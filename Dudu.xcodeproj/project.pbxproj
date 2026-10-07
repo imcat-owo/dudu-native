@@ -10,6 +10,8 @@
 		10000000000000000000000F /* DuduApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000000A /* DuduApp.swift */; };
 		100000000000000000000010 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000000B /* ContentView.swift */; };
 		100000000000000000000011 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000000C /* Assets.xcassets */; };
+		89B3EFC36CACF9FA835AD3FD /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 129D94B13E4A50C15AAB7687 /* ContentView.swift */; };
+		A5ED0CDBD2BB34E7D80BC939 /* DuduApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8CC5DC1C7D36D6E6B19B9B1 /* DuduApp.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +21,8 @@
 		10000000000000000000000C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		10000000000000000000000D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		10000000000000000000000E /* Dudu.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Dudu.entitlements; sourceTree = "<group>"; };
+		129D94B13E4A50C15AAB7687 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		F8CC5DC1C7D36D6E6B19B9B1 /* DuduApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuduApp.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,11 +47,8 @@
 		100000000000000000000007 /* Dudu */ = {
 			isa = PBXGroup;
 			children = (
-				10000000000000000000000A /* DuduApp.swift */,
-				10000000000000000000000B /* ContentView.swift */,
-				10000000000000000000000C /* Assets.xcassets */,
-				10000000000000000000000D /* Info.plist */,
-				10000000000000000000000E /* Dudu.entitlements */,
+				129D94B13E4A50C15AAB7687 /* ContentView.swift */,
+				F8CC5DC1C7D36D6E6B19B9B1 /* DuduApp.swift */,
 			);
 			path = Dudu;
 			sourceTree = "<group>";
@@ -127,8 +128,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				10000000000000000000000F /* DuduApp.swift in Sources */,
-				100000000000000000000010 /* ContentView.swift in Sources */,
+				89B3EFC36CACF9FA835AD3FD /* ContentView.swift in Sources */,
+				A5ED0CDBD2BB34E7D80BC939 /* DuduApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
