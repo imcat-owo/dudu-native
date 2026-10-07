@@ -400,7 +400,7 @@ final class FileMentionIndex: ObservableObject {
         // we want to know loudly rather than silently mis-rank.
         for e in result {
             if !e.linuxPath.lowercased().contains(q) {
-                print("[MentionScan] ⚠️ NON-MATCHING entry leaked into result: q=\"\(q)\" path=\(e.linuxPath)")
+                print("[MentionScan] NON-MATCHING entry leaked into result: q=\"\(q)\" path=\(e.linuxPath)")
             }
         }
         #endif

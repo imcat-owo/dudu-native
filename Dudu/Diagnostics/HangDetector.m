@@ -139,7 +139,7 @@ static void dumpAllThreadsToLog(thread_t monitorTid, double busyMs) {
     if (task_threads(task, &threads, &count) != KERN_SUCCESS) return;
 
     NSMutableString *out = [NSMutableString stringWithFormat:
-        @"[HangDetector] 🧵 ALL-THREADS DUMP busyMs=%.0f threads=%u",
+        @"[HangDetector] ALL-THREADS DUMP busyMs=%.0f threads=%u",
         busyMs, (unsigned)count];
 
     for (mach_msg_type_number_t i = 0; i < count; i++) {
@@ -337,11 +337,11 @@ static void *monitorThreadMain(void *arg) {
                         const char *pname = plevel >= 2 ? "CRITICAL" : (plevel == 1 ? "warn" : "normal");
 
                         if (freeMB >= 0.0) {
-                            NSLog(@"[MemMonitor] 📈 footprint=%.1fMB (Δ%+.1fMB) | sys free=%.0f/%.0fMB (%.0f%%) | pressure=%s",
+                            NSLog(@"[MemMonitor] footprint=%.1fMB (Δ%+.1fMB) | sys free=%.0f/%.0fMB (%.0f%%) | pressure=%s",
                                   curMB, curMB - lastMB, freeMB, totalMB,
                                   totalMB > 0 ? (freeMB / totalMB * 100.0) : 0.0, pname);
                         } else {
-                            NSLog(@"[MemMonitor] 📈 footprint=%.1fMB (Δ%+.1fMB) | sys free=- /%.0fMB | pressure=%s",
+                            NSLog(@"[MemMonitor] footprint=%.1fMB (Δ%+.1fMB) | sys free=- /%.0fMB | pressure=%s",
                                   curMB, curMB - lastMB, totalMB, pname);
                         }
                         lastLoggedFootprint = cur;
@@ -524,7 +524,7 @@ static void *monitorThreadMain(void *arg) {
         // Surface the most-likely-relevant frames in the daily log so the
         // event is grep-able even without the structured dump RPC.
         NSMutableString *summary = [NSMutableString stringWithFormat:
-            @"[HangDetector] ⚠️ MAIN HANG %.0fms (activity=0x%x) buffered=%lu",
+            @"[HangDetector] MAIN HANG %.0fms (activity=0x%x) buffered=%lu",
             busyMs, activity, (unsigned long)total];
         NSUInteger logFrames = MIN(resolved.count, (NSUInteger)8);
         for (NSUInteger i = 0; i < logFrames; i++) {
@@ -671,7 +671,7 @@ static void *monitorThreadMain(void *arg) {
                 if (flags & DISPATCH_MEMORYPRESSURE_CRITICAL) { level = 2; name = "CRITICAL"; }
                 else if (flags & DISPATCH_MEMORYPRESSURE_WARN) { level = 1; name = "warn"; }
                 atomic_store_explicit(&g_memPressureLevel, level, memory_order_relaxed);
-                NSLog(@"[MemMonitor] ⚠️ memory pressure → %s", name);
+                NSLog(@"[MemMonitor] memory pressure → %s", name);
             });
             dispatch_resume(g_memPressureSource);
         }

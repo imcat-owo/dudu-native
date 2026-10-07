@@ -73,7 +73,7 @@ enum DuduISHSeams {
     //
     //  Signatures mirror the real ones, read from
     //  OpenMinis Agent/ISH/ISHExecutionCoordinator.swift,
-    //  Agent/ISH/MinisFsRouter.swift, and the iSH kernel fakefs handler:
+    //  Agent/ISH/DuduFsRouter.swift, and the iSH kernel fakefs handler:
     //    - mountedSessionIdSnapshot: nonisolated static var on
     //      ISHExecutionCoordinator (SYNC upstream — read without hopping to the
     //      coordinator actor, deliberately, to avoid deadlocks under shell
@@ -85,7 +85,7 @@ enum DuduISHSeams {
     //      carries exactly the four fields SessionFileChangeTracker consumes
     //      (fsContext, linuxPath, op, timestampNs); P8 maps its kernel event
     //      type field-for-field when assigning.
-    //    - fsRouterSid:             MinisFsRouter.shared.sid(for:) — maps a
+    //    - fsRouterSid:             DuduFsRouter.shared.sid(for:) — maps a
     //      fakefs fs_context back to the owning session id.
 
     /// P8: ISHExecutionCoordinator.mountedSessionIdSnapshot (nonisolated, sync).
@@ -118,7 +118,7 @@ enum DuduISHSeams {
     /// Until then nil (no-op).
     static var applyExternalMountSnapshot: (() async -> Void)?
 
-    /// P8: MinisFsRouter.shared.sid(for:) — fs_context -> owning session id.
+    /// P8: DuduFsRouter.shared.sid(for:) — fs_context -> owning session id.
     static var fsRouterSid: ((UInt64) -> String?)? = nil
 
     /// P8: RootfsManager.shared.rootfsPath (sync URL; dataPath = rootfsPath/data).

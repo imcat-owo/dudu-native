@@ -1209,7 +1209,7 @@ extension AIChatViewModel {
                 }
                 toolImageData = nil
                 toolImageMimeType = nil
-                ctLogger.info("🖼️ Tool image budget exhausted, stripped image from \(tu.name) id:\(tu.id.prefix(8))")
+                ctLogger.info("Tool image budget exhausted, stripped image from \(tu.name) id:\(tu.id.prefix(8))")
             }
         }
 
@@ -1253,7 +1253,7 @@ extension AIChatViewModel {
         #if DEBUG
         let head = String(finalOutput.prefix(200))
         let tail = finalOutput.count > 400 ? "...\(String(finalOutput.suffix(200)))" : ""
-        ctLogger.debug("🔧 Tool result [\(tu.name)] id:\(tu.id.prefix(8)) success:\(toolSuccess) len:\(finalOutput.count) head=\"\(head)\" \(tail)")
+        ctLogger.debug("Tool result [\(tu.name)] id:\(tu.id.prefix(8)) success:\(toolSuccess) len:\(finalOutput.count) head=\"\(head)\" \(tail)")
         #endif
 
         return ToolExecOutcome(

@@ -404,7 +404,7 @@ final class StreamingHangLogger {
         // AIChatViewModel.runAgentLoop). Bridged via the same global hook
         // SelectableMarkdownView uses, avoiding a cross-module import.
         let _diagRound = AIChatViewModel.currentDiagRound()
-        mgr.writeRawLine(category: cat, level: lvl, message: "[StreamHang] 📸 \(label) round=\(_diagRound): \(events.count) main-thread hang event(s) captured (threshold=\(HangDetector.thresholdMs)ms) bufferedFlushes=\(self.streamBuffer.count)/\(self.streamFlushCount)")
+        mgr.writeRawLine(category: cat, level: lvl, message: "[StreamHang] \(label) round=\(_diagRound): \(events.count) main-thread hang event(s) captured (threshold=\(HangDetector.thresholdMs)ms) bufferedFlushes=\(self.streamBuffer.count)/\(self.streamFlushCount)")
 
         // TEMP(2026-05-13) — write the most recent UITextView inventory
         // snapshot before the stack frames so a log reader can see what
