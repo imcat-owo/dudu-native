@@ -47,7 +47,8 @@ enum SandboxRelayError: Error, LocalizedError {
     case requestFailed(String)
     /// The relay ran the SSH probe and it failed (bad creds, SSH refused…).
     case probeFailed(String)
-    /// Host failed the allowlist (plain hostname/IP only — no scheme/port/path).
+    /// Host failed the allowlist (plain hostname / IPv4 / IPv6 literal only
+    /// — no scheme, port, or path).
     case badHost
 
     var errorDescription: String? {
@@ -74,13 +75,22 @@ enum SandboxRelayTransport {
     private static let execTimeout: TimeInterval = 120
 
     private static func baseURL(for host: String) throws -> URL {
-        // Host allowlist: plain hostname/IP only — no scheme, port, or path.
-        // The relay is always reached via https://{host}/dudu-sandbox (Caddy, 443).
+        // Host allowlist: plain hostname / IPv4 / IPv6 literal — no scheme,
+        // port, or path. The relay is always reached via
+        // https://{host}/dudu-sandbox (Caddy, 443). IPv6 literals are
+        // bracketed for the URL; the relay's SSH side receives the raw
+        // host string, which SSH accepts as-is. A colon-bearing host that
+        // is not a valid IPv6 literal fails URL parsing and throws badHost
+        // with a localized message — never a silent misconnect.
         let ok = host.range(
-            of: "^[A-Za-z0-9.-]{1,253}$",
+            of: "^[A-Za-z0-9.:-]{1,253}$",
             options: .regularExpression
         ) != nil
-        guard ok, let url = URL(string: "https://\(host)\(relayPath)") else {
+        guard ok else {
+            throw SandboxRelayError.badHost
+        }
+        let urlHost = host.contains(":") ? "[\(host)]" : host
+        guard let url = URL(string: "https://\(urlHost)\(relayPath)") else {
             throw SandboxRelayError.badHost
         }
         return url

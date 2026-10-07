@@ -206,7 +206,7 @@ enum OpenAppURLError: Error, LocalizedError {
         case .missingRequiredParam(let name, let example):
             return "Missing required parameter \"\(name)\" (e.g. \(example))."
         case .unknownSlot(let name, let entry):
-            return "Unknown template slot {\(name)} in entry \"\(entry)\"."
+            return "Unknown entry \"\(name)\" in \"\(entry)\"."
         case .noWebVersion(let app):
             return "\"\(app)\" has no web version."
         }

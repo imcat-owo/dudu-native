@@ -24,6 +24,25 @@ import UIKit
 //
 // Zero emoji (SF Symbols only). All copy via L10n. All colors via DuduTheme.
 
+/// Localize an i18n key, tolerating the relay error detail suffix.
+/// Relay errors arrive as "sandbox.relay.unreachable: <detail>" — the key
+/// portion is localized and the human detail is kept verbatim, so users
+/// never see a bare sandbox.* key. Bare keys and non-key strings behave
+/// exactly as before.
+private func localizeKeyOrRaw(_ msg: String) -> String {
+    let keyPattern = "^sandbox\\.[a-zA-Z.]+$"
+    if msg.range(of: keyPattern, options: .regularExpression) != nil {
+        return L10n.string(msg)
+    }
+    if let colon = msg.range(of: ": ") {
+        let key = String(msg[..<colon.lowerBound])
+        if key.range(of: keyPattern, options: .regularExpression) != nil {
+            return "\(L10n.string(key)): \(msg[colon.upperBound...])"
+        }
+    }
+    return msg
+}
+
 struct SandboxSettingsView: View {
     // @ObservedObject (not @StateObject): codebase pattern for @MainActor
     // singletons (cf. FontSettings.shared / AppearanceStudio.shared).
@@ -393,9 +412,11 @@ struct SandboxSettingsView: View {
         relayMissing = false
     }
 
-    /// Translate bare i18n keys (e.g. sandbox.cloud.noConfig); relay errors
-    /// carry a detail suffix and stay raw — the relayMissing note below is
-    /// the human-readable part. Same rule as the old failConnect.
+    /// Translate bare i18n keys (e.g. sandbox.cloud.noConfig). Relay errors
+    /// arrive as "sandbox.relay.unreachable: <detail>" — the key portion is
+    /// localized, the human detail kept verbatim; users never see a bare
+    /// key. The relayMissing note below stays the human-readable part.
+    /// Same rule as the old failConnect.
     private func reportError(_ error: Error) {
         let msg: String
         if let le = error as? LocalizedError, let d = le.errorDescription {
@@ -403,21 +424,15 @@ struct SandboxSettingsView: View {
         } else {
             msg = error.localizedDescription
         }
-        if msg.range(of: "^sandbox\\.[a-zA-Z.]+$", options: .regularExpression) != nil {
-            errorText = L10n.string(msg)
-        } else {
-            errorText = msg
-        }
+        errorText = localizeKeyOrRaw(msg)
         relayMissing = (error as? SandboxRelayError)?.isUnreachable ?? false
     }
 
-    /// Backend detail lines may be i18n keys or raw relay text.
+    /// Backend detail lines may be i18n keys, relay "key: detail" errors,
+    /// or raw relay text.
     private func displayDetail(_ detail: String?) -> String? {
         guard let detail, !detail.isEmpty else { return nil }
-        if detail.range(of: "^sandbox\\.[a-zA-Z.]+$", options: .regularExpression) != nil {
-            return L10n.string(detail)
-        }
-        return detail
+        return localizeKeyOrRaw(detail)
     }
 }
 
@@ -714,10 +729,7 @@ private struct ServerEditSheet: View {
                 } else {
                     raw = e.localizedDescription
                 }
-                let shown = raw.range(
-                    of: "^sandbox\\.[a-zA-Z.]+$",
-                    options: .regularExpression
-                ) != nil ? L10n.string(raw) : raw
+                let shown = localizeKeyOrRaw(raw)
                 errorText = "\(L10n.string("sandbox.testFailed")): \(shown)"
             }
         }
