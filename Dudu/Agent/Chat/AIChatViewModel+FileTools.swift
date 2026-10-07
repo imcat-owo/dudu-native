@@ -26,6 +26,81 @@ extension AIChatViewModel {
         let success: Bool
     }
 
+    // MARK: - Incognito write guard (Wave 1 privacy fix, 2026-10-08)
+    //
+    // SCOPE DECISION — what file_write/file_edit refuse in incognito:
+    // the incognito contract is "无消息内容落盘" (no message CONTENT on
+    // disk). The persistent roots below all survive the session, so any
+    // write there is a contract violation. Blocked:
+    //   /var/dudu/memory/      — persona memory (App Group, cross-session);
+    //                            the reported bypass: file_write/edit could
+    //                            write Personas/<id>/ GLOBAL.md and daily
+    //                            logs in incognito (memory_write's own
+    //                            incognito guard was bypassable via files).
+    //   /var/dudu/skills/      — persistent skills (cross-session, user-facing)
+    //   /var/dudu/shared/      — persistent shared storage (cross-session)
+    //   /var/dudu/mcp-servers/ — persistent MCP server configs (may hold
+    //                            credentials; must never be touched silently)
+    //   /var/dudu/mounts/      — the user's own external folders (Obsidian
+    //                            vault, Downloads, ...): persistent by
+    //                            definition, writes land in the user's files.
+    // NOT blocked: session-scoped namespaces (workspace, attachments,
+    // offloads, browser) — the model's scratch space for THIS conversation.
+    // Temp/scratch writes that get wiped are fine; the incognito contract
+    // targets persistent content. (Residual, documented not fixed: in
+    // incognito those namespaces resolve under
+    // duduPersistentBase/<incognito-id>/, which is not wiped on exit — a
+    // follow-up should redirect file-tool resolution for session
+    // namespaces to the incognito tmp root the way sessionUploadsDir() /
+    // sessionOffloadsDir() / sessionBrowserDir() / sessionAttachmentsDir()
+    // already do.)
+    //
+    // Checked on the RAW path (Linux form or dudu-clone:// form) BEFORE any
+    // resolution, so the guard holds regardless of which branch
+    // resolvePathForDirectRead takes — the same pre-reject pattern as the
+    // read-only-mount check below. The refusal is VISIBLE to the model
+    // (success: false + message), mirroring executeMemoryWrite's guard.
+
+    /// Persistent roots under /var/dudu/ that file_write/file_edit must not
+    /// touch in incognito. Canonical roots live on DuduPaths (*LinuxDir).
+    private static let incognitoBlockedWriteRoots: [(linux: String, label: String)] = [
+        (DuduPaths.duduMemoryLinuxDir, "memory"),
+        (DuduPaths.duduSkillsLinuxDir, "skills"),
+        (DuduPaths.duduSharedLinuxDir, "shared"),
+        (DuduPaths.duduMcpServersLinuxDir, "mcp-servers"),
+        (DuduPaths.duduMountsLinuxDir, "mounted folders"),
+    ]
+
+    /// Returns the blocked namespace label when `path` targets a persistent
+    /// root, else nil. Accepts both `/var/dudu/<ns>/...` and
+    /// `dudu-clone://<ns>/...` forms so the guard can't be bypassed by
+    /// switching URL scheme.
+    private static func incognitoBlockedNamespace(for path: String) -> String? {
+        let linuxPath: String
+        if path.hasPrefix("dudu-clone://") {
+            guard let url = URL(string: path), let host = url.host else { return nil }
+            linuxPath = "/var/dudu/\(host)"
+        } else {
+            linuxPath = path
+        }
+        for (root, label) in incognitoBlockedWriteRoots {
+            if linuxPath == root || linuxPath.hasPrefix(root + "/") {
+                return label
+            }
+        }
+        return nil
+    }
+
+    /// Incognito refusal for a write tool call, or nil when the write is allowed.
+    /// Visible to the model: success=false + plain-language message.
+    private func incognitoWriteRefusal(toolName: String, path: String) -> FileToolResult? {
+        guard isIncognito, let blocked = Self.incognitoBlockedNamespace(for: path) else { return nil }
+        return FileToolResult(
+            output: "\(toolName) is disabled for \(blocked) paths in incognito mode — nothing was saved.",
+            success: false
+        )
+    }
+
     /// Snapshot all files under /var/dudu/ with their modification dates.
     func snapshotDuduFiles() -> [String: Date] {
         let fm = FileManager.default
@@ -402,6 +477,12 @@ extension AIChatViewModel {
             return FileToolResult(output: "Error: Missing required 'path' and/or 'content' parameters", success: false)
         }
 
+        // [incognito-write-guard] Refuse persistent-root writes in incognito
+        // BEFORE any resolution — nothing may land on disk here.
+        if let refusal = incognitoWriteRefusal(toolName: "file_write", path: path) {
+            return refusal
+        }
+
         #if DEBUG
         print("[FileWrite] ▶ START path=\(path) sessionId=\(self.sessionId ?? "<nil>") contentBytes=\(content.utf8.count)")
         #endif
@@ -607,6 +688,12 @@ extension AIChatViewModel {
               let oldString = dict["old_string"] as? String,
               let newString = dict["new_string"] as? String else {
             return FileToolResult(output: "Error: Missing required parameters (path, old_string, new_string)", success: false)
+        }
+
+        // [incognito-write-guard] Refuse persistent-root edits in incognito
+        // BEFORE any resolution — same contract as file_write.
+        if let refusal = incognitoWriteRefusal(toolName: "file_edit", path: path) {
+            return refusal
         }
 
         // Pre-reject edits to read-only mounts via Linux path first — immune

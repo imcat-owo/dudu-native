@@ -2180,7 +2180,20 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
             + "the user can tap it to open the Environment Variables page with the key and optional note pre-filled. "
             + "create_note is optional; fill it with a brief description of what the variable is used for (e.g. 'API key for OpenAI', 'Used by XYZ skill'); URL-encode it.\n"
             + "- Settings deep links: when you tell the user \"go to Settings → X\" or want to point them at a specific setting, prefer a Markdown link `[Label](dudu-clone://settings/<path>)` over plain prose. Available paths: providers (list), providers/<instanceId> (one provider), model-groups (incl. Agent Loop), model-groups/<groupId>, usage (token usage), skills, memory, storage, shared-folders (Shared Folders: /var/dudu/{shared,skills,memory}), mount-external (Mount External Folders), logs, appearance, background, about, permissions, environments[?create_key=K&create_value=V[&create_note=N]], rootfs (also reachable as mirrors), siri (Siri & Shortcuts). Unknown paths fall back to Settings home, but prefer the exact path so users land where they want. These settings/action links are app deep links — render them as Markdown links in chat (same action-vs-resource rule as the dudu-clone:// section above: only /var/dudu resource URLs may go to browser_use).\n"
-            + "Memory system:\n"
+            + memorySystemPromptSection
+            + "Scheduled tasks: there is no in-app scheduler and no background execution — nothing runs after your turn ends, and scripts cannot be scheduled from inside the app. "
+            + "For recurring tasks that must fire beyond the current conversation, tell the user to set up an automation in Apple Shortcuts — it is the only reliable way to trigger periodic execution on iOS."
+    }
+
+    /// The "Memory system" instruction section of the system prompt (GLOBAL.md
+    /// / daily-log file_read + file_edit guidance). SUPPRESSED in incognito:
+    /// it would otherwise tell the model to do exactly what the incognito
+    /// file-tool guard refuses (Wave 1 privacy fix, 2026-10-08) — and an
+    /// incognito session must never be pointed at the persistent persona
+    /// memory. Non-incognito prompt text is byte-identical to before.
+    private var memorySystemPromptSection: String {
+        guard !isIncognito else { return "" }
+        return "Memory system:\n"
             + "- memory_write writes to today's daily log (YYYY-MM-DD.md) — use it for session notes, key facts, project context, things learned, and action items.\n"
             + "- GLOBAL.md (/var/dudu/memory/GLOBAL.md) stores persistent preferences, settings, and general-purpose conventions. To read it, use file_read (NOT memory_get). To update it, use file_read first then file_edit. If GLOBAL.md does not exist yet, use file_write to create it directly.\n"
             + "- IMPORTANT: Only write to GLOBAL.md when the user explicitly asks (e.g. 'remember this globally', 'save to global memory'). Before editing, deduplicate and clean up — avoid ambiguity, repetition, or daily-log-style entries. GLOBAL.md should contain only concise, reusable knowledge (preferences, settings, conventions), NOT session logs or transient context.\n"
@@ -2189,8 +2202,6 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
             + "- When the user says 'remember this' or similar, use memory_write to persist to the daily log. Only write to GLOBAL.md if the user specifically asks for global/persistent storage.\n"
             + "- What NOT to remember: passwords, API keys, tokens, secrets, or any sensitive credentials. Warn the user about the risk first; only proceed if they explicitly confirm.\n"
             + "- Keep memories concise, factual, and general-purpose — avoid noise that won't be useful later.\n\n"
-            + "Scheduled tasks: there is no in-app scheduler and no background execution — nothing runs after your turn ends, and scripts cannot be scheduled from inside the app. "
-            + "For recurring tasks that must fire beyond the current conversation, tell the user to set up an automation in Apple Shortcuts — it is the only reliable way to trigger periodic execution on iOS."
     }
 
     /// [T-memory-toggle-gates-injection-and-tools-ios]
@@ -2205,6 +2216,18 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
     /// model knows the tools won't be registered, the memory files won't
     /// be injected, and what to tell the user if they ask about memory.
     private var memoryStatusFragment: String {
+        // [incognito-write-guard, Wave 1 privacy fix 2026-10-08] In
+        // incognito the "ENABLED" wording below would lie: memory_write
+        // refuses every call, the memory-instruction section is suppressed,
+        // and file_write/file_edit refuse persistent-root writes. Land an
+        // authoritative override so the model knows memory is off here and
+        // what to tell the user.
+        if isIncognito {
+            return "\n\nMemory status: INCOGNITO — memory is disabled for this session. "
+                + "Do not read or write /var/dudu/memory/ (GLOBAL.md, daily logs) with the file tools: "
+                + "file_write and file_edit refuse memory, skills, shared, mcp-servers, and mounted-folder paths in incognito mode, and memory_write / memory_get will not persist anything. "
+                + "If the user asks you to remember something, tell them memory is unavailable in incognito and they can save it in a normal session."
+        }
         if memoryEnabled {
             return "\n\nMemory status: ENABLED for this session. GLOBAL.md and recent daily logs have been injected above (if non-empty), and memory_get / memory_write are available in the tool list."
         } else {
