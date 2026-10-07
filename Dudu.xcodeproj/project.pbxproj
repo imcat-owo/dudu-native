@@ -472,6 +472,9 @@
 		3FE125E5C8A13E0C2F714E56 /* VoiceCallOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273B87DF21B4F5E4B988F99D /* VoiceCallOverlay.swift */; };
 		3E635B1418A4AAE81B0664A9 /* VoiceCallScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4B2E0DF72110A916F989034 /* VoiceCallScreen.swift */; };
 		6C2B943377C94E05CE97943E /* WaveformKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B40B17C87401086F61E4CBD /* WaveformKey.swift */; };
+		B69EB3FDC3618E38A4851B11 /* ComputerBackend.swift in Sources */ = {isa = PBXBuildFile; fileRef = C487739E6663445CBED696F5 /* ComputerBackend.swift */; };
+		D88D77BC5F7C3886A27DB31C /* ComputerTerminalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B908F67FB95CBE877B9348 /* ComputerTerminalView.swift */; };
+		7F675F59958AA975DC967091 /* ComputerTerminalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF64B7EA879778610416D3FE /* ComputerTerminalViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1081,6 +1084,9 @@
 		273B87DF21B4F5E4B988F99D /* VoiceCallOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceCallOverlay.swift; sourceTree = "<group>"; };
 		E4B2E0DF72110A916F989034 /* VoiceCallScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceCallScreen.swift; sourceTree = "<group>"; };
 		4B40B17C87401086F61E4CBD /* WaveformKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveformKey.swift; sourceTree = "<group>"; };
+		C487739E6663445CBED696F5 /* ComputerBackend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComputerBackend.swift; sourceTree = "<group>"; };
+		E6B908F67FB95CBE877B9348 /* ComputerTerminalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComputerTerminalView.swift; sourceTree = "<group>"; };
+		AF64B7EA879778610416D3FE /* ComputerTerminalViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComputerTerminalViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 		30AC3C5C6C418C791E362178 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 
@@ -2021,6 +2027,7 @@
 				337ECA3C31F601E393A7A740 /* Avatar */,
 				6118222DA01CD5526F8307B8 /* Call */,
 				FC61A6675134359CB1A0BBA1 /* Chat */,
+				12FCC3EC64521BAD1C37E6E7 /* Computer */,
 				18E9DA5BE55C7A48F1D6BFB5 /* Knowledge */,
 				AA856D71B083C7F259E49862 /* MCP */,
 				6D7AF697BE452E1C125B5155 /* Music */,
@@ -2315,6 +2322,16 @@
 				E4B2E0DF72110A916F989034 /* VoiceCallScreen.swift */,
 			);
 			path = Call;
+			sourceTree = "<group>";
+		};
+		12FCC3EC64521BAD1C37E6E7 /* Computer */ = {
+			isa = PBXGroup;
+			children = (
+				AF64B7EA879778610416D3FE /* ComputerTerminalViewModel.swift */,
+				C487739E6663445CBED696F5 /* ComputerBackend.swift */,
+				E6B908F67FB95CBE877B9348 /* ComputerTerminalView.swift */,
+			);
+			path = Computer;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2683,6 +2700,7 @@
 				7DD0CE5A9F5DD169FBD00C00 /* SyncableTypeRegistry.swift in Sources */,
 				7F626AC140C78E9D7A276989 /* RcloneBackendCatalog.swift in Sources */,
 				7F63F36987FCADF907CF9E03 /* ModelPickerView.swift in Sources */,
+				7F675F59958AA975DC967091 /* ComputerTerminalViewModel.swift in Sources */,
 				7F98C16A84FAC05FC230BD0E /* IntimacyView.swift in Sources */,
 				7FE3537DCBB0AB677659F0D3 /* JiebaWrapper.mm in Sources */,
 				8064FD6E07E0D64A489F23D2 /* VoiceCallTools.swift in Sources */,
@@ -2768,6 +2786,7 @@
 				B3E2ECFC581E50F1B6363D02 /* VoiceBubblePlaybackState.swift in Sources */,
 				B4D330FAE059BF2C52DEE04F /* AIChatViewModel+Incognito.swift in Sources */,
 				B53A7D8D45188FB227A2384C /* AnthropicProvider.swift in Sources */,
+				B69EB3FDC3618E38A4851B11 /* ComputerBackend.swift in Sources */,
 				B77005D9C86D80F3D5EF4A9C /* BackupImporter+Categories.swift in Sources */,
 				B7A0894222ADCCAE19070C05 /* SpeechSegmenter.swift in Sources */,
 				B881EB9AC1CFB39DB5E69E97 /* AIChatViewModel+MemoryTools.swift in Sources */,
@@ -2817,6 +2836,7 @@
 				D6EC296962DAFD85920625F5 /* AppearanceThemeLibrary.swift in Sources */,
 				D7415DA85BBAA8D5C0DDFCB6 /* OpenRouterOAuthManager.swift in Sources */,
 				D79A3CAFF1302E0F61BEB2C3 /* BridgeExternalMCPService.swift in Sources */,
+				D88D77BC5F7C3886A27DB31C /* ComputerTerminalView.swift in Sources */,
 				D8AB9C6299EA8D6BF8C580B0 /* DuduTheme.swift in Sources */,
 				D9F1395EBE84FC9A03AC0EA5 /* FontUploadView.swift in Sources */,
 				D9FBDEDBF7F811C9795B9758 /* ConfigField.swift in Sources */,
