@@ -29,6 +29,10 @@ struct ModelGroupListView: View {
         .listStyle(.insetGrouped)
         .navigationTitle(AppLocalized("orchestration.title"))
         .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                // Enables edit mode so the group reorder (.onMove) is reachable.
+                EditButton()
+            }
             ToolbarItem(placement: .primaryAction) {
                 Button {
                     let group = ModelGroup(name: AppLocalized("orchestration.newGroupName"),

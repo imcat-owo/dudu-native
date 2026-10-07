@@ -48,6 +48,12 @@ struct ModelGroupDetailView: View {
         }
         .navigationTitle(group?.name ?? AppLocalized("orchestration.title"))
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                // Enables edit mode so the member reorder (.onMove) is reachable.
+                EditButton()
+            }
+        }
         .sheet(isPresented: $showingMemberPicker) {
             if let group {
                 ModelGroupMemberPickerView(group: group)
