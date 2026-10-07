@@ -181,7 +181,7 @@ struct KnowledgeView: View {
         }
         .fileImporter(
             isPresented: $model.showPicker,
-            allowedContentTypes: [.pdf, .plainText, .markdown],
+            allowedContentTypes: [.pdf, .plainText, UTType(filenameExtension: "md") ?? .plainText],
             allowsMultipleSelection: false
         ) { result in
             switch result {
