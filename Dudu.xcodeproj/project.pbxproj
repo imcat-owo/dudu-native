@@ -352,6 +352,8 @@
 		D35BB931DF9D2DDE6F9A56F6 /* xAIModelsAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = xAIModelsAPI.swift; sourceTree = "<group>"; };
 		DDA5CE5D489BC6AE21105C18 /* SpeechSegmenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechSegmenter.swift; sourceTree = "<group>"; };
 		05EB74C8CF8BB5F929E398DF /* ProviderCustomizationGenerated.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderCustomizationGenerated.swift; sourceTree = "<group>"; };
+		4EBD5BDF77A68BC3A4E69A17 /* ProviderCustomization.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = ProviderCustomization.xcconfig; sourceTree = "<group>"; };
+		C32569B6901DC9CFFE3C7759 /* ProviderCustomization.xcconfig.example */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = ProviderCustomization.xcconfig.example; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 		30AC3C5C6C418C791E362178 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 
@@ -373,6 +375,7 @@
 		100000000000000000000006 = {
 			isa = PBXGroup;
 			children = (
+				C0CD43208038472DB51D6CBB /* Configs */,
 				100000000000000000000007 /* Dudu */,
 				100000000000000000000008 /* Products */,
 			);
@@ -821,6 +824,15 @@
 			path = Generated;
 			sourceTree = "<group>";
 		};
+		C0CD43208038472DB51D6CBB /* Configs */ = {
+			isa = PBXGroup;
+			children = (
+				4EBD5BDF77A68BC3A4E69A17 /* ProviderCustomization.xcconfig */,
+				C32569B6901DC9CFFE3C7759 /* ProviderCustomization.xcconfig.example */,
+			);
+			path = Configs;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1137,6 +1149,7 @@
 				);
 			};
 			name = Debug;
+			baseConfigurationReference = 4EBD5BDF77A68BC3A4E69A17 /* ProviderCustomization.xcconfig */;
 		};
 		100000000000000000000017 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -1168,6 +1181,7 @@
 				);
 			};
 			name = Release;
+			baseConfigurationReference = 4EBD5BDF77A68BC3A4E69A17 /* ProviderCustomization.xcconfig */;
 		};
 /* End XCBuildConfiguration section */
 

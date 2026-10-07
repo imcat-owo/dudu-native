@@ -1083,9 +1083,8 @@ final class ProviderConfigStore: ObservableObject {
         // emitV3MarkDirty no longer diff-infers deletions, so the instance, its
         // cascaded entries, and any groups emptied by the removal must each
         // emit their own delete record here.
-        let entryIds = removedEntryUuids
-        let groupIds = removedGroupIds
         // P3-DROP(iCloud): delete-tombstone Task removed with the ChatStore refs above;
+        // (removedEntryUuids/removedGroupIds were consumed only by that Task)
         // restore the whole Task block when the P4 sync engine lands.
     }
 

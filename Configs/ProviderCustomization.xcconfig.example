@@ -1,0 +1,5 @@
+// Copy to ProviderCustomization.xcconfig and fill in. Never commit the filled copy.
+// (ProviderCustomization.xcconfig is gitignored; the .example ships with empty values.)
+
+// Prompt shown when the user starts Claude OAuth login. Empty = build default.
+ANTHROPIC_OAUTH_IDENTIFIER_PROMPT =

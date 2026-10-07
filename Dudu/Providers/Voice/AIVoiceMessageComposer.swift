@@ -215,7 +215,7 @@ enum AIVoiceMessageComposer {
         return nil
     }
 
-    /// linuxPathFor(url:) — turn the dudu-clone URL back into the /var/minis
+    /// linuxPathFor(url:) — turn the dudu-clone URL back into the /var/dudu
     /// path (used by the auto-play trigger's resolvePathForDirectRead).
     nonisolated static func linuxPathFor(url: String) -> String {
         guard let comps = URLComponents(string: url), let host = comps.host else { return "" }

@@ -225,7 +225,7 @@ final class ConfigConfirmationGate: ObservableObject {
         )
 
         let content = UNMutableNotificationContent()
-        content.title = "⚙️ Config change awaiting approval"
+        content.title = "Config change awaiting approval"
         // Show the caption (e.g. "Update multi-model writing workflow: …") so
         // the user gets the gist without opening the app; fall back to a
         // row-count summary when there's no caption.

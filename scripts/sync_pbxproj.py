@@ -142,7 +142,7 @@ def get_object_block(text, obj_id):
     # inside children/files arrays (deeper indent) never match. The comment
     # class [^\n]* keeps it on one line.
     pat = re.compile(
-        r"^\t\t" + re.escape(obj_id) + r" /\*[^\n]*\*/ = \{\n(.*?)\n\t\t\};",
+        r"^\t\t" + re.escape(obj_id) + r"(?: /\*[^\n]*\*/)? = \{\n(.*?)\n\t\t\};",
         re.M | re.S)
     m = pat.search(text)
     if not m:

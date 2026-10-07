@@ -30,3 +30,4 @@ Payload/
 
 # Python
 __pycache__/
+*.xcconfig
