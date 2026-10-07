@@ -117,7 +117,14 @@ enum VoiceCallToolHandler {
         }
     }
 
-    static func list() async -> Outcome {
+    static func list(isIncognito: Bool) async -> Outcome {
+        // Incognito: call proposals live in normal-chat history, which an
+        // incognito session must never see — same refusal as propose.
+        if isIncognito {
+            return Outcome(
+                output: "Error: Voice calls are unavailable in incognito mode — call history lives in chat history, so there's nothing to list here.",
+                success: false)
+        }
         let list = CallProposalCenter.shared.recentProposals()
         guard !list.isEmpty else {
             return Outcome(output: "No call proposals yet.", success: true)

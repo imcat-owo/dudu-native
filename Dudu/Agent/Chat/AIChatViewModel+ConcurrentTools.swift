@@ -917,7 +917,7 @@ extension AIChatViewModel {
 
         case "list_voice_calls":
             // [D21] List call proposals (ringing / accepted / declined / missed).
-            let listResult = await VoiceCallToolHandler.list()
+            let listResult = await VoiceCallToolHandler.list(isIncognito: isIncognito)
             if msgIdx < messages.count, blockIdx < messages[msgIdx].blocks.count {
                 messages[msgIdx].blocks[blockIdx].content = listResult.output
             }

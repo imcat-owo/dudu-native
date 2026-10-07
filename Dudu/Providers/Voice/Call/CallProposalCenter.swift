@@ -71,6 +71,12 @@ final class CallProposalCenter: ObservableObject {
     /// "call me" with no why is not allowed.
     @discardableResult
     func propose(reason: String, topic: String?, personaId: String, personaName: String) async throws -> CallProposal {
+        // No ringing while a call is live: the full-screen call cover would
+        // hide the new ring, and stacking rings breaks the one-at-a-time
+        // consent model — one call at a time, like a phone.
+        guard activeSession == nil else {
+            throw VoiceProviderError.unsupported("She's already on a call — one at a time. Don't propose a new one until this one ends.")
+        }
         let why = reason.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !why.isEmpty else {
             throw VoiceProviderError.unsupported("A call proposal needs a reason — she decides based on the why.")

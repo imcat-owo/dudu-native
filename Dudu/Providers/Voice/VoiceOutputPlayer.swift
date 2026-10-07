@@ -995,7 +995,7 @@ extension VoiceOutputPlayer: AVAudioPlayerDelegate {
             let nextReady = self.queue.first?.audio != nil
             let generating = self.queue.contains { $0.task != nil && $0.audio == nil && !$0.failed }
             if !self.queue.isEmpty && !nextReady && generating {
-                VoiceLog.log("TTS ⚠︎ UNDER-RUN after #\(finishedSeq): next unit not ready (queue=\(self.queue.count), still synthesizing)")
+                VoiceLog.log("TTS [WARN] UNDER-RUN after #\(finishedSeq): next unit not ready (queue=\(self.queue.count), still synthesizing)")
             } else {
                 VoiceLog.log("TTS ■ finished #\(finishedSeq) (queue=\(self.queue.count) buffered=\(String(format: "%.2f", self.bufferedAudioSeconds))s)")
             }
