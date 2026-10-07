@@ -63,4 +63,96 @@ enum DuduISHSeams {
 
     /// P8: ISHExecutionCoordinator.stopAllNonisolated(sessionId:)
     static var stopAllNonisolated: ((String?) -> Int)? = nil
+
+    // MARK: - P7 additions (2026-10-07)
+    //
+    //  Hooks for the P8 APIs that P7's ported files (NativeOffloads bridges,
+    //  Sync/SessionFileChangeTracker, Agent/BrowserUse) call. Same contract as
+    //  above: nil until P8 assigns the real implementations; every call site
+    //  degrades to its documented fallback. P8 assigns these at startup.
+    //
+    //  Signatures mirror the real ones, read from
+    //  OpenMinis Agent/ISH/ISHExecutionCoordinator.swift,
+    //  Agent/ISH/MinisFsRouter.swift, and the iSH kernel fakefs handler:
+    //    - mountedSessionIdSnapshot: nonisolated static var on
+    //      ISHExecutionCoordinator (SYNC upstream — read without hopping to the
+    //      coordinator actor, deliberately, to avoid deadlocks under shell
+    //      pressure; see BrowserUseOffloadBridge).
+    //    - isKernelBooted:          ISHKernel.shared.isBooted (SYNC Bool).
+    //    - rootfsDataPath:          RootfsManager.shared.dataPath (SYNC URL).
+    //    - installFakefsChangeHandler: ISHKernel.installFakefsChangeHandler —
+    //      installs the fakefs write/unlink/rename callback. The event struct
+    //      carries exactly the four fields SessionFileChangeTracker consumes
+    //      (fsContext, linuxPath, op, timestampNs); P8 maps its kernel event
+    //      type field-for-field when assigning.
+    //    - fsRouterSid:             MinisFsRouter.shared.sid(for:) — maps a
+    //      fakefs fs_context back to the owning session id.
+
+    /// P8: ISHExecutionCoordinator.mountedSessionIdSnapshot (nonisolated, sync).
+    static var mountedSessionIdSnapshot: (() -> String?)? = nil
+
+    /// P8: ISHKernel.shared.isBooted (sync Bool).
+    static var isKernelBooted: (() -> Bool)? = nil
+
+    /// P8: RootfsManager.shared.dataPath (sync URL).
+    static var rootfsDataPath: (() -> URL?)? = nil
+
+    /// P8: ISHKernel.installFakefsChangeHandler — see DuduFakefsChangeEvent.
+    static var installFakefsChangeHandler: ((@escaping ([DuduFakefsChangeEvent]) -> Void) -> Void)? = nil
+
+    /// P8: MinisFsRouter.shared.sid(for:) — fs_context -> owning session id.
+    static var fsRouterSid: ((UInt64) -> String?)? = nil
+
+    /// P8: RootfsManager.shared.rootfsPath (sync URL; dataPath = rootfsPath/data).
+    static var rootfsPath: (() -> URL?)? = nil
+
+    /// P8: RootfsManager.shared.removeFakefsPath(_:) — best-effort fakefs
+    /// meta.db cleanup. Nil skips it (canonical state is the Library copy).
+    static var removeFakefsPath: ((String) -> Void)? = nil
+
+    /// P8: ISHExecutionCoordinator.shared.mountForSession(_:) — bind-mounts a
+    /// session's dudu directories into iSH-visible /var/dudu/.
+    static var mountForSession: ((String) async -> Void)? = nil
+
+    /// P8: ISHKernel.shared.refreshDns() — rewrites the guest resolv.conf.
+    /// Nil skips it (pre-P8 there is no guest network stack to refresh).
+    static var refreshDns: (() -> Void)? = nil
+
+    /// P8: ISHKernel.shared.beginBackgroundCPUGovernor() — clamps the iSH
+    /// guest CPU when the app backgrounds. Nil skips it (pre-P8 there is no
+    /// guest CPU to govern). Begin is idempotent upstream.
+    static var beginBackgroundCPUGovernor: (() -> Void)? = nil
+
+    /// P8: ISHKernel.shared.endBackgroundCPUGovernor() — releases the clamp
+    /// on foreground return. Nil skips it.
+    static var endBackgroundCPUGovernor: (() -> Void)? = nil
+
+    /// P8: the full iSH kernel boot sequence — RootfsManager.installIfNeeded,
+    /// ISHKernel.boot(withRootPath:), installSessionFileChangeTracker,
+    /// DuduFsRouter.installHook, applyDefaultMountOverlay, and the mirror
+    /// speed auto-detect. Nil pre-P8; callers must surface the unavailability
+    /// honestly (see DuduKernelBootError) instead of hanging on .booting.
+    static var bootKernel: (() async throws -> Void)? = nil
+}
+
+/// P7 (2026-10-07): thrown when code needs the iSH sandbox before P8 lands.
+enum DuduKernelBootError: Error, LocalizedError {
+    case sandboxUnavailable
+    var errorDescription: String? {
+        switch self {
+        case .sandboxUnavailable:
+            return "Sandbox (iSH) is not available in this build yet."
+        }
+    }
+}
+
+/// P7 (2026-10-07): minimal fakefs change event for the
+/// `DuduISHSeams.installFakefsChangeHandler` seam. Carries exactly the fields
+/// `SessionFileChangeTracker` consumes; P8 maps the real kernel event type
+/// onto this struct field-for-field when assigning the seam.
+struct DuduFakefsChangeEvent {
+    var fsContext: UInt64
+    var linuxPath: String
+    var op: Int32
+    var timestampNs: Int64
 }

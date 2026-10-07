@@ -89,12 +89,14 @@ enum MCPManagementTools {
 
     /// 在沙箱里跑一条 dudu-mcp-cli 命令（工具清单/探针/管理都走这条）。
     private static func runCLI(_ command: String, timeout: TimeInterval = 60) async throws -> String {
-        let result = try await ISHExecutionCoordinator.shared.execute(
-            sessionId: "mcp-settings",
-            command: command,
-            timeout: timeout,
-            lineCallback: { _ in },
-            pidCallback: { _ in })
+        // P7 PORT: ISHExecutionCoordinator is P8 — routed via DuduISHSeams.execute.
+        guard let ishExecute = DuduISHSeams.execute else { throw MCPManagementError.kernelNotBooted }
+        let result = try await ishExecute(
+            "mcp-settings",
+            command,
+            timeout,
+            { _ in },
+            { _ in })
         return result.output
     }
 
@@ -114,8 +116,13 @@ enum MCPManagementTools {
 
     enum MCPManagementError: Error, LocalizedError {
         case cli(String)
+        // P7 PORT: thrown when the iSH kernel isn't booted (P8 seam nil).
+        case kernelNotBooted
         var errorDescription: String? {
             if case .cli(let m) = self { return m }
+            if case .kernelNotBooted = self {
+                return "沙箱还没启动：请先在 App 里打开一次终端页，等沙箱初始化完成后再试。"
+            }
             return nil
         }
     }

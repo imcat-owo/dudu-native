@@ -66,7 +66,8 @@ final class BridgeKernelAssembly {
             registry: registry,
             approvalGate: StewardSensitiveApprovalGate(),
             hardStopHook: {
-                ISHExecutionCoordinator.stopAllNonisolated(sessionId: OffloadToolRunner.bridgeSessionId)
+                // P7 PORT: ISHExecutionCoordinator is P8 — routed via DuduISHSeams.
+                DuduISHSeams.stopAllNonisolated?(OffloadToolRunner.bridgeSessionId)
             }
         )
         self.steward = steward

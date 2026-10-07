@@ -294,7 +294,7 @@ extension AIChatViewModel {
         }
 
         if evicted > 0 {
-            logger.info("🖼️ Context image trim: evicted \(evicted) old image(s) (snapshots: \(snapshotsWritten)), kept last \(keep) (total was \(totalImages))")
+            logger.info(" Context image trim: evicted \(evicted) old image(s) (snapshots: \(snapshotsWritten)), kept last \(keep) (total was \(totalImages))")
         }
     }
 
@@ -557,7 +557,7 @@ extension AIChatViewModel {
             freedTokens += candidate.tokens
             offloadedCount += 1
             let afterPct = Int(Double(currentTokens) / Double(contextWindow) * 100)
-            logger.info("  ✂ Offloaded #\(offloadedCount): [\(candidate.toolName)] id:\(candidate.toolId.prefix(8)) ~\(candidate.tokens) tokens (\(candidate.bytes) bytes) → \(linuxPath) [now \(currentTokens) (\(afterPct)%)]")
+            logger.info("   Offloaded #\(offloadedCount): [\(candidate.toolName)] id:\(candidate.toolId.prefix(8)) ~\(candidate.tokens) tokens (\(candidate.bytes) bytes) → \(linuxPath) [now \(currentTokens) (\(afterPct)%)]")
         }
 
         if offloadedCount > 0 {
@@ -649,7 +649,8 @@ extension AIChatViewModel {
         // Always ensure symlinks exist in data/ for the file browser,
         // even when the iSH kernel isn't booted yet.
         ensureDuduSymlinks(for: sid)
-        Task { await ISHExecutionCoordinator.shared.mountForSession(sid) }
+        // P7 PORT: ISHExecutionCoordinator is P8 — routed via DuduISHSeams.
+        Task { await DuduISHSeams.mountForSession?(sid) }
     }
 
     /// [T-ish-container-identity GH#99] One-shot per launch: detect an iOS
@@ -678,7 +679,9 @@ extension AIChatViewModel {
     /// can access dudu directories without requiring the iSH kernel to be booted.
     private func ensureDuduSymlinks(for sid: String) {
         let fm = FileManager.default
-        let dataPath = RootfsManager.shared.dataPath
+        // P7 PORT: RootfsManager is P8 — routed via DuduISHSeams. Pre-P8
+        // there is no fakefs data/ dir to symlink into; skip.
+        guard let dataPath = DuduISHSeams.rootfsDataPath?() else { return }
         Self.noteContainerMigrationIfNeeded()
 
         // Ensure /var/dudu/ exists in data/
@@ -819,7 +822,9 @@ extension AIChatViewModel {
         snapshot: [MountedFolderSymlinkSpec]
     ) {
         let fm = FileManager.default
-        let dataPath = RootfsManager.shared.dataPath
+        // P7 PORT: RootfsManager is P8 — routed via DuduISHSeams. Pre-P8
+        // there is no fakefs mounts dir; nothing to reconcile.
+        guard let dataPath = DuduISHSeams.rootfsDataPath?() else { return }
         let mountsDir = dataPath.appendingPathComponent("var/dudu/mounts", isDirectory: true)
         try? fm.createDirectory(at: mountsDir, withIntermediateDirectories: true)
 

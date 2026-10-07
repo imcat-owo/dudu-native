@@ -486,6 +486,9 @@ actor ChatStore {
     }
 
     init() {
+        // P7: wire session-cleanup seams owned by later parts (NativeOffloads).
+        // Idempotent; ChatStore.shared is created once at startup.
+        BrowserUseOffloadBridge.assignCleanupSeams()
         let libraryURL = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!
         let baseURL = libraryURL.appendingPathComponent("DuduChat", isDirectory: true)
         self.dbURL = baseURL.appendingPathComponent("dudu.db")
@@ -804,7 +807,7 @@ actor ChatStore {
         // cloud delete (CKSyncEngine tombstone) is pushed asynchronously. In the
         // window before it lands, fetchRecentV2's active query can pull the
         // still-present old SessionV2/MessageV2/SessionFileV2 records back and
-        // mergeRemote* re-INSERTs them — the session "resurrects" (with a ☁️
+        // mergeRemote* re-INSERTs them — the session "resurrects" (with a 
         // remote-origin marker). This table records every locally-deleted
         // session id + when, so the inbound merge can refuse to re-insert a
         // record that isn't newer than the deletion. Entries are pruned only by
@@ -1451,7 +1454,7 @@ actor ChatStore {
     /// options: .regularExpression)` calls. Each such call re-compiles the
     /// pattern *and* bridges `String → NSString` afresh; when `listSessions()`
     /// runs on a background cooperative queue over hundreds of messages whose
-    /// text contains non-BMP characters (emoji like ⚡❌✅), Foundation could
+    /// text contains non-BMP characters (emoji like ), Foundation could
     /// corrupt the temporary-NSString freelist and crash inside
     /// `NSString substringWithRange` / `_xzm_xzone_malloc`.
     ///
@@ -1605,7 +1608,7 @@ actor ChatStore {
             break
         }
 
-        return cap("🔧 " + tu.name)
+        return cap(" " + tu.name)
     }
 
     /// Search sessions by keyword across title and message text content.
@@ -6502,7 +6505,7 @@ extension ChatStore {
             // [T-icloud-deleted-session-resurrection] Refuse to resurrect a
             // session the user just deleted locally. fetchRecentV2 can pull the
             // still-present cloud record back before our delete tombstone lands;
-            // without this guard the session reappears (with a ☁️ remote-origin
+            // without this guard the session reappears (with a  remote-origin
             // marker). Only block when the inbound record isn't newer than the
             // deletion — a genuine newer re-create of the same id still applies.
             if isResurrectionOfDeleted(session.id, remoteUpdatedAt: Date(timeIntervalSince1970: remoteUpdated)) {
@@ -7431,7 +7434,7 @@ extension ChatStore {
 /// correct for sync and wrong for a restore:
 ///
 ///  1. **`remote_origin_device_id`** — the sync insert stamps the originating
-///     device, which makes the row render with a ☁️ remote badge and become
+///     device, which makes the row render with a  remote badge and become
 ///     eligible for `deleteLocalSessionIfFromDevice`. Restored data is THIS
 ///     device's data; it must be indistinguishable from locally-authored rows,
 ///     so this column stays NULL. (The parameter is a non-optional `String`, so

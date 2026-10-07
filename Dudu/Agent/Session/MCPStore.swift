@@ -736,16 +736,19 @@ final class MCPStore: ObservableObject {
     /// sessionId gives the coordinator a mount context; the static mount layer
     /// it initializes includes /var/dudu/mcp-servers.
     func refreshTools(server: String) async throws -> [MCPToolInfo] {
-        guard ISHKernel.shared.isBooted else { throw ToolsRefreshError.kernelNotBooted }
+        // P7 PORT: ISHKernel is P8 — routed via DuduISHSeams.isKernelBooted.
+        guard DuduISHSeams.isKernelBooted?() == true else { throw ToolsRefreshError.kernelNotBooted }
         // Shell-quote the name defensively (names are also file keys, but a
         // space or quote must not break the command line).
         let quoted = "'" + server.replacingOccurrences(of: "'", with: "'\\''") + "'"
-        let result = try await ISHExecutionCoordinator.shared.execute(
-            sessionId: "mcp-settings",
-            command: "dudu-mcp-cli refresh \(quoted)",
-            timeout: 120,
-            lineCallback: { _ in },
-            pidCallback: { _ in }
+        // P7 PORT: ISHExecutionCoordinator is P8 — routed via DuduISHSeams.execute.
+        guard let ishExecute = DuduISHSeams.execute else { throw ToolsRefreshError.kernelNotBooted }
+        let result = try await ishExecute(
+            "mcp-settings",
+            "dudu-mcp-cli refresh \(quoted)",
+            120,
+            { _ in },
+            { _ in }
         )
         // stdout is one JSON envelope line; tolerate stray non-JSON lines
         // (wrapper noise) by scanning for the first parseable object.

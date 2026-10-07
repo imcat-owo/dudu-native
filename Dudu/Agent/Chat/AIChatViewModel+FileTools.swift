@@ -115,22 +115,22 @@ extension AIChatViewModel {
             // P6 ISH seam: P8 assigns the real mount-table lookup.
             if let resolved = await DuduISHSeams.hostURL?(linuxPath, nil) {
                 let exists = FileManager.default.fileExists(atPath: resolved.path)
-                logger.notice("📂[RESOLVE] \(linuxPath) → \(resolved.path) exists=\(exists) sid=\(self.sessionId ?? "nil")")
+                logger.notice("[RESOLVE] \(linuxPath) → \(resolved.path) exists=\(exists) sid=\(self.sessionId ?? "nil")")
                 if exists { return resolved }
                 // Mount table returned a stale path — fall through to session/rootfs fallbacks
-                logger.notice("📂[RESOLVE] stale mount entry, trying fallbacks…")
+                logger.notice("[RESOLVE] stale mount entry, trying fallbacks…")
             }
             // Mount table has no entry — fall back to resolveDuduURL with self.sessionId
             if let duduURL = linuxPathToDuduURL(linuxPath),
                let resolved = resolveDuduURL(duduURL) {
                 let exists = FileManager.default.fileExists(atPath: resolved.path)
-                logger.notice("📂[RESOLVE-sessionFallback] \(linuxPath) → \(resolved.path) exists=\(exists) sid=\(self.sessionId ?? "nil")")
+                logger.notice("[RESOLVE-sessionFallback] \(linuxPath) → \(resolved.path) exists=\(exists) sid=\(self.sessionId ?? "nil")")
                 return resolved
             }
         }
         let fallback = resolveHostPath(linuxPath)
         let exists = fallback.map { FileManager.default.fileExists(atPath: $0.path) } ?? false
-        logger.notice("📂[RESOLVE-hostPath] \(linuxPath) → hostPath=\(fallback?.path ?? "nil") exists=\(exists)")
+        logger.notice("[RESOLVE-hostPath] \(linuxPath) → hostPath=\(fallback?.path ?? "nil") exists=\(exists)")
         return fallback
     }
 
@@ -153,10 +153,13 @@ extension AIChatViewModel {
         guard linuxPath.hasPrefix("/"), !linuxPath.contains("..") else { return nil }
         // Strip leading / — fix_path() convention from iSH
         let relative = String(linuxPath.dropFirst())
+        // P7 PORT: RootfsManager is P8 — routed via DuduISHSeams. Pre-P8 no
+        // guest rootfs exists; return nil (callers already handle nil).
+        guard let dataPath = DuduISHSeams.rootfsDataPath?() else { return nil }
         if relative.isEmpty {
-            return RootfsManager.shared.dataPath
+            return dataPath
         }
-        return RootfsManager.shared.dataPath.appendingPathComponent(relative)
+        return dataPath.appendingPathComponent(relative)
     }
 
     /// Ensure a path exists in meta.db so iSH can see it.
@@ -171,7 +174,10 @@ extension AIChatViewModel {
 
     /// Creates entries in both `stats` and `paths` tables if missing.
     func ensureFakefsMetadata(for linuxPath: String, isDirectory: Bool) {
-        let metaDBPath = RootfsManager.shared.rootfsPath.appendingPathComponent("meta.db").path
+        // P7 PORT: RootfsManager is P8 — routed via DuduISHSeams. Pre-P8
+        // there is no meta.db; skip (best-effort metadata).
+        guard let rootfsPath = DuduISHSeams.rootfsPath?() else { return }
+        let metaDBPath = rootfsPath.appendingPathComponent("meta.db").path
         var db: OpaquePointer?
         guard sqlite3_open_v2(metaDBPath, &db, SQLITE_OPEN_READWRITE, nil) == SQLITE_OK,
               let db else { return }
@@ -465,7 +471,7 @@ extension AIChatViewModel {
             #endif
             if let mountURL {
                 hostURL = mountURL
-                logger.notice("📂[RESOLVE-write] \(path) → \(mountURL.path) (mount table, unconditional for writes)")
+                logger.notice("[RESOLVE-write] \(path) → \(mountURL.path) (mount table, unconditional for writes)")
                 #if DEBUG
                 print("[FileWrite] using MOUNT-TABLE URL: \(mountURL.path)")
                 #endif
@@ -484,7 +490,7 @@ extension AIChatViewModel {
 
         guard let hostURL else {
             #if DEBUG
-            print("[FileWrite] ✗ ABORT hostURL is nil for path=\(path)")
+            print("[FileWrite]  ABORT hostURL is nil for path=\(path)")
             #endif
             return FileToolResult(output: "Error: Invalid path: \(path)", success: false)
         }
@@ -530,7 +536,10 @@ extension AIChatViewModel {
         // "succeed".
         if path.hasPrefix("/var/dudu/mounts/") {
             let resolvedPath = hostURL.standardizedFileURL.path
-            let fakefsMountsPrefix = RootfsManager.shared.dataPath
+            // P7 PORT: RootfsManager is P8 — routed via DuduISHSeams. Pre-P8
+            // the fakefs prefix check is skipped (session-fallback check below
+            // still runs).
+            let fakefsMountsPrefix: String? = DuduISHSeams.rootfsDataPath?()?
                 .appendingPathComponent("var/dudu/mounts").standardizedFileURL.path
             let sessionFallbackPrefix = DuduPaths.duduPersistentBase
                 .standardizedFileURL.path
@@ -540,10 +549,10 @@ extension AIChatViewModel {
             print("[FileWrite] defenseCheck sessionFallbackPrefix=\(sessionFallbackPrefix)")
             print("[FileWrite] defenseCheck hitFakefs=\(resolvedPath.hasPrefix(fakefsMountsPrefix)) hitSessionFallback=\(resolvedPath.hasPrefix(sessionFallbackPrefix))")
             #endif
-            if resolvedPath.hasPrefix(fakefsMountsPrefix)
+            if (fakefsMountsPrefix.map(resolvedPath.hasPrefix) ?? false)
                 || resolvedPath.hasPrefix(sessionFallbackPrefix) {
                 #if DEBUG
-                print("[FileWrite] ✗ DEFENSE REJECT path=\(path) resolved=\(resolvedPath)")
+                print("[FileWrite]  DEFENSE REJECT path=\(path) resolved=\(resolvedPath)")
                 #endif
                 return FileToolResult(
                     output: "Error: mount for \(path) is not active — the file would be written to an internal location invisible to both iSH and the real folder. Ensure the folder is mounted in Settings → Mount External Folders, then retry.",
@@ -570,7 +579,7 @@ extension AIChatViewModel {
             }
         } catch {
             #if DEBUG
-            print("[FileWrite] ✗ WRITE ERROR path=\(path) url=\(hostURL.path) err=\(error.localizedDescription)")
+            print("[FileWrite]  WRITE ERROR path=\(path) url=\(hostURL.path) err=\(error.localizedDescription)")
             #endif
             return FileToolResult(output: "Error writing \(path): \(error.localizedDescription)", success: false)
         }

@@ -72,16 +72,19 @@ actor MCPAggregator {
     /// 经 in-guest CLI 拉某 server 的工具清单（daemon 缓存会话，不强制 refresh）。
     func fetchTools(serverId: String) async throws -> [MCPToolDesc] {
         if let cached = toolCache[serverId] { return cached }
-        let result: ISHCommandResult
+        // P7 PORT: ISHExecutionCoordinator/ISHCommandResult are P8 — routed via
+        // DuduISHSeams.execute (the tuple carries ISHCommandResult's exact
+        // output/exitCode fields). Nil seam (pre-P8) throws kernelNotBooted,
+        // the same error upstream threw.
+        guard let ishExecute = DuduISHSeams.execute else { throw AggregationError.kernelNotBooted }
+        let result: (output: String, exitCode: Int)
         do {
-            result = try await ISHExecutionCoordinator.shared.execute(
-                sessionId: "mcp-settings",
-                command: "dudu-mcp-cli tools \(Self.shellQuote(serverId))",
-                timeout: 120,
-                lineCallback: { _ in },
-                pidCallback: { _ in })
-        } catch ISHCoordinatorError.kernelNotBooted {
-            throw AggregationError.kernelNotBooted
+            result = try await ishExecute(
+                "mcp-settings",
+                "dudu-mcp-cli tools \(Self.shellQuote(serverId))",
+                120,
+                { _ in },
+                { _ in })
         }
         let tools = try Self.parseTools(from: result.output)
         toolCache[serverId] = tools
@@ -239,16 +242,21 @@ actor MCPAggregator {
             return ToolOutput(text: "参数不是合法 JSON：\(error.localizedDescription)", isError: true)
         }
         let command = "dudu-mcp-cli call \(shellQuote(serverId)) \(shellQuote(toolName)) --input \(shellQuote(json))"
-        let result: ISHCommandResult
-        do {
-            result = try await ISHExecutionCoordinator.shared.execute(
-                sessionId: OffloadToolRunner.bridgeSessionId,
-                command: command,
-                timeout: 120,
-                lineCallback: { _ in },
-                pidCallback: { _ in })
-        } catch ISHCoordinatorError.kernelNotBooted {
+        // P7 PORT: ISHExecutionCoordinator/ISHCommandResult are P8 — routed via
+        // DuduISHSeams.execute (the tuple carries ISHCommandResult's exact
+        // output/exitCode fields). Nil seam (pre-P8) throws kernelNotBooted,
+        // the same error upstream threw.
+        guard let ishExecute = DuduISHSeams.execute else {
             return ToolOutput(text: "沙箱还没启动：请先在 App 里打开一次终端页，等沙箱初始化完成后再试。", isError: true)
+        }
+        let result: (output: String, exitCode: Int)
+        do {
+            result = try await ishExecute(
+                OffloadToolRunner.bridgeSessionId,
+                command,
+                120,
+                { _ in },
+                { _ in })
         } catch is CancellationError {
             throw CancellationError()
         } catch let urlErr as URLError where urlErr.code == .cancelled {

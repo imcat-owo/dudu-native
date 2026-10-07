@@ -26,4 +26,8 @@
 // CppJieba Chinese word segmentation (ObjC++ wrapper)
 #import "Shared/JiebaWrapper.h"
 
+// P7 (Diagnostics): async-signal-safe crash signal handler (pure Darwin,
+// no P8 deps). CrashReporter.swift calls CrashSignalHandler.install().
+#import "Diagnostics/CrashSignalHandler.h"
+
 #endif /* Dudu_Bridging_Header_h */

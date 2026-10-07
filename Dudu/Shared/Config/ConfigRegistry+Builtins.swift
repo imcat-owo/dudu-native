@@ -63,7 +63,7 @@ extension ConfigRegistry {
     // .soulMdChanged notification fired by SoulStore.save().
     //
     // emoji is intentionally NOT exposed — the user-facing UI has it
-    // locked to ✨ (commit 9240f58); allowing the agent to mutate the
+    // locked to  (commit 9240f58); allowing the agent to mutate the
     // on-disk emoji field would create the appearance of customization
     // without any UI surface to read it back.
 
@@ -1024,15 +1024,17 @@ extension ConfigRegistry {
             displayName: "Rootfs data path",
             description: "Host filesystem path backing the Linux rootfs (fakefs data root). Read-only.",
             valueSchema: .string(maxLength: 512),
-            reader: { .string(RootfsManager.shared.dataPath.path) }
+            // P7 PORT: RootfsManager is P8 — routed via DuduISHSeams.
+            reader: { .string(DuduISHSeams.rootfsDataPath?()?.path ?? "") }
         ))
         r.register(ReadOnlyField(
             path: "system.mountedSession",
             displayName: "Mounted session",
             description: "Chat session whose storage /var/dudu currently points at. Each session has its own attachments/offloads/workspace — files from other sessions are not visible here. Empty when no session is mounted. Read-only.",
             valueSchema: .string(maxLength: 64),
+            // P7 PORT: ISHExecutionCoordinator is P8 — routed via DuduISHSeams.
             reader: {
-                .string(ISHExecutionCoordinator.mountedSessionIdSnapshot ?? "")
+                .string(DuduISHSeams.mountedSessionIdSnapshot?() ?? "")
             }
         ))
 

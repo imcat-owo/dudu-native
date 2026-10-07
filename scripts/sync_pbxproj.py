@@ -70,100 +70,42 @@ CPPJIEBA_INCLUDE = "$(SRCROOT)/Dudu/Vendor/cppjieba/include"
 #     build via the ShareFeedbackToast reroute (P3); when Views defines
 #     DuduToast (ported from MinisToast), restore the original call site.
 EXCLUDE = {
-    "Dudu/Shared/Config/ConfigRegistry+Builtins.swift",  # needs SoulStore + AIChatViewModel (P4)
-    # P6 re-enabled (2026-10-07): ConversationContext now in Agent/Speech.
-    "Dudu/Providers/Voice/VoiceActivityDetector.swift",  # needs BackgroundKeepAliveManager (P7); no in-Providers dependents
-    "Dudu/Shared/AppearanceStudio.swift",
-    "Dudu/Shared/AppearanceThemePack.swift",
-    "Dudu/Shared/AppearanceThemeLibrary.swift",
-    # P1 foundation files whose only missing deps are later-part types and
-    # which nothing in P1 references — re-enabled by their owning part:
-    "Dudu/Shared/BPETokenizer.swift",      # needs AgentContentPart (P4/P7)
-    "Dudu/Shared/NetworkMonitor.swift",     # needs ISHKernel (P8)
-    # P4/P5 (2026-10-07): ported to disk with renames, but excluded from the
-    # target — they reference P6/P7/P8 types (directly or via cascade).
-    # Re-enable when the owning part lands; see the per-file reasons.
-    # --- Chat core: needs SyncCore/CloudSyncEngine/SyncV2Bootstrap/UploadPolicy
-    #     (Agent/Sync, P7), MarkdownContent (Agent/Markdown, P6),
-    #     BackgroundKeepAliveManager/CacheKeepAliveManager (Agent/Background, P7),
-    #     BrowserTabPool (Agent/BrowserUse, P6), SpeechRecognitionManager/
-    #     TypedVocabularyBuilder (Agent/Speech, P6), ISHExecutionCoordinator
-    #     (Agent/ISH, P8), ScrollMetricsRecorder (Agent/MessageList, P7) ---
-    "Dudu/Agent/Chat/AIChatViewModel.swift",
-    "Dudu/Agent/Chat/ChatModels.swift",  # P6: MarkdownContent now exists but the file ALSO needs
-                                         # MediaRef/ToolSnapshot/RawMessage from ChatStore (P7 Sync) — stays out.
-    "Dudu/Agent/Chat/ChatStore.swift",
-    "Dudu/Agent/Chat/AIChatViewModel+SSEStream.swift",       # MarkdownContent (P6)
-    "Dudu/Agent/Chat/AIChatViewModel+ToolDefinitions.swift",  # BrowserAction/WebSearchService (P6)
-    "Dudu/Agent/Chat/AIChatViewModel+ConcurrentTools.swift",  # Browser*/WebSearch* (P6)
-    "Dudu/Agent/Chat/AIChatViewModel+BackgroundTask.swift",   # ISH/BrowserTabPool/Background (P6/P7/P8)
-    "Dudu/Agent/Chat/AIChatViewModel+FileTools.swift",        # ISHExecutionCoordinator (P8)
-    "Dudu/Agent/Chat/AIChatViewModel+ISHCommand.swift",       # ISHExecutionCoordinator (P8)
-    "Dudu/Agent/Chat/AIChatViewModel+Offloading.swift",       # ISHExecutionCoordinator (P8)
-    "Dudu/Agent/Chat/AIChatViewModel+Misc.swift",             # MinisFsRouter (P8)
-    "Dudu/Agent/Chat/ChatLifecycleSupport.swift",             # BackgroundKeepAliveManager (P7)
-    "Dudu/Agent/Chat/ChatURLBrokerage.swift",                 # BackgroundKeepAliveManager (P7)
-    # --- Cascade: extensions/members of the excluded core ---
-    "Dudu/Agent/Chat/AIChatViewModel+AskUser.swift",
-    "Dudu/Agent/Chat/AIChatViewModel+Attachments.swift",
-    "Dudu/Agent/Chat/AIChatViewModel+Compaction.swift",
-    "Dudu/Agent/Chat/AIChatViewModel+Fallback.swift",
-    "Dudu/Agent/Chat/AIChatViewModel+MemoryTools.swift",
-    "Dudu/Agent/Chat/AIChatViewModel+MentionMenu.swift",
-    "Dudu/Agent/Chat/AIChatViewModel+Persistence.swift",
-    "Dudu/Agent/Chat/AIChatViewModel+ProviderFactory.swift",
-    "Dudu/Agent/Chat/AIChatViewModel+RequestBudget.swift",
-    "Dudu/Agent/Chat/AIChatViewModel+SlashCommands.swift",
-    "Dudu/Agent/Chat/AIChatViewModel+SuspensionResume.swift",
-    "Dudu/Agent/Chat/AIChatViewModel+TitleGeneration.swift",
-    "Dudu/Agent/Chat/AIChatViewModel+ToolPreflight.swift",
-    "Dudu/Agent/Chat/FileMentionIndex.swift",
-    # --- Session: MCPStore needs ISH (P8); others need ChatStore/AIChatViewModel ---
-    "Dudu/Agent/Session/MCPStore.swift",          # ISHExecutionCoordinator (P8)
-    "Dudu/Agent/Session/SoulStore.swift",         # ChatStore
-    "Dudu/Agent/Session/PersonaStore.swift",       # ChatStore/AIChatViewModel
-    "Dudu/Agent/Session/SkillStore.swift",         # ChatStore/AIChatViewModel
-    "Dudu/Agent/Session/SessionForkManager.swift", # ChatStore/AIChatViewModel
-    "Dudu/Agent/Session/MCPOAuthController.swift", # AIChatViewModel
-    # --- Bridge: MCP aggregation runs via ISH in-guest CLI (P8) ---
-    "Dudu/Agent/Bridge/MCPAggregator.swift",       # ISHExecutionCoordinator (P8)
-    "Dudu/Agent/Bridge/MCPManagementTools.swift",  # ISHExecutionCoordinator (P8)
-    "Dudu/Agent/Bridge/OffloadToolRunner.swift",   # ISHExecutionCoordinator (P8)
-    "Dudu/Agent/Bridge/BridgeKernelAssembly.swift",# ISHExecutionCoordinator (P8)
-    "Dudu/Agent/Bridge/Relay/BridgeRelayClient.swift", # BackgroundKeepAliveManager (P7)
-    # --- Bridge cascade: need excluded Bridge/Session types ---
-    "Dudu/Agent/Bridge/BluetoothDeviceTool.swift",
-    "Dudu/Agent/Bridge/ClipboardDeviceTool.swift",
-    "Dudu/Agent/Bridge/DeviceTools.swift",
-    "Dudu/Agent/Bridge/ExternalMCP/BridgeExternalMCPService.swift",
-    "Dudu/Agent/Bridge/LocationDeviceTool.swift",
-    "Dudu/Agent/Bridge/NotificationDeviceTool.swift",
-    "Dudu/Agent/Bridge/PhotosDeviceTool.swift",
-    "Dudu/Agent/Bridge/StewardWorkContext.swift",
-    # --- Offload: approval gates need MCPStore/AIChatViewModel ---
-    "Dudu/Agent/Offload/OffloadPermissionManager.swift",
-    "Dudu/Agent/Offload/ToolApprovalGate.swift",
-    "Dudu/Agent/Offload/ToolSuspensionService.swift",
-    # --- P6 (2026-10-07): ported to disk with renames, but excluded from the
-    #     target — per-file blockers named; re-enable when the owning part lands.
-    #     Browser engine cascade: BrowserUseManager is the root blocker.
-    "Dudu/Agent/BrowserUse/BrowserUseManager.swift",  # WebLoadError (Views) +
-        # BrowserResourceMonitor (P7 Diagnostics) + RootfsManager (P8 iSH) +
-        # ViewModelCache / AIChatViewModel.resolveDuduURL (P4, needs P7/P8)
-    "Dudu/Agent/BrowserUse/BrowserTabPool.swift",      # BrowserUseManager (excluded) +
-        # BrowserResourceMonitor (P7 Diagnostics)
-    "Dudu/Agent/BrowserUse/BrowserWebView.swift",      # BrowserUseManager (excluded)
-    "Dudu/Agent/BrowserUse/BrowserSheetView.swift",    # BrowserUseManager (excluded) +
-        # WebLoadErrorOverlay (Views/Chat/WebLoadError.swift)
-    "Dudu/Agent/BrowserUse/BrowserManagementView.swift",  # BrowserTabPool (excluded)
-    # --- P6 Speech: TypedVocabularyBuilder mines ChatStore (P7 Sync) ---
-    "Dudu/Agent/Speech/TypedVocabularyBuilder.swift",  # ChatStore (P7 Sync)
-    # --- P6 Markdown: parsers need SPM products not yet wired into Dudu.xcodeproj;
-    #     wire XCRemoteSwiftPackageReference swift-cmark (cmark_gfm/cmark_gfm_extensions)
-    #     + SwiftMath (github.com/mgriebling/SwiftMath, like SwiftAnthropic) then re-enable.
-    "Dudu/Agent/Markdown/DuduMarkdownParser.swift",  # swift-cmark SPM; provides MarkdownContent
-    "Dudu/Agent/Markdown/SwiftMathRenderer.swift",    # SwiftMath SPM
-    "Dudu/Agent/Markdown/MathRenderScheduler.swift",  # MathAttachment (Views/Chat/SelectableMarkdownView.swift)
+    # P7 (2026-10-07): Views-owned UI — re-enable when Phase C ports Views.
+    "Dudu/Agent/BrowserUse/BrowserSheetView.swift",
+    "Dudu/Agent/Markdown/MathRenderScheduler.swift",
+    "Dudu/Agent/MessageList/CollectionViewMessageListV3.swift",
+    # P7 (2026-10-07): widget extension entry point — @main conflicts with DuduApp; belongs to the future widget extension target.
+    "Dudu/AgentWidget/AgentWidgetBundle.swift",
+    # P7 (2026-10-07): iSH guest CLI tools — need kernel/native_offload.h (iSH kernel headers, P8) + FFmpeg.framework (deps/, not vendored). The 8 Swift bridges ARE in the build; only the .m files stay out.
+    "Dudu/NativeOffloads/AlarmOffload.m",
+    "Dudu/NativeOffloads/BluetoothOffload.m",
+    "Dudu/NativeOffloads/BrowserUseOffload.m",
+    "Dudu/NativeOffloads/CalendarOffload.m",
+    "Dudu/NativeOffloads/ClipboardOffload.m",
+    "Dudu/NativeOffloads/ConfigOffload.m",
+    "Dudu/NativeOffloads/DebugOffload.m",
+    "Dudu/NativeOffloads/DeviceOffload.m",
+    "Dudu/NativeOffloads/FFmpegOffload.m",
+    "Dudu/NativeOffloads/HealthKitOffload.m",
+    "Dudu/NativeOffloads/HomeKitOffload.m",
+    "Dudu/NativeOffloads/LocationOffload.m",
+    "Dudu/NativeOffloads/MapsOffload.m",
+    "Dudu/NativeOffloads/MediaOffload.m",
+    "Dudu/NativeOffloads/ModelUseOffload.m",
+    "Dudu/NativeOffloads/NFCOffload.m",
+    "Dudu/NativeOffloads/NLPOffload.m",
+    "Dudu/NativeOffloads/NativeOffloadUtils.m",
+    "Dudu/NativeOffloads/NotificationOffload.m",
+    "Dudu/NativeOffloads/OpenOffload.m",
+    "Dudu/NativeOffloads/PhotosOffload.m",
+    "Dudu/NativeOffloads/PlayerOffload.m",
+    "Dudu/NativeOffloads/RemindersOffload.m",
+    "Dudu/NativeOffloads/SessionsOffload.m",
+    "Dudu/NativeOffloads/SpeakOffload.m",
+    "Dudu/NativeOffloads/SpeechOffload.m",
+    "Dudu/NativeOffloads/ThemeOffload.m",
+    "Dudu/NativeOffloads/VisionOffload.m",
+    "Dudu/NativeOffloads/WeatherOffload.m",
 }
 
 SOURCE_EXTS = {".swift", ".m", ".mm"}

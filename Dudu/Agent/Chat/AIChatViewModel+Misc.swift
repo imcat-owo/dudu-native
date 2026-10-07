@@ -19,35 +19,16 @@ extension AIChatViewModel {
         Task {
             let bootStart = CFAbsoluteTimeGetCurrent()
             do {
-                if !ISHKernel.shared.isBooted {
-                    let installStart = CFAbsoluteTimeGetCurrent()
-                    try RootfsManager.shared.installIfNeeded()
-                    let installElapsed = (CFAbsoluteTimeGetCurrent() - installStart) * 1000
-                    logger.info("[KernelBoot] installIfNeeded: \(String(format: "%.1f", installElapsed))ms")
-
-                    let kernelStart = CFAbsoluteTimeGetCurrent()
-                    let rootPath = RootfsManager.shared.rootfsPath.path
-                    let err = ISHKernel.shared.boot(withRootPath: rootPath)
-                    let kernelElapsed = (CFAbsoluteTimeGetCurrent() - kernelStart) * 1000
-                    logger.info("[KernelBoot] kernel boot call: \(String(format: "%.1f", kernelElapsed))ms")
-                    if err < 0 {
-                        kernelStatus = .failed("Kernel boot failed: \(err)")
-                        return
-                    }
-                    // Wire fakefs change events into the iCloud Sync v2
-                    // SessionFile dirty pipeline. Must be done after boot
-                    // (the C-side dispatch source is created by this call)
-                    // and before any bind mount, so the first realfs op
-                    // already has a consumer registered.
-                    installSessionFileChangeTracker(kernel: ISHKernel.shared)
-
-                    // Install per-session path-translate hook. Must run
-                    // before any session task is spawned so the first
-                    // /var/dudu/* access already routes correctly.
-                    DuduFsRouter.shared.installHook()
+                // P7 PORT: the iSH kernel boot sequence is P8 — routed via
+                // DuduISHSeams.bootKernel (which performs installIfNeeded,
+                // ISHKernel.boot, installSessionFileChangeTracker,
+                // DuduFsRouter.installHook, applyDefaultMountOverlay, and the
+                // mirror speed auto-detect). Pre-P8 the sandbox is
+                // unavailable; report honestly instead of hanging on .booting.
+                guard let bootKernel = DuduISHSeams.bootKernel else {
+                    throw DuduKernelBootError.sandboxUnavailable
                 }
-                RootfsManager.shared.applyDefaultMountOverlay()
-                Task { @MainActor in MirrorSpeedTestViewModel.shared.autoDetectOnceIfNeeded() }
+                try await bootKernel()
                 kernelStatus = .booted
                 let totalElapsed = (CFAbsoluteTimeGetCurrent() - bootStart) * 1000
                 logger.info("[KernelBoot] TOTAL: \(String(format: "%.1f", totalElapsed))ms")
@@ -87,7 +68,7 @@ extension AIChatViewModel {
         // [T-ios-queued-candidate-not-onscreen] Log the queued candidate text
         // (prefix 100) + a queue/messages snapshot so we can later correlate a
         // queued send against whether it ever rendered.
-        logger.info("📋[QueueDiag] ENQUEUE candidate id=\(prompt.id.uuidString.prefix(8)) text(prefix100)=\"\(text.prefix(100))\"")
+        logger.info("[QueueDiag] ENQUEUE candidate id=\(prompt.id.uuidString.prefix(8)) text(prefix100)=\"\(text.prefix(100))\"")
         dumpQueueSnapshot("after-enqueue")
     }
 
@@ -287,7 +268,7 @@ extension AIChatViewModel {
         let result = min(upperBound, clamped)
 
         if result != upperBound {
-            logger.info("📐 dynamicMaxTokens: \(result) (upperBound \(upperBound), remaining \(remaining), floor \(floor), window \(contextWindow), input \(inputTokens))")
+            logger.info(" dynamicMaxTokens: \(result) (upperBound \(upperBound), remaining \(remaining), floor \(floor), window \(contextWindow), input \(inputTokens))")
         }
         // [T-maxtokens-override-receipt] One line per computation naming the
         // SOURCE of the upper bound. Field reports of "I changed Max Output
@@ -299,7 +280,7 @@ extension AIChatViewModel {
         // entry-merged models, so src=model here with the expected value
         // proves the chain; src=providerDefault on a model the user "edited"
         // means the bound entry has no override — check WHICH entry they edited.
-        logger.info("📐 maxTokens=\(result) src=\(model.maxOutputTokens != nil ? "model(\(model.maxOutputTokens!))" : "providerDefault(\(provider.defaultMaxTokens))") ceiling=\(Self.globalMaxTokensCeiling) model=\(model.id)")
+        logger.info(" maxTokens=\(result) src=\(model.maxOutputTokens != nil ? "model(\(model.maxOutputTokens!))" : "providerDefault(\(provider.defaultMaxTokens))") ceiling=\(Self.globalMaxTokensCeiling) model=\(model.id)")
         return result
     }
 

@@ -85,18 +85,23 @@ enum OffloadToolRunner {
         }
 
         // 2. 执行。
-        let result: ISHCommandResult
-        do {
-            result = try await ISHExecutionCoordinator.shared.execute(
-                sessionId: bridgeSessionId,
-                command: commandLine,
-                timeout: timeout,
-                lineCallback: { _ in },
-                pidCallback: { _ in })
-        } catch ISHCoordinatorError.kernelNotBooted {
+        // P7 PORT: ISHExecutionCoordinator/ISHCommandResult are P8 — routed via
+        // DuduISHSeams.execute (the tuple carries ISHCommandResult's exact
+        // output/exitCode fields). Nil seam (pre-P8) throws kernelNotBooted,
+        // the same error upstream threw.
+        guard let ishExecute = DuduISHSeams.execute else {
             return ToolOutput(
                 text: "沙箱还没启动：请先在 App 里打开一次终端页，等沙箱初始化完成后再试。",
                 isError: true)
+        }
+        let result: (output: String, exitCode: Int)
+        do {
+            result = try await ishExecute(
+                bridgeSessionId,
+                commandLine,
+                timeout,
+                { _ in },
+                { _ in })
         } catch {
             logger.warning("命令执行失败 \(commandName)：\(error.localizedDescription)")
             return ToolOutput(

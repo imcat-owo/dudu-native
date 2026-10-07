@@ -1282,7 +1282,10 @@ final class BrowserUseManager: NSObject, ObservableObject {
         let timestamp = Int(Date().timeIntervalSince1970)
         let safeDomain = rootDomain.replacingOccurrences(of: ".", with: "_")
         let envFilename = "env_cookies_\(safeDomain)_\(timestamp).sh"
-        let offloadsDir = RootfsManager.shared.dataPath
+        // P7 PORT: RootfsManager is P8 — routed via DuduISHSeams. Pre-P8 the
+        // guest offloads dir doesn't exist; stage under tmp (the guest
+        // `source` step is P8-gated anyway).
+        let offloadsDir = (DuduISHSeams.rootfsDataPath?() ?? FileManager.default.temporaryDirectory)
             .appendingPathComponent("var/dudu/offloads", isDirectory: true)
         try? FileManager.default.createDirectory(at: offloadsDir, withIntermediateDirectories: true)
         let envFileURL = offloadsDir.appendingPathComponent(envFilename)
@@ -2651,7 +2654,7 @@ extension BrowserUseManager: WKDownloadDelegate {
                     guard let self, let download else { return }
                     self.cancelDownload(download)
                 })
-            logger.info("⬇️ Download started: \(name) → session \(sid.prefix(8)) workspace")
+            logger.info(" Download started: \(name) → session \(sid.prefix(8)) workspace")
             completionHandler(dest)
         }
     }
@@ -2667,7 +2670,7 @@ extension BrowserUseManager: WKDownloadDelegate {
             if let entryId = self.downloadCenterIds.removeValue(forKey: key) {
                 BrowserDownloadCenter.shared.finished(id: entryId, sizeText: sizeText)
             }
-            logger.info("✅ Download finished: \(name) (\(sizeText))")
+            logger.info(" Download finished: \(name) (\(sizeText))")
             if let sid = self.sessionIdProvider?(), !sid.isEmpty {
                 // [T-browser-download-ux-v3] Name + size only — the full
                 // path/link made the bubble wrap badly, and path navigation
@@ -2717,7 +2720,7 @@ extension BrowserUseManager: WKDownloadDelegate {
         download.cancel { _ in }
         if let dest {
             try? FileManager.default.removeItem(at: dest)
-            logger.info("🛑 Download cancelled by user: \(dest.lastPathComponent) — partial file removed")
+            logger.info(" Download cancelled by user: \(dest.lastPathComponent) — partial file removed")
         }
     }
 

@@ -2473,7 +2473,9 @@ extension SkillStore {
     /// requirement.
     private func removeFakefsPathIfPresent(_ linuxPath: String) {
         if #available(iOS 17.0, *) {
-            RootfsManager.shared.removeFakefsPath(linuxPath)
+            // P7 PORT: RootfsManager is P8 — routed via DuduISHSeams. Nil
+            // skips the nicety (canonical state is the Library/rootfs copy).
+            DuduISHSeams.removeFakefsPath?(linuxPath)
         }
     }
 

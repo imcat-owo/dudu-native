@@ -27,7 +27,9 @@ final class NetworkMonitor {
         lastInterfaceTypes = activeInterfaceTypes(initialPath)
         logger.info("[Network] Monitor started — writing initial DNS config")
         NSLog("NetworkMonitor: about to refreshDns + dump proxy")
-        ISHKernel.shared.refreshDns()
+        // P7 PORT: ISHKernel is P8 — routed via DuduISHSeams. Pre-P8 there
+        // is no guest resolv.conf to refresh; skip.
+        DuduISHSeams.refreshDns?()
         dumpSystemProxySettings(reason: "monitor-start")
 
         monitor.pathUpdateHandler = { [weak self] path in
@@ -62,7 +64,9 @@ final class NetworkMonitor {
             logger.info("[Network] Path updated — refreshing DNS")
         }
 
-        ISHKernel.shared.refreshDns()
+        // P7 PORT: ISHKernel is P8 — routed via DuduISHSeams. Pre-P8 there
+        // is no guest resolv.conf to refresh; skip.
+        DuduISHSeams.refreshDns?()
         dumpSystemProxySettings(reason: typesChanged ? "interface-change" : "path-update")
 
         // Evict LLM provider connection pools ONLY when the active interface

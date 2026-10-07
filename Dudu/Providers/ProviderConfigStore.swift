@@ -298,7 +298,8 @@ final class ProviderConfigStore: ObservableObject {
                 let migratedFlag = UserDefaults.standard.bool(forKey: "cloudSync.providerV3.migrationCompleted")
                 let dbNonEmpty = !(await db.isEmpty())
                 // P4: ProviderV3Bootstrap gate restored (was dropped in P3 with the
-                // iCloud refs; the enum is extracted in Dudu/Agent/Chat/ProviderV3Bootstrap.swift).
+                // iCloud refs). P7: the extract file is deleted; the canonical
+                // enum now lives in Agent/Sync/V2/ChatStoreSyncHydrators.swift.
                 guard ProviderV3Bootstrap.isEnabled, (migratedFlag || dbNonEmpty) else {
                     logger.info("[GroupLoad] init: staying on V2 JSON config (v3Enabled=\(ProviderV3Bootstrap.isEnabled) migrated=\(migratedFlag) dbNonEmpty=\(dbNonEmpty))")
                     return
@@ -362,8 +363,7 @@ final class ProviderConfigStore: ObservableObject {
                         for eid in toDelete { await db.deleteEntryRow(id: eid) }
                     }
                     for eid in prunedAtLoad {
-                        // P3-DROP(iCloud): ChatStore sync engine (P4) not ported; restore when it lands.
-                        // await ChatStore.shared.markDirty(recordType: "ProviderModelEntryV3", recordId: eid, operation: "delete")
+                                                Task { await ChatStore.shared.markDirty(recordType: "ProviderModelEntryV3", recordId: eid, operation: "delete") }
                     }
                 }
     }
@@ -672,8 +672,7 @@ final class ProviderConfigStore: ObservableObject {
         //    receive a current snapshot via the legacy
         //    ProviderConfigV2 record. New peer devices ignore inbound
         //    V2 records once their v3 flag is on (S7).
-        // P3-DROP(iCloud): ChatStore sync engine (P4) not ported; restore when it lands.
-        // await ChatStore.shared.markDirty(recordType: "ProviderConfig", recordId: "provider-config")
+                Task { await ChatStore.shared.markDirty(recordType: "ProviderConfig", recordId: "provider-config") }
     }
 
     /// Diff `prior` vs `current` and emit per-record V3 markDirty calls
@@ -691,17 +690,14 @@ final class ProviderConfigStore: ObservableObject {
         // engine's first batch carries the full picture to cloud.
         guard let prior else {
             for inst in current.instances {
-                // P3-DROP(iCloud): ChatStore sync engine (P4) not ported; restore when it lands.
-                // await ChatStore.shared.markDirty(recordType: "ProviderInstanceV3", recordId: inst.id, operation: "upsert")
+                                await ChatStore.shared.markDirty(recordType: "ProviderInstanceV3", recordId: inst.id, operation: "upsert")
             }
             for entry in current.modelEntries {
                 // Plan-X: V3 entry record is keyed by uuid (= DB primary key).
-                // P3-DROP(iCloud): ChatStore sync engine (P4) not ported; restore when it lands.
-                // await ChatStore.shared.markDirty(recordType: "ProviderModelEntryV3", recordId: entry.uuid, operation: "upsert")
+                                await ChatStore.shared.markDirty(recordType: "ProviderModelEntryV3", recordId: entry.uuid, operation: "upsert")
             }
             for group in current.modelGroups {
-                // P3-DROP(iCloud): ChatStore sync engine (P4) not ported; restore when it lands.
-                // await ChatStore.shared.markDirty(recordType: "ProviderModelGroupV3", recordId: group.id, operation: "upsert")
+                                await ChatStore.shared.markDirty(recordType: "ProviderModelGroupV3", recordId: group.id, operation: "upsert")
             }
             return
         }
@@ -711,8 +707,7 @@ final class ProviderConfigStore: ObservableObject {
         let curInst = Self.dictByIdLastWins(current.instances.map { ($0.id, $0) })
         for (id, inst) in curInst {
             if priorInst[id] != inst {
-                // P3-DROP(iCloud): ChatStore sync engine (P4) not ported; restore when it lands.
-                // await ChatStore.shared.markDirty(recordType: "ProviderInstanceV3", recordId: id, operation: "upsert")
+                                await ChatStore.shared.markDirty(recordType: "ProviderInstanceV3", recordId: id, operation: "upsert")
             }
         }
         // [T-ios-provider-reorder] A pure reorder changes no instance STRUCT
@@ -724,8 +719,7 @@ final class ProviderConfigStore: ObservableObject {
         // bulkReplace, so LWW protects the new order against stale echoes).
         if prior.instances.map(\.id) != current.instances.map(\.id) {
             for inst in current.instances {
-                // P3-DROP(iCloud): ChatStore sync engine (P4) not ported; restore when it lands.
-                // await ChatStore.shared.markDirty(recordType: "ProviderInstanceV3", recordId: inst.id, operation: "upsert")
+                                await ChatStore.shared.markDirty(recordType: "ProviderInstanceV3", recordId: inst.id, operation: "upsert")
             }
         }
         // [T-icloud-provider-sync-consistency] Do NOT diff-infer instance
@@ -745,8 +739,7 @@ final class ProviderConfigStore: ObservableObject {
         let curEntries = Self.dictByIdLastWins(current.modelEntries.map { ($0.uuid, $0) })
         for (uuid, entry) in curEntries {
             if priorEntries[uuid] != entry {
-                // P3-DROP(iCloud): ChatStore sync engine (P4) not ported; restore when it lands.
-                // await ChatStore.shared.markDirty(recordType: "ProviderModelEntryV3", recordId: uuid, operation: "upsert")
+                                await ChatStore.shared.markDirty(recordType: "ProviderModelEntryV3", recordId: uuid, operation: "upsert")
             }
         }
         // [T-icloud-provider-sync-consistency] Do NOT diff-infer entry/group
@@ -766,8 +759,7 @@ final class ProviderConfigStore: ObservableObject {
         let curGroups = Self.dictByIdLastWins(current.modelGroups.map { ($0.id, $0) })
         for (id, group) in curGroups {
             if priorGroups[id] != group {
-                // P3-DROP(iCloud): ChatStore sync engine (P4) not ported; restore when it lands.
-                // await ChatStore.shared.markDirty(recordType: "ProviderModelGroupV3", recordId: id, operation: "upsert")
+                                await ChatStore.shared.markDirty(recordType: "ProviderModelGroupV3", recordId: id, operation: "upsert")
             }
         }
         for id in priorGroups.keys where curGroups[id] == nil {
@@ -1083,9 +1075,18 @@ final class ProviderConfigStore: ObservableObject {
         // emitV3MarkDirty no longer diff-infers deletions, so the instance, its
         // cascaded entries, and any groups emptied by the removal must each
         // emit their own delete record here.
-        // P3-DROP(iCloud): delete-tombstone Task removed with the ChatStore refs above;
-        // (removedEntryUuids/removedGroupIds were consumed only by that Task)
-        // restore the whole Task block when the P4 sync engine lands.
+        // P7: delete-tombstone Task restored (was P3-DROPped with the ChatStore refs).
+        let entryIds = removedEntryUuids
+        let groupIds = removedGroupIds
+        Task {
+            await ChatStore.shared.markDirty(recordType: "ProviderInstanceV3", recordId: instanceId, operation: "delete")
+            for eid in entryIds {
+                await ChatStore.shared.markDirty(recordType: "ProviderModelEntryV3", recordId: eid, operation: "delete")
+            }
+            for gid in groupIds {
+                await ChatStore.shared.markDirty(recordType: "ProviderModelGroupV3", recordId: gid, operation: "delete")
+            }
+        }
     }
 
     func instance(for id: String) -> ProviderInstance? {
@@ -1622,8 +1623,7 @@ final class ProviderConfigStore: ObservableObject {
         // [T-icloud-provider-sync-consistency] emitV3MarkDirty no longer
         // infers deletes from the snapshot diff, so an explicit removal must
         // emit its own V3 delete tombstone here.
-        // P3-DROP(iCloud): ChatStore sync engine (P4) not ported; restore when it lands.
-        // await ChatStore.shared.markDirty(recordType: "ProviderModelEntryV3", recordId: removedUuid, operation: "delete")
+                Task { await ChatStore.shared.markDirty(recordType: "ProviderModelEntryV3", recordId: removedUuid, operation: "delete") }
     }
 
     /// Replace model entries for an instance with fresh ones (e.g. after API fetch).
@@ -1900,8 +1900,7 @@ final class ProviderConfigStore: ObservableObject {
         save()
         // [T-icloud-provider-sync-consistency] Explicit V3 delete tombstone —
         // emitV3MarkDirty no longer diff-infers group deletions.
-        // P3-DROP(iCloud): ChatStore sync engine (P4) not ported; restore when it lands.
-        // await ChatStore.shared.markDirty(recordType: "ProviderModelGroupV3", recordId: groupId, operation: "delete")
+                Task { await ChatStore.shared.markDirty(recordType: "ProviderModelGroupV3", recordId: groupId, operation: "delete") }
     }
 
     func group(for id: String) -> ModelGroup? {
@@ -2273,8 +2272,7 @@ final class ProviderConfigStore: ObservableObject {
             logger.info("[ModelList] applyMergedConfigFromSync: collapsed \(prunedEntryIds.count) cross-device duplicate entry/entries; rewrote group refs to representatives")
             // Tombstone the pruned uuids so the fold propagates to peers.
             for eid in prunedEntryIds {
-                // P3-DROP(iCloud): ChatStore sync engine (P4) not ported; restore when it lands.
-                // await ChatStore.shared.markDirty(recordType: "ProviderModelEntryV3", recordId: eid, operation: "delete")
+                                Task { await ChatStore.shared.markDirty(recordType: "ProviderModelEntryV3", recordId: eid, operation: "delete") }
             }
         }
 
@@ -2626,7 +2624,7 @@ final class ProviderConfigStore: ObservableObject {
             let result = try await Self.fetchModelsWithFallback(instance, forceRefresh: true)
             replaceEntries(for: instance.id, models: result.models, caller: "refreshModels(manual)")
             logger.info("[ModelList] refreshModels (MANUAL): instance=\(instance.label) source=\(result.source) count=\(result.models.count)")
-            for w in result.warnings { logger.warning("⚠️ \(w)") }
+            for w in result.warnings { logger.warning(" \(w)") }
         } catch {
             logger.error("[ModelList] refreshModels (MANUAL): instance=\(instance.label) FAILED — \(error)")
         }
@@ -3076,9 +3074,8 @@ final class ProviderConfigStore: ObservableObject {
         // reorder paths below resurrect/revert the same way).
         if ok {
             await reloadThinkingRuleCache()
-            // P3-DROP(iCloud): ChatStore sync engine (P4) not ported; restore when it lands.
-            // await ChatStore.shared.markDirty(recordType: "ProviderThinkingRuleV3",
-            //                                  recordId: rule.id, operation: "upsert")
+            await ChatStore.shared.markDirty(recordType: "ProviderThinkingRuleV3",
+                                             recordId: rule.id, operation: "upsert")
         }
         return ok
     }
@@ -3105,9 +3102,8 @@ final class ProviderConfigStore: ObservableObject {
         // The delete markDirty below stays unconditional — the tombstone
         // must reach peers even if our local row was already gone.
         if ok { await reloadThinkingRuleCache() }
-        // P3-DROP(iCloud): ChatStore sync engine (P4) not ported; restore when it lands.
-        // await ChatStore.shared.markDirty(recordType: "ProviderThinkingRuleV3",
-        //                                  recordId: id, operation: "delete")
+        await ChatStore.shared.markDirty(recordType: "ProviderThinkingRuleV3",
+                                         recordId: id, operation: "delete")
         return ok
     }
 
@@ -3123,9 +3119,8 @@ final class ProviderConfigStore: ObservableObject {
         if ok {
             await reloadThinkingRuleCache()
             for rid in orderedIds {
-                // P3-DROP(iCloud): ChatStore sync engine (P4) not ported; restore when it lands.
-                // await ChatStore.shared.markDirty(recordType: "ProviderThinkingRuleV3",
-                //                                  recordId: rid, operation: "upsert")
+                await ChatStore.shared.markDirty(recordType: "ProviderThinkingRuleV3",
+                                                 recordId: rid, operation: "upsert")
             }
         }
         return ok

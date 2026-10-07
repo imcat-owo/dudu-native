@@ -185,7 +185,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
     private static let bgHintBrowserThreshold: TimeInterval = 5 * 60
 
     init() {
-        logger.info("🔄SESSION [vm=\(self.vmInstanceId)] init — new AIChatViewModel created")
+        logger.info("SESSION [vm=\(self.vmInstanceId)] init — new AIChatViewModel created")
 
         fontChangeObserver = NotificationCenter.default.addObserver(
             forName: .fontSettingsMessageBaseChanged, object: nil, queue: .main
@@ -340,7 +340,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                     return
                 }
                 let src = "vm=\(self.vmInstanceId) isProcessing=\(processing)"
-                logger.info("🔄SESSION [vm=\(self.vmInstanceId)] isProcessing=\(processing) key=\(activeKey) draftId=\(self.draftId ?? "nil") sessionId=\(self.sessionId ?? "nil")")
+                logger.info("SESSION [vm=\(self.vmInstanceId)] isProcessing=\(processing) key=\(activeKey) draftId=\(self.draftId ?? "nil") sessionId=\(self.sessionId ?? "nil")")
                 if processing {
                     SessionActivityTracker.shared.setActive(activeKey, source: src)
                     if let sid = self.sessionId {
@@ -456,8 +456,10 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                 self.speechPaused = false
                 AudioSessionCoordinator.shared.end(.replyTTS)
                 self.syncSpeechStateToGlobal()
-                DuduToast.show(AppLocalized("No voice available — add a TTS service or voice group, or allow System voice in Settings."),
-                               systemImage: "speaker.slash")
+                // P7 PORT: DuduToast is Views (Phase C) — rerouted to the
+                // ShareFeedbackToast shim per the P3 precedent (systemImage
+                // dropped until Views restores DuduToast).
+                ShareFeedbackToast.show(AppLocalized("No voice available — add a TTS service or voice group, or allow System voice in Settings."))
             }
 
         // Read-replies is now GLOBAL state (VoiceOutputState.shared). Forward its
@@ -482,7 +484,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
         // sink won't fire once self is gone. Fields are MainActor-isolated
         // and deinit is nonisolated; `_deinitSnapshot` is updated on the
         // main actor during normal flow so we can read it here safely.
-        logger.info("🔄SESSION [vm=\(vmId)] deinit lastKnown: \(self._deinitSnapshot)")
+        logger.info("SESSION [vm=\(vmId)] deinit lastKnown: \(self._deinitSnapshot)")
         if let observer = fontChangeObserver {
             NotificationCenter.default.removeObserver(observer)
         }
@@ -554,9 +556,9 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
             if inputText.isEmpty && !oldValue.isEmpty {
                 voiceUsedInComposition = false
                 #if DEBUG
-                logger.info("🔑DRAFT [vm=\(self.vmInstanceId)] inputText CLEARED (was '\(String(oldValue.prefix(30)))') sessionId=\(self.sessionId ?? "nil") draftId=\(self.draftId ?? "nil") isProcessing=\(self.isProcessing)")
+                logger.info("DRAFT [vm=\(self.vmInstanceId)] inputText CLEARED (was '\(String(oldValue.prefix(30)))') sessionId=\(self.sessionId ?? "nil") draftId=\(self.draftId ?? "nil") isProcessing=\(self.isProcessing)")
                 #else
-                logger.info("🔑DRAFT [vm=\(self.vmInstanceId)] inputText CLEARED (was \(oldValue.count)ch) sessionId=\(self.sessionId ?? "nil") draftId=\(self.draftId ?? "nil") isProcessing=\(self.isProcessing)")
+                logger.info("DRAFT [vm=\(self.vmInstanceId)] inputText CLEARED (was \(oldValue.count)ch) sessionId=\(self.sessionId ?? "nil") draftId=\(self.draftId ?? "nil") isProcessing=\(self.isProcessing)")
                 #endif
             }
             updateSlashMenuState()
@@ -1543,7 +1545,8 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
         unmuteForExplicitReadAloud()
         guard canSpeakNow, !text.isEmpty else {
             if text.isEmpty {
-                DuduToast.show(AppLocalized("Nothing to read aloud"), systemImage: "speaker.slash")
+                // P7 PORT: DuduToast is Views (Phase C) — rerouted per P3 precedent.
+            ShareFeedbackToast.show(AppLocalized("Nothing to read aloud"))
             }
             return
         }
@@ -1897,8 +1900,10 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
         // being rendered — so reaching it here would be a cross-session leak.
         // Session-scoped resolution already happened above against
         // activeSessionId; not-found is correct beyond that.
-        if globalDirs.contains(host) {
-            let dataPath = RootfsManager.shared.dataPath
+        // P7 PORT: RootfsManager is P8 — routed via DuduISHSeams. Pre-P8 the
+        // global-dir probe is skipped (not-found is already the correct
+        // answer beyond session scope — see the comment above).
+        if globalDirs.contains(host), let dataPath = DuduISHSeams.rootfsDataPath?() {
             for subPath in subPaths {
                 let linuxPath = "/var/dudu/\(host)/\(subPath)"
                 let hostPath = dataPath.appendingPathComponent(linuxPath.hasPrefix("/") ? String(linuxPath.dropFirst()) : linuxPath)
@@ -2179,7 +2184,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
     /// background-completion notification for this run, because a Shortcuts
     /// intent already posts its own via `ShortcutNotification`. Without this the
     /// user gets two overlapping notifications for one task: "Dudu Task
-    /// Completed" from the intent and "✅ {sessionTitle}" from
+    /// Completed" from the intent and " {sessionTitle}" from
     /// `endBackgroundProcessing`.
     ///
     /// Deliberately NOT keyed off `sessionSource == "shortcut"`: that value also
@@ -2227,7 +2232,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
 
     #if DEBUG
     /// [T-ios-log-noise-reduction] High-water mark of how many agentHistory
-    /// entries the Debug `📋 agentHistory[i]` dump has already printed. The
+    /// entries the Debug ` agentHistory[i]` dump has already printed. The
     /// per-API-call dump only NSLogs entries at index ≥ this value (the delta
     /// since the previous call) instead of re-printing the whole growing
     /// history every iteration. Reset to 0 when the history shrinks.
@@ -2386,12 +2391,12 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
         let text = inputText.trimmingCharacters(in: .whitespacesAndNewlines)
         let pendingAttachments = attachments
         #if DEBUG
-        logger.info("🔑DRAFT [vm=\(self.vmInstanceId)] send() text=\(text.count)ch attachments=\(pendingAttachments.count) isProcessing=\(self.isProcessing) sessionId=\(self.sessionId ?? "nil") draftId=\(self.draftId ?? "nil") inputText='\(String(self.inputText.prefix(30)))'")
+        logger.info("DRAFT [vm=\(self.vmInstanceId)] send() text=\(text.count)ch attachments=\(pendingAttachments.count) isProcessing=\(self.isProcessing) sessionId=\(self.sessionId ?? "nil") draftId=\(self.draftId ?? "nil") inputText='\(String(self.inputText.prefix(30)))'")
         #else
-        logger.info("🔑DRAFT [vm=\(self.vmInstanceId)] send() text=\(text.count)ch attachments=\(pendingAttachments.count) isProcessing=\(self.isProcessing) sessionId=\(self.sessionId ?? "nil") draftId=\(self.draftId ?? "nil")")
+        logger.info("DRAFT [vm=\(self.vmInstanceId)] send() text=\(text.count)ch attachments=\(pendingAttachments.count) isProcessing=\(self.isProcessing) sessionId=\(self.sessionId ?? "nil") draftId=\(self.draftId ?? "nil")")
         #endif
         guard !text.isEmpty || !pendingAttachments.isEmpty, !isProcessing else {
-            logger.warning("🔑DRAFT [vm=\(self.vmInstanceId)] send() GUARD FAILED — text.isEmpty=\(text.isEmpty) attachments.isEmpty=\(pendingAttachments.isEmpty) isProcessing=\(self.isProcessing)")
+            logger.warning("DRAFT [vm=\(self.vmInstanceId)] send() GUARD FAILED — text.isEmpty=\(text.isEmpty) attachments.isEmpty=\(pendingAttachments.isEmpty) isProcessing=\(self.isProcessing)")
             return
         }
 
@@ -2532,7 +2537,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
             if let lastRowId = messages.last(where: { $0.dbRowId != nil })?.dbRowId,
                let hi = agentHistory.lastIndex(where: { $0.dbMessageId == lastRowId }) {
                 keepUpTo = hi
-                logger.info("✏️[RetryDiag] edit path id-anchored dbRowId=\(lastRowId.prefix(8)) → historyIdx=\(hi)")
+                logger.info("[RetryDiag] edit path id-anchored dbRowId=\(lastRowId.prefix(8)) → historyIdx=\(hi)")
             } else {
                 var usersSeen = 0
                 var cutFound = false
@@ -2558,10 +2563,10 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                 if !cutFound {
                     if editRowWasLastUserRow,
                        let lastBubble = agentHistory.lastIndex(where: { Self.isUserBubbleEntry($0) }) {
-                        logger.error("✏️[RetryDiag] edit path bubble-count not found (remainingUserCount=\(remainingUserCount), history=\(agentHistory.count)) — fail-safe: cutting before last user bubble @\(lastBubble)")
+                        logger.error("[RetryDiag] edit path bubble-count not found (remainingUserCount=\(remainingUserCount), history=\(agentHistory.count)) — fail-safe: cutting before last user bubble @\(lastBubble)")
                         keepUpTo = lastBubble - 1
                     } else {
-                        logger.error("✏️[RetryDiag] edit path bubble-count not found and not safely locatable (remainingUserCount=\(remainingUserCount), history=\(agentHistory.count), editRowWasLastUserRow=\(editRowWasLastUserRow)) — keeping full history")
+                        logger.error("[RetryDiag] edit path bubble-count not found and not safely locatable (remainingUserCount=\(remainingUserCount), history=\(agentHistory.count), editRowWasLastUserRow=\(editRowWasLastUserRow)) — keeping full history")
                     }
                 }
             }
@@ -2589,7 +2594,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                         return toolSnapshots.first(where: { $0.id == tuId })
                     }
                 }
-            logger.info("✏️ send() edit applied: truncated to \(self.messages.count) messages, \(self.agentHistory.count) history entries")
+            logger.info(" send() edit applied: truncated to \(self.messages.count) messages, \(self.agentHistory.count) history entries")
         }
 
         // Close any stale tool blocks still showing as streaming/running from a
@@ -2640,7 +2645,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
 
         isProcessing = true
         errorMessage = nil
-        logger.info("🔄SESSION [vm=\(self.vmInstanceId)] send START session=\(self.sessionId ?? "nil")")
+        logger.info("SESSION [vm=\(self.vmInstanceId)] send START session=\(self.sessionId ?? "nil")")
 
         // Ensure kernel is booted before running
         ensureKernelBooted()
@@ -2683,13 +2688,13 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
             // T-imgsize-13b7d81c.
             var cumulativeImageBytes = 0
 
-            logger.info("📎[SEND-ASYNC] Processing \(pendingAttachments.count) attachments, uploadsDir=\(uploadsDir.path), imageBudget=\(inlineBudget) byteBudget=\(Self.kMessageImageMaxBytes)")
+            logger.info("[SEND-ASYNC] Processing \(pendingAttachments.count) attachments, uploadsDir=\(uploadsDir.path), imageBudget=\(inlineBudget) byteBudget=\(Self.kMessageImageMaxBytes)")
             for (i, attachment) in pendingAttachments.enumerated() {
                 let fileExists = fm.fileExists(atPath: attachment.cacheURL.path)
-                logger.info("📎[SEND-ASYNC] attachment[\(i)] kind=\(String(describing: attachment.kind)) file=\(attachment.fileName) cacheExists=\(fileExists)")
+                logger.info("[SEND-ASYNC] attachment[\(i)] kind=\(String(describing: attachment.kind)) file=\(attachment.fileName) cacheExists=\(fileExists)")
 
                 guard fileExists else {
-                    logger.error("📎[SEND-ASYNC]   FAILED — source missing at \(attachment.cacheURL.path)")
+                    logger.error("[SEND-ASYNC]   FAILED — source missing at \(attachment.cacheURL.path)")
                     continue
                 }
 
@@ -2715,14 +2720,14 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                 do {
                     try fm.copyItem(at: attachment.cacheURL, to: destURL)
                 } catch {
-                    logger.error("📎[SEND-ASYNC]   FAILED to copy \(attachment.cacheURL.lastPathComponent) → \(destURL.path): \(error.localizedDescription)")
+                    logger.error("[SEND-ASYNC]   FAILED to copy \(attachment.cacheURL.lastPathComponent) → \(destURL.path): \(error.localizedDescription)")
                     continue
                 }
                 try? fm.setAttributes([.creationDate: fileDate, .modificationDate: fileDate], ofItemAtPath: destURL.path)
                 let linuxPath = "/var/dudu/attachments/uploads/\(safeName)"
                 let meta = AttachmentMeta(path: linuxPath, size: fileSize, modified: fileDate)
                 attachmentMetas.append(meta)
-                logger.info("📎[SEND-ASYNC]   saved \(safeName): \(fileSize) bytes → \(linuxPath)")
+                logger.info("[SEND-ASYNC]   saved \(safeName): \(fileSize) bytes → \(linuxPath)")
 
                 // [T-ios-attachment-oom-bg-kill] Only IMAGES need the bytes in
                 // memory (for resize/compress/inline below). Non-image attachments
@@ -2731,7 +2736,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                 // loading them here is bounded and safe.
                 guard attachment.kind == .image else { continue }
                 guard let data = try? Data(contentsOf: attachment.cacheURL) else {
-                    logger.error("📎[SEND-ASYNC]   image load failed (kept on disk) \(attachment.cacheURL.path)")
+                    logger.error("[SEND-ASYNC]   image load failed (kept on disk) \(attachment.cacheURL.path)")
                     continue
                 }
 
@@ -2761,13 +2766,13 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                                 // disk and can still reference it via shell tools.
                                 let placeholder = Self.imagePlaceholderText(data: data, originalPath: linuxPath, snapshotPath: nil)
                                 userParts.append(.text(placeholder))
-                                logger.warning("📎[SEND-ASYNC]   image \(i) dropped to placeholder — cumulative \(cumulativeImageBytes) + this \(prepared.data.count) > \(Self.kMessageImageMaxBytes) message budget")
+                                logger.warning("[SEND-ASYNC]   image \(i) dropped to placeholder — cumulative \(cumulativeImageBytes) + this \(prepared.data.count) > \(Self.kMessageImageMaxBytes) message budget")
                             } else {
                                 userParts.append(.text("[attached image: \(linuxPath)]"))
                                 userParts.append(.imageData(data: prepared.data, mimeType: prepared.mimeType, linuxPath: linuxPath))
                                 inlinedImages += 1
                                 cumulativeImageBytes += prepared.data.count
-                                logger.info("📎[SEND-ASYNC]   image \(inlinedImages)/\(inlineBudget) inlined: orig=\(data.count) final=\(prepared.data.count) cumulative=\(cumulativeImageBytes)/\(Self.kMessageImageMaxBytes) mime=\(prepared.mimeType)")
+                                logger.info("[SEND-ASYNC]   image \(inlinedImages)/\(inlineBudget) inlined: orig=\(data.count) final=\(prepared.data.count) cumulative=\(cumulativeImageBytes)/\(Self.kMessageImageMaxBytes) mime=\(prepared.mimeType)")
                             }
                         } else {
                             // Undecodable, or still over the per-image budget at
@@ -2777,12 +2782,12 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                             // provider will reject.
                             let placeholder = Self.imagePlaceholderText(data: data, originalPath: linuxPath, snapshotPath: nil)
                             userParts.append(.text(placeholder))
-                            logger.warning("📎[SEND-ASYNC]   image \(i) degraded to placeholder — could not be prepared within per-image budget \(Self.kPerImageMaxBytes), NOT sent (orig=\(data.count) bytes, file kept at \(linuxPath))")
+                            logger.warning("[SEND-ASYNC]   image \(i) degraded to placeholder — could not be prepared within per-image budget \(Self.kPerImageMaxBytes), NOT sent (orig=\(data.count) bytes, file kept at \(linuxPath))")
                         }
                     } else {
                         let placeholder = Self.imagePlaceholderText(data: data, originalPath: linuxPath, snapshotPath: nil)
                         userParts.append(.text(placeholder))
-                        logger.info("📎[SEND-ASYNC]   image not inlined (count budget \(inlineBudget) exhausted), placeholder for \(linuxPath)")
+                        logger.info("[SEND-ASYNC]   image not inlined (count budget \(inlineBudget) exhausted), placeholder for \(linuxPath)")
                     }
                 }
             }
@@ -2935,7 +2940,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
             // isProcessing=false mid-run — the chat stops rendering the live tool
             // loop while the preview bar / Live Activity keep updating.
             guard !Task.isCancelled else {
-                logger.info("🔄SESSION [vm=\(self.vmInstanceId)] send epilogue skipped (task cancelled) session=\(self.sessionId ?? "nil")")
+                logger.info("SESSION [vm=\(self.vmInstanceId)] send epilogue skipped (task cancelled) session=\(self.sessionId ?? "nil")")
                 return
             }
 
@@ -2956,7 +2961,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                 self.lastKnownDbOrderHash = Self.computeOrderHash(of: dbMessages)
             }
 
-            logger.info("🔄SESSION [vm=\(self.vmInstanceId)] send DONE session=\(self.sessionId ?? "nil")")
+            logger.info("SESSION [vm=\(self.vmInstanceId)] send DONE session=\(self.sessionId ?? "nil")")
             self.playCompletionHaptic()
             self.isProcessing = false
             self.endBackgroundProcessing()
@@ -3148,11 +3153,11 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
             // [T-stop-with-queue-render-desync] See send(): Stop's cancel() owns
             // state teardown; a superseded task must not drain or flip isProcessing.
             guard !Task.isCancelled else {
-                logger.info("🔄SESSION [vm=\(self.vmInstanceId)] retry epilogue skipped (task cancelled) session=\(self.sessionId ?? "nil")")
+                logger.info("SESSION [vm=\(self.vmInstanceId)] retry epilogue skipped (task cancelled) session=\(self.sessionId ?? "nil")")
                 return
             }
             await self.drainQueuedPrompts()
-            logger.info("🔄SESSION [vm=\(self.vmInstanceId)] retry DONE session=\(self.sessionId ?? "nil")")
+            logger.info("SESSION [vm=\(self.vmInstanceId)] retry DONE session=\(self.sessionId ?? "nil")")
             self.playCompletionHaptic()
             self.isProcessing = false
             self.endBackgroundProcessing()
@@ -3190,10 +3195,10 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
         // clearUncommittedStreamTail preserves non-empty text + terminal tools while
         // still dropping the uncommitted partial/streaming tail.
         if committedBlockCount < lastMsg.blocks.count {
-            logger.info("⏹️[StopDiag] resume() pre-trim committed=\(self.committedBlockCount) blocks=\(lastMsg.blocks.count) — preserving committed text/tools via clearUncommittedStreamTail")
+            logger.info("⏹[StopDiag] resume() pre-trim committed=\(self.committedBlockCount) blocks=\(lastMsg.blocks.count) — preserving committed text/tools via clearUncommittedStreamTail")
             Self.clearUncommittedStreamTail(lastMsg, committedBlockCount: committedBlockCount)
         } else {
-            logger.info("⏹️[StopDiag] resume() no trim (committed=\(self.committedBlockCount) >= blocks=\(lastMsg.blocks.count))")
+            logger.info("⏹[StopDiag] resume() no trim (committed=\(self.committedBlockCount) >= blocks=\(lastMsg.blocks.count))")
         }
 
         // Mark any remaining tool blocks with nil status as cancelled
@@ -3295,11 +3300,11 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
             // [T-stop-with-queue-render-desync] See send(): Stop's cancel() owns
             // state teardown; a superseded task must not drain or flip isProcessing.
             guard !Task.isCancelled else {
-                logger.info("🔄SESSION [vm=\(self.vmInstanceId)] resume epilogue skipped (task cancelled) session=\(self.sessionId ?? "nil")")
+                logger.info("SESSION [vm=\(self.vmInstanceId)] resume epilogue skipped (task cancelled) session=\(self.sessionId ?? "nil")")
                 return
             }
             await self.drainQueuedPrompts()
-            logger.info("🔄SESSION [vm=\(self.vmInstanceId)] resume DONE session=\(self.sessionId ?? "nil")")
+            logger.info("SESSION [vm=\(self.vmInstanceId)] resume DONE session=\(self.sessionId ?? "nil")")
             self.playCompletionHaptic()
             self.isProcessing = false
             self.endBackgroundProcessing()
@@ -3401,11 +3406,11 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
             }
             if self.userDidCancel { self.handleUserCancelledCleanup() }
             guard !Task.isCancelled else {
-                logger.info("🔄SESSION [vm=\(self.vmInstanceId)] orphan-tail resume epilogue skipped (task cancelled) session=\(self.sessionId ?? "nil")")
+                logger.info("SESSION [vm=\(self.vmInstanceId)] orphan-tail resume epilogue skipped (task cancelled) session=\(self.sessionId ?? "nil")")
                 return
             }
             await self.drainQueuedPrompts()
-            logger.info("🔄SESSION [vm=\(self.vmInstanceId)] orphan-tail resume DONE session=\(self.sessionId ?? "nil")")
+            logger.info("SESSION [vm=\(self.vmInstanceId)] orphan-tail resume DONE session=\(self.sessionId ?? "nil")")
             self.playCompletionHaptic()
             self.isProcessing = false
             self.endBackgroundProcessing()
@@ -3910,11 +3915,11 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
             // [T-stop-with-queue-render-desync] See send(): Stop's cancel() owns
             // state teardown; a superseded task must not drain or flip isProcessing.
             guard !Task.isCancelled else {
-                logger.info("🔄SESSION [vm=\(self.vmInstanceId)] \(label) epilogue skipped (task cancelled) session=\(self.sessionId ?? "nil")")
+                logger.info("SESSION [vm=\(self.vmInstanceId)] \(label) epilogue skipped (task cancelled) session=\(self.sessionId ?? "nil")")
                 return
             }
             await self.drainQueuedPrompts()
-            logger.info("🔄SESSION [vm=\(self.vmInstanceId)] \(label) DONE session=\(self.sessionId ?? "nil")")
+            logger.info("SESSION [vm=\(self.vmInstanceId)] \(label) DONE session=\(self.sessionId ?? "nil")")
             self.playCompletionHaptic()
             self.isProcessing = false
             self.endBackgroundProcessing()
@@ -4228,20 +4233,20 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
         }
 
         scrollToBottomSignal.send()
-        logger.info("✏️ editMessage idx=\(idx) text=\(text.count)ch attachments=\(msg.attachments.count)")
+        logger.info(" editMessage idx=\(idx) text=\(text.count)ch attachments=\(msg.attachments.count)")
     }
 
     func cancelEdit() {
         editingMessageIndex = nil
         inputText = ""
         attachments = []
-        logger.info("✏️ cancelEdit")
+        logger.info(" cancelEdit")
     }
 
     func cancel() {
         let lastBlocks = (messages.last?.role == .assistant) ? messages.last!.blocks.count : -1
         let lastRole = messages.last.map { $0.role == .assistant ? "assistant" : "user" } ?? "nil"
-        logger.info("⏹️ cancel() START session=\(self.sessionId ?? "nil") isProcessing=\(self.isProcessing) lastRole=\(lastRole) lastBlocks=\(lastBlocks) currentTask=\(self.currentTask != nil)")
+        logger.info("⏹ cancel() START session=\(self.sessionId ?? "nil") isProcessing=\(self.isProcessing) lastRole=\(lastRole) lastBlocks=\(lastBlocks) currentTask=\(self.currentTask != nil)")
         dumpCandidateState("cancel-START")
         // [T-ios-queued-candidate-not-onscreen] Snapshot the queue + on-screen
         // messages at Stop time, and again 500ms later, so we can see whether a
@@ -4284,7 +4289,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
         autoRetryAttempt = 0
         autoRetryCountdown = 0
         if let sid = sessionId {
-            logger.info("🔥 cache keep-alive: cancelling on user cancel — session=\(sid.prefix(8))")
+            logger.info(" cache keep-alive: cancelling on user cancel — session=\(sid.prefix(8))")
             CacheKeepAliveManager.shared.cancelKeepAlive(sessionId: sid)
         }
         // Don't modify blocks here — the cancelled task may still be writing to them.
@@ -4313,7 +4318,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
         // processing them. The old task is cancelled (stops the current agent
         // loop) but the queue should keep draining.
         if !promptQueue.isEmpty && !isCompacting {
-            logger.info("⏹️ cancel() — \(promptQueue.count) queued prompt(s) remain, restarting drain")
+            logger.info("⏹ cancel() — \(promptQueue.count) queued prompt(s) remain, restarting drain")
             resumeQueueAfterCancel()
         }
     }
@@ -4337,14 +4342,14 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
             self.canResume = false
             self.isProcessing = true
             self.beginBackgroundProcessing()
-            logger.info("📨[DRAIN] Resuming queue in new task — \(self.promptQueue.count) prompt(s)")
+            logger.info("[DRAIN] Resuming queue in new task — \(self.promptQueue.count) prompt(s)")
             await self.drainQueuedPrompts()
 
             // [T-stop-with-queue-render-desync] A second Stop during this drained
             // run cancels THIS task and may spawn yet another drain task — same
             // handover as send()'s epilogue, so don't clobber its state either.
             guard !Task.isCancelled else {
-                logger.info("📨[DRAIN] queue-resume epilogue skipped (task cancelled) session=\(self.sessionId ?? "nil")")
+                logger.info("[DRAIN] queue-resume epilogue skipped (task cancelled) session=\(self.sessionId ?? "nil")")
                 return
             }
 
@@ -4375,7 +4380,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
     /// extension file can drain through this same path after a compact.
     func drainQueuedPrompts() async {
         guard !self.isDrainingQueue else {
-            logger.info("📨[DRAIN] Already draining in another task — skipping duplicate drain")
+            logger.info("[DRAIN] Already draining in another task — skipping duplicate drain")
             return
         }
         self.isDrainingQueue = true
@@ -4392,12 +4397,12 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
             // consume queue items — resumeQueueAfterCancel() handles them
             // in a fresh Task.
             guard !Task.isCancelled else {
-                logger.info("📨[DRAIN] Task cancelled — leaving \(self.promptQueue.count) prompt(s) in queue")
+                logger.info("[DRAIN] Task cancelled — leaving \(self.promptQueue.count) prompt(s) in queue")
                 break
             }
             let queued = self.promptQueue
             self.promptQueue.removeAll()
-            logger.info("📨[DRAIN] Draining \(queued.count) queued prompt(s)")
+            logger.info("[DRAIN] Draining \(queued.count) queued prompt(s)")
 
             let queuedIds = Set(queued.map(\.id))
             for msg in self.messages where msg.isQueued {
@@ -4517,7 +4522,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
         // Yield once to let any last-moment enqueuePrompt() calls execute
         await Task.yield()
         if !Task.isCancelled && !self.userDidCancel && !self.promptQueue.isEmpty {
-            logger.info("📨[DRAIN] Late arrivals after yield: \(self.promptQueue.count)")
+            logger.info("[DRAIN] Late arrivals after yield: \(self.promptQueue.count)")
             // Recurse on the INNER worker (we already hold the reentrancy guard)
             // so late-arrival handling isn't skipped by our own guard.
             await drainQueuedPromptsInner()
@@ -4734,7 +4739,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
             let preview = p.text.replacingOccurrences(of: "\n", with: "⏎").prefix(50)
             queueLines.append("  q[\(p.id.uuidString.prefix(8))] att=\(p.attachments.count) \"\(preview)\"")
         }
-        logger.info("📋[QueueDiag] \(tag) — promptQueue=\(self.promptQueue.count) messages=\(self.messages.count) isProcessing=\(self.isProcessing)\nPROMPT-QUEUE (last \(queueTail.count)):\n\(queueLines.joined(separator: "\n"))\nMESSAGES (last \(msgTail.count)):\n\(msgLines.joined(separator: "\n"))")
+        logger.info("[QueueDiag] \(tag) — promptQueue=\(self.promptQueue.count) messages=\(self.messages.count) isProcessing=\(self.isProcessing)\nPROMPT-QUEUE (last \(queueTail.count)):\n\(queueLines.joined(separator: "\n"))\nMESSAGES (last \(msgTail.count)):\n\(msgLines.joined(separator: "\n"))")
     }
 
     /// [T-ios-stop-candidate-message-lost] One-line-per-block dump of the
@@ -4748,12 +4753,12 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
         // Resolve the candidate by the last ASSISTANT row (a queued .user
         // message can sit after it), not messages.last.
         guard let candidateIdx = messages.lastIndex(where: { $0.role == .assistant }) else {
-            logger.info("⏹️[StopDiag] \(tag) — no assistant message at all (messagesLast=\(self.messages.last?.role == .user ? "user" : "nil")) committed=\(so) prevCommitted=\(pso) histLast=\(histLast) canResume=\(self.canResume)")
+            logger.info("⏹[StopDiag] \(tag) — no assistant message at all (messagesLast=\(self.messages.last?.role == .user ? "user" : "nil")) committed=\(so) prevCommitted=\(pso) histLast=\(histLast) canResume=\(self.canResume)")
             return
         }
         let last = messages[candidateIdx]
         let trailingQueued = candidateIdx < messages.count - 1
-        logger.info("⏹️[StopDiag] \(tag) — candidate idx=\(candidateIdx) trailingQueued=\(trailingQueued) blocks=\(last.blocks.count) committed=\(so) prevCommitted=\(pso) histLast=\(histLast) canResume=\(self.canResume) msgId=\(last.id.uuidString.prefix(8))")
+        logger.info("⏹[StopDiag] \(tag) — candidate idx=\(candidateIdx) trailingQueued=\(trailingQueued) blocks=\(last.blocks.count) committed=\(so) prevCommitted=\(pso) histLast=\(histLast) canResume=\(self.canResume) msgId=\(last.id.uuidString.prefix(8))")
         for (i, b) in last.blocks.enumerated() {
             let kindStr: String = {
                 switch b.kind {
@@ -4781,7 +4786,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
             }()
             let committedMark = i < so ? "C" : "·"  // C = already committed to agentHistory
             let preview = b.content.replacingOccurrences(of: "\n", with: "⏎").prefix(40)
-            logger.info("⏹️[StopDiag]   [\(committedMark)] block[\(i)] kind=\(kindStr) status=\(statusStr) len=\(b.content.count) tuId=\(b.toolUseId?.prefix(8) ?? "-") \"\(preview)\"")
+            logger.info("⏹[StopDiag]   [\(committedMark)] block[\(i)] kind=\(kindStr) status=\(statusStr) len=\(b.content.count) tuId=\(b.toolUseId?.prefix(8) ?? "-") \"\(preview)\"")
         }
     }
 
@@ -4823,7 +4828,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
         let hasContent = (messages.last?.role == .assistant) ? messages.last!.blocks.contains(where: { !$0.content.isEmpty }) : false
         let lastRole = messages.last.map { $0.role == .assistant ? "assistant" : "user" } ?? "nil"
         let historyLastRole = agentHistory.last?.role.rawValue ?? "nil"
-        logger.info("⏹️ handleUserCancelledCleanup userDidCancel=\(self.userDidCancel) lastRole=\(lastRole) blocks=\(blockCount) hasContent=\(hasContent) canResume=\(self.canResume) historyLast=\(historyLastRole)")
+        logger.info("⏹ handleUserCancelledCleanup userDidCancel=\(self.userDidCancel) lastRole=\(lastRole) blocks=\(blockCount) hasContent=\(hasContent) canResume=\(self.canResume) historyLast=\(historyLastRole)")
         dumpCandidateState("cleanup-ENTER")
         if userDidCancel {
             userDidCancel = false
@@ -4846,7 +4851,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
             // blocks and appended tool_result to agentHistory.
             let lastHistoryIsToolResult = agentHistory.last?.role == .user
                 && agentHistory.last?.parts.contains(where: { if case .toolResult = $0 { return true }; return false }) == true
-            logger.info("⏹️[StopDiag] branch-decision lastHistoryIsToolResult=\(lastHistoryIsToolResult) → \(lastHistoryIsToolResult ? "Case 1 (tool cancel)" : "Case 2 (text/param cancel)")")
+            logger.info("⏹[StopDiag] branch-decision lastHistoryIsToolResult=\(lastHistoryIsToolResult) → \(lastHistoryIsToolResult ? "Case 1 (tool cancel)" : "Case 2 (text/param cancel)")")
             if lastHistoryIsToolResult {
                 for block in last.blocks {
                     if let status = block.toolStatus {
@@ -4871,16 +4876,16 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                 // uncommitted tail (text only — the cancelled tool blocks above are not
                 // re-issued) so it's both kept on screen and written to history.
                 let toolCancelStart = min(committedBlockCount, last.blocks.count)
-                logger.info("⏹️[StopDiag] Case1 flush-scan range=[\(toolCancelStart)..<\(last.blocks.count)] (committed=\(self.committedBlockCount))")
+                logger.info("⏹[StopDiag] Case1 flush-scan range=[\(toolCancelStart)..<\(last.blocks.count)] (committed=\(self.committedBlockCount))")
                 if toolCancelStart < last.blocks.count {
                     var tailTextParts: [AgentContentPart] = []
                     for i in toolCancelStart..<last.blocks.count {
                         let block = last.blocks[i]
                         if case .text = block.kind, !block.content.isEmpty {
                             tailTextParts.append(.text(block.content))
-                            logger.info("⏹️[StopDiag]   Case1 flush-include block[\(i)] len=\(block.content.count)")
+                            logger.info("⏹[StopDiag]   Case1 flush-include block[\(i)] len=\(block.content.count)")
                         } else {
-                            logger.info("⏹️[StopDiag]   Case1 flush-skip block[\(i)] (not non-empty text)")
+                            logger.info("⏹[StopDiag]   Case1 flush-skip block[\(i)] (not non-empty text)")
                         }
                     }
                     if !tailTextParts.isEmpty {
@@ -4898,12 +4903,12 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                         // resume's `removeSubrange(committedBlockCount...)` trim.
                         self.prevCommittedBlockCount = self.committedBlockCount
                         self.committedBlockCount = last.blocks.count
-                        logger.info("⏹️ Case 1: flushed \(tailTextParts.count) post-tool text part(s) to agentHistory before stopping")
+                        logger.info("⏹ Case 1: flushed \(tailTextParts.count) post-tool text part(s) to agentHistory before stopping")
                     }
                 }
 
                 canResume = true
-                logger.info("⏹️ Case 1 (tool cancel): preserved \(last.blocks.count) blocks, canResume=true")
+                logger.info("⏹ Case 1 (tool cancel): preserved \(last.blocks.count) blocks, canResume=true")
                 dumpCandidateState("cleanup-EXIT-case1")
                 return
             }
@@ -4928,7 +4933,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
             }
             let hasAnyToolUse = last.blocks.contains { $0.toolStatus != nil }
             if !hasNonEmptyText, !hasAnyToolUse, prevCommittedBlockCount == 0 {
-                logger.info("⏹️[StopDiag] Case0 REMOVING thinking-only placeholder at idx=\(candidateIdx) blocks=\(last.blocks.count) (no text, no tool_use, prevCommitted=0)")
+                logger.info("⏹[StopDiag] Case0 REMOVING thinking-only placeholder at idx=\(candidateIdx) blocks=\(last.blocks.count) (no text, no tool_use, prevCommitted=0)")
                 messages.remove(at: candidateIdx)
                 dumpCandidateState("cleanup-EXIT-case0")
                 return
@@ -4954,7 +4959,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
 
             let hasVisibleContent = last.blocks.contains(where: { !$0.content.isEmpty })
 
-            logger.info("⏹️[StopDiag] Case2 hasVisibleContent=\(hasVisibleContent) prevCommitted=\(self.prevCommittedBlockCount) committed=\(self.committedBlockCount) blocks=\(last.blocks.count)")
+            logger.info("⏹[StopDiag] Case2 hasVisibleContent=\(hasVisibleContent) prevCommitted=\(self.prevCommittedBlockCount) committed=\(self.committedBlockCount) blocks=\(last.blocks.count)")
             if hasVisibleContent {
                 // Collect text from current iteration's blocks
                 var textParts: [AgentContentPart] = []
@@ -4969,7 +4974,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                 // Commit partial text to agentHistory with a truncation marker
                 // so the model knows the response was interrupted.
                 let histLastIsAsst = agentHistory.last?.role == .assistant
-                logger.info("⏹️[StopDiag] Case2 collect textParts=\(textParts.count) safeStart=\(safeStart) histLastIsAsst=\(histLastIsAsst) → \(!textParts.isEmpty && !histLastIsAsst ? "WILL COMMIT" : "SKIP commit")")
+                logger.info("⏹[StopDiag] Case2 collect textParts=\(textParts.count) safeStart=\(safeStart) histLastIsAsst=\(histLastIsAsst) → \(!textParts.isEmpty && !histLastIsAsst ? "WILL COMMIT" : "SKIP commit")")
                 if !textParts.isEmpty, agentHistory.last?.role != .assistant {
                     textParts.append(.text("<system-reminder>The user stopped this response. Content may be incomplete.</system-reminder>"))
                     let assistantMsg = AgentMessage(role: .assistant, parts: textParts)
@@ -4981,7 +4986,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                             self.agentHistory[asstIdx].dbMessageId = pid
                         }
                     }
-                    logger.info("⏹️ Case 2: committed partial text (\(textParts.count) parts) with truncation marker to agentHistory")
+                    logger.info("⏹ Case 2: committed partial text (\(textParts.count) parts) with truncation marker to agentHistory")
                 }
 
                 // Update committed counts to preserve current blocks
@@ -4989,10 +4994,10 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                 self.committedBlockCount = last.blocks.count
 
                 canResume = true
-                logger.info("⏹️ Case 2 (text cancel): preserved \(last.blocks.count) blocks, canResume=true")
+                logger.info("⏹ Case 2 (text cancel): preserved \(last.blocks.count) blocks, canResume=true")
             } else if prevCommittedBlockCount > 0 {
                 // No visible content in current iteration but prior iterations exist.
-                logger.info("⏹️[StopDiag] Case2-branchB no-visible-content, prevCommitted=\(self.prevCommittedBlockCount)>0 → trim blocks[\(self.prevCommittedBlockCount)...], drop trailing asst history if present")
+                logger.info("⏹[StopDiag] Case2-branchB no-visible-content, prevCommitted=\(self.prevCommittedBlockCount)>0 → trim blocks[\(self.prevCommittedBlockCount)...], drop trailing asst history if present")
                 if prevCommittedBlockCount < last.blocks.count {
                     last.blocks.removeSubrange(prevCommittedBlockCount...)
                 }
@@ -5001,16 +5006,16 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                     agentHistory.removeLast()
                 }
                 canResume = true
-                logger.info("⏹️ No visible content but prior iterations exist — canResume=true")
+                logger.info("⏹ No visible content but prior iterations exist — canResume=true")
             } else {
-                logger.warning("⏹️[StopDiag] Case2-branchC REMOVING empty candidate message at idx=\(candidateIdx) (no visible content, prevCommitted=0)")
+                logger.warning("⏹[StopDiag] Case2-branchC REMOVING empty candidate message at idx=\(candidateIdx) (no visible content, prevCommitted=0)")
                 // Remove the candidate by index — NOT removeLast() — because a
                 // queued `.user` message may sit after it (enqueued mid-tool).
                 messages.remove(at: candidateIdx)
                 if agentHistory.last?.role == .assistant {
                     agentHistory.removeLast()
                 }
-                logger.info("⏹️ Removed empty assistant message")
+                logger.info("⏹ Removed empty assistant message")
             }
             dumpCandidateState("cleanup-EXIT")
         } else {
@@ -5099,8 +5104,8 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
         let _diagRound = Self.bumpDiagRound()
         AppLogger(category: "RoundMarker").warning("══════════════ ROUND BEGIN \(_diagRound) ══════════════ vm=\(self.vmInstanceId) session=\(self.sessionId ?? "nil") history=\(self.agentHistory.count) resuming=\(existingMsgIdx != nil)")
         defer { AppLogger(category: "RoundMarker").warning("══════════════ ROUND END \(_diagRound) ════════════════ vm=\(self.vmInstanceId) session=\(self.sessionId ?? "nil") history=\(self.agentHistory.count) estimated ~\(self.estimateContextTokens()) tokens") }
-        logger.info("🔄SESSION [vm=\(self.vmInstanceId)] runAgentLoop START session=\(self.sessionId ?? "nil") history=\(self.agentHistory.count) resuming=\(existingMsgIdx != nil)")
-        defer { logger.info("🔄SESSION [vm=\(self.vmInstanceId)] runAgentLoop END session=\(self.sessionId ?? "nil") history=\(self.agentHistory.count) estimated ~\(self.estimateContextTokens()) tokens") }
+        logger.info("SESSION [vm=\(self.vmInstanceId)] runAgentLoop START session=\(self.sessionId ?? "nil") history=\(self.agentHistory.count) resuming=\(existingMsgIdx != nil)")
+        defer { logger.info("SESSION [vm=\(self.vmInstanceId)] runAgentLoop END session=\(self.sessionId ?? "nil") history=\(self.agentHistory.count) estimated ~\(self.estimateContextTokens()) tokens") }
 
         let loopSetupStart = CFAbsoluteTimeGetCurrent()
 
@@ -5204,7 +5209,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
         userSystemPrompt += memoryStatusFragment
 
         let promptBuildMs = (CFAbsoluteTimeGetCurrent() - loopSetupStart) * 1000
-        logger.info("⏱️ [runAgentLoop] prompt build elapsed=\(String(format: "%.1f", promptBuildMs))ms history=\(self.agentHistory.count)")
+        logger.info("⏱ [runAgentLoop] prompt build elapsed=\(String(format: "%.1f", promptBuildMs))ms history=\(self.agentHistory.count)")
         await Task.yield()
 
         // When resuming after error, reuse the existing assistant message; otherwise create new
@@ -5234,7 +5239,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
 
         // Log context baseline for offload diagnostics
         let estimatedTokens = estimateContextTokens()
-        logger.info("📐 Context baseline: agentHistory=\(self.agentHistory.count) msgs, estimated ~\(estimatedTokens) tokens, turnUsage.latestContextTokens=\(turnUsage.latestContextTokens) (model window: \(ProviderConfigStore.shared.entry(for: entry.id)?.model.contextWindowTokens ?? 0))")
+        logger.info(" Context baseline: agentHistory=\(self.agentHistory.count) msgs, estimated ~\(estimatedTokens) tokens, turnUsage.latestContextTokens=\(turnUsage.latestContextTokens) (model window: \(ProviderConfigStore.shared.entry(for: entry.id)?.model.contextWindowTokens ?? 0))")
 
         // Safety: scan the entire agentHistory for assistant messages with tool_use
         // that lack corresponding tool_result messages. This can happen when:
@@ -5367,7 +5372,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
         }
 
         let orphanScanMs = (CFAbsoluteTimeGetCurrent() - loopSetupStart) * 1000
-        logger.info("⏱️ [runAgentLoop] setup complete elapsed=\(String(format: "%.1f", orphanScanMs))ms (prompt+orphanScan)")
+        logger.info("⏱ [runAgentLoop] setup complete elapsed=\(String(format: "%.1f", orphanScanMs))ms (prompt+orphanScan)")
         await Task.yield()
 
         // Counted instead of `while true` so we have a hard backstop against
@@ -5559,7 +5564,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
             // API call, re-printing the entire (growing) history each iteration
             // — the single biggest Debug-log noise source (~13.6k lines). The
             // structured AgentRequestTrace still records every entry (cheap,
-            // in-memory, not NSLog), but the NSLog `📋 agentHistory[i]` line now
+            // in-memory, not NSLog), but the NSLog ` agentHistory[i]` line now
             // only fires for entries NEW since the last dump (delta), preceded
             // by a one-line summary. `lastDumpedAgentHistoryCount` resets to 0
             // whenever the history shrinks (retry truncation / new session) so
@@ -5568,7 +5573,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                 lastDumpedAgentHistoryCount = 0
             }
             let deltaStart = lastDumpedAgentHistoryCount
-            logger.debug("📋 agentHistory dump: total=\(agentHistory.count) newSince=\(deltaStart)")
+            logger.debug(" agentHistory dump: total=\(agentHistory.count) newSince=\(deltaStart)")
             for (i, msg) in agentHistory.enumerated() {
                 var partSummaries: [String] = []
                 for part in msg.parts {
@@ -5597,7 +5602,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                 }
                 AgentRequestTrace.shared.step("agentHistory[\(i)]", detail: "\(msg.role.rawValue): \(partSummaries.joined(separator: " | "))")
                 if i >= deltaStart {
-                    logger.debug("📋 agentHistory[\(i)] \(msg.role.rawValue): \(partSummaries.joined(separator: " | "))")
+                    logger.debug(" agentHistory[\(i)] \(msg.role.rawValue): \(partSummaries.joined(separator: " | "))")
                 }
             }
             lastDumpedAgentHistoryCount = agentHistory.count
@@ -5628,10 +5633,10 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
             // (index valid + id matches).
             if msgIdx < 0 || msgIdx >= messages.count || messages[msgIdx].id != runMsgId {
                 guard let resynced = messages.firstIndex(where: { $0.id == runMsgId }) else {
-                    logger.error("🔀STREAM round-start: assistant message id=\(runMsgId) vanished (count=\(messages.count)) — aborting round")
+                    logger.error("STREAM round-start: assistant message id=\(runMsgId) vanished (count=\(messages.count)) — aborting round")
                     throw LLMError.transientError(message: "The assistant message was removed while preparing the request.")
                 }
-                logger.warning("🔀STREAM round-start: msgIdx resynced → \(resynced) (count=\(messages.count))")
+                logger.warning("STREAM round-start: msgIdx resynced → \(resynced) (count=\(messages.count))")
                 msgIdx = resynced
             }
             let stream = try await streamWithGroupFallback(
@@ -5662,7 +5667,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                       let newEntry = ProviderConfigStore.shared.entry(for: newEntryId) else {
                     return false
                 }
-                logger.info("🔀AGENT_LOOP provider updated after fallback: \(prevEntryId ?? "nil") → \(newEntryId)")
+                logger.info("AGENT_LOOP provider updated after fallback: \(prevEntryId ?? "nil") → \(newEntryId)")
                 provider = await makeAgentProvider(for: newEntry)
                 userSystemPrompt = baseSystemPrompt
                 if let capFragment = newEntry.model.capabilityPromptFragment {
@@ -5713,14 +5718,14 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                     // skip the notice — it's a non-critical UI hint.
                     if let resynced = messages.firstIndex(where: { $0.id == runMsgId }) {
                         msgIdx = resynced
-                        let trailLines = fallbackReasons.map { "⚠️ \($0.model) (\($0.instance)): \($0.reason)" }
+                        let trailLines = fallbackReasons.map { " \($0.model) (\($0.instance)): \($0.reason)" }
                         let instanceLabel = ProviderConfigStore.shared.instance(for: newEntry.providerInstanceId)?.label ?? newEntry.model.provider
                         let noticeText = trailLines.joined(separator: "\n") + "\n" + AppLocalized("Switched to \(newEntry.model.displayName) (\(instanceLabel))")
                         let infoBlock = AssistantBlock(kind: .info, content: noticeText)
                         messages[msgIdx].blocks.insert(infoBlock, at: 0)
                         fallbackReasons.removeAll()
                     } else {
-                        logger.error("🔀AGENT_LOOP applyFallbackSwitch: assistant message id=\(runMsgId) no longer in messages (count=\(self.messages.count)) — skipping fallback notice")
+                        logger.error("AGENT_LOOP applyFallbackSwitch: assistant message id=\(runMsgId) no longer in messages (count=\(self.messages.count)) — skipping fallback notice")
                         fallbackReasons.removeAll()
                     }
                 }
@@ -5776,11 +5781,11 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                     // once, so it can never loop; if the reminder round is also
                     // empty we report an error (below) instead of a silent stall.
                     guard !didInjectEmptyToolReminderThisRun, lastEffectiveMessageIsToolResult() else {
-                        logger.error("🔁STREAM empty response (no content, no stop reason) — treating as transient error")
+                        logger.error("STREAM empty response (no content, no stop reason) — treating as transient error")
                         throw LLMError.transientError(message: "Server returned an empty response (overloaded or upstream error)")
                     }
                     didInjectEmptyToolReminderThisRun = true
-                    logger.error("🔁STREAM empty after tool result — injecting <system-reminder> and retrying one round")
+                    logger.error("STREAM empty after tool result — injecting <system-reminder> and retrying one round")
                     // [T-msgidx-oob] Re-resync before subscripting: the stream
                     // we just consumed is a suspension point, so `messages` may
                     // have been mutated meanwhile (iCloud inbound rebuild,
@@ -5793,10 +5798,10 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                     // to this line. Same guard shape as the fallback paths below.
                     if msgIdx < 0 || msgIdx >= messages.count || messages[msgIdx].id != runMsgId {
                         guard let resynced = messages.firstIndex(where: { $0.id == runMsgId }) else {
-                            logger.error("🔁STREAM empty-reminder: assistant message id=\(runMsgId) vanished (count=\(messages.count)) — aborting round")
+                            logger.error("STREAM empty-reminder: assistant message id=\(runMsgId) vanished (count=\(messages.count)) — aborting round")
                             throw LLMError.transientError(message: "Server returned an empty response (overloaded or upstream error)")
                         }
-                        logger.warning("🔁STREAM empty-reminder: msgIdx resynced → \(resynced) (count=\(messages.count))")
+                        logger.warning("STREAM empty-reminder: msgIdx resynced → \(resynced) (count=\(messages.count))")
                         msgIdx = resynced
                     }
                     let reminderStream = try await streamWithAutoRetry(
@@ -5816,7 +5821,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                         // Still empty after the nudge — a genuine failure, not a
                         // transient blip. Surface it clearly instead of silently
                         // looping so the user knows why the chat stopped.
-                        logger.error("🔁STREAM still empty after <system-reminder> retry — reporting error")
+                        logger.error("STREAM still empty after <system-reminder> retry — reporting error")
                         throw LLMError.providerError(message: "The model returned no response after a tool result, even after a reminder. It may be overloaded — please retry or switch models.")
                     }
                     // Recovered — proceed with the reminder round's content.
@@ -5825,7 +5830,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                     streamResult = result
                 }
             } catch let streamError as LLMError where streamError.isRetryable {
-                logger.error("🔁STREAM mid-stream retryable error, entering autoRetry: \(streamError.localizedDescription)")
+                logger.error("STREAM mid-stream retryable error, entering autoRetry: \(streamError.localizedDescription)")
                 // Resync msgIdx by stable id before touching messages — the
                 // array may have been shrunk by a concurrent path (user
                 // delete, reloadMessagesFromDB, compactBefore) during the
@@ -5833,7 +5838,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                 if let resynced = messages.firstIndex(where: { $0.id == runMsgId }) {
                     msgIdx = resynced
                 } else {
-                    logger.error("🔁STREAM mid-stream catch: assistant message id=\(runMsgId) no longer in messages (count=\(messages.count)) — aborting retry")
+                    logger.error("STREAM mid-stream catch: assistant message id=\(runMsgId) no longer in messages (count=\(messages.count)) — aborting retry")
                     throw streamError
                 }
                 // Clear text blocks AND incomplete tool blocks from the interrupted stream
@@ -5858,7 +5863,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                 let midStreamFbStrategy = activeGroupId
                     .flatMap { ProviderConfigStore.shared.group(for: $0) }?.fallbackStrategy ?? .limited
                 if midStreamFbStrategy == .always {
-                    logger.error("🔀STREAM always-strategy, skipping autoRetry — direct group fallback: \(streamError.localizedDescription)")
+                    logger.error("STREAM always-strategy, skipping autoRetry — direct group fallback: \(streamError.localizedDescription)")
                     if let eid = activeEntryId, let entry = ProviderConfigStore.shared.entry(for: eid) {
                         let inst = ProviderConfigStore.shared.instance(for: entry.providerInstanceId)?.label ?? entry.model.provider
                         fallbackReasons.append((model: entry.model.displayName, instance: inst, reason: streamError.fallbackReason))
@@ -5866,7 +5871,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                     // Re-resync after the await above — another task may have
                     // mutated `messages` during the MainActor.run suspension.
                     guard let resynced = messages.firstIndex(where: { $0.id == runMsgId }) else {
-                        logger.error("🔀STREAM always-strategy: assistant message id=\(runMsgId) vanished post-await (count=\(messages.count)) — aborting fallback")
+                        logger.error("STREAM always-strategy: assistant message id=\(runMsgId) vanished post-await (count=\(messages.count)) — aborting fallback")
                         throw streamError
                     }
                     msgIdx = resynced
@@ -5888,7 +5893,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                     // Re-resync after the MainActor.run above before the next
                     // messages[msgIdx] read in the retry call.
                     guard let resynced = messages.firstIndex(where: { $0.id == runMsgId }) else {
-                        logger.error("🔁STREAM autoRetry path: assistant message id=\(runMsgId) vanished post-await (count=\(messages.count)) — aborting retry")
+                        logger.error("STREAM autoRetry path: assistant message id=\(runMsgId) vanished post-await (count=\(messages.count)) — aborting retry")
                         throw streamError
                     }
                     msgIdx = resynced
@@ -5909,13 +5914,13 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                         // If the retried stream is also empty, the provider is persistently
                         // failing (e.g. Anthropic overloaded).  Trigger group fallback.
                         if isEmptyResponse(retryResult) {
-                            logger.error("🔁STREAM autoRetry also returned empty — triggering group fallback")
+                            logger.error("STREAM autoRetry also returned empty — triggering group fallback")
                             throw LLMError.providerError(message: "Server is overloaded")
                         }
                         streamResult = retryResult
                     } catch let retryError as LLMError where retryError.isFallbackable || retryError.isRetryable {
                         // Auto-retry exhausted or still empty — attempt group fallback.
-                        logger.error("🔀STREAM retries exhausted, attempting group fallback: \(retryError.localizedDescription)")
+                        logger.error("STREAM retries exhausted, attempting group fallback: \(retryError.localizedDescription)")
                         if let eid = activeEntryId, let entry = ProviderConfigStore.shared.entry(for: eid) {
                             let inst = ProviderConfigStore.shared.instance(for: entry.providerInstanceId)?.label ?? entry.model.provider
                             fallbackReasons.append((model: entry.model.displayName, instance: inst, reason: retryError.fallbackReason))
@@ -5924,7 +5929,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                         if let resynced = messages.firstIndex(where: { $0.id == runMsgId }) {
                             msgIdx = resynced
                         } else {
-                            logger.error("🔀STREAM retry-exhausted catch: assistant message id=\(runMsgId) gone (count=\(messages.count)) — aborting fallback")
+                            logger.error("STREAM retry-exhausted catch: assistant message id=\(runMsgId) gone (count=\(messages.count)) — aborting fallback")
                             throw retryError
                         }
                         await MainActor.run {
@@ -5938,7 +5943,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                         // Re-resync after MainActor.run before the messages[msgIdx]
                         // read below — see outer catch for rationale.
                         guard let resynced2 = messages.firstIndex(where: { $0.id == runMsgId }) else {
-                            logger.error("🔀STREAM retry-exhausted fallback: assistant message id=\(runMsgId) vanished post-await (count=\(messages.count)) — aborting")
+                            logger.error("STREAM retry-exhausted fallback: assistant message id=\(runMsgId) vanished post-await (count=\(messages.count)) — aborting")
                             throw retryError
                         }
                         msgIdx = resynced2
@@ -5967,7 +5972,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
             let toolEntries = streamResult.toolEntries
             let stopReason = streamResult.stopReason
             turnUsage = streamResult.turnUsage
-            logger.info("📐 Context after API: latestContextTokens=\(turnUsage.latestContextTokens) (in:\(turnUsage.inputTokens) cache_read:\(turnUsage.cacheReadTokens) cache_create:\(turnUsage.cacheCreationTokens))")
+            logger.info(" Context after API: latestContextTokens=\(turnUsage.latestContextTokens) (in:\(turnUsage.inputTokens) cache_read:\(turnUsage.cacheReadTokens) cache_create:\(turnUsage.cacheCreationTokens))")
 
             // Track session-level token stats
             let iterationStreamDuration = streamEnd.timeIntervalSince(iterationStreamStart)
@@ -6022,7 +6027,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
             Self.triggerAutoPlayAudio(in: assistantText)
 
             #if DEBUG
-            logger.debug("📊 Turn usage — in: \(turnUsage.inputTokens), out: \(turnUsage.outputTokens), cache_create: \(turnUsage.cacheCreationTokens), cache_read: \(turnUsage.cacheReadTokens)")
+            logger.debug(" Turn usage — in: \(turnUsage.inputTokens), out: \(turnUsage.outputTokens), cache_create: \(turnUsage.cacheCreationTokens), cache_read: \(turnUsage.cacheReadTokens)")
             let elapsed = Int(Date().timeIntervalSince(iterationStart) * 1000)
             LastAPIRequestBody.shared.updateLatest(
                 usage: CapturedUsage(
@@ -6040,7 +6045,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
 
             // Re-check bounds — messages may have been mutated during streaming.
             guard msgIdx >= 0, msgIdx < messages.count else {
-                logger.error("⚠️ Agent loop: msgIdx \(msgIdx) out of bounds after streaming, breaking")
+                logger.error(" Agent loop: msgIdx \(msgIdx) out of bounds after streaming, breaking")
                 hitTurnLimit = false
                 break
             }
@@ -6098,7 +6103,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                 keepAliveSystemPrompt = userSystemPrompt
                 keepAliveTools = tools
                 keepAliveEntry = ProviderConfigStore.shared.entry(for: activeEntryId ?? "")
-                logger.info("🔥 cache keep-alive: snapshot updated — session=\(sid.prefix(8)) history=\(self.agentHistory.count) tools=\(tools.count) sysPromptLen=\(userSystemPrompt.count) enhancedCache=\(self.enhancedCacheEnabled) cacheRead=\(turnUsage.cacheReadTokens) cacheCreate=\(turnUsage.cacheCreationTokens)")
+                logger.info(" cache keep-alive: snapshot updated — session=\(sid.prefix(8)) history=\(self.agentHistory.count) tools=\(tools.count) sysPromptLen=\(userSystemPrompt.count) enhancedCache=\(self.enhancedCacheEnabled) cacheRead=\(turnUsage.cacheReadTokens) cacheCreate=\(turnUsage.cacheCreationTokens)")
                 CacheKeepAliveManager.shared.recordRequest(sessionId: sid, vm: self)
             }
 
@@ -6293,8 +6298,8 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                         // [T-voice-bubble-failure-toast 09-12] 修复审查问题1: 合成失败
                         // 不再静默——开关开着却没气泡，她只会以为功能坏了。Toast 告知
                         // 原因（没配 TTS 服务/语音组都不可用）。
-                        DuduToast.show(AppLocalized("Voice bubble unavailable — check your TTS service or voice group."),
-                                       systemImage: "exclamationmark.triangle.fill")
+                        // P7 PORT: DuduToast is Views (Phase C) — rerouted per P3 precedent.
+                        ShareFeedbackToast.show(AppLocalized("Voice bubble unavailable — check your TTS service or voice group."))
                         logger.info("[AIVoice] synthesis unavailable — skipped bubble")
                         // [AI-P2-3] Leave a trace in the AI's context so the model
                         // knows the voice bubble was never sent: append a
@@ -6570,7 +6575,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
             // If user cancelled during tool execution, commit everything and stop.
             // History is now properly paired: assistant(tool_use) + user(tool_result).
             if cancelledDuringToolExecution || self.userDidCancel {
-                logger.info("⏹️ User cancelled during tool execution — committed \(toolResultParts.count) tool result(s), stopping agent loop")
+                logger.info("⏹ User cancelled during tool execution — committed \(toolResultParts.count) tool result(s), stopping agent loop")
                 self.prevCommittedBlockCount = self.committedBlockCount
                 committedBlockCount = messages[msgIdx].blocks.count
                 self.committedBlockCount = committedBlockCount
@@ -6595,7 +6600,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
             // own response (the #579 bug). Breaking → fresh turn avoids the merge
             // entirely while still inserting/un-queuing the message immediately.
             if !promptQueue.isEmpty {
-                logger.info("📨[QueueInterrupt] \(self.promptQueue.count) queued prompt(s) — interrupting after current tool call to start a standalone turn")
+                logger.info("[QueueInterrupt] \(self.promptQueue.count) queued prompt(s) — interrupting after current tool call to start a standalone turn")
                 self.prevCommittedBlockCount = self.committedBlockCount
                 committedBlockCount = messages[msgIdx].blocks.count
                 self.committedBlockCount = committedBlockCount
@@ -6666,7 +6671,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
         // turnCount to max and slap a fake "200 turns hit" error on every
         // ordinary completion — exactly the v1.4.0-dev bug user hit.)
         if hitTurnLimit, msgIdx >= 0, msgIdx < messages.count {
-            logger.warning("⚠️ runAgentLoop hit maxAgentTurns=\(Self.maxAgentTurns) — finalizing as resumable")
+            logger.warning(" runAgentLoop hit maxAgentTurns=\(Self.maxAgentTurns) — finalizing as resumable")
             messages[msgIdx].error =
                 "Stopped after \(Self.maxAgentTurns) agent turns to prevent runaway tool use. " +
                 "The model kept calling tools without finishing — tap Resume to continue from here, " +
