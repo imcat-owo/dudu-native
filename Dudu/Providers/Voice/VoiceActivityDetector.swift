@@ -180,9 +180,9 @@ final class VoiceActivityDetector: NSObject {
         // Error) when the engine/route is in a bad state — Swift `try` can't
         // catch it and it crashes via SIGABRT. Wrap in noff_try_objc.
         var engineError: Error?
-        let started = noff_try_objc {
+        let started = DuduCatchObjCException({
             do { try self.audioEngine.start() } catch { engineError = error }
-        }
+        }, nil)
         if let engineError {
             VoiceLog.log("audioEngine start failed: \(engineError.localizedDescription)")
             tearDown()
@@ -278,9 +278,9 @@ final class VoiceActivityDetector: NSObject {
             try configureSession()
             try setupEngineAndVAD()
             var engineError: Error?
-            let started = noff_try_objc {
+            let started = DuduCatchObjCException({
                 do { try self.audioEngine.start() } catch { engineError = error }
-            }
+            }, nil)
             if engineError != nil || !started {
                 VoiceLog.log("resume failed to restart engine")
                 fullStopFromInterruption()
@@ -301,7 +301,7 @@ final class VoiceActivityDetector: NSObject {
     /// voiceStarted() will append to existing samples rather than resetting).
     private func tearDownEngineOnly() {
         audioEngine.stop()
-        _ = noff_try_objc { self.audioEngine.inputNode.removeTap(onBus: 0) }
+        _ = DuduCatchObjCException({ self.audioEngine.inputNode.removeTap(onBus: 0) }
         vad?.delegate = nil
         vad = nil
         // Don't clear rawAudioBuffer here — it may be needed for fallback flush
@@ -317,7 +317,7 @@ final class VoiceActivityDetector: NSObject {
         #endif
         DispatchQueue.main.async { [weak self] in
             self?.delegate?.voiceActivityInterrupted()
-        }
+        }, nil)
     }
 
     func stop() {
@@ -475,7 +475,7 @@ final class VoiceActivityDetector: NSObject {
         unregisterSessionObservers()
         interruptedWhileRunning = false
         audioEngine.stop()
-        _ = noff_try_objc { self.audioEngine.inputNode.removeTap(onBus: 0) }
+        _ = DuduCatchObjCException({ self.audioEngine.inputNode.removeTap(onBus: 0) }
         vad?.delegate = nil
         vad = nil
         isRunning = false
@@ -498,7 +498,7 @@ final class VoiceActivityDetector: NSObject {
         MainActor.assumeIsolated {
             AudioSessionCoordinator.shared.end(.capture)
             BackgroundKeepAliveManager.shared.resumeSilentAudioForMedia(caller: "VAD.capture")
-        }
+        }, nil)
         VoiceLog.log("AVAudioSession: end(.capture)")
     }
 
@@ -567,21 +567,21 @@ final class VoiceActivityDetector: NSObject {
 
         // 512-frame buffer (~10 ms @ 48 kHz) matches the VAD frame size.
         // installTap can also throw an ObjC NSException — wrap it.
-        let installed = noff_try_objc {
+        let installed = DuduCatchObjCException({
             inputNode.installTap(onBus: 0, bufferSize: 512, format: inputFormat) { [weak self] buffer, _ in
                 self?.processAudioBuffer(buffer)
             }
-        }
+        }, nil)
         if !installed {
             // Fallback: let CoreAudio pick the node's native format (nil) — this
             // sidesteps a residual "format mismatch" when the explicit format and
             // the bus disagree mid route-change.
             VoiceLog.log("installTap explicit format failed; retrying with nil (native) format")
-            let retried = noff_try_objc {
+            let retried = DuduCatchObjCException({
                 inputNode.installTap(onBus: 0, bufferSize: 512, format: nil) { [weak self] buffer, _ in
                     self?.processAudioBuffer(buffer)
                 }
-            }
+            }, nil)
             guard retried else {
                 self.vad = nil
                 throw VoiceProviderError.parseError("Failed to attach microphone tap")

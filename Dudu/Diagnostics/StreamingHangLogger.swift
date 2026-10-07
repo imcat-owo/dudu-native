@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 /// Bridges the existing `HangDetector` (ObjC, main-thread stack capture) to
 /// the streaming lifecycle. While at least one streaming session is active,

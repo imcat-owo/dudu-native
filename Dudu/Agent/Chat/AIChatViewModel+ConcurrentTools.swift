@@ -1000,7 +1000,7 @@ extension AIChatViewModel {
                         AIVoiceMessageComposer.linuxPathFor(url: voice.url)) {
                         // P7 PORT: GlobalAudioPlayer is Views (Phase C). DuduVoiceBubblePlayer
                         // is the minimal engine-owned stand-in (documented in its file).
-                        DuduVoiceBubblePlayer.play(url: fileURL)
+                        DuduVoiceBubblePlayer.shared.play(url: fileURL)
                     }
                 }
                 let via = voice.serviceName.map { "（\($0)合成）" } ?? ""

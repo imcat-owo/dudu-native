@@ -1864,7 +1864,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
         logger.info("⏵ auto_play: triggering playback for \(resolved.lastPathComponent)")
         // P7 PORT: GlobalAudioPlayer is Views (Phase C). DuduVoiceBubblePlayer
         // is the minimal engine-owned stand-in (documented in its file).
-        DuduVoiceBubblePlayer.play(url: resolved)
+        DuduVoiceBubblePlayer.shared.play(url: resolved)
     }
 
     /// Resolve dudu-clone:// URL to local file URL (standalone, no UI dependency).
@@ -6294,7 +6294,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                             if let fileURL = await resolvePathForDirectRead(
                                 AIVoiceMessageComposer.linuxPathFor(url: voice.url)) {
                                 // P7 PORT: GlobalAudioPlayer is Views (Phase C) — see DuduVoiceBubblePlayer.
-                                DuduVoiceBubblePlayer.play(url: fileURL)
+                                DuduVoiceBubblePlayer.shared.play(url: fileURL)
                             }
                         } else {
                             logger.info("[AIVoice] auto-play skipped — mic capturing")

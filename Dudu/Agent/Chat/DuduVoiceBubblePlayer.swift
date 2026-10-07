@@ -7,22 +7,28 @@
 //  ObservableObject — Views/Phase C, NOT ported).
 //
 //  The chat core auto-plays voice bubbles after sending them
-//  (AIChatViewModel+ConcurrentTools). Deleting the call would drop the
-//  feature; this preserves it with plain AVAudioPlayer. When Phase C ports
-//  the full AudioPlayback view layer, it may replace this with the real
-//  player — but it must NOT redeclare this type (single definition).
+//  (AIChatViewModel+ConcurrentTools) and PlayerOffloadBridge drives audio
+//  sessions through it. Deleting those calls would drop features; this
+//  preserves them with plain AVAudioPlayer. When Phase C ports the full
+//  AudioPlayback view layer, it may replace this with the real player —
+//  but it must NOT redeclare this type (single definition).
 //
 
 import AVFoundation
 import Foundation
 
-/// Minimal voice-bubble playback for the chat core.
-/// Not the full GlobalAudioPlayer (no generation tracking, no UI state) —
-/// just enough that sent voice bubbles still auto-play.
-enum DuduVoiceBubblePlayer {
-    private static var player: AVAudioPlayer?
+/// Minimal audio playback for the chat core and offloads.
+/// Not the full GlobalAudioPlayer (no generation tracking, no UI state,
+/// no Control Center integration) — just enough that audio features work.
+final class DuduVoiceBubblePlayer {
+    static let shared = DuduVoiceBubblePlayer()
 
-    static func play(url: URL) {
+    private var player: AVAudioPlayer?
+
+    private init() {}
+
+    /// Play a file, replacing any current playback.
+    func play(url: URL) {
         // Match GlobalAudioPlayer.play(url:): suspend the silent-audio
         // keep-alive so media gets full volume (MainActor-isolated).
         Task { @MainActor in
@@ -37,5 +43,41 @@ enum DuduVoiceBubblePlayer {
             // Best-effort: the bubble was already sent; playback failing
             // must not break the turn.
         }
+    }
+
+    /// Toggle between playing and paused.
+    func togglePlayPause() {
+        guard let p = player else { return }
+        if p.isPlaying {
+            p.pause()
+        } else {
+            p.play()
+        }
+    }
+
+    /// Seek to a time in seconds.
+    func seek(to seconds: TimeInterval) {
+        player?.currentTime = seconds
+    }
+
+    /// Stop playback and release the player.
+    func stop() {
+        player?.stop()
+        player = nil
+    }
+
+    /// Whether audio is currently playing.
+    var isPlaying: Bool {
+        player?.isPlaying ?? false
+    }
+
+    /// Duration of the loaded file in seconds, 0 if none.
+    var duration: TimeInterval {
+        player?.duration ?? 0
+    }
+
+    /// Current playback position in seconds, 0 if none.
+    var currentTime: TimeInterval {
+        player?.currentTime ?? 0
     }
 }

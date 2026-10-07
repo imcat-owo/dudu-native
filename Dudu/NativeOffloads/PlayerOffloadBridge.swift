@@ -32,7 +32,7 @@ private class PlayerSession {
     let createdAt: Date
     weak var presentedController: UIViewController?
 
-    /// Video sessions own their AVPlayer; audio sessions delegate to GlobalAudioPlayer.
+    /// Video sessions own their AVPlayer; audio sessions delegate to DuduVoiceBubblePlayer (P7).
     var videoPlayer: AVPlayer?
 
     /// True once this session has called `suspendSilentAudioForMedia()` and
@@ -116,14 +116,14 @@ private class PlayerSession {
         }
     }
 
-    // MARK: - Audio (delegates to GlobalAudioPlayer + DuduAudioPreviewView)
+    // MARK: - Audio (delegates to DuduVoiceBubblePlayer (P7 stand-in) + DuduAudioPreviewView)
 
     private static func openAudioSession(_ session: PlayerSession, completion: @escaping (NSDictionary?, NSString?) -> Void) {
-        // Use GlobalAudioPlayer for playback
-        GlobalAudioPlayer.shared.play(url: session.fileURL)
+        // P7 PORT: DuduVoiceBubblePlayer is the engine stand-in for GlobalAudioPlayer (Views/Phase C)
+        DuduVoiceBubblePlayer.shared.play(url: session.fileURL)
 
-        // Build metadata from GlobalAudioPlayer
-        let durationSecs = GlobalAudioPlayer.shared.duration
+        // Build metadata from DuduVoiceBubblePlayer
+        let durationSecs = DuduVoiceBubblePlayer.shared.duration
 
         let data: NSDictionary = [
             "session_id": session.id,
@@ -214,7 +214,7 @@ private class PlayerSession {
             return nil
         }
         if session.mediaType == .audio {
-            let player = GlobalAudioPlayer.shared
+            let player = DuduVoiceBubblePlayer.shared
             if player.isPlaying { player.togglePlayPause() }
             return [
                 "session_id": sessionId,
@@ -237,7 +237,7 @@ private class PlayerSession {
             return nil
         }
         if session.mediaType == .audio {
-            let player = GlobalAudioPlayer.shared
+            let player = DuduVoiceBubblePlayer.shared
             if !player.isPlaying { player.togglePlayPause() }
             return [
                 "session_id": sessionId,
@@ -260,10 +260,10 @@ private class PlayerSession {
             return nil
         }
         if session.mediaType == .audio {
-            GlobalAudioPlayer.shared.seek(to: seconds)
+            DuduVoiceBubblePlayer.shared.seek(to: seconds)
             return [
                 "session_id": sessionId,
-                "status": GlobalAudioPlayer.shared.isPlaying ? "playing" : "paused",
+                "status": DuduVoiceBubblePlayer.shared.isPlaying ? "playing" : "paused",
                 "current_time": seconds,
             ]
         } else {
@@ -283,7 +283,7 @@ private class PlayerSession {
             return nil
         }
         if session.mediaType == .audio {
-            let player = GlobalAudioPlayer.shared
+            let player = DuduVoiceBubblePlayer.shared
             return [
                 "session_id": sessionId,
                 "file": session.guestPath,
@@ -324,7 +324,7 @@ private class PlayerSession {
             return nil
         }
         if session.mediaType == .audio {
-            GlobalAudioPlayer.shared.stop()
+            DuduVoiceBubblePlayer.shared.stop()
         } else {
             session.videoPlayer?.pause()
         }
@@ -348,7 +348,7 @@ private class PlayerSession {
         var items: [[String: Any]] = []
         for (_, session) in sessions {
             if session.mediaType == .audio {
-                let player = GlobalAudioPlayer.shared
+                let player = DuduVoiceBubblePlayer.shared
                 items.append([
                     "session_id": session.id,
                     "file": session.guestPath,
@@ -381,7 +381,7 @@ private class PlayerSession {
     static func cleanupSession(_ sessionId: String) {
         guard let session = sessions[sessionId] else { return }
         if session.mediaType == .audio {
-            GlobalAudioPlayer.shared.stop()
+            DuduVoiceBubblePlayer.shared.stop()
         } else {
             session.videoPlayer?.pause()
         }

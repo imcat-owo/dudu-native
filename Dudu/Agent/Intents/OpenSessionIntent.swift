@@ -30,6 +30,5 @@ struct OpenSessionIntent: AppIntent {
     }
 }
 
-extension Notification.Name {
-    static let openSessionFromIntent = Notification.Name("openSessionFromIntent")
-}
+// P7 PORT: `openSessionFromIntent` is defined in Dudu/Shared/DuduNotifications.swift
+// (P1-owned cross-cutting definition) — removed the duplicate that was here.
