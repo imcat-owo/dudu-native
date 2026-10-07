@@ -167,7 +167,7 @@ struct MCPApprovalCardView: View {
                 }
             }
 
-            if let timeout = payload.timeoutSeconds {
+            if let timeout = request.timeoutSeconds {
                 Text("若 \(Int(timeout)) 秒内不作答，将自动拒绝。")
                     .font(DuduTheme.captionFont())
                     .foregroundStyle(DuduTheme.duduTextDim)
