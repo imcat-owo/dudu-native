@@ -917,7 +917,7 @@ final class VoiceOutputPlayer: NSObject, ObservableObject {
             // scrubber (0.1s cadence — kelivo's floating player updates at
             // frame rate but a tenth-second is plenty for a 40pt-wide bar).
             startProgressTick()
-            VoiceLog.log(String(format: "TTS ▶︎ play #%d owner=%@ dur=%.2fs rate=%.2f queueAhead=%d bufferedAfter=%.2fs",
+            VoiceLog.log(String(format: "TTS play #%d owner=%@ dur=%.2fs rate=%.2f queueAhead=%d bufferedAfter=%.2fs",
                 front.seq, String(front.ownerSessionId.prefix(8)), p.duration, p.rate, queue.count, bufferedAudioSeconds))
         } catch {
             logger.error("TTS play failed #\(front.seq): \(error.localizedDescription)")

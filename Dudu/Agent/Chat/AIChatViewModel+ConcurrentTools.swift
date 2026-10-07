@@ -389,7 +389,7 @@ extension AIChatViewModel {
                         let mm = remaining / 60
                         let ss = remaining % 60
                         let countdown = mm > 0 ? String(format: "%d:%02d", mm, ss) : "\(ss)s"
-                        self.messages[msgIdx].blocks[blockIdx].content = "⏳ Waiting \(countdown) before executing..."
+                        self.messages[msgIdx].blocks[blockIdx].content = "Waiting \(countdown) before executing..."
                         self.scrollToBottomSignal.send()
                     }
                     try await Task.sleep(nanoseconds: tickNanos)
