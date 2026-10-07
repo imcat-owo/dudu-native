@@ -480,7 +480,7 @@ struct MusicRoomView: View {
 // MARK: - Shared pieces
 
 /// Track artwork: picked cover → Apple Music artwork → music-note fallback.
-func trackArtwork(for track: MusicTrack, size: CGFloat) -> some View {
+@MainActor func trackArtwork(for track: MusicTrack, size: CGFloat) -> some View {
     Group {
         if !track.coverUri.isEmpty, FileManager.default.fileExists(atPath: track.coverUri) {
             AsyncImage(url: URL(fileURLWithPath: track.coverUri)) { phase in
@@ -504,7 +504,7 @@ func trackArtwork(for track: MusicTrack, size: CGFloat) -> some View {
     .clipShape(RoundedRectangle(cornerRadius: size * 0.22))
 }
 
-private func artworkFallback(size: CGFloat) -> some View {
+@MainActor private func artworkFallback(size: CGFloat) -> some View {
     ZStack {
         RoundedRectangle(cornerRadius: size * 0.22)
             .fill(DuduTheme.duduIconChip)
