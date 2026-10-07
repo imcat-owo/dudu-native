@@ -375,11 +375,11 @@ class SelfSizingCell: UICollectionViewCell {
         var hostingSubtree: [UIView] = []
         Self.collectSubtree(self.contentView, into: &hostingSubtree)
         var superAttrs: UICollectionViewLayoutAttributes = layoutAttributes
-        let superOk = noff_try_objc {
+        let superOk = DuduCatchObjCException({
             withExtendedLifetime(hostingSubtree) {
                 superAttrs = super.preferredLayoutAttributesFitting(layoutAttributes)
             }
-        }
+        }, nil)
         if !superOk {
             // super's hosting measure threw an ObjC exception mid-race. Fall
             // back to the best height we have (cached, else the proposed one)
@@ -446,7 +446,7 @@ class SelfSizingCell: UICollectionViewCell {
         // `hostingSubtree` was already collected and pinned around the super
         // call above; reuse it here so the explicit measure runs under the same
         // lifetime guarantee without walking the subtree a second time.
-        let measureOk = noff_try_objc {
+        let measureOk = DuduCatchObjCException({
             withExtendedLifetime(hostingSubtree) {
                 fittingSize = self.contentView.systemLayoutSizeFitting(
                     targetSize,
@@ -454,7 +454,7 @@ class SelfSizingCell: UICollectionViewCell {
                     verticalFittingPriority: .fittingSizeLevel
                 )
             }
-        }
+        }, nil)
         if !measureOk {
             Self.sizingLogger.info("[CellSizing]  systemLayoutSizeFitting threw — using fallback height \(String(format: "%.0f", attrs.size.height))")
             return attrs

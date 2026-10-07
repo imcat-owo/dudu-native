@@ -1862,9 +1862,9 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
         }
 
         logger.info("⏵ auto_play: triggering playback for \(resolved.lastPathComponent)")
-        // GlobalAudioPlayer.play() configures the audio session itself (without
-        // .mixWithOthers) so that it appears in Control Center / lock screen.
-        GlobalAudioPlayer.shared.play(url: resolved)
+        // P7 PORT: GlobalAudioPlayer is Views (Phase C). DuduVoiceBubblePlayer
+        // is the minimal engine-owned stand-in (documented in its file).
+        DuduVoiceBubblePlayer.play(url: resolved)
     }
 
     /// Resolve dudu-clone:// URL to local file URL (standalone, no UI dependency).
@@ -6293,7 +6293,8 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                         if !VoiceModePreference.shared.isCapturing {
                             if let fileURL = await resolvePathForDirectRead(
                                 AIVoiceMessageComposer.linuxPathFor(url: voice.url)) {
-                                GlobalAudioPlayer.shared.play(url: fileURL)
+                                // P7 PORT: GlobalAudioPlayer is Views (Phase C) — see DuduVoiceBubblePlayer.
+                                DuduVoiceBubblePlayer.play(url: fileURL)
                             }
                         } else {
                             logger.info("[AIVoice] auto-play skipped — mic capturing")

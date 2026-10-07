@@ -339,6 +339,8 @@
 		02B7BEAB587874D24C5AAFC4 /* StreamingHangLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6900310CCD101724D3E556EC /* StreamingHangLogger.swift */; };
 		4E77C6B819872BAE86BE9687 /* MountedFolderCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00314764901FCFB49E72A7 /* MountedFolderCoordinator.swift */; };
 		725E07B4B624B1DD53B4BAA4 /* MountedFolderManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E34264D632927D4E82FD6D2 /* MountedFolderManager.swift */; };
+		EE42C3A2EF174A47EC706CB1 /* AttributeQueryRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = CAF4CB2C13732AE7088D8F93 /* AttributeQueryRecorder.m */; };
+		2CE00C1B37646EAE7276BCA4 /* HangDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A1637F10411D13B13BE869E /* HangDetector.m */; };
 /* End PBXBuildFile section */
 		C22E4BE16A67710000C9EBF0 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 30AC3C5C6C418C791E362178 /* libsqlite3.tbd */; };
 		F8F1403829CEFF47083C5520 /* RealTimeCutVADLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = AECFD4BE143BED595F298AF5 /* RealTimeCutVADLibrary */; };
@@ -792,6 +794,10 @@
 		6900310CCD101724D3E556EC /* StreamingHangLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamingHangLogger.swift; sourceTree = "<group>"; };
 		DD00314764901FCFB49E72A7 /* MountedFolderCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MountedFolderCoordinator.swift; sourceTree = "<group>"; };
 		9E34264D632927D4E82FD6D2 /* MountedFolderManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MountedFolderManager.swift; sourceTree = "<group>"; };
+		9F65F21F2B0F05C674E48589 /* AttributeQueryRecorder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AttributeQueryRecorder.h; sourceTree = "<group>"; };
+		CAF4CB2C13732AE7088D8F93 /* AttributeQueryRecorder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AttributeQueryRecorder.m; sourceTree = "<group>"; };
+		7370B3BF54014AC01432A0DB /* HangDetector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HangDetector.h; sourceTree = "<group>"; };
+		4A1637F10411D13B13BE869E /* HangDetector.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HangDetector.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 		30AC3C5C6C418C791E362178 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 
@@ -1605,8 +1611,12 @@
 			isa = PBXGroup;
 			children = (
 				164E581F225F4EB804EDBC2B /* CrashReporter.swift */,
+				4A1637F10411D13B13BE869E /* HangDetector.m */,
 				511B74A97C06640CB76F31AC /* CrashSignalHandler.h */,
 				6900310CCD101724D3E556EC /* StreamingHangLogger.swift */,
+				7370B3BF54014AC01432A0DB /* HangDetector.h */,
+				9F65F21F2B0F05C674E48589 /* AttributeQueryRecorder.h */,
+				CAF4CB2C13732AE7088D8F93 /* AttributeQueryRecorder.m */,
 				CFC2CBD4D49AA356B8FDA6F4 /* CrashSignalHandler.m */,
 				F7F58D14A8E71495349E6ACE /* BrowserResourceMonitor.swift */,
 			);
@@ -1863,6 +1873,7 @@
 				296F93A2AF71819172037474 /* CookieAuditLogger.swift in Sources */,
 				2AE426B2F83796022396A27E /* RetryRunIntent.swift in Sources */,
 				2C9F4E98EFD9BA15F707C48D /* VoiceProviderTemplate.swift in Sources */,
+				2CE00C1B37646EAE7276BCA4 /* HangDetector.m in Sources */,
 				2D8659197159B23E338FF83B /* BackupOpenRouter.swift in Sources */,
 				2F55F5609A79C092C1633137 /* BrowserManagementView.swift in Sources */,
 				2FDB86929AA1A1E4D00FFD22 /* LLMProviderFactory.swift in Sources */,
@@ -1965,7 +1976,6 @@
 				77EFA3ED57736203DFE92AEB /* Syncable.swift in Sources */,
 				79A31EFC56E9B93237A9EC0B /* WeatherOffloadBridge.swift in Sources */,
 				7A4A2F0720CD0F635FBD1BDB /* ProvidersCollection.swift in Sources */,
-				7A9A8C682E5A09A9106775F1 /* MessageListInfrastructure.swift in Sources */,
 				7BE834043097152B89728978 /* NSTextContainerSetSizeGuard.m in Sources */,
 				7BF31961A4395DE33856F4E1 /* BrowserUseManager.swift in Sources */,
 				7C88B218A5F6EBB40F16A1C4 /* EnvVarRedactor.swift in Sources */,
@@ -1996,7 +2006,6 @@
 				8E9832DE5E4A229FE2EC0E3A /* MCPStore.swift in Sources */,
 				8FCE740B6D52F5AE503C2C4D /* ImageTextCache.swift in Sources */,
 				90518BF15A6AD71E99CD269B /* AgentProvider.swift in Sources */,
-				905BBB4614A710EDE45A8D33 /* MessageListLayout.swift in Sources */,
 				930088BFD0594EA853EA7D26 /* ObjCExceptionCatcher.m in Sources */,
 				954385629223CF740A290BF0 /* BrowserUseOffloadBridge.swift in Sources */,
 				96621CBAA9C292B538C99557 /* AlarmOffloadBridge.swift in Sources */,
@@ -2106,6 +2115,7 @@
 				EBD60F4B64B875B4180648E0 /* WebAppShortcut.swift in Sources */,
 				ECA4A123D95F076693FF0804 /* ProviderInstance.swift in Sources */,
 				ED789F45FE7AC2B700D9CB0E /* CloudSyncEngine.swift in Sources */,
+				EE42C3A2EF174A47EC706CB1 /* AttributeQueryRecorder.m in Sources */,
 				EEACA4FAE211E1FAC17F7567 /* LLMError.swift in Sources */,
 				EFE77131D3FBBE595E98F633 /* GeminiAgentProvider.swift in Sources */,
 				F14AF3D911C49A3310325720 /* AnthropicModelsAPI.swift in Sources */,

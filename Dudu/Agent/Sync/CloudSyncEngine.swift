@@ -666,9 +666,9 @@ final class CloudSyncEngine: ObservableObject {
                     let zoneID = CKRecordZone.ID(zoneName: dirty.zoneName)
                     let deleteRecordName = "\(dirty.recordType):\(dirty.recordId)"
                     var deleteRecordID: CKRecord.ID?
-                    let deleteOk = noff_try_objc {
+                    let deleteOk = DuduCatchObjCException({
                         deleteRecordID = CKRecord.ID(recordName: deleteRecordName, zoneID: zoneID)
-                    }
+                    }, nil)
                     guard deleteOk, let deleteRecordID else {
                         logger.error("[CloudSync] CKRecord.ID threw for delete recordName '\(deleteRecordName)' — clearing")
                         await ChatStore.shared.clearDirtyRecord(recordName: deleteRecordName)
@@ -1095,9 +1095,9 @@ final class CloudSyncEngine: ObservableObject {
             return
         }
         var recordIDOpt: CKRecord.ID?
-        let recordIDOk = noff_try_objc {
+        let recordIDOk = DuduCatchObjCException({
             recordIDOpt = CKRecord.ID(recordName: deviceRecordName, zoneID: devicesZoneID)
-        }
+        }, nil)
         guard recordIDOk, let recordID = recordIDOpt else {
             logger.error("[CloudSync] CKRecord.ID threw for deviceId \(ICloudSharedZoneTransport.escapeForLog(deviceRecordName)) — skipping device record")
             return
@@ -1137,9 +1137,9 @@ final class CloudSyncEngine: ObservableObject {
         // CKRecord.ID throws NSException (not Swift Error) for invalid recordName —
         // wrap in ObjC @try/@catch to prevent crash loop
         var recordID: CKRecord.ID?
-        let ok = noff_try_objc {
+        let ok = DuduCatchObjCException({
             recordID = CKRecord.ID(recordName: recordName, zoneID: zoneID)
-        }
+        }, nil)
         guard ok, let recordID else {
             logger.error("[CloudSync] CKRecord.ID threw for recordName '\(recordName)' — skipping")
             return nil

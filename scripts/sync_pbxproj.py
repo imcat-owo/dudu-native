@@ -71,9 +71,12 @@ CPPJIEBA_INCLUDE = "$(SRCROOT)/Dudu/Vendor/cppjieba/include"
 #     DuduToast (ported from MinisToast), restore the original call site.
 EXCLUDE = {
     # P7 (2026-10-07): Views-owned UI — re-enable when Phase C ports Views.
+    # (MessageListInfrastructure/Layout are only used by the excluded V3 list.)
     "Dudu/Agent/BrowserUse/BrowserSheetView.swift",
     "Dudu/Agent/Markdown/MathRenderScheduler.swift",
     "Dudu/Agent/MessageList/CollectionViewMessageListV3.swift",
+    "Dudu/Agent/MessageList/MessageListInfrastructure.swift",
+    "Dudu/Agent/MessageList/MessageListLayout.swift",
     # P7 (2026-10-07): widget extension entry point — @main conflicts with DuduApp; belongs to the future widget extension target.
     "Dudu/AgentWidget/AgentWidgetBundle.swift",
     # P7 (2026-10-07): iSH guest CLI tools — need kernel/native_offload.h (iSH kernel headers, P8) + FFmpeg.framework (deps/, not vendored). The 8 Swift bridges ARE in the build; only the .m files stay out.

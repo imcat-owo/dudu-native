@@ -34,6 +34,18 @@ extension NSNotification.Name {
     /// must NOT redeclare it).
     static let memoryFilesDidChange =
         NSNotification.Name("com.dudu.ios.memoryFilesDidChange")
+
+    /// P7: chat session lifecycle (were MinisApp.swift in OpenMinis).
+    static let sessionDidCreate = NSNotification.Name("sessionDidCreate")
+    static let sessionDidUpdate = NSNotification.Name("sessionDidUpdate")
+    static let sessionAgentLoopDidEnd = NSNotification.Name("sessionAgentLoopDidEnd")
+
+    /// P7: posted when user attachments are mounted for a session (was
+    /// Agent/MessageList/CollectionViewMessageListV3.swift in OpenMinis,
+    /// which is excluded until Views/Phase C — the definition moves here
+    /// so the engine compiles; Views must NOT redeclare it).
+    static let duduUserAttachmentsMounted =
+        NSNotification.Name("duduUserAttachmentsMounted")
 }
 
 extension Bundle {

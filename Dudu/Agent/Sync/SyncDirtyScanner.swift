@@ -58,7 +58,7 @@ final class SyncDirtyScanner {
     private var memoryBaselineEstablished = false
 
     private var skillsDir: URL {
-        AIChatViewModel.duduSkillsPersistentDir
+        DuduPaths.duduSkillsPersistentDir
     }
 
     private init() {}
@@ -114,7 +114,7 @@ final class SyncDirtyScanner {
     /// Return the max file modification date for a given skill ID.
     /// Used by CloudSyncEngine to detect filesystem changes not reflected in the DB.
     static func maxModDate(inSkill skillId: String) -> Date {
-        let dir = AIChatViewModel.duduSkillsPersistentDir.appendingPathComponent(skillId)
+        let dir = DuduPaths.duduSkillsPersistentDir.appendingPathComponent(skillId)
         return SyncDirtyScanner.shared.maxModDate(in: dir)
     }
 

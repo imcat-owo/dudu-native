@@ -1172,9 +1172,9 @@ final class ICloudSharedZoneTransport: NSObject, SyncTransport {
             // frame is intact and it catches whatever the validator failed to
             // anticipate about CloudKit's rules.
             var recordIDOpt: CKRecord.ID?
-            let recordIDOk = DuduCatchObjCException {
+            let recordIDOk = DuduCatchObjCException({
                 recordIDOpt = CKRecord.ID(recordName: recordName, zoneID: zoneID)
-            }
+            }, nil)
             guard recordIDOk, let recordID = recordIDOpt else {
                 logger.error("[SyncTransport] CKRecord.ID threw for save recordName \(Self.escapeForLog(recordName)) type=\(portable.id.type) — skipping")
                 continue
@@ -1202,9 +1202,9 @@ final class ICloudSharedZoneTransport: NSObject, SyncTransport {
             // [T-ckrecordname-defense-in-depth] Same shape as the save loop
             // above — synchronous body, so the @try frame survives.
             var recordIDOpt: CKRecord.ID?
-            let recordIDOk = DuduCatchObjCException {
+            let recordIDOk = DuduCatchObjCException({
                 recordIDOpt = CKRecord.ID(recordName: recordName, zoneID: zoneID)
-            }
+            }, nil)
             guard recordIDOk, let recordID = recordIDOpt else {
                 logger.error("[SyncTransport] CKRecord.ID threw for delete recordName \(Self.escapeForLog(recordName)) type=\(d.type) — skipping")
                 continue
@@ -1986,9 +1986,9 @@ extension ICloudSharedZoneTransport: CKSyncEngineDelegate {
         }
         let zoneID = CKRecordZone.ID(zoneName: DeviceIdentity.zoneName)
         var out: CKRecord.ID?
-        let ok = DuduCatchObjCException {
+        let ok = DuduCatchObjCException({
             out = CKRecord.ID(recordName: v1Name, zoneID: zoneID)
-        }
+        }, nil)
         guard ok else {
             logger.error("[SyncTransport] v1RecordID: CKRecord.ID threw for \(escapeForLog(v1Name)) — skipping v1 delete")
             return nil

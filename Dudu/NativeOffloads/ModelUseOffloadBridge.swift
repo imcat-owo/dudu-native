@@ -859,7 +859,7 @@ private let logger = AppLogger(category: "ModelUseOffload")
             let callerSid = DuduISHSeams.mountedSessionIdSnapshot?() ?? ""
             let attachDir: String
             if !callerSid.isEmpty {
-                attachDir = AIChatViewModel.duduAttachmentsPersistentDir(for: callerSid).path
+                attachDir = DuduPaths.duduAttachmentsPersistentDir(for: callerSid).path
             } else {
                 // P7 PORT: RootfsManager is P8 — routed via DuduISHSeams.
                 // Without P8 there is no guest rootfs; degrade to tmp (the
@@ -1681,7 +1681,7 @@ private let logger = AppLogger(category: "ModelUseOffload")
         let callerSid2 = DuduISHSeams.mountedSessionIdSnapshot?() ?? ""
         let attachDir: String
         if !callerSid2.isEmpty {
-            attachDir = AIChatViewModel.duduAttachmentsPersistentDir(for: callerSid2).path
+            attachDir = DuduPaths.duduAttachmentsPersistentDir(for: callerSid2).path
         } else {
             // P7 PORT: RootfsManager is P8 — routed via DuduISHSeams.
             // Without P8 there is no guest rootfs; degrade to tmp (the
@@ -1973,12 +1973,12 @@ private let logger = AppLogger(category: "ModelUseOffload")
         // Case 1: match a session-persistent dir prefix for this caller.
         if !callerSid.isEmpty {
             let mappings: [(persistDir: String, linuxDir: String)] = [
-                (AIChatViewModel.duduAttachmentsPersistentDir(for: callerSid).path,
-                 AIChatViewModel.duduAttachmentsLinuxDir),
-                (AIChatViewModel.duduWorkspacePersistentDir(for: callerSid).path,
-                 AIChatViewModel.duduWorkspaceLinuxDir),
-                (AIChatViewModel.duduOffloadsPersistentDir(for: callerSid).path,
-                 AIChatViewModel.duduOffloadsLinuxDir),
+                (DuduPaths.duduAttachmentsPersistentDir(for: callerSid).path,
+                 DuduPaths.duduAttachmentsLinuxDir),
+                (DuduPaths.duduWorkspacePersistentDir(for: callerSid).path,
+                 DuduPaths.duduWorkspaceLinuxDir),
+                (DuduPaths.duduOffloadsPersistentDir(for: callerSid).path,
+                 DuduPaths.duduOffloadsLinuxDir),
             ]
             for (persistDir, linuxDir) in mappings {
                 for prefix in [persistDir, "/private" + persistDir] {
@@ -1996,7 +1996,7 @@ private let logger = AppLogger(category: "ModelUseOffload")
         // Last resort: preserve prior behavior (announce under attachments by
         // basename). Only reachable when the file is neither under dataPath nor
         // any known persistent dir — shouldn't happen for our own save paths.
-        return AIChatViewModel.duduAttachmentsLinuxDir + "/" + (filePath as NSString).lastPathComponent
+        return DuduPaths.duduAttachmentsLinuxDir + "/" + (filePath as NSString).lastPathComponent
     }
 
     /// Strip MIME parameters (e.g. "audio/L16;codec=pcm;rate=24000" → "audio/L16")

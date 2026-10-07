@@ -24,8 +24,10 @@ enum DuduVoiceBubblePlayer {
 
     static func play(url: URL) {
         // Match GlobalAudioPlayer.play(url:): suspend the silent-audio
-        // keep-alive so media gets full volume.
-        BackgroundKeepAliveManager.shared.suspendSilentAudioForMedia()
+        // keep-alive so media gets full volume (MainActor-isolated).
+        Task { @MainActor in
+            BackgroundKeepAliveManager.shared.suspendSilentAudioForMedia()
+        }
         do {
             let p = try AVAudioPlayer(contentsOf: url)
             p.prepareToPlay()

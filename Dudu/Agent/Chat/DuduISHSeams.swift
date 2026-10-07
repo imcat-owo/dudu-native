@@ -100,6 +100,24 @@ enum DuduISHSeams {
     /// P8: ISHKernel.installFakefsChangeHandler — see DuduFakefsChangeEvent.
     static var installFakefsChangeHandler: ((@escaping ([DuduFakefsChangeEvent]) -> Void) -> Void)? = nil
 
+    // MARK: - P8 external mounts (MountedFolderManager)
+
+    /// P8: a mount spec for the iSH guest. Mirrors
+    /// ISHExecutionCoordinator.ExternalMountSpec (P8).
+    struct DuduExternalMountSpec {
+        let linuxDir: String
+        let hostPath: String
+        let readOnly: Bool
+    }
+
+    /// P8 (not yet): push external mount snapshot to the iSH coordinator.
+    /// Until then nil (no-op).
+    static var setExternalMountSnapshot: (([DuduExternalMountSpec]) -> Void)?
+
+    /// P8 (not yet): ask the iSH coordinator to reconcile mounts.
+    /// Until then nil (no-op).
+    static var applyExternalMountSnapshot: (() async -> Void)?
+
     /// P8: MinisFsRouter.shared.sid(for:) — fs_context -> owning session id.
     static var fsRouterSid: ((UInt64) -> String?)? = nil
 

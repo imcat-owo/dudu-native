@@ -167,13 +167,13 @@ final class DuduMountedFoldersManager {
     /// Historically stored in `duduAppGroupRoot/mounted-folders.json`, but
     /// that path sits inside the FileProvider's exposed root.
     private static var storeURL: URL {
-        return AIChatViewModel.duduConfigRoot.appendingPathComponent("mounted-folders.json")
+        return DuduPaths.duduConfigRoot.appendingPathComponent("mounted-folders.json")
     }
 
     /// Old pre-migration path — kept as a fallback source so existing mounts
     /// aren't lost after upgrading.
     private static var legacyStoreURL: URL {
-        AIChatViewModel.duduAppGroupRoot.appendingPathComponent("mounted-folders.json")
+        DuduPaths.duduAppGroupRoot.appendingPathComponent("mounted-folders.json")
     }
 
     /// Move `mounted-folders.json` out of providerRoot into DuduConfig the
@@ -758,15 +758,16 @@ final class DuduMountedFoldersManager {
     /// performMount will pick up the snapshot on the next session mount).
     func pushExternalMountSnapshot() {
         var droppedNames: [String] = []
-        let snapshot: [ISHExecutionCoordinator.ExternalMountSpec] = entries.compactMap { entry in
+        // P7 PORT: ISHExecutionCoordinator is P8 — use the DuduISHSeams mirror type.
+        let snapshot: [DuduISHSeams.DuduExternalMountSpec] = entries.compactMap { entry in
             guard let url = activeURLs[entry.id] else {
                 let state = activationStates[entry.id].map { "\($0)" } ?? "nil"
                 droppedNames.append("\(entry.name)[\(String(entry.id.uuidString.prefix(8)))]:state=\(state)")
                 return nil
             }
-            let linuxDir = "\(AIChatViewModel.duduMountsLinuxDir)/\(entry.name)"
+            let linuxDir = "\(DuduPaths.duduMountsLinuxDir)/\(entry.name)"
             // Effective writable = source is actually writable AND user allows it.
-            return ISHExecutionCoordinator.ExternalMountSpec(
+            return DuduISHSeams.DuduExternalMountSpec(
                 linuxDir: linuxDir,
                 hostPath: url.path,
                 readOnly: !entry.effectiveWritable
@@ -808,11 +809,12 @@ final class DuduMountedFoldersManager {
                 }
             }
         }
-        // Synchronous write to the thread-safe shared storage — visible to
-        // performMount immediately, no actor hop required.
-        ISHExecutionCoordinator.setExternalMountSnapshot(snapshot)
-        // Also ask the coordinator to reconcile now (async, no-op if not booted).
-        Task { await ISHExecutionCoordinator.shared.applyExternalMountSnapshot() }
+        // P7 PORT: ISHExecutionCoordinator is P8 — routed via DuduISHSeams.
+        // Until P8 assigns them these are no-ops.
+        DuduISHSeams.setExternalMountSnapshot?(snapshot)
+        if let apply = DuduISHSeams.applyExternalMountSnapshot {
+            Task { await apply() }
+        }
     }
 
     /// Re-activate a single entry (used on add and manual reauth).
@@ -912,7 +914,7 @@ final class DuduMountedFoldersManager {
     /// Returns the entry matching a fakefs symlink path (`/var/dudu/mounts/<name>/...`).
     /// Useful for FileBrowserView to decide whether to use NSFileCoordinator.
     func entryForLinuxPath(_ linuxPath: String) -> MountedFolderEntry? {
-        let prefix = AIChatViewModel.duduMountsLinuxDir + "/"
+        let prefix = DuduPaths.duduMountsLinuxDir + "/"
         guard linuxPath.hasPrefix(prefix) else { return nil }
         let rest = String(linuxPath.dropFirst(prefix.count))
         let name = rest.split(separator: "/", maxSplits: 1).first.map(String.init) ?? rest
@@ -978,7 +980,8 @@ final class DuduMountedFoldersManager {
 
     /// Remove the fakefs symlink for a mount by name. Safe to call when it doesn't exist.
     private func removeMountSymlink(name: String) {
-        let dataPath = RootfsManager.shared.dataPath
+        // P7 PORT: RootfsManager is P8 — routed via DuduISHSeams.rootfsDataPath.
+        guard let dataPath = DuduISHSeams.rootfsDataPath?() else { return }
         let linkPath = dataPath
             .appendingPathComponent("var/dudu/mounts", isDirectory: true)
             .appendingPathComponent(name)

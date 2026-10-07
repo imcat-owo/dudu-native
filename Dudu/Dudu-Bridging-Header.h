@@ -29,6 +29,8 @@
 // P7 (Diagnostics): async-signal-safe crash signal handler (pure Darwin,
 // no P8 deps). CrashReporter.swift calls CrashSignalHandler.install().
 #import "Diagnostics/CrashSignalHandler.h"
+#import "Diagnostics/HangDetector.h"
+#import "Diagnostics/AttributeQueryRecorder.h"
 
 // P7 (Backup/Remote): rclone Go mobile entry points. The real library
 // (deps/rclone-mobile xcframework) is NOT vendored; DuduRcloneStub.m

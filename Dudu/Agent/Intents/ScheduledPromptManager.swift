@@ -254,7 +254,9 @@ final class ScheduledPromptStore: ObservableObject {
     /// Opens the target session (existing or new draft) and auto-sends the
     /// preset prompt — the AskDuduIntent pipeline shape, minus Siri.
     static func handleTap(promptId: String, promptText: String, sessionId: String?) {
-        Task { @MainActor in
+        // P7 PORT: explicit priority — `Task { @MainActor in }` is ambiguous
+        // between Task.init overloads on this toolchain.
+        Task(priority: .userInitiated) { @MainActor in
             let vm: AIChatViewModel
             if let sid = sessionId, !sid.isEmpty {
                 let (cached, _) = ViewModelCache.shared.getOrCreate(for: sid)

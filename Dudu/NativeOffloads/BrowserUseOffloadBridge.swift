@@ -209,7 +209,7 @@ import Foundation
         // what /var/dudu/browser/ bind-mounts to for that session.
         let browserHostDir: URL? = (sid == Self.unmountedSentinel)
             ? nil
-            : AIChatViewModel.duduBrowserPersistentDir(for: sid)
+            : DuduPaths.duduBrowserPersistentDir(for: sid)
 
         // ── Screenshot / snapshot ──
         var persistedImagePath: String? = nil
@@ -220,7 +220,7 @@ import Foundation
                 let dest = hostDir.appendingPathComponent(filename)
                 do {
                     try data.write(to: dest)
-                    let linuxPath = "\(AIChatViewModel.duduBrowserLinuxDir)/\(filename)"
+                    let linuxPath = "\(DuduPaths.duduBrowserLinuxDir)/\(filename)"
                     persistedImagePath = linuxPath
                     out["image_path"] = linuxPath
                     out["dudu_url"] = "dudu-clone://browser/\(filename)"
@@ -252,7 +252,7 @@ import Foundation
                     let dest = hostDir.appendingPathComponent(filename)
                     do {
                         try data.write(to: dest)
-                        out["image_path"] = "\(AIChatViewModel.duduBrowserLinuxDir)/\(filename)"
+                        out["image_path"] = "\(DuduPaths.duduBrowserLinuxDir)/\(filename)"
                         out["dudu_url"] = "dudu-clone://browser/\(filename)"
                         reported = true
                     } catch {
@@ -279,7 +279,7 @@ import Foundation
                     let dest = hostDir.appendingPathComponent(name)
                     do {
                         try data.write(to: dest)
-                        let linuxPath = "\(AIChatViewModel.duduBrowserLinuxDir)/\(name)"
+                        let linuxPath = "\(DuduPaths.duduBrowserLinuxDir)/\(name)"
                         out["fetched_path"] = linuxPath
                         out["fetched_dudu_url"] = "dudu-clone://browser/\(name)"
                     } catch {
