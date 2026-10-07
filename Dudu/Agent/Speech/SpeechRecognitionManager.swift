@@ -253,11 +253,13 @@ final class SpeechRecognitionManager: ObservableObject {
         // rejected. That NSException blows straight through this `throws`
         // function and the caller's `try?`, landing in `abort()` (SIGABRT) via
         // AVAudioEngineImpl::InstallTapOnNode. `audioEngine.start()` can do the
-        // same. Wrap both in noff_try_objc so the NSException is caught, we tear
+        // same. Wrap both in DuduCatchObjCException (P1's @try/@catch bridge —
+        // same contract as upstream noff_try_objc, which lives in P7's
+        // NativeOffloads) so the NSException is caught, we tear
         // the tap/engine back down, and we surface a normal Swift error the
         // caller's `try?` can swallow.
         var startError: Error?
-        let installOk = noff_try_objc {
+        let installOk = DuduCatchObjCException({
             inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { [weak self] buffer, _ in
                 request.append(buffer)
                 let rms = self?.computeRMS(buffer: buffer) ?? 0
@@ -272,7 +274,7 @@ final class SpeechRecognitionManager: ObservableObject {
             } catch {
                 startError = error
             }
-        }
+        }, nil)
 
         guard installOk, startError == nil else {
             // Roll back anything that partially succeeded so the next attempt
