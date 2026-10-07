@@ -4291,9 +4291,10 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                 let fileName = (meta.path as NSString).lastPathComponent
                 let fileURL = uploadsDir.appendingPathComponent(fileName)
                 guard FileManager.default.fileExists(atPath: fileURL.path) else { continue }
-                // Copy to Caches so the normal send() flow works
-                let cacheDir = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
-                    .appendingPathComponent("InputAttachments")
+                // Copy to the attachment cache so the normal send() flow works.
+                // Uses the incognito-aware cache dir: in incognito this is the
+                // tmp root (wiped on exit), never the persistent Caches dir.
+                let cacheDir = attachmentCacheDir
                 try? FileManager.default.createDirectory(at: cacheDir, withIntermediateDirectories: true)
                 let cacheURL = cacheDir.appendingPathComponent(fileName)
                 try? FileManager.default.removeItem(at: cacheURL)

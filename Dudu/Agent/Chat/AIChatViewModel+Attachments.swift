@@ -11,7 +11,21 @@ private let logger = AppLogger(category: "AIChatVM")
 
 extension AIChatViewModel {
 
-    private var attachmentCacheDir: URL {
+    /// Pre-send staging dir for attachment chips.
+    ///
+    /// Privacy (incognito): while `isIncognito` is true, attachments are staged
+    /// under the incognito tmp root (`tmp/dudu-incognito-uploads`) instead of the
+    /// shared `Caches/InputAttachments`. `wipeIncognitoTempFiles()` deletes that
+    /// whole root on exit, so incognito attachments — PhotosPicker, camera, file
+    /// picker, stickers, intent files — can never survive into Caches. This keeps
+    /// the wipe a simple whole-dir deletion (no per-file tracking needed) and
+    /// leaves non-incognito attachments untouched in Caches/InputAttachments.
+    var attachmentCacheDir: URL {
+        if isIncognito {
+            return FileManager.default.temporaryDirectory
+                .appendingPathComponent("dudu-incognito-uploads", isDirectory: true)
+                .appendingPathComponent("InputAttachments", isDirectory: true)
+        }
         let caches = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
         return caches.appendingPathComponent("InputAttachments")
     }
