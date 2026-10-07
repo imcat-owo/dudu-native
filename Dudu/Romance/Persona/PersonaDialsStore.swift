@@ -106,7 +106,7 @@ final class PersonaDialsStore: ObservableObject {
 
     // MARK: - Disk (UserDefaults; small, fast, immediate)
 
-    private static func key(for personaID: String) -> String {
+    nonisolated private static func key(for personaID: String) -> String {
         "dudu.personaDials.\(personaID).v1"
     }
 

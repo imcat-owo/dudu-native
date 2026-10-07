@@ -107,7 +107,7 @@ final class PersonaEvolutionStore: ObservableObject {
 
     // MARK: - Disk
 
-    private static func envelopeURL(for personaID: String) -> URL {
+    nonisolated private static func envelopeURL(for personaID: String) -> URL {
         DuduPaths.duduConfigRoot
             .appendingPathComponent("evolution", isDirectory: true)
             .appendingPathComponent("evolution_\(personaID).json")

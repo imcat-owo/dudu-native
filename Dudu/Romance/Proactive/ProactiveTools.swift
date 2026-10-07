@@ -337,9 +337,12 @@ enum ProactiveTools {
                                       isError: true)
                 }
                 let mgr = await MoodCheckInManager.shared
-                if let h = args.int("hour"), !await mgr.setHour(h) {
-                    return ToolOutput(text: "她 \(h):00 在睡觉，这个时间不行。给她换个晚上的时间（比如 20 点）吧。",
-                                      isError: true)
+                if let h = args.int("hour") {
+                    let ok = await mgr.setHour(h)
+                    if !ok {
+                        return ToolOutput(text: "她 \(h):00 在睡觉，这个时间不行。给她换个晚上的时间（比如 20 点）吧。",
+                                          isError: true)
+                    }
                 }
                 if let e = args.bool("enabled") { await mgr.setEnabled(e) }
                 let c = await mgr.config

@@ -291,7 +291,7 @@ public enum InteractiveTools {
         var message: String
     }
 
-    private static func needStory(_ store: StoryStore, storyId: String) async -> Result<Story, StoryFailure> {
+    private static func needStory(_ store: StoryStore, _ storyId: String) async -> Result<Story, StoryFailure> {
         let id = storyId.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !id.isEmpty else {
             return .failure(StoryFailure(message: "storyId 必填（先调 story_list 看有哪些故事）。"))

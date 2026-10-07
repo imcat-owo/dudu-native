@@ -134,7 +134,7 @@ final class SelfPostManager: ObservableObject {
 
     /// Called from the settings UI (her hand) or the selfpost_config tool
     /// (with her explicit confirmation — enforced in the tool handler).
-    func updateConfig(_ update: (inout SelfPostConfig) -> Void, byHer: Bool) {
+    func updateConfig(byHer: Bool, _ update: (inout SelfPostConfig) -> Void) {
         guard byHer else {
             logDecision(kind: "config", text: "拒绝：AI 不能擅自改自发帖配置")
             return
