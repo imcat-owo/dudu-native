@@ -5323,8 +5323,12 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
         // value the injection actually keys off. Trace it against the
         // session so a repro shows whether loadSession seeded it from the
         // global default.
-        AppLogger(category: "MemDiag").info("[MemDiag] inject-decision sid=\(self.sessionId?.prefix(8) ?? "nil") vm.memoryEnabled=\(self.memoryEnabled)")
-        if memoryEnabled {
+        // [incognito-memory-hole 2026-10-08] Incognito means "fresh, no
+        // history": past memory must not reach the system prompt even when
+        // the per-session memoryEnabled toggle is on. memoryStatusFragment
+        // below lands an authoritative INCOGNITO footer for this case.
+        AppLogger(category: "MemDiag").info("[MemDiag] inject-decision sid=\(self.sessionId?.prefix(8) ?? "nil") vm.memoryEnabled=\(self.memoryEnabled) isIncognito=\(self.isIncognito)")
+        if memoryEnabled && !isIncognito {
             if let memoryFragment = Self.loadGlobalMemoryFragment(personaID: sessionPersonaId) {
                 userSystemPrompt += "\n\n" + memoryFragment
             }
@@ -5825,11 +5829,10 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                 // 时和第一注入点保持一致：已下发过的纸条只给 compact 提醒，
                 // 会话级去重不变，但这一轮不能丢纸条。
                 DuduToolPapersWiring.inject(into: &userSystemPrompt, userMessage: Self.lastUserText(in: agentHistory), sessionID: sessionId)
-                // [T-memory-toggle-gates-injection-and-tools-ios] Mirror
-                // the gate from the first injection site — fallback to a
-                // new provider must respect the per-session memoryEnabled
-                // toggle the same way the initial system prompt did.
-                if memoryEnabled {
+                // [incognito-memory-hole 2026-10-08] Mirror the incognito gate
+                // from the first injection site: fallback to a new provider
+                // must not leak past memory into the rebuilt system prompt.
+                if memoryEnabled && !isIncognito {
                     if let memoryFragment = Self.loadGlobalMemoryFragment(personaID: sessionPersonaId) {
                         userSystemPrompt += "\n\n" + memoryFragment
                     }
