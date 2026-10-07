@@ -45,7 +45,7 @@ struct EvolutionNote: Codable, Identifiable, Equatable {
 }
 
 /// Envelope on disk: notes + the enabled toggle, per persona.
-private struct EvolutionEnvelope: Codable {
+struct EvolutionEnvelope: Codable {
     var enabled: Bool
     var notes: [EvolutionNote]
 

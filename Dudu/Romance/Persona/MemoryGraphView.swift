@@ -94,7 +94,7 @@ struct MemoryGraphView: View {
 
     // MARK: - Graph model (real data only)
 
-    private enum NodeKind {
+    enum NodeKind {
         case seed, moment, diary
     }
 
