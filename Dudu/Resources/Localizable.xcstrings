@@ -55683,28 +55683,6 @@
         }
       }
     },
-    "orchestration.capabilities": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Capabilities"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "能力"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "能力"
-          }
-        }
-      }
-    },
     "orchestration.capabilityNote": {
       "localizations": {
         "en": {
@@ -56977,6 +56955,94 @@
           "stringUnit": {
             "state": "translated",
             "value": "輸入命令"
+          }
+        }
+      }
+    },
+    "sandbox.relay.badHost": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invalid relay host"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "中继地址无效"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "中繼地址無效"
+          }
+        }
+      }
+    },
+    "sandbox.relay.probeFailed": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Relay probe failed"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "中继探测失败"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "中繼探測失敗"
+          }
+        }
+      }
+    },
+    "sandbox.relay.requestFailed": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Relay request failed"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "中继请求失败"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "中繼請求失敗"
+          }
+        }
+      }
+    },
+    "sandbox.relay.unreachable": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Relay unreachable"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "中继不可达"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "中繼不可達"
           }
         }
       }
