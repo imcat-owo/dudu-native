@@ -6,9 +6,10 @@ import UIKit
 ///
 /// - Multiline TextField bound to vm.inputText (grows to 5 lines).
 /// - Pink send button, disabled while the draft is empty; while the AI is
-///   busy it morphs into a stop button (vm.cancel()).
+///   busy it stays live next to a stop button (vm.cancel()) — send queues a
+///   follow-up via vm.send(), stop ends the current turn AND clears the queue.
 /// - The input is NEVER locked while processing: she can send follow-ups
-///   anytime (the engine queues them).
+///   anytime (the engine queues them; a badge shows how many are queued).
 /// - Photo attach button → PhotosPicker → vm.addImageAttachment (real).
 /// - No voice button: STT UI is a Phase-D surface (plan §8), and dead
 ///   buttons are not shipped.
@@ -28,6 +29,20 @@ struct ChatInputBar: View {
                 attachmentStrip
             }
 
+            // [C2-followup-queue] Queue status above the input: how many
+            // follow-ups are queued, or what a Stop just cleared.
+            if vm.queuedFollowUpCount > 0 {
+                Text("\(vm.queuedFollowUpCount) 条排队中")
+                    .font(DuduTheme.captionFont())
+                    .foregroundStyle(DuduTheme.duduTextDim)
+                    .accessibilityLabel("\(vm.queuedFollowUpCount) 条消息排队中")
+            }
+            if let notice = vm.queueClearedNotice {
+                Text(notice)
+                    .font(DuduTheme.captionFont())
+                    .foregroundStyle(DuduTheme.duduTextDim)
+            }
+
             HStack(alignment: .bottom, spacing: 8) {
                 PhotosPicker(selection: $selectedPhoto, matching: .images) {
                     Image(systemName: "photo")
@@ -43,6 +58,11 @@ struct ChatInputBar: View {
                     .lineLimit(1...5)
                     .padding(.vertical, 8)
 
+                // [C2-followup-queue] While the AI is busy BOTH buttons stay
+                // live: stop ends the current turn (and clears any queued
+                // follow-ups — Stop = stop everything), send queues a
+                // follow-up via vm.send() which never drops. The input is
+                // never locked.
                 if vm.isProcessing {
                     Button {
                         vm.cancel()
@@ -54,6 +74,19 @@ struct ChatInputBar: View {
                             .background(DuduTheme.pink, in: Circle())
                     }
                     .accessibilityLabel("停止生成")
+
+                    Button {
+                        vm.send()
+                    } label: {
+                        Image(systemName: "arrow.up")
+                            .font(DuduTheme.bodyFont(weight: .semibold))
+                            .foregroundStyle(DuduTheme.duduText)
+                            .frame(width: 32, height: 32)
+                            .background(DuduTheme.pink, in: Circle())
+                            .opacity(canSend ? 1 : 0.4)
+                    }
+                    .disabled(!canSend)
+                    .accessibilityLabel("发送，AI 忙时排队")
                 } else {
                     Button {
                         vm.send()

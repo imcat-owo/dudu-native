@@ -6,7 +6,9 @@ import SwiftUI
 /// Layout: nav bar (drawer button, session title, model picker, new chat) +
 /// message list (or ChatEmptyStateView when there is nothing to show) +
 /// ChatInputBar. The input is NEVER locked while the AI is busy — she can
-/// send follow-ups at any time; they queue on the engine side.
+/// send follow-ups at any time; they queue on the engine side (post-turn
+/// drain auto-sends them), with a queued-count badge in the input bar and a
+/// "排队中" tag on each queued bubble.
 struct ChatView: View {
     @EnvironmentObject private var vm: AIChatViewModel
     @EnvironmentObject private var providers: ProviderConfigStore

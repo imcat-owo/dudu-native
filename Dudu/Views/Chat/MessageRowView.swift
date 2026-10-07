@@ -58,6 +58,18 @@ struct MessageRowView: View {
                             in: RoundedRectangle(cornerRadius: DuduTheme.radiusCard, style: .continuous)
                         )
                 }
+                // [C2-followup-queue] A follow-up sent while the AI was busy
+                // waits its turn — the bubble is already in the list with a
+                // "排队中" tag so she sees it was never lost. The tag clears
+                // when the post-turn drain picks the prompt up.
+                if message.isQueued {
+                    Text("排队中")
+                        .font(DuduTheme.captionFont())
+                        .foregroundStyle(DuduTheme.duduTextDim)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 3)
+                        .background(DuduTheme.duduIconChip, in: Capsule())
+                }
             }
             avatar(isUser: true)
         }

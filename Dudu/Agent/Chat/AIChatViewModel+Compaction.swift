@@ -118,8 +118,8 @@ extension AIChatViewModel {
             self.beginBackgroundProcessing()
             await self.drainQueuedPrompts()
             // Stop during the drained run hands state ownership to cancel()
-            // (and possibly a fresh resumeQueueAfterCancel task) — don't
-            // clobber it from the superseded task.
+            // (which clears the queue outright — Stop = stop everything) —
+            // don't clobber it from the superseded task.
             guard !Task.isCancelled else { return }
             self.isProcessing = false
             self.endBackgroundProcessing()

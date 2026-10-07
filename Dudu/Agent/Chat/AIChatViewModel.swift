@@ -1314,7 +1314,18 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
 
     // MARK: - Prompt Queue
     /// Prompts queued by the user while the agent loop is running.
-    @Published var promptQueue: [QueuedPrompt] = []
+    @Published var promptQueue: [QueuedPrompt] = [] {
+        didSet { queuedFollowUpCount = promptQueue.count }
+    }
+    /// [C2-followup-queue] Published count of queued follow-ups, for the
+    /// input-bar "N 条排队中" badge. Synced from promptQueue via didSet so
+    /// there is exactly one source of truth for queue membership.
+    @Published var queuedFollowUpCount: Int = 0
+    /// [C2-followup-queue] Transient notice shown when cancel() clears queued
+    /// follow-ups ("已清除 N 条排队消息"), auto-dismissed by cancel() itself.
+    @Published var queueClearedNotice: String? = nil
+    /// Token so the auto-dismiss task only clears a notice it set itself.
+    private var queueClearedNoticeToken = 0
 
     // MARK: - Speech
 
@@ -2316,12 +2327,15 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
     /// Set by cancel() so the task's error handler knows this was a user stop.
     /// Internal-access so concurrent tool extensions can read it. [T-concurrent-tools]
     var userDidCancel = false
-    /// Reentrancy guard for `drainQueuedPrompts()`. After a Stop with queued
-    /// prompts, `cancel()` hands off to a fresh Task via `resumeQueueAfterCancel()`,
-    /// but the original (superseded) send/retry/resume Task ALSO reaches its own
-    /// post-loop `drainQueuedPrompts()` call. Without a guard both Tasks could run
-    /// the queued turn, firing the next LLM request — and thus every tool call +
-    /// reply — TWICE. Set/cleared only on @MainActor, so the check-and-set is
+    /// Reentrancy guard for `drainQueuedPrompts()`. Only ONE drain may be
+    /// active at a time: the cancelled send/retry/resume Task's post-loop
+    /// `drainQueuedPrompts()` can race a compact-triggered drain otherwise,
+    /// and without this guard both Tasks could run the queued turn and
+    /// double-fire the next request (every tool call + reply twice).
+    /// [C2-followup-queue 2026-10-07] cancel() now CLEARS the queue instead
+    /// of handing off to a resume Task (Stop = stop everything), so a Stop
+    /// can no longer race a drain — but the compact drain path still can, so
+    /// this guard stays. Set/cleared only on @MainActor, so the check-and-set is
     /// atomic and spans the `await runAgentLoop()` suspension where the second
     /// drainer would otherwise slip in. [T-ios-concurrent-stop-double-request]
     private var isDrainingQueue = false
@@ -2399,8 +2413,19 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
         #else
         logger.info("DRAFT [vm=\(self.vmInstanceId)] send() text=\(text.count)ch attachments=\(pendingAttachments.count) isProcessing=\(self.isProcessing) sessionId=\(self.sessionId ?? "nil") draftId=\(self.draftId ?? "nil")")
         #endif
-        guard !text.isEmpty || !pendingAttachments.isEmpty, !isProcessing else {
-            logger.warning("DRAFT [vm=\(self.vmInstanceId)] send() GUARD FAILED — text.isEmpty=\(text.isEmpty) attachments.isEmpty=\(pendingAttachments.isEmpty) isProcessing=\(self.isProcessing)")
+        guard !text.isEmpty || !pendingAttachments.isEmpty else {
+            logger.warning("DRAFT [vm=\(self.vmInstanceId)] send() GUARD FAILED — text.isEmpty=\(text.isEmpty) attachments.isEmpty=\(pendingAttachments.isEmpty)")
+            return
+        }
+
+        // [C2-followup-queue] Her hard rule (2026-10-02): she can send
+        // follow-ups ANY time, even while the AI is busy. NEVER drop a send —
+        // while the loop is running, enqueuePrompt() puts the bubble in the
+        // list immediately (isQueued = true, "排队中" label) and the post-turn
+        // drain auto-sends it when this turn finishes.
+        if isProcessing {
+            logger.info("DRAFT [vm=\(self.vmInstanceId)] send() while busy → queueing as follow-up")
+            enqueuePrompt()
             return
         }
 
@@ -4318,55 +4343,29 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
         }
         endBackgroundProcessing()
 
-        // If there are queued prompts remaining, spawn a new task to continue
-        // processing them. The old task is cancelled (stops the current agent
-        // loop) but the queue should keep draining.
-        if !promptQueue.isEmpty && !isCompacting {
-            logger.info("⏹ cancel() — \(promptQueue.count) queued prompt(s) remain, restarting drain")
-            resumeQueueAfterCancel()
-        }
-    }
-
-    /// Resume queue processing after the user stopped the current task.
-    /// Spawns a fresh Task (not cancelled) so the drain loop can call runAgentLoop().
-    private func resumeQueueAfterCancel() {
-        // Small delay to let the cancelled task's error handler finish cleanup.
-        currentTask = Task { @MainActor [weak self] in
-            guard let self else { return }
-            // Wait briefly for the previous task to complete cleanup
-            try? await Task.sleep(nanoseconds: 200_000_000) // 200ms
-            self.handleUserCancelledCleanup()
-            self.userDidCancel = false
-            // [T-stop-with-queue-render-desync] handleUserCancelledCleanup (run
-            // here or by the cancelled task's own catch) set canResume=true —
-            // correct for a plain Stop, but this drain immediately continues the
-            // conversation with the queued prompt, so the "Interrupted — tap
-            // Resume" banner / ⏸ badge must not stay up over a live run. Clearing
-            // it also lets the didSet replay any sync reload it deferred.
-            self.canResume = false
-            self.isProcessing = true
-            self.beginBackgroundProcessing()
-            logger.info("[DRAIN] Resuming queue in new task — \(self.promptQueue.count) prompt(s)")
-            await self.drainQueuedPrompts()
-
-            // [T-stop-with-queue-render-desync] A second Stop during this drained
-            // run cancels THIS task and may spawn yet another drain task — same
-            // handover as send()'s epilogue, so don't clobber its state either.
-            guard !Task.isCancelled else {
-                logger.info("[DRAIN] queue-resume epilogue skipped (task cancelled) session=\(self.sessionId ?? "nil")")
-                return
+        // [C2-followup-queue] Stop means stop EVERYTHING: the current turn AND
+        // any queued follow-ups. Deliberate choice (2026-10-07): if she hits
+        // stop, she wants the noise to end — a follow-up firing 200ms later
+        // from resumeQueueAfterCancel() felt like "I said stop, why is it
+        // still answering?". Queued bubbles are removed from the list so the
+        // list shows exactly what remains, and a transient notice tells her
+        // what was cleared. She can re-send anything she still wants.
+        let clearedCount = promptQueue.count
+        if clearedCount > 0 {
+            for queued in promptQueue {
+                messages.removeAll { $0.queuedPromptId == queued.id }
             }
-
-            if let sid = self.sessionId {
-                let dbMessages = await ChatStore.shared.loadMessages(sessionId: sid)
-                self.lastKnownDbSortOrder = dbMessages.last?.sortOrder ?? self.lastKnownDbSortOrder
-                self.lastKnownDbCount = dbMessages.count
-                // T-baseline-hash-drift: see send DONE path for why hash
-                // must be refreshed alongside count/sortOrder.
-                self.lastKnownDbOrderHash = Self.computeOrderHash(of: dbMessages)
+            promptQueue.removeAll()
+            queueClearedNoticeToken += 1
+            let token = queueClearedNoticeToken
+            queueClearedNotice = "已清除 \(clearedCount) 条排队消息"
+            logger.info("⏹ cancel() — cleared \(clearedCount) queued follow-up(s)")
+            Task { @MainActor [weak self] in
+                try? await Task.sleep(nanoseconds: 2_500_000_000)
+                // Only auto-dismiss if no newer notice replaced it.
+                guard let self, self.queueClearedNoticeToken == token else { return }
+                self.queueClearedNotice = nil
             }
-            self.isProcessing = false
-            self.endBackgroundProcessing()
         }
     }
 
@@ -4374,10 +4373,9 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
     /// Called from send(), retry(), resume(), and retryFromMessage() before setting isProcessing=false.
     /// Uses a while loop + final yield to catch prompts queued during the last streaming response.
     /// Reentrancy-guarded entry point. Only ONE drain may be active at a time:
-    /// a Stop with queued prompts spawns a fresh resume Task whose drain races
-    /// the superseded original Task's post-loop drain, and without this guard
-    /// both would run the queued turn and double-fire the next request (every
-    /// tool call + reply twice). The guard is set/cleared only on @MainActor so
+    /// a compact-triggered drain can race a send/retry/resume Task's own
+    /// post-loop drain, and without this guard both would run the queued turn
+    /// and double-fire the next request (every tool call + reply twice). The guard is set/cleared only on @MainActor so
     /// check-and-set is atomic and held across the inner `await runAgentLoop()`.
     /// [T-ios-concurrent-stop-double-request]
     /// `internal` (not `private`) so `compactAndSend` in the +Compaction
@@ -4401,7 +4399,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
             // consume queue items — resumeQueueAfterCancel() handles them
             // in a fresh Task.
             guard !Task.isCancelled else {
-                logger.info("[DRAIN] Task cancelled — leaving \(self.promptQueue.count) prompt(s) in queue")
+                logger.info("[DRAIN] Task cancelled — leaving \(self.promptQueue.count) prompt(s) in queue (cancel() will clear them)")
                 break
             }
             let queued = self.promptQueue
@@ -4476,8 +4474,9 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
             } catch is CancellationError {
                 logger.info("Agent loop (queued-drain) cancelled")
                 self.handleUserCancelledCleanup()
-                // Don't consume remaining queue items — resumeQueueAfterCancel()
-                // will pick them up in a fresh Task.
+                // Don't consume remaining queue items — the outer catch/task
+                // teardown (and cancel(), if this was a user Stop) owns them;
+                // cancel() clears the queue outright.
                 break
             } catch {
                 let rawDesc = String(describing: error)
@@ -5050,7 +5049,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
     /// Number of assistant turns in `agentHistory` at the moment we LAST marked
     /// this session unread. `endBackgroundProcessing()` is called from ~15 sites
     /// (normal completions, kernel-failure early-returns, cancel cleanup, the
-    /// bgTask-expiration handler, resumeQueueAfterCancel, …), and it used to
+    /// bgTask-expiration handler, …), and it used to
     /// push `.unread` unconditionally on every one of them. That made a late or
     /// duplicate call — e.g. a background keep-alive bgTask expiring after the
     /// user already read and left the session — re-add the red dot with NO new

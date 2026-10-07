@@ -102,7 +102,7 @@ extension AIChatViewModel {
         //
         // This funnel is hit from ~15 sites (normal completions, kernel-failure
         // early-returns, cancel cleanup, the bgTask-expiration handler,
-        // resumeQueueAfterCancel, …). Pushing unconditionally re-added the dot
+        // …). Pushing unconditionally re-added the dot
         // on late/duplicate calls that carried no new content — e.g. the user
         // reads and leaves the session, then a background keep-alive bgTask
         // expires and its handler calls endBackgroundProcessing(), re-badging a
