@@ -317,7 +317,6 @@ final class VoiceActivityDetector: NSObject {
         #endif
         DispatchQueue.main.async { [weak self] in
             self?.delegate?.voiceActivityInterrupted()
-        }, nil)
     }
 
     func stop() {
@@ -498,7 +497,6 @@ final class VoiceActivityDetector: NSObject {
         MainActor.assumeIsolated {
             AudioSessionCoordinator.shared.end(.capture)
             BackgroundKeepAliveManager.shared.resumeSilentAudioForMedia(caller: "VAD.capture")
-        }, nil)
         VoiceLog.log("AVAudioSession: end(.capture)")
     }
 
@@ -586,7 +584,6 @@ final class VoiceActivityDetector: NSObject {
                 self.vad = nil
                 throw VoiceProviderError.parseError("Failed to attach microphone tap")
             }
-        }
         audioEngine.prepare()
     }
 
