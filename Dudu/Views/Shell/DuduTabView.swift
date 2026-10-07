@@ -20,7 +20,7 @@ struct DuduTabView: View {
                 }
                 .tag(DuduTab.chat)
 
-            SettingsStubView()
+            SettingsView()
                 .tabItem {
                     Label(DuduTab.settings.title, systemImage: DuduTab.settings.systemImage)
                 }

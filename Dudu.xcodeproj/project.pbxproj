@@ -355,6 +355,11 @@
 		CA6C4898E137ACD9A534C196 /* MessageRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5FEF1AA02738BFD9F5BA39 /* MessageRowView.swift */; };
 		7F63F36987FCADF907CF9E03 /* ModelPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A46D393F44AE1B899BFDCB /* ModelPickerView.swift */; };
 		D48D08B56BF7A6BA7A85B6C3 /* SessionDrawerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2DB0C154BD454AFAC4DB7A /* SessionDrawerView.swift */; };
+		EA2C4497108EC28A324BE29C /* AppearanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68558ECEDABFE019C6F313DA /* AppearanceView.swift */; };
+		AFE7B0B47048FB65772EDEFE /* ApiKeyFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 126EBFD62176AD35C616C407 /* ApiKeyFieldView.swift */; };
+		4A055772F58E693828870A29 /* ProviderDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC655EAE3AF5A70BFEFA2C8D /* ProviderDetailView.swift */; };
+		8C7D4DE82130BFDABC9131DF /* ProviderListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A263C3932C0151A6A4E70A /* ProviderListView.swift */; };
+		F9D9D65BEF93460D38703B71 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E084A58363D98CF4058A6B90 /* SettingsView.swift */; };
 /* End PBXBuildFile section */
 		C22E4BE16A67710000C9EBF0 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 30AC3C5C6C418C791E362178 /* libsqlite3.tbd */; };
 		F8F1403829CEFF47083C5520 /* RealTimeCutVADLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = AECFD4BE143BED595F298AF5 /* RealTimeCutVADLibrary */; };
@@ -826,6 +831,11 @@
 		AD5FEF1AA02738BFD9F5BA39 /* MessageRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageRowView.swift; sourceTree = "<group>"; };
 		E2A46D393F44AE1B899BFDCB /* ModelPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelPickerView.swift; sourceTree = "<group>"; };
 		7C2DB0C154BD454AFAC4DB7A /* SessionDrawerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionDrawerView.swift; sourceTree = "<group>"; };
+		68558ECEDABFE019C6F313DA /* AppearanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceView.swift; sourceTree = "<group>"; };
+		126EBFD62176AD35C616C407 /* ApiKeyFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiKeyFieldView.swift; sourceTree = "<group>"; };
+		EC655EAE3AF5A70BFEFA2C8D /* ProviderDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderDetailView.swift; sourceTree = "<group>"; };
+		A8A263C3932C0151A6A4E70A /* ProviderListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderListView.swift; sourceTree = "<group>"; };
+		E084A58363D98CF4058A6B90 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 		30AC3C5C6C418C791E362178 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 
@@ -1747,7 +1757,10 @@
 		20717E3E6BE56A460102CF7F /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				D10B8E531D0D2511BD797801 /* Appearance */,
 				FC61A6675134359CB1A0BBA1 /* Chat */,
+				5C12BE9B55843E8E76492218 /* Providers */,
+				930C951A6A0C2D8A4A21F5B8 /* Settings */,
 				F3B905EA2EE48C52F8156403 /* Shell */,
 				3ADCBF358DC9CFDB2F2EC897 /* Theme */,
 			);
@@ -1787,6 +1800,32 @@
 				DC4F03EEF77B47173E669EE2 /* DuduTheme.swift */,
 			);
 			path = Theme;
+			sourceTree = "<group>";
+		};
+		D10B8E531D0D2511BD797801 /* Appearance */ = {
+			isa = PBXGroup;
+			children = (
+				68558ECEDABFE019C6F313DA /* AppearanceView.swift */,
+			);
+			path = Appearance;
+			sourceTree = "<group>";
+		};
+		5C12BE9B55843E8E76492218 /* Providers */ = {
+			isa = PBXGroup;
+			children = (
+				126EBFD62176AD35C616C407 /* ApiKeyFieldView.swift */,
+				A8A263C3932C0151A6A4E70A /* ProviderListView.swift */,
+				EC655EAE3AF5A70BFEFA2C8D /* ProviderDetailView.swift */,
+			);
+			path = Providers;
+			sourceTree = "<group>";
+		};
+		930C951A6A0C2D8A4A21F5B8 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				E084A58363D98CF4058A6B90 /* SettingsView.swift */,
+			);
+			path = Settings;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1982,6 +2021,7 @@
 				433B53963730BE2DFDE06803 /* AgentLiveActivityWidget.swift in Sources */,
 				433C50B687A3B8DB822FD5C5 /* SpeechRecognitionManager.swift in Sources */,
 				43D70D06FD32CDF437D9ED8A /* ShortcutRunTracker.swift in Sources */,
+				4A055772F58E693828870A29 /* ProviderDetailView.swift in Sources */,
 				4B3C7B1EF8BCDFF2C01E8C8D /* BackupFormat.swift in Sources */,
 				4C29274E763868CC079C7B8A /* AudioSessionCoordinator.swift in Sources */,
 				4D11D4BBAAEA29A339F82AB8 /* LoggingManager.swift in Sources */,
@@ -2080,6 +2120,7 @@
 				8A2FE41F6E019F0203958DF6 /* AIChatViewModel.swift in Sources */,
 				8B8D6D1163E1B06F7EB53330 /* VisionGroupResolver.swift in Sources */,
 				8BB564FAFF8441017EBA804E /* CookieBackupStore.swift in Sources */,
+				8C7D4DE82130BFDABC9131DF /* ProviderListView.swift in Sources */,
 				8D1E4BD68420DF9836986E67 /* EnvVarsCollection.swift in Sources */,
 				8DBC10601A1AACD2115AAA9A /* BrowserWebView.swift in Sources */,
 				8E9832DE5E4A229FE2EC0E3A /* MCPStore.swift in Sources */,
@@ -2121,6 +2162,7 @@
 				AE91B96C01574BFD92EC39B6 /* TTSDiskCache.swift in Sources */,
 				AF71002ABC7271FEDDA7A001 /* BackupTransferStatus.swift in Sources */,
 				AFC8F717F7BCF966FEC7CBE8 /* QuickActionRouter.swift in Sources */,
+				AFE7B0B47048FB65772EDEFE /* ApiKeyFieldView.swift in Sources */,
 				B14BD78E795825B2B44C492A /* OpenAIAgentProvider.swift in Sources */,
 				B19A3C95E097250777DC0595 /* BackupRestoreJournal.swift in Sources */,
 				B1FA904A6FB20E4432428FEF /* QuickActionWorkflow.swift in Sources */,
@@ -2194,6 +2236,7 @@
 				E8344525CD56D06E793AEE71 /* SessionLockStore.swift in Sources */,
 				E8DDF91E385B0DC8512F77BE /* GetSessionStatusIntent.swift in Sources */,
 				EA12FFE29C4D1BB30AA21FBD /* TTSGroupStore.swift in Sources */,
+				EA2C4497108EC28A324BE29C /* AppearanceView.swift in Sources */,
 				EA6B5DE5695DD2FF4CE17D3E /* NotificationDeviceTool.swift in Sources */,
 				EA96F1339B8D301AF06C28CC /* AIChatViewModel+RequestBudget.swift in Sources */,
 				EAA52D16E0EDD37B8AB83AE8 /* KimiOAuthRefreshCoordinator.swift in Sources */,
@@ -2220,6 +2263,7 @@
 				F875E22B66B3196E4A90345B /* VoiceTextSanitizer.swift in Sources */,
 				F87FAC01CC4169C1AED9B351 /* AIChatViewModel+Offloading.swift in Sources */,
 				F8A9AB05C2120FE0BCDE2A4E /* ChatLifecycleSupport.swift in Sources */,
+				F9D9D65BEF93460D38703B71 /* SettingsView.swift in Sources */,
 				F9E4294B15A06286CF74D6B7 /* ModelsCollection.swift in Sources */,
 				F9FB1B9E06748D5D047F512A /* SyncV2Bootstrap.swift in Sources */,
 				FA85C8D46039670EEB1C22AB /* AIChatViewModel+BackgroundTask.swift in Sources */,
