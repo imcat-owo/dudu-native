@@ -400,6 +400,8 @@
 		92DDC6EA135F9F9DA95B6FB8 /* devil-08.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4AB27BC230D8D31B729FF491 /* devil-08.jpg */; };
 		D02DC5EA366008601CE34138 /* devil-09.jpg in Resources */ = {isa = PBXBuildFile; fileRef = CA7B36D6E74DB3E86488B7A4 /* devil-09.jpg */; };
 		C09741FEC8BADA625982E462 /* devil-10.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 91E4ACA76BC7E354A653EA25 /* devil-10.jpg */; };
+		14266D03E281C3CDD351B91D /* StickerPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85D5AD0AA864E4EDA3298ED /* StickerPickerView.swift */; };
+		247E674257B4DD9EBF5C767F /* StickerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4565C254D2262AFFA6A93C5F /* StickerStore.swift */; };
 /* End PBXBuildFile section */
 		F8F1403829CEFF47083C5520 /* RealTimeCutVADLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = AECFD4BE143BED595F298AF5 /* RealTimeCutVADLibrary */; };
 		BA894477DDF6C14EE49C54DE /* SwiftAnthropic in Frameworks */ = {isa = PBXBuildFile; productRef = 05812F6725F9E44AAB5A4A83 /* SwiftAnthropic */; };
@@ -916,6 +918,8 @@
 		4AB27BC230D8D31B729FF491 /* devil-08.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "devil-08.jpg"; sourceTree = "<group>"; };
 		CA7B36D6E74DB3E86488B7A4 /* devil-09.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "devil-09.jpg"; sourceTree = "<group>"; };
 		91E4ACA76BC7E354A653EA25 /* devil-10.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "devil-10.jpg"; sourceTree = "<group>"; };
+		F85D5AD0AA864E4EDA3298ED /* StickerPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerPickerView.swift; sourceTree = "<group>"; };
+		4565C254D2262AFFA6A93C5F /* StickerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 		30AC3C5C6C418C791E362178 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 
@@ -1853,6 +1857,7 @@
 				5C12BE9B55843E8E76492218 /* Providers */,
 				930C951A6A0C2D8A4A21F5B8 /* Settings */,
 				F3B905EA2EE48C52F8156403 /* Shell */,
+				4FEB8D2DF9669524BACEE766 /* Stickers */,
 				3ADCBF358DC9CFDB2F2EC897 /* Theme */,
 			);
 			path = Views;
@@ -1990,6 +1995,15 @@
 				E8EEAE65C9F5A82918B095FF /* devil-07.jpg */,
 				F7DABBF057FEDDE671BCAD2F /* devil-05.jpg */,
 				F83FAE364C1D7A681D14C5D6 /* devil-02.jpg */,
+			);
+			path = Stickers;
+			sourceTree = "<group>";
+		};
+		4FEB8D2DF9669524BACEE766 /* Stickers */ = {
+			isa = PBXGroup;
+			children = (
+				4565C254D2262AFFA6A93C5F /* StickerStore.swift */,
+				F85D5AD0AA864E4EDA3298ED /* StickerPickerView.swift */,
 			);
 			path = Stickers;
 			sourceTree = "<group>";
@@ -2144,6 +2158,7 @@
 				131F06560939DC0926AF1C62 /* OpenRouterModelsAPI.swift in Sources */,
 				13DDBEBE650C4B525340F0BE /* ModelGroupRouter.swift in Sources */,
 				14245C50DD31BEEA154BECE2 /* OAuthHTTPClient.swift in Sources */,
+				14266D03E281C3CDD351B91D /* StickerPickerView.swift in Sources */,
 				14F34D2C98F43A277072706B /* DuduPaths.swift in Sources */,
 				167242263BF49BFD6C8F4258 /* BackupImporter.swift in Sources */,
 				1704B76557C10CD3559ADAFF /* SharedEventLog.swift in Sources */,
@@ -2163,6 +2178,7 @@
 				2199BEA93B328984E882D617 /* AppLogger.swift in Sources */,
 				230176062B0C4AECD0123270 /* DuduMarkdownSegments.swift in Sources */,
 				241EC1EBB90EBA7813AE57B9 /* ModelEntry.swift in Sources */,
+				247E674257B4DD9EBF5C767F /* StickerStore.swift in Sources */,
 				249CCFCDA4A9509B6CAADA3E /* ModelsDevAPI.swift in Sources */,
 				25D829F2DC587CDCB8D47832 /* ModelSelectionEntity.swift in Sources */,
 				25E85F3413301FED50E5DBB0 /* KnowledgePDFImport.swift in Sources */,
