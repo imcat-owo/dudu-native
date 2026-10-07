@@ -389,14 +389,11 @@ enum ShortcutNotification {
 }
 
 /// [T-notification-tap-vs-launch-session] Cold-launch handoff for a
-/// notification-tap navigation. On a cold launch the delegate's `didReceive`
-/// fires before ContentView has mounted its `.onReceive(.openSessionFromIntent)`
-/// subscriber, so the posted NotificationCenter event is simply lost — and the
-/// Launch Session preference (e.g. "New Chat") then opens a fresh session
-/// instead of the tapped one. The delegate buffers the target here;
-/// ContentView's launch `.task` consumes it with top priority, and the warm
-/// path (`.onReceive` did navigate) marks it handled so the launch-screen
-/// logic yields either way.
+/// notification-tap navigation. DEFERRED: no view currently observes
+/// `.openSessionFromIntent` and the consume side below has no callers, so
+/// tapping a completion notification does not navigate anywhere yet.
+/// The delegate still buffers the target here (write side intact), so the
+/// navigation wiring can be completed later without touching the post sites.
 @MainActor
 final class NotificationNavigationStore {
     static let shared = NotificationNavigationStore()
