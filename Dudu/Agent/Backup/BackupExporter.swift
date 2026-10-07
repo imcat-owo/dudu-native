@@ -1181,6 +1181,8 @@ actor BackupExporter {
         let records = await MainActor.run {
             OurSpaceStore.shared.backupRecords()
                 + TaskCardStore.shared.backupRecords()
+                + PhotoShareManager.backupRecords()
+                + IntimacyManager.backupRecords()
         }
 
         let alreadyStaged = Self.jsonlStaged(dataDir: dataDir, base: "our_space")
