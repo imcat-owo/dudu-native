@@ -69,8 +69,8 @@ extension BackupImporter {
         // gigabytes to undo a merge that is itself idempotent.
         let liveDirs: [URL]
         switch category {
-        case .sharedFiles: liveDirs = [AIChatViewModel.duduSharedPersistentDir]
-        case .memory: liveDirs = [AIChatViewModel.duduMemoryPersistentDir]
+        case .sharedFiles: liveDirs = [DuduPaths.duduSharedPersistentDir]
+        case .memory: liveDirs = [DuduPaths.duduMemoryPersistentDir]
         // [PIC-2] The appearance tree is directory-backed like shared
         // files, so it gets the same copy-aside rollback.
         case .appearance: liveDirs = [AppearanceStudio.appearanceAssetsDirectory]
@@ -110,7 +110,7 @@ extension BackupImporter {
         // 上面的目录 copy-aside 覆盖不到。仿 providers 做文件级快照，
         // 否则恢复中途失败时注册表回滚不了。
         if category == .memory {
-            let live = AIChatViewModel.duduConfigRoot.appendingPathComponent("personas.json")
+            let live = DuduPaths.duduConfigRoot.appendingPathComponent("personas.json")
             if fm.fileExists(atPath: live.path) {
                 let saved = staging.appendingPathComponent("memory-personas.json")
                 try? fm.removeItem(at: saved)
@@ -305,7 +305,7 @@ extension BackupImporter {
                 let parts = path.split(separator: "/", maxSplits: 2).map(String.init)
                 guard parts.count >= 3, parts[0] == "chats",
                       !runningSessionIds.contains(parts[1]) else { return nil }
-                return AIChatViewModel.duduPersistentBase
+                return DuduPaths.duduPersistentBase
                     .appendingPathComponent(parts[1], isDirectory: true)
                     .appendingPathComponent(parts[2])
             })
@@ -327,7 +327,7 @@ extension BackupImporter {
     private func importSharedFiles(root: URL, fileIndex: [BackupFileIndexEntry]) throws
         -> CategoryReport {
         var report = CategoryReport(category: BackupCategory.sharedFiles.rawValue)
-        let base = AIChatViewModel.duduSharedPersistentDir
+        let base = DuduPaths.duduSharedPersistentDir
         let files = try restoreFileTree(
             root: root, fileIndex: fileIndex, category: .sharedFiles,
             destinationFor: { path in
@@ -455,7 +455,7 @@ extension BackupImporter {
                 // Restoring its files anyway would silently roll the skill
                 // (SKILL.md and sidecars alike) back to the older backup.
                 guard !lwwSkippedIds.contains(parts[1]) else { return nil }
-                return AIChatViewModel.duduSkillsPersistentDir
+                return DuduPaths.duduSkillsPersistentDir
                     .appendingPathComponent(parts[1], isDirectory: true)
                     .appendingPathComponent(parts[2])
             })
@@ -472,7 +472,7 @@ extension BackupImporter {
         let fm = FileManager.default
         let src = root.appendingPathComponent("data/memory", isDirectory: true)
         guard fm.fileExists(atPath: src.path) else { return report }
-        let dst = AIChatViewModel.duduMemoryPersistentDir
+        let dst = DuduPaths.duduMemoryPersistentDir
         try fm.createDirectory(at: dst, withIntermediateDirectories: true)
 
         for name in (try? fm.contentsOfDirectory(atPath: src.path)) ?? [] where name.hasSuffix(".md") {
@@ -559,7 +559,7 @@ extension BackupImporter {
         // 旧包没有它时照常跳过。
         let registrySrc = src.appendingPathComponent("personas.json")
         if fm.fileExists(atPath: registrySrc.path) {
-            let registryDst = AIChatViewModel.duduConfigRoot.appendingPathComponent("personas.json")
+            let registryDst = DuduPaths.duduConfigRoot.appendingPathComponent("personas.json")
             try fm.createDirectory(at: registryDst.deletingLastPathComponent(), withIntermediateDirectories: true)
             if let localData = try? Data(contentsOf: registryDst),
                let pkgData = try? Data(contentsOf: registrySrc),
@@ -980,16 +980,16 @@ extension BackupImporter {
     /// bound.
     func containmentRoot(for category: BackupCategory) -> URL {
         switch category {
-        case .chats: return AIChatViewModel.duduPersistentBase
-        case .sharedFiles: return AIChatViewModel.duduSharedPersistentDir
-        case .skills: return AIChatViewModel.duduSkillsPersistentDir
-        case .memory: return AIChatViewModel.duduMemoryPersistentDir
+        case .chats: return DuduPaths.duduPersistentBase
+        case .sharedFiles: return DuduPaths.duduSharedPersistentDir
+        case .skills: return DuduPaths.duduSkillsPersistentDir
+        case .memory: return DuduPaths.duduMemoryPersistentDir
         case .appearance: return AppearanceStudio.appearanceAssetsDirectory
         case .providers, .mcpServers, .voiceCorrections, .environmentVariables:
             // These write single known files, not index-driven trees; give them
             // the app-group root so the check is still meaningful if one ever
             // starts using restoreFileTree.
-            return AIChatViewModel.duduAppGroupRoot
+            return DuduPaths.duduAppGroupRoot
         }
     }
 

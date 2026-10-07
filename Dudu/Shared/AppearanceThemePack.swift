@@ -867,7 +867,28 @@ enum DuduThemeList {
     }
 
     static func categoryIcon(for category: String?) -> (systemName: String, color: Color) {
-        let fallback = sessionCategoryIconBuiltin(for: category)
+        // P7 PORT: inlined from OpenMinis Views/ContentView.swift
+        // sessionCategoryIconBuiltin (Views/Phase C not ported).
+        let fallback: (systemName: String, color: Color)
+        switch category {
+        case "code":         fallback = ("terminal.fill", .orange)
+        case "writing":      fallback = ("doc.text.fill", .blue)
+        case "research":     fallback = ("globe.americas.fill", .teal)
+        case "analysis":     fallback = ("chart.pie.fill", .indigo)
+        case "creative":     fallback = ("paintbrush.pointed.fill", .pink)
+        case "chat":         fallback = ("bubble.left.fill", .green)
+        case "math":         fallback = ("number.circle.fill", .purple)
+        case "translation":  fallback = ("character.bubble", .cyan)
+        case "health":       fallback = ("heart.fill", .red)
+        case "finance":      fallback = ("banknote.fill", .mint)
+        case "travel":       fallback = ("map.fill", .orange)
+        case "education":    fallback = ("book.closed.fill", .blue)
+        case "design":       fallback = ("paintpalette.fill", .pink)
+        case "productivity": fallback = ("calendar.badge.checkmark", .yellow)
+        case "support":      fallback = ("gearshape.fill", .brown)
+        case "other":        fallback = ("square.grid.2x2.fill", .gray)
+        default:             fallback = ("bubble.left.fill", .gray)
+        }
         let key = category ?? "other"
         let name = pack.categoryIcons[key] ?? fallback.systemName
         if let hex = pack.categoryColors[key] {

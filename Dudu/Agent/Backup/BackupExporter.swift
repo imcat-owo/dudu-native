@@ -618,7 +618,7 @@ actor BackupExporter {
 
             // The session's whole on-disk tree: attachments / offloads /
             // workspace / browser.
-            let dir = AIChatViewModel.duduPersistentBase
+            let dir = DuduPaths.duduPersistentBase
                 .appendingPathComponent(sid, isDirectory: true)
             let r = try trees.export(root: dir, logicalPrefix: "chats/\(sid)",
                                      category: .chats, sessionId: sid)
@@ -717,7 +717,7 @@ actor BackupExporter {
     /// the App Group directory, NOT anything inside the rootfs.
     private func exportSharedFiles(trees: BackupFileTreeExporter) throws
         -> BackupManifest.CategoryStat {
-        let r = try trees.export(root: AIChatViewModel.duduSharedPersistentDir,
+        let r = try trees.export(root: DuduPaths.duduSharedPersistentDir,
                                  logicalPrefix: "shared",
                                  category: .sharedFiles)
         return BackupManifest.CategoryStat(
@@ -791,7 +791,7 @@ actor BackupExporter {
     /// the live file has become since.
     private func exportMemory(dataDir: URL, snapshotAt: Date) throws
         -> BackupManifest.CategoryStat {
-        let src = AIChatViewModel.duduMemoryPersistentDir
+        let src = DuduPaths.duduMemoryPersistentDir
         let dst = dataDir.appendingPathComponent("memory", isDirectory: true)
         try fm.createDirectory(at: dst, withIntermediateDirectories: true)
 
@@ -848,7 +848,7 @@ actor BackupExporter {
 
         // P1-2：人设注册表 DuduConfig/personas.json —— 恢复后人设才回得来。
         // 旧包没有它时照常跳过。
-        let registrySrc = AIChatViewModel.duduConfigRoot.appendingPathComponent("personas.json")
+        let registrySrc = DuduPaths.duduConfigRoot.appendingPathComponent("personas.json")
         if fm.fileExists(atPath: registrySrc.path) {
             let to = dst.appendingPathComponent("personas.json")
             if fm.fileExists(atPath: to.path) {

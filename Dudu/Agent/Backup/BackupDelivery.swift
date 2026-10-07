@@ -55,7 +55,7 @@ enum BackupDelivery {
 
     /// Where delivered packages live: `<AppGroup>/DuduFileProvider/Backups/`.
     static var backupsDirectory: URL {
-        AIChatViewModel.duduAppGroupRoot
+        DuduPaths.duduAppGroupRoot
             .appendingPathComponent(backupsDirectoryName, isDirectory: true)
     }
 
@@ -104,7 +104,7 @@ enum BackupDelivery {
     /// are sitting in the agent-visible workspace and would be swept into the
     /// next Shared Files export. Called on app start.
     static func migrateLegacySharedBackups() {
-        let legacy = AIChatViewModel.duduSharedPersistentDir
+        let legacy = DuduPaths.duduSharedPersistentDir
             .appendingPathComponent(backupsDirectoryName, isDirectory: true)
         let fm = FileManager.default
         guard fm.fileExists(atPath: legacy.path) else { return }

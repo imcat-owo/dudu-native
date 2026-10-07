@@ -221,7 +221,7 @@ final class FileMentionIndex: ObservableObject {
 
         logger.info("scan start token=\(token.uuidString.prefix(8)) sid=\(sessionId ?? "nil")")
 
-        // Build scan plan on main actor (needs MountedFoldersManager).
+        // Build scan plan on main actor (needs DuduMountedFoldersManager).
         let sessionRoots = Self.sessionRoots(sessionId: sessionId)
         let sharedRoots = Self.sharedRoots()
         let mountRoots = Self.mountRoots()
@@ -477,7 +477,7 @@ final class FileMentionIndex: ObservableObject {
     }
 
     private static func mountRoots() -> [ScanRoot] {
-        let mgr = MountedFoldersManager.shared
+        let mgr = DuduMountedFoldersManager.shared
         return mgr.entries.compactMap { entry -> ScanRoot? in
             guard let url = mgr.resolvedURL(for: entry.id) else { return nil }
             let linuxPrefix = "\(DuduPaths.duduMountsLinuxDir)/\(entry.name)"

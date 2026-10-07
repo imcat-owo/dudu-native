@@ -759,11 +759,11 @@ extension AIChatViewModel {
     }
 
     /// Create/refresh `/var/dudu/mounts/<name>` symlinks for every entry in
-    /// `MountedFoldersManager`. Removes stale symlinks whose mounts were deleted.
+    /// `DuduMountedFoldersManager`. Removes stale symlinks whose mounts were deleted.
     ///
     /// Called from:
     ///   - `ensureDuduSymlinks` on each session mount
-    ///   - `MountedFoldersManager` after add/rename/remove
+    ///   - `DuduMountedFoldersManager` after add/rename/remove
     ///   - App launch after `activateAll`
     ///
     /// Safe to call before the iSH kernel is booted — writes only into `data/`.
@@ -807,7 +807,7 @@ extension AIChatViewModel {
     /// pure string accessor, unlike `resolvingSymlinksInPath()`.
     @MainActor
     private static func mountedFolderSymlinkSnapshot() -> [MountedFolderSymlinkSpec] {
-        let manager = MountedFoldersManager.shared
+        let manager = DuduMountedFoldersManager.shared
         return manager.entries.map { entry in
             MountedFolderSymlinkSpec(
                 name: entry.name,

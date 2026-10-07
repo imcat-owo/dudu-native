@@ -1172,7 +1172,7 @@ final class ICloudSharedZoneTransport: NSObject, SyncTransport {
             // frame is intact and it catches whatever the validator failed to
             // anticipate about CloudKit's rules.
             var recordIDOpt: CKRecord.ID?
-            let recordIDOk = noff_try_objc {
+            let recordIDOk = DuduCatchObjCException {
                 recordIDOpt = CKRecord.ID(recordName: recordName, zoneID: zoneID)
             }
             guard recordIDOk, let recordID = recordIDOpt else {
@@ -1202,7 +1202,7 @@ final class ICloudSharedZoneTransport: NSObject, SyncTransport {
             // [T-ckrecordname-defense-in-depth] Same shape as the save loop
             // above — synchronous body, so the @try frame survives.
             var recordIDOpt: CKRecord.ID?
-            let recordIDOk = noff_try_objc {
+            let recordIDOk = DuduCatchObjCException {
                 recordIDOpt = CKRecord.ID(recordName: recordName, zoneID: zoneID)
             }
             guard recordIDOk, let recordID = recordIDOpt else {
@@ -1986,7 +1986,7 @@ extension ICloudSharedZoneTransport: CKSyncEngineDelegate {
         }
         let zoneID = CKRecordZone.ID(zoneName: DeviceIdentity.zoneName)
         var out: CKRecord.ID?
-        let ok = noff_try_objc {
+        let ok = DuduCatchObjCException {
             out = CKRecord.ID(recordName: v1Name, zoneID: zoneID)
         }
         guard ok else {

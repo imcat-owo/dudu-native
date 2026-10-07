@@ -1851,9 +1851,11 @@ struct BackgroundInterruptionBanner: View {
                 .offset(y: min(dragOffset, 0))
                 .gesture(swipeToDismiss)
                 .animation(.spring(response: 0.35), value: tracker.showBanner)
-                .sheet(isPresented: $showSettings) {
-                    NavigationStack { EnhancedBackgroundSettingsView() }
-                }
+                // P7 PORT: EnhancedBackgroundSettingsView is Views/Settings (Phase C,
+                // not ported). The sheet is dropped until then; the Enable button's
+                // DeepLinkCoordinator focus still routes to Settings when Views lands.
+                // Phase C: restore `.sheet(isPresented: $showSettings) { NavigationStack {
+                // EnhancedBackgroundSettingsView() } }` here.
                 // [T-ios-scene-create-watchdog-corelocation] Subscribe only once
                 // the banner is actually on screen — the subscription exists to
                 // auto-dismiss a VISIBLE banner, so there is nothing to observe

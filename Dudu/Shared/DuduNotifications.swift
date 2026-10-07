@@ -26,6 +26,14 @@ extension NSNotification.Name {
     /// another is up silently no-ops.
     static let dismissAllImmersivePresentations =
         NSNotification.Name("dismissAllImmersivePresentations")
+
+    /// P7: posted when memory files change (was
+    /// Views/Settings/MemoryManagementView.swift in OpenMinis; moved to the
+    /// engine because AIChatViewModel+MemoryTools posts it and
+    /// ChatStoreSyncHydrators observes it — both engine. The Views overlay
+    /// must NOT redeclare it).
+    static let memoryFilesDidChange =
+        NSNotification.Name("com.dudu.ios.memoryFilesDidChange")
 }
 
 extension Bundle {

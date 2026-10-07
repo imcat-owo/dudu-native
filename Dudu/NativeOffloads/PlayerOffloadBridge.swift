@@ -398,31 +398,25 @@ private class PlayerSession {
     // MARK: - UI Presentation
 
     private static func presentAudioUI(for session: PlayerSession) {
-        guard let topVC = topViewController() else { return }
-
-        let view = DuduAudioPreviewView(fileURL: session.fileURL)
-        let hostingVC = UIHostingController(rootView: view)
-        hostingVC.modalPresentationStyle = .pageSheet
-        if let sheet = hostingVC.sheetPresentationController {
-            sheet.detents = [.large()]
-            sheet.prefersGrabberVisible = false
-        }
-
-        session.presentedController = hostingVC
-        topVC.present(hostingVC, animated: true)
+        // P7 PORT: DuduAudioPreviewView is Views (Phase C, not ported).
+        // Audio itself plays via the shared audio player; only the preview
+        // sheet is skipped until Phase C ports the view.
     }
 
     private static func presentVideoUI(for session: PlayerSession) {
         guard let topVC = topViewController() else { return }
         guard let player = session.videoPlayer else { return }
 
-        let view = DuduVideoFullscreenPlayer(fileURL: session.fileURL, externalPlayer: player)
-        let hostingVC = UIHostingController(rootView: view)
-        hostingVC.modalPresentationStyle = .overFullScreen
-        hostingVC.modalTransitionStyle = .crossDissolve
+        // P7 PORT: DuduVideoFullscreenPlayer is Views (Phase C, not ported).
+        // AVPlayerViewController (UIKit) provides fullscreen playback now;
+        // Phase C may swap in the SwiftUI player.
+        let playerVC = AVPlayerViewController()
+        playerVC.player = player
+        playerVC.modalPresentationStyle = .overFullScreen
+        playerVC.modalTransitionStyle = .crossDissolve
 
-        session.presentedController = hostingVC
-        topVC.present(hostingVC, animated: true)
+        session.presentedController = playerVC
+        topVC.present(playerVC, animated: true)
     }
 
     private static func topViewController() -> UIViewController? {

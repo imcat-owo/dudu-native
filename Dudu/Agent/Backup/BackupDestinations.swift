@@ -16,7 +16,7 @@ private let logger = AppLogger(category: "Backup")
 ///
 /// Deliberately stores nothing but a set of `MountedFolderEntry` ids. The
 /// bookmark, the security scope, the resolved URL and the writability probe all
-/// stay owned by `MountedFoldersManager` — duplicating any of that here would
+/// stay owned by `DuduMountedFoldersManager` — duplicating any of that here would
 /// mean two places that can disagree about whether a folder is usable, and the
 /// stale one would be the one deciding where a backup gets written.
 ///
@@ -37,7 +37,7 @@ enum BackupDestinations {
     static var selectedIds: [UUID] {
         get {
             let raw = UserDefaults.standard.stringArray(forKey: defaultsKey) ?? []
-            let known = Set(MountedFoldersManager.shared.entries.map(\.id))
+            let known = Set(DuduMountedFoldersManager.shared.entries.map(\.id))
             return raw.compactMap(UUID.init(uuidString:)).filter(known.contains)
         }
         set {
@@ -64,13 +64,13 @@ enum BackupDestinations {
     /// WebDAV clients to duplicate something iOS already does — and something
     /// the user has already authenticated.
     ///
-    /// Reuses `MountedFoldersManager.add`, so a destination added here is an
+    /// Reuses `DuduMountedFoldersManager.add`, so a destination added here is an
     /// ordinary Mounted Folder: it appears in Settings ▸ Mount External
     /// Folders, survives relaunch via the same security-scoped bookmark, and is
     /// governed by the same writability rules. No parallel storage.
     @discardableResult
     static func addDestination(pickedURL: URL) throws -> MountedFolderEntry {
-        let entry = try MountedFoldersManager.shared.add(
+        let entry = try DuduMountedFoldersManager.shared.add(
             pickedURL: pickedURL,
             customName: suggestedName(for: pickedURL),
             userAllowWrite: true)
@@ -89,10 +89,10 @@ enum BackupDestinations {
             .trimmingCharacters(in: .whitespaces)
             .replacingOccurrences(of: "/", with: "-")
         let base = raw.isEmpty ? "backup" : raw
-        guard !MountedFoldersManager.shared.isNameAvailable(base) else { return base }
+        guard !DuduMountedFoldersManager.shared.isNameAvailable(base) else { return base }
         for n in 2...99 {
             let candidate = "\(base)-\(n)"
-            if MountedFoldersManager.shared.isNameAvailable(candidate) { return candidate }
+            if DuduMountedFoldersManager.shared.isNameAvailable(candidate) { return candidate }
         }
         return "\(base)-\(UUID().uuidString.prefix(4))"
     }
@@ -115,7 +115,7 @@ enum BackupDestinations {
     static var registeredIds: [UUID] {
         get {
             let raw = UserDefaults.standard.stringArray(forKey: registeredKey) ?? []
-            let known = Set(MountedFoldersManager.shared.entries.map(\.id))
+            let known = Set(DuduMountedFoldersManager.shared.entries.map(\.id))
             return raw.compactMap(UUID.init(uuidString:)).filter(known.contains)
         }
         set {
@@ -150,7 +150,7 @@ enum BackupDestinations {
     /// would only produce a failure at the end of a long export.
     static var eligibleFolders: [MountedFolderEntry] {
         let registered = Set(registeredIds)
-        return MountedFoldersManager.shared.entries
+        return DuduMountedFoldersManager.shared.entries
             .filter { registered.contains($0.id) && $0.effectiveWritable }
     }
 
@@ -163,7 +163,7 @@ enum BackupDestinations {
         // write the user never asked for, into a directory they use for
         // something else — so the registration list is the authority.
         let ids = Set(selectedIds).intersection(registeredIds)
-        return MountedFoldersManager.shared.entries.filter { ids.contains($0.id) }
+        return DuduMountedFoldersManager.shared.entries.filter { ids.contains($0.id) }
     }
 
     /// Outcome of delivering one package to one destination.
@@ -204,7 +204,7 @@ enum BackupDestinations {
     /// paths, and delivery walked straight into it.
     ///
     /// Only the mount *lookup* genuinely needs the main actor
-    /// (`MountedFoldersManager` is `@MainActor`), so the resolved roots are
+    /// (`DuduMountedFoldersManager` is `@MainActor`), so the resolved roots are
     /// captured here and the transfer happens on a detached executor.
     static func deliver(packageURL: URL, backupId: String = "") async -> [DeliveryResult] {
         let folders = selectedFolders
@@ -212,7 +212,7 @@ enum BackupDestinations {
 
         // Resolve every root while still on the main actor, then hand plain
         // URLs to the background copy.
-        let manager = MountedFoldersManager.shared
+        let manager = DuduMountedFoldersManager.shared
         let targets: [(id: UUID, name: String, root: URL?)] = folders.map {
             ($0.id, $0.name, manager.resolvedURL(for: $0.id))
         }
@@ -353,7 +353,7 @@ enum BackupDestinations {
         let folders = folderId.map { id in selectedFolders.filter { $0.id == id } }
             ?? selectedFolders
         for folder in folders {
-            guard let root = MountedFoldersManager.shared.resolvedURL(for: folder.id) else {
+            guard let root = DuduMountedFoldersManager.shared.resolvedURL(for: folder.id) else {
                 logger.info("[Backup] destination '\(folder.name)' is not currently available")
                 continue
             }

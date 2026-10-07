@@ -327,6 +327,18 @@
 		D6EC296962DAFD85920625F5 /* AppearanceThemeLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE9C3B18BA28A85501C74726 /* AppearanceThemeLibrary.swift */; };
 		061634BB8C6B545949ACBFD2 /* AppearanceThemePack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABD87495B459AD171E5C588 /* AppearanceThemePack.swift */; };
 		26022CB918AABDE24697FD48 /* ConfigRegistry+Builtins.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C89DBBA7845A1A7840430AD /* ConfigRegistry+Builtins.swift */; };
+		4F3CDF1B644655332FCE2C13 /* DuduRcloneStub.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EE379B0EDFD85AF35BB8D9E /* DuduRcloneStub.m */; };
+		5B298C778AF26DD11A90B6F5 /* DuduVoiceBubblePlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1CE402FD81EBD4B129CBF85 /* DuduVoiceBubblePlayer.swift */; };
+		31DC668EFF158F0266418982 /* DuduMarkdownPrepRegex.swift in Sources */ = {isa = PBXBuildFile; fileRef = C672357225BC096393E3F97E /* DuduMarkdownPrepRegex.swift */; };
+		230176062B0C4AECD0123270 /* DuduMarkdownSegments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57DFDAC19E9B3FE02EFB86DF /* DuduMarkdownSegments.swift */; };
+		77E2F7B9B92594706DDC002C /* BashismDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E0CED5810119CCF62E2A594 /* BashismDetector.swift */; };
+		F74D823D3161BB4A424BC17E /* BashismReminder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B841F30940763A5661D6002 /* BashismReminder.swift */; };
+		DC424D926FBB9C37B1B86E69 /* OnDemandBash.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFEAC400F244F6EAAD141A0A /* OnDemandBash.swift */; };
+		722839FBC32AABF710579C5F /* ShellCommandRingBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22925A3DF25A5E7230327A96 /* ShellCommandRingBuffer.swift */; };
+		0DB46B6AE6E65BFEEDF38EE9 /* ToolLoopDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7678E1696E980E4EE1FD2B17 /* ToolLoopDetector.swift */; };
+		02B7BEAB587874D24C5AAFC4 /* StreamingHangLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6900310CCD101724D3E556EC /* StreamingHangLogger.swift */; };
+		4E77C6B819872BAE86BE9687 /* MountedFolderCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00314764901FCFB49E72A7 /* MountedFolderCoordinator.swift */; };
+		725E07B4B624B1DD53B4BAA4 /* MountedFolderManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E34264D632927D4E82FD6D2 /* MountedFolderManager.swift */; };
 /* End PBXBuildFile section */
 		C22E4BE16A67710000C9EBF0 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 30AC3C5C6C418C791E362178 /* libsqlite3.tbd */; };
 		F8F1403829CEFF47083C5520 /* RealTimeCutVADLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = AECFD4BE143BED595F298AF5 /* RealTimeCutVADLibrary */; };
@@ -768,6 +780,18 @@
 		5BF9399C9F6795D1A5B67E5F /* WeatherOffloadBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherOffloadBridge.swift; sourceTree = "<group>"; };
 		7FE12ECA00F5CE75E311E182 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
 		1DE4E7B4BAF82065B464583D /* ShareViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewModel.swift; sourceTree = "<group>"; };
+		5EE379B0EDFD85AF35BB8D9E /* DuduRcloneStub.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DuduRcloneStub.m; sourceTree = "<group>"; };
+		F1CE402FD81EBD4B129CBF85 /* DuduVoiceBubblePlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuduVoiceBubblePlayer.swift; sourceTree = "<group>"; };
+		C672357225BC096393E3F97E /* DuduMarkdownPrepRegex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuduMarkdownPrepRegex.swift; sourceTree = "<group>"; };
+		57DFDAC19E9B3FE02EFB86DF /* DuduMarkdownSegments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuduMarkdownSegments.swift; sourceTree = "<group>"; };
+		5E0CED5810119CCF62E2A594 /* BashismDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BashismDetector.swift; sourceTree = "<group>"; };
+		8B841F30940763A5661D6002 /* BashismReminder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BashismReminder.swift; sourceTree = "<group>"; };
+		CFEAC400F244F6EAAD141A0A /* OnDemandBash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnDemandBash.swift; sourceTree = "<group>"; };
+		22925A3DF25A5E7230327A96 /* ShellCommandRingBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShellCommandRingBuffer.swift; sourceTree = "<group>"; };
+		7678E1696E980E4EE1FD2B17 /* ToolLoopDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolLoopDetector.swift; sourceTree = "<group>"; };
+		6900310CCD101724D3E556EC /* StreamingHangLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamingHangLogger.swift; sourceTree = "<group>"; };
+		DD00314764901FCFB49E72A7 /* MountedFolderCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MountedFolderCoordinator.swift; sourceTree = "<group>"; };
+		9E34264D632927D4E82FD6D2 /* MountedFolderManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MountedFolderManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 		30AC3C5C6C418C791E362178 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 
@@ -867,6 +891,7 @@
 				858ABEAA1DFA8960534429F6 /* TextSegmenter.swift */,
 				8A573FCBEB83EEA430E46D00 /* AppLogger.swift */,
 				8EAAEFF44ECE9C0CF5A03A78 /* EnvVarPrivacyStore.swift */,
+				9E34264D632927D4E82FD6D2 /* MountedFolderManager.swift */,
 				9FC79DED9285C2DE76B06B56 /* SafeKVCSetTrue.m */,
 				A06A4D1FEAC63AD0CC61BFB5 /* ShareCoordinator.swift */,
 				A5AAE76C52D440B9F8235B12 /* ThumbnailCache.swift */,
@@ -881,6 +906,7 @@
 				D3DFBDF97361719C904C7E7B /* UserManualMirror.swift */,
 				D6376B255808B1B8D6DFFD0B /* DeviceIdentity.swift */,
 				DA843B9A1B0D0558C05D1B3D /* AppearanceStudio.swift */,
+				DD00314764901FCFB49E72A7 /* MountedFolderCoordinator.swift */,
 				DDA5CE5D489BC6AE21105C18 /* SpeechSegmenter.swift */,
 				DE32A68A5429329F7D672674 /* SafeKVCSetTrue.h */,
 				DE9C3B18BA28A85501C74726 /* AppearanceThemeLibrary.swift */,
@@ -1271,8 +1297,11 @@
 				F7B6CDCCD756384DC1BEFA4A /* Offload */,
 				0BE578F84114150F9AEAF78E /* Search */,
 				3472DFCFBA04F8D290623603 /* Session */,
+				7277C3CABC0CD65606CC1D81 /* Shell */,
 				084D6A8BAD82AC5B5FCF8122 /* Speech */,
 				9B0C40439F5D201FB36CDADD /* Sync */,
+				22925A3DF25A5E7230327A96 /* ShellCommandRingBuffer.swift */,
+				7678E1696E980E4EE1FD2B17 /* ToolLoopDetector.swift */,
 			);
 			path = Agent;
 			sourceTree = "<group>";
@@ -1352,6 +1381,7 @@
 				DD25C9102A526698D4E42D95 /* AIChatViewModel+RequestBudget.swift */,
 				E9AE3A073CEECE603D4935A7 /* AIChatViewModel+AskUser.swift */,
 				EDCB01ED3F9B898B6643DBD1 /* DuduISHSeams.swift */,
+				F1CE402FD81EBD4B129CBF85 /* DuduVoiceBubblePlayer.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -1404,7 +1434,9 @@
 				0DA6EC357DAC2FA666FCAA51 /* MathRenderScheduler.swift */,
 				2F354ACB14EF4383D2BF276A /* DuduMarkdownParser.swift */,
 				507B15DDDE16012D7737A37D /* KaTeXRenderer.swift */,
+				57DFDAC19E9B3FE02EFB86DF /* DuduMarkdownSegments.swift */,
 				84A301B4E666239E20360CE8 /* SwiftMathRenderer.swift */,
+				C672357225BC096393E3F97E /* DuduMarkdownPrepRegex.swift */,
 			);
 			path = Markdown;
 			sourceTree = "<group>";
@@ -1485,6 +1517,7 @@
 			isa = PBXGroup;
 			children = (
 				3EB2099348904AD035F8A693 /* RcloneChunkedUpload.swift */,
+				5EE379B0EDFD85AF35BB8D9E /* DuduRcloneStub.m */,
 				6106180F5314F43FDDD313C2 /* RcloneBackendCatalog.swift */,
 				666982AD43C98A06B4EDBC28 /* RcloneRemoteStore.swift */,
 				978F5264BFDE38BFE8059BBD /* RcloneBridge.swift */,
@@ -1573,6 +1606,7 @@
 			children = (
 				164E581F225F4EB804EDBC2B /* CrashReporter.swift */,
 				511B74A97C06640CB76F31AC /* CrashSignalHandler.h */,
+				6900310CCD101724D3E556EC /* StreamingHangLogger.swift */,
 				CFC2CBD4D49AA356B8FDA6F4 /* CrashSignalHandler.m */,
 				F7F58D14A8E71495349E6ACE /* BrowserResourceMonitor.swift */,
 			);
@@ -1660,6 +1694,16 @@
 				7FE12ECA00F5CE75E311E182 /* ShareViewController.swift */,
 			);
 			path = ShareExtension;
+			sourceTree = "<group>";
+		};
+		7277C3CABC0CD65606CC1D81 /* Shell */ = {
+			isa = PBXGroup;
+			children = (
+				5E0CED5810119CCF62E2A594 /* BashismDetector.swift */,
+				8B841F30940763A5661D6002 /* BashismReminder.swift */,
+				CFEAC400F244F6EAAD141A0A /* OnDemandBash.swift */,
+			);
+			path = Shell;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1770,6 +1814,7 @@
 				01143848CEE0E32FC8AC7873 /* ConfigAuditLog.swift in Sources */,
 				01EDE2720259FF8357A4AE71 /* AIChatViewModel+ProviderFactory.swift in Sources */,
 				02209BEA52C0F6B7AC5D79B9 /* ProviderConfigDB.swift in Sources */,
+				02B7BEAB587874D24C5AAFC4 /* StreamingHangLogger.swift in Sources */,
 				03DD616DCD08FD35FAC588E0 /* ChatURLBrokerage.swift in Sources */,
 				04C5732B164DB3E717C53EA9 /* AIChatViewModel+ToolPreflight.swift in Sources */,
 				061634BB8C6B545949ACBFD2 /* AppearanceThemePack.swift in Sources */,
@@ -1782,6 +1827,7 @@
 				0ABFDA00A952DC0AF54FFE64 /* PhoneticNormalizer.swift in Sources */,
 				0B1DA20EF270C5F8FE1AABDA /* TextSegmenter.swift in Sources */,
 				0D290709292683F1CE5948F4 /* ClipboardDeviceTool.swift in Sources */,
+				0DB46B6AE6E65BFEEDF38EE9 /* ToolLoopDetector.swift in Sources */,
 				1056489266E503A373E8BDAF /* EnvVarStore.swift in Sources */,
 				1066B0C5D60899B8252B0A08 /* ContextPolicy.swift in Sources */,
 				10FF20D60057976BCCEE309C /* BPETokenizer.swift in Sources */,
@@ -1806,6 +1852,7 @@
 				1E585248DE96A5017878299C /* MigrationEngine.swift in Sources */,
 				213D8C9D2BFBA67D19336772 /* CorrectionContextBuilder.swift in Sources */,
 				2199BEA93B328984E882D617 /* AppLogger.swift in Sources */,
+				230176062B0C4AECD0123270 /* DuduMarkdownSegments.swift in Sources */,
 				241EC1EBB90EBA7813AE57B9 /* ModelEntry.swift in Sources */,
 				249CCFCDA4A9509B6CAADA3E /* ModelsDevAPI.swift in Sources */,
 				25D829F2DC587CDCB8D47832 /* ModelSelectionEntity.swift in Sources */,
@@ -1821,6 +1868,7 @@
 				2FDB86929AA1A1E4D00FFD22 /* LLMProviderFactory.swift in Sources */,
 				2FF53A575F667462901F5ABB /* GeminiProvider.swift in Sources */,
 				31CCB5418C039123A1DA6093 /* VoiceActivityDetector.swift in Sources */,
+				31DC668EFF158F0266418982 /* DuduMarkdownPrepRegex.swift in Sources */,
 				323DDC2F2A913E137EAEEFBC /* UploadPolicy.swift in Sources */,
 				33AD360F88F0F2A73202DA78 /* AIChatViewModel+FileTools.swift in Sources */,
 				33AE1CD0BF7D60B09BCC4187 /* KimiDeviceFlow.swift in Sources */,
@@ -1852,7 +1900,9 @@
 				4D7D4EFDA4C85A8F05983AE5 /* ImagePayloadPrep.swift in Sources */,
 				4DC570DB08623E0FCB6F9CD8 /* SyncDirtyScanner.swift in Sources */,
 				4DE566C76BED45B1D7B2A89B /* AIChatViewModel+Misc.swift in Sources */,
+				4E77C6B819872BAE86BE9687 /* MountedFolderCoordinator.swift in Sources */,
 				4EDEFCBC9C18CBD9EC7B09C1 /* StewardSensitiveApprovalGate.swift in Sources */,
+				4F3CDF1B644655332FCE2C13 /* DuduRcloneStub.m in Sources */,
 				4F774D0ED2029D8FB7BC3D3B /* BackupFileTreeExporter.swift in Sources */,
 				4FF373341209143426232AC7 /* DuduNotifications.swift in Sources */,
 				50CCFE84494B9E678A3B93FC /* BackupKeepAlive.swift in Sources */,
@@ -1874,6 +1924,7 @@
 				59F83DF3BD978CECA9D64C6E /* ChatModels.swift in Sources */,
 				5A0D937B53B1E4CA8F251306 /* VoiceInputModels.swift in Sources */,
 				5AC8C9CC1608FFAB04D360E4 /* DeviceIdentity.swift in Sources */,
+				5B298C778AF26DD11A90B6F5 /* DuduVoiceBubblePlayer.swift in Sources */,
 				5CEB43284FA863D303812936 /* WebSearchService.swift in Sources */,
 				5DBE7ECBD28F29E7FDF38205 /* OffloadToolRunner.swift in Sources */,
 				5EDB617F7A0C1048824A6E3F /* BackupSecrets.swift in Sources */,
@@ -1902,12 +1953,15 @@
 				6F25BCD0CBE8ECF2031ED37A /* XAITokenStorage.swift in Sources */,
 				7063555737FF6E9285CB7E48 /* BackupDelivery.swift in Sources */,
 				70716F220A3F45E9BCE6846E /* VoiceOutputPlayer.swift in Sources */,
+				722839FBC32AABF710579C5F /* ShellCommandRingBuffer.swift in Sources */,
 				722851F737BEFA977D3547BF /* TTSServiceModels.swift in Sources */,
+				725E07B4B624B1DD53B4BAA4 /* MountedFolderManager.swift in Sources */,
 				731BF17B7F06C850869C88C7 /* AskDuduIntent.swift in Sources */,
 				73E493CDAA07BE571815A0E1 /* SyncCoreHydrators.swift in Sources */,
 				74EE7CB8FF29657982E011DD /* AIChatViewModel+SSEStream.swift in Sources */,
 				750D6959384BE052FB7059EE /* RcloneRemoteStore.swift in Sources */,
 				761F4D086C9100A513AFCC20 /* OAuthRefreshCoordinator.swift in Sources */,
+				77E2F7B9B92594706DDC002C /* BashismDetector.swift in Sources */,
 				77EFA3ED57736203DFE92AEB /* Syncable.swift in Sources */,
 				79A31EFC56E9B93237A9EC0B /* WeatherOffloadBridge.swift in Sources */,
 				7A4A2F0720CD0F635FBD1BDB /* ProvidersCollection.swift in Sources */,
@@ -2028,6 +2082,7 @@
 				DAB039AC54C20586C63B168C /* MCPAggregator.swift in Sources */,
 				DB80EDD03FCFE853B2945194 /* DuduISHSeams.swift in Sources */,
 				DBF0A2BFA44F891E9D04874C /* ReportIssueTool.swift in Sources */,
+				DC424D926FBB9C37B1B86E69 /* OnDemandBash.swift in Sources */,
 				DCB945DB6318559F10CD063E /* GeminiOAuthManager.swift in Sources */,
 				DCE9E9F6AE5E68E8C8701578 /* NetworkMonitor.swift in Sources */,
 				DEFABC6E8686F4D13563CD1C /* LLMProvider.swift in Sources */,
@@ -2063,6 +2118,7 @@
 				F606A39F8DA406D88425FA38 /* GroupsCollection.swift in Sources */,
 				F668BB8733196FE97632B51F /* FontSettings.swift in Sources */,
 				F6A6F892A117608BC7E91F1F /* PendingShare.swift in Sources */,
+				F74D823D3161BB4A424BC17E /* BashismReminder.swift in Sources */,
 				F79A8B355D610992A2B53DB5 /* MarkdownStripper.swift in Sources */,
 				F7C29E59BC2B955A6AF5A6D7 /* DuduConfigPermissionStore.swift in Sources */,
 				F875E22B66B3196E4A90345B /* VoiceTextSanitizer.swift in Sources */,

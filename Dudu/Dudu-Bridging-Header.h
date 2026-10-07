@@ -30,4 +30,12 @@
 // no P8 deps). CrashReporter.swift calls CrashSignalHandler.install().
 #import "Diagnostics/CrashSignalHandler.h"
 
+// P7 (Backup/Remote): rclone Go mobile entry points. The real library
+// (deps/rclone-mobile xcframework) is NOT vendored; DuduRcloneStub.m
+// provides stubs that return 503 until it is. Delete the stub when the
+// real library lands.
+void DuduRcloneInitialize(void);
+char *_Nullable DuduRcloneRPC(const char *method, const char *input, int *status);
+void DuduRcloneFreeString(char *s);
+
 #endif /* Dudu_Bridging_Header_h */

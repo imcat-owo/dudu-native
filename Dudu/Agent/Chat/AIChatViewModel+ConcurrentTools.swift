@@ -998,7 +998,9 @@ extension AIChatViewModel {
                 if !VoiceModePreference.shared.isCapturing {
                     if let fileURL = await resolvePathForDirectRead(
                         AIVoiceMessageComposer.linuxPathFor(url: voice.url)) {
-                        GlobalAudioPlayer.shared.play(url: fileURL)
+                        // P7 PORT: GlobalAudioPlayer is Views (Phase C). DuduVoiceBubblePlayer
+                        // is the minimal engine-owned stand-in (documented in its file).
+                        DuduVoiceBubblePlayer.play(url: fileURL)
                     }
                 }
                 let via = voice.serviceName.map { "（\($0)合成）" } ?? ""

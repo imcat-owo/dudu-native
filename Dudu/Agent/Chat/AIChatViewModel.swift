@@ -1804,7 +1804,11 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
         // scales on top of it exactly like it does for the manager's rate.
         let baseRate: Float
         if UserDefaults.standard.object(forKey: "systemVoice.rateMultiplier") != nil {
-            baseRate = SystemVoiceEditorPreferences.utteranceRate
+            // P7 PORT: SystemVoiceEditorPreferences is Views
+            // (Views/Settings/SystemVoiceEditorView.swift, Phase C) — inlined its
+            // `utteranceRate` getter verbatim per the P3 precedent in
+            // VoiceProvider+System.swift. Views must revert to the real type.
+            baseRate = UserDefaults.standard.object(forKey: "systemVoice.rateMultiplier") as? Float ?? 0.5
         } else {
             baseRate = mgr.speechRate
         }
@@ -6734,9 +6738,10 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
         // No extra work: we were already computing this MarkdownContent here.
         let content = block.cachedMarkdown ?? MarkdownContent(prepareMarkdownForRender(block.content))
         block.cachedMarkdown = content
-        block.cachedAttributedString = autoreleasepool {
-            renderMarkdownBlocks(content.blocks)
-        }
+        // P7 PORT: renderMarkdownBlocks is Views (SelectableMarkdownView, Phase C).
+        // cachedAttributedString stays nil until then; the Views layer recomputes
+        // it on demand (this is a render cache, not data).
+        block.cachedAttributedString = nil
     }
 
     @MainActor
