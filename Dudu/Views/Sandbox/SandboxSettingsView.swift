@@ -1014,7 +1014,7 @@ private struct CrossAppRow: View {
                     }
                     opening = false
                 }
-            case .webview:
+            case .webview(let url):
                 opening = false
                 onWebView(url)
             }

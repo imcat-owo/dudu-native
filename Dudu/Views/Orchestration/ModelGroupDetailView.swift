@@ -232,10 +232,10 @@ struct ModelGroupDetailView: View {
 
     private func thinkingLabel(_ supports: Bool?) -> String {
         let state: String
-        switch supports {
-        case true: state = AppLocalized("orchestration.thinkingYes")
-        case false: state = AppLocalized("orchestration.thinkingNo")
-        case nil: state = AppLocalized("orchestration.thinkingUnknown")
+        if let s = supports {
+            state = AppLocalized(s ? "orchestration.thinkingYes" : "orchestration.thinkingNo")
+        } else {
+            state = AppLocalized("orchestration.thinkingUnknown")
         }
         return "\(AppLocalized("orchestration.thinking")): \(state)"
     }
