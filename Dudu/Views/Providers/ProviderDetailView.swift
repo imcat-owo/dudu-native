@@ -9,6 +9,7 @@ import UIKit
 
 struct ProviderDetailView: View {
     @EnvironmentObject private var store: ProviderConfigStore
+    @EnvironmentObject private var nav: SettingsNavigator
     let instanceId: String
     @State private var showingDeleteConfirm = false
     @State private var showingAddModel = false
@@ -56,6 +57,30 @@ struct ProviderDetailView: View {
             }
 
             credentialSection(instance)
+
+            // D24: 分享 —— 把这份配置生成二维码 / 分享文本发给别人
+            Section {
+                Button {
+                    nav.path.append(SettingsRoute.providerShare(instance.id))
+                } label: {
+                    HStack(spacing: 12) {
+                        Image(systemName: "qrcode")
+                            .font(.system(size: 15))
+                            .foregroundStyle(DuduTheme.pink)
+                            .frame(width: 30, height: 30)
+                            .background(DuduTheme.pinkSoft)
+                            .clipShape(RoundedRectangle(cornerRadius: DuduTheme.radiusChip))
+                        Text(AppLocalized("shareimport.shareEntry"))
+                            .font(DuduTheme.bodyFont(weight: .medium))
+                            .foregroundStyle(DuduTheme.duduText)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 12, weight: .medium))
+                            .foregroundStyle(DuduTheme.duduTextDim)
+                    }
+                    .frame(minHeight: 44)
+                }
+            }
 
             Section("模型") {
                 let entries = store.entries(for: instance.id)

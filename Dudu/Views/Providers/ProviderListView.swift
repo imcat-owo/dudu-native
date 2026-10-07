@@ -8,11 +8,35 @@ import SwiftUI
 
 struct ProviderListView: View {
     @EnvironmentObject private var store: ProviderConfigStore
+    @EnvironmentObject private var nav: SettingsNavigator
     @State private var showingTypePicker = false
     @State private var pendingDelete: ProviderInstance?
 
     var body: some View {
         List {
+            // D24: 扫码导入 —— 二维码 / 粘贴分享文本导入服务配置
+            Section {
+                Button {
+                    nav.path.append(SettingsRoute.qrScan)
+                } label: {
+                    HStack(spacing: 12) {
+                        Image(systemName: "qrcode.viewfinder")
+                            .font(.system(size: 15))
+                            .foregroundStyle(DuduTheme.pink)
+                            .frame(width: 30, height: 30)
+                            .background(DuduTheme.pinkSoft)
+                            .clipShape(RoundedRectangle(cornerRadius: DuduTheme.radiusChip))
+                        Text(AppLocalized("shareimport.scanEntry"))
+                            .font(DuduTheme.bodyFont(weight: .medium))
+                            .foregroundStyle(DuduTheme.duduText)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 12, weight: .medium))
+                            .foregroundStyle(DuduTheme.duduTextDim)
+                    }
+                    .frame(minHeight: 44)
+                }
+            }
             ForEach(store.instances) { instance in
                 NavigationLink(value: SettingsRoute.providerDetail(instance.id)) {
                     ProviderRowView(instance: instance)

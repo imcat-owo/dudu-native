@@ -5,6 +5,10 @@ import SwiftUI
 /// Phase-C navigation routes inside the Settings tab.
 enum SettingsRoute: Hashable {
     case providerDetail(String)
+    case qrScan
+    case providerShare(String)
+    case modelGroups
+    case modelGroupDetail(String)
     case appearance
     case fontScale
     case ttsSettings
@@ -39,6 +43,12 @@ struct SettingsView: View {
                         icon: "cpu",
                         title: "模型服务",
                         route: .providerDetail("__list__")
+                    )
+                    // D24: 模型分组（编排）——分组切换器 + 成员编排
+                    SettingsRow(
+                        icon: "square.stack.3d.up",
+                        title: AppLocalized("orchestration.title"),
+                        route: .modelGroups
                     )
                     SettingsRow(
                         icon: "paintpalette",
@@ -103,6 +113,14 @@ struct SettingsView: View {
                     ProviderListView()
                 case .providerDetail(let id):
                     ProviderDetailView(instanceId: id)
+                case .qrScan:
+                    ProviderQRScanView()
+                case .providerShare(let id):
+                    ProviderQRShareView(instanceId: id)
+                case .modelGroups:
+                    ModelGroupListView()
+                case .modelGroupDetail(let id):
+                    ModelGroupDetailView(groupId: id)
                 case .appearance:
                     AppearanceView()
                 case .fontScale:
