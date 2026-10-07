@@ -353,6 +353,35 @@ def add_local_package(name, relpath, product):
     else:
         print(f"product dep {product} already present")
 
+    # Register the package on the PBXProject's packageReferences list —
+    # without this Xcode fails with "Missing package product '<product>'".
+    PROJ_ID = "100000000000000000000001"  # PBXProject "Dudu"
+    loc = get_object_block(text, PROJ_ID)
+    assert loc, "project object not found"
+    s, e, inner = loc
+    pkg_entry = f"{pkg_id} /* {name} */"
+    if "packageReferences" in inner:
+        m = re.search(r"packageReferences = \(\n(.*?)\n\t\t\t\);", inner, re.S)
+        assert m, "malformed packageReferences"
+        existing = m.group(1)
+        if pkg_id not in existing:
+            new_list = existing + f",\n\t\t\t{pkg_entry}"
+            inner = inner.replace(m.group(0),
+                f"packageReferences = ({new_list}\n\t\t);")
+            text = text[:s] + text[s:e].replace(loc[2], inner) + text[e:]
+            print("added package to project packageReferences")
+        else:
+            print("package already in project packageReferences")
+    else:
+        anchor = "\t\t\tproductRefGroup = "
+        assert anchor in inner, "productRefGroup anchor not found"
+        ins = (f"\t\t\tpackageReferences = (\n"
+               f"\t\t\t\t{pkg_entry},\n"
+               f"\t\t\t);\n")
+        inner = inner.replace(anchor, ins + anchor, 1)
+        text = text[:s] + text[s:e].replace(loc[2], inner) + text[e:]
+        print("created packageReferences on project")
+
     # Attach to target's packageProductDependencies
     loc = get_object_block(text, TARGET_ID)
     assert loc, "target not found"

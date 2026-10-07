@@ -464,6 +464,9 @@
 				en,
 			);
 			mainGroup = 100000000000000000000006;
+			packageReferences = (
+				777F3A508E55B56E9030C792 /* BridgeCore */,
+			);
 			productRefGroup = 100000000000000000000008 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
