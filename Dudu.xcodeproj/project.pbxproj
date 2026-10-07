@@ -375,6 +375,16 @@
 		05AAEDF89BE114347E59613A /* AIAuthorizationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC00A5FAB73F3B351B90E21 /* AIAuthorizationCoordinator.swift */; };
 		1C07E7F023BEC271BE4DEE05 /* AIAuthorizationPromptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11E6E208B570BC2937827B32 /* AIAuthorizationPromptView.swift */; };
 		266F27CBD48407036D67D137 /* TTSSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B01CB96F538F928059CFCED3 /* TTSSettingsView.swift */; };
+		765098CEC2079346EFE211F2 /* AIChatViewModel+ThemeTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B21B27C606DE1B305F8162F /* AIChatViewModel+ThemeTools.swift */; };
+		20FFE63AD822E6DB8394502F /* CustomFontManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58CDB533361A114E156AD46C /* CustomFontManager.swift */; };
+		D9F1395EBE84FC9A03AC0EA5 /* FontUploadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 441418BFFC4022345E0F99C7 /* FontUploadView.swift */; };
+		A3583A7F1DCDC1CAE60BD62E /* ThemeCustomCSS.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99C78C492C4078261074CC2 /* ThemeCustomCSS.swift */; };
+		745D13BC63F9C332BAB2A7C6 /* ThemePackShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D88ACCFDB140E3C03CE0062A /* ThemePackShareView.swift */; };
+		62B4D31BC7667F62B4546371 /* ThemeRecolor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0E19DC86F1F64F43B4ECE8 /* ThemeRecolor.swift */; };
+		06A731A6304FF14D318BF6DC /* ThemeTryOn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12BB9F7F0972DC733ECC485E /* ThemeTryOn.swift */; };
+		3973EC92659FF2F843D48FF9 /* SessionSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D888578F6FFFAB12908535B8 /* SessionSearchView.swift */; };
+		32E368F7CCD668DA16921DDD /* AppLockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B169975641E9148AEE28E9 /* AppLockView.swift */; };
+		8F98429970333857FE4CD2E8 /* BackupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00CB3EF2E3464AB2704D220B /* BackupView.swift */; };
 /* End PBXBuildFile section */
 		C22E4BE16A67710000C9EBF0 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 30AC3C5C6C418C791E362178 /* libsqlite3.tbd */; };
 		F8F1403829CEFF47083C5520 /* RealTimeCutVADLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = AECFD4BE143BED595F298AF5 /* RealTimeCutVADLibrary */; };
@@ -866,6 +876,16 @@
 		3DC00A5FAB73F3B351B90E21 /* AIAuthorizationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIAuthorizationCoordinator.swift; sourceTree = "<group>"; };
 		11E6E208B570BC2937827B32 /* AIAuthorizationPromptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIAuthorizationPromptView.swift; sourceTree = "<group>"; };
 		B01CB96F538F928059CFCED3 /* TTSSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTSSettingsView.swift; sourceTree = "<group>"; };
+		5B21B27C606DE1B305F8162F /* AIChatViewModel+ThemeTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AIChatViewModel+ThemeTools.swift"; sourceTree = "<group>"; };
+		58CDB533361A114E156AD46C /* CustomFontManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFontManager.swift; sourceTree = "<group>"; };
+		441418BFFC4022345E0F99C7 /* FontUploadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontUploadView.swift; sourceTree = "<group>"; };
+		C99C78C492C4078261074CC2 /* ThemeCustomCSS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeCustomCSS.swift; sourceTree = "<group>"; };
+		D88ACCFDB140E3C03CE0062A /* ThemePackShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemePackShareView.swift; sourceTree = "<group>"; };
+		0A0E19DC86F1F64F43B4ECE8 /* ThemeRecolor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeRecolor.swift; sourceTree = "<group>"; };
+		12BB9F7F0972DC733ECC485E /* ThemeTryOn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeTryOn.swift; sourceTree = "<group>"; };
+		D888578F6FFFAB12908535B8 /* SessionSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionSearchView.swift; sourceTree = "<group>"; };
+		B6B169975641E9148AEE28E9 /* AppLockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLockView.swift; sourceTree = "<group>"; };
+		00CB3EF2E3464AB2704D220B /* BackupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 		30AC3C5C6C418C791E362178 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 
@@ -952,6 +972,7 @@
 				4ADDEBD727A0C4735EE662BB /* cl100k_base.tiktoken */,
 				55802BEC33709AECE58098FC /* WebAppShortcut.swift */,
 				57A5AB6973CD03FEB2E3BFFC /* SentenceSplitter.swift */,
+				58CDB533361A114E156AD46C /* CustomFontManager.swift */,
 				58DFF59D9E9E6DF0B26C87B5 /* LLMSessionRegistry.swift */,
 				5DEDA2ED3EAD6E54FF136E28 /* NSTextContainerSetSizeGuard.m */,
 				677259B0CAB632585F6AEB16 /* FileHandleSafeWrite.h */,
@@ -1431,6 +1452,7 @@
 				32099E6DCF1779727A0B71E9 /* ChatModels.swift */,
 				4C0BDD1BB30680A46924FB66 /* AIChatViewModel+Persistence.swift */,
 				558ABC0159FB6B97FB7E87BE /* AIChatViewModel+Misc.swift */,
+				5B21B27C606DE1B305F8162F /* AIChatViewModel+ThemeTools.swift */,
 				651AE65514D8081A71CF38AE /* ChatURLBrokerage.swift */,
 				673FF962A969EA4DACC7A2A1 /* AIChatViewModel+SSEStream.swift */,
 				7415FEE0FAD87BECDC7DA6CF /* DuduURLPathDecoding.swift */,
@@ -1815,6 +1837,7 @@
 				7C2DB0C154BD454AFAC4DB7A /* SessionDrawerView.swift */,
 				A11E38BB2F202107950A2CBA /* MessageListView.swift */,
 				AD5FEF1AA02738BFD9F5BA39 /* MessageRowView.swift */,
+				D888578F6FFFAB12908535B8 /* SessionSearchView.swift */,
 				E2A46D393F44AE1B899BFDCB /* ModelPickerView.swift */,
 			);
 			path = Chat;
@@ -1842,7 +1865,12 @@
 		D10B8E531D0D2511BD797801 /* Appearance */ = {
 			isa = PBXGroup;
 			children = (
+				0A0E19DC86F1F64F43B4ECE8 /* ThemeRecolor.swift */,
+				12BB9F7F0972DC733ECC485E /* ThemeTryOn.swift */,
+				441418BFFC4022345E0F99C7 /* FontUploadView.swift */,
 				68558ECEDABFE019C6F313DA /* AppearanceView.swift */,
+				C99C78C492C4078261074CC2 /* ThemeCustomCSS.swift */,
+				D88ACCFDB140E3C03CE0062A /* ThemePackShareView.swift */,
 			);
 			path = Appearance;
 			sourceTree = "<group>";
@@ -1860,7 +1888,9 @@
 		930C951A6A0C2D8A4A21F5B8 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				00CB3EF2E3464AB2704D220B /* BackupView.swift */,
 				B01CB96F538F928059CFCED3 /* TTSSettingsView.swift */,
+				B6B169975641E9148AEE28E9 /* AppLockView.swift */,
 				E084A58363D98CF4058A6B90 /* SettingsView.swift */,
 			);
 			path = Settings;
@@ -2012,6 +2042,7 @@
 				061634BB8C6B545949ACBFD2 /* AppearanceThemePack.swift in Sources */,
 				062182EF40D53B47DC86B8A7 /* ListSessionsIntent.swift in Sources */,
 				06842974D85CC4EA30889D58 /* AppearanceStudio.swift in Sources */,
+				06A731A6304FF14D318BF6DC /* ThemeTryOn.swift in Sources */,
 				07D72A674C42EF2B57FAC7FD /* ThinkingRulesCollection.swift in Sources */,
 				0877B36A44441FC9114D734D /* MessageBlockView.swift in Sources */,
 				08B9C892C3AFBB905BD3215A /* MCPApprovalCardView.swift in Sources */,
@@ -2045,6 +2076,7 @@
 				1D050B834629689057DB0570 /* BluetoothDeviceTool.swift in Sources */,
 				1DD22A170850E4C802A572A7 /* BackupExportJournal.swift in Sources */,
 				1E585248DE96A5017878299C /* MigrationEngine.swift in Sources */,
+				20FFE63AD822E6DB8394502F /* CustomFontManager.swift in Sources */,
 				213D8C9D2BFBA67D19336772 /* CorrectionContextBuilder.swift in Sources */,
 				2199BEA93B328984E882D617 /* AppLogger.swift in Sources */,
 				230176062B0C4AECD0123270 /* DuduMarkdownSegments.swift in Sources */,
@@ -2067,6 +2099,7 @@
 				31CCB5418C039123A1DA6093 /* VoiceActivityDetector.swift in Sources */,
 				31DC668EFF158F0266418982 /* DuduMarkdownPrepRegex.swift in Sources */,
 				323DDC2F2A913E137EAEEFBC /* UploadPolicy.swift in Sources */,
+				32E368F7CCD668DA16921DDD /* AppLockView.swift in Sources */,
 				33AD360F88F0F2A73202DA78 /* AIChatViewModel+FileTools.swift in Sources */,
 				33AE1CD0BF7D60B09BCC4187 /* KimiDeviceFlow.swift in Sources */,
 				33ECF3A8854F827EAE7306F9 /* ClosureField.swift in Sources */,
@@ -2076,6 +2109,7 @@
 				3771E4D044124F1800F5C5CA /* GeminiWireFormat.swift in Sources */,
 				389D8D99DE74E73C3C5094AB /* ConfigError.swift in Sources */,
 				390C5D8C9838C194237CCBE8 /* ModelGroup.swift in Sources */,
+				3973EC92659FF2F843D48FF9 /* SessionSearchView.swift in Sources */,
 				3A384622BB0EBA71D4807E7F /* CrashSignalHandler.m in Sources */,
 				3ACCE8EFC05BAF634FAF6877 /* ThinkingRuleCoding.swift in Sources */,
 				3B52FF397420B244B117A961 /* AIChatViewModel+TitleGeneration.swift in Sources */,
@@ -2132,6 +2166,7 @@
 				5F786E3CEE6A8E09C02031C3 /* ChatSessionIdEnvironment.swift in Sources */,
 				60FB4E304E801C8C9AA86E5F /* TTSPaper.swift in Sources */,
 				61DA7635161432D2DE8D77D8 /* KimiOAuthManager.swift in Sources */,
+				62B4D31BC7667F62B4546371 /* ThemeRecolor.swift in Sources */,
 				630DE487919D013A8137B3AB /* BrowserUseActions.swift in Sources */,
 				636220D5B76F3A916E13621D /* OAuthRefreshSingleFlight.swift in Sources */,
 				643ACF98144CFE939E187E97 /* CorrectionSignalSource.swift in Sources */,
@@ -2161,9 +2196,11 @@
 				725E07B4B624B1DD53B4BAA4 /* MountedFolderManager.swift in Sources */,
 				731BF17B7F06C850869C88C7 /* AskDuduIntent.swift in Sources */,
 				73E493CDAA07BE571815A0E1 /* SyncCoreHydrators.swift in Sources */,
+				745D13BC63F9C332BAB2A7C6 /* ThemePackShareView.swift in Sources */,
 				74EE7CB8FF29657982E011DD /* AIChatViewModel+SSEStream.swift in Sources */,
 				750D6959384BE052FB7059EE /* RcloneRemoteStore.swift in Sources */,
 				761F4D086C9100A513AFCC20 /* OAuthRefreshCoordinator.swift in Sources */,
+				765098CEC2079346EFE211F2 /* AIChatViewModel+ThemeTools.swift in Sources */,
 				77E2F7B9B92594706DDC002C /* BashismDetector.swift in Sources */,
 				77EFA3ED57736203DFE92AEB /* Syncable.swift in Sources */,
 				79A31EFC56E9B93237A9EC0B /* WeatherOffloadBridge.swift in Sources */,
@@ -2197,6 +2234,7 @@
 				8D1E4BD68420DF9836986E67 /* EnvVarsCollection.swift in Sources */,
 				8DBC10601A1AACD2115AAA9A /* BrowserWebView.swift in Sources */,
 				8E9832DE5E4A229FE2EC0E3A /* MCPStore.swift in Sources */,
+				8F98429970333857FE4CD2E8 /* BackupView.swift in Sources */,
 				8FCE740B6D52F5AE503C2C4D /* ImageTextCache.swift in Sources */,
 				90518BF15A6AD71E99CD269B /* AgentProvider.swift in Sources */,
 				930088BFD0594EA853EA7D26 /* ObjCExceptionCatcher.m in Sources */,
@@ -2218,6 +2256,7 @@
 				A06092493578FC211FBF896F /* DeepLinkRouter.swift in Sources */,
 				A1D0D5608CC044F384E0E0F9 /* LANTransport.swift in Sources */,
 				A321A0BCA8C27961EE1874BA /* VoiceProvider+Vendors.swift in Sources */,
+				A3583A7F1DCDC1CAE60BD62E /* ThemeCustomCSS.swift in Sources */,
 				A382C9E8F945D60F8D6AF82F /* OpenAIProvider.swift in Sources */,
 				A40DD19BD5EAA2735DE0AFF9 /* SendPromptResult.swift in Sources */,
 				A441D496C5D73220BCFC1521 /* VoiceProviderFactory.swift in Sources */,
@@ -2289,6 +2328,7 @@
 				D7415DA85BBAA8D5C0DDFCB6 /* OpenRouterOAuthManager.swift in Sources */,
 				D79A3CAFF1302E0F61BEB2C3 /* BridgeExternalMCPService.swift in Sources */,
 				D8AB9C6299EA8D6BF8C580B0 /* DuduTheme.swift in Sources */,
+				D9F1395EBE84FC9A03AC0EA5 /* FontUploadView.swift in Sources */,
 				D9FBDEDBF7F811C9795B9758 /* ConfigField.swift in Sources */,
 				DAB039AC54C20586C63B168C /* MCPAggregator.swift in Sources */,
 				DB80EDD03FCFE853B2945194 /* DuduISHSeams.swift in Sources */,

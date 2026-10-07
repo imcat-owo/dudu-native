@@ -34,6 +34,19 @@ struct AppearanceView: View {
                 }
             }
 
+            Section("主题包") {
+                NavigationLink {
+                    ThemePackShareView()
+                } label: {
+                    appearanceLinkRow(icon: "square.and.arrow.up", title: "导入 / 导出 / 分享")
+                }
+                NavigationLink {
+                    FontUploadView()
+                } label: {
+                    appearanceLinkRow(icon: "textformat", title: "字体")
+                }
+            }
+
             Section("颜色") {
                 ForEach(roles, id: \.0) { role, name in
                     colorRow(role: role, name: name)
@@ -63,6 +76,22 @@ struct AppearanceView: View {
     }
 
     // MARK: Presets
+
+    /// Navigation row for the 主题包 section (D12): icon chip + title,
+    /// matching the 定妆 row style (small, compact, no subtitles).
+    private func appearanceLinkRow(icon: String, title: String) -> some View {
+        HStack(spacing: 12) {
+            Image(systemName: icon)
+                .font(.system(size: 13, weight: .medium))
+                .foregroundStyle(DuduTheme.pink)
+                .frame(width: 28, height: 28)
+                .background(DuduTheme.pinkSoft)
+                .clipShape(Circle())
+            Text(title)
+                .font(DuduTheme.bodyFont(weight: .medium))
+                .foregroundStyle(DuduTheme.duduText)
+        }
+    }
 
     private func presetRow(_ preset: AppearancePreset) -> some View {
         Button {

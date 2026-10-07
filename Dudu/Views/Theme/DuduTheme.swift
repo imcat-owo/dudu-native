@@ -51,6 +51,12 @@ extension DuduTheme {
     /// Dividers. Light #F1E7E2 · dark #38302C (derived, pending her review).
     static var duduDivider: Color { adaptive(light: "F1E7E2", dark: "38302C") }
 
+    /// Destructive red. Theme role (user-customizable via the 外观 page),
+    /// not a fixed token — defaults light #BC6262 / dark #DA8181.
+    static var duduDestructive: Color {
+        AppearanceStudio.shared.color(.destructive, scope: .global)
+    }
+
     /// Resolves a fixed token for the current scheme: iOS system setting,
     /// honoring the studio's appearanceMode override (1 = force light,
     /// 2 = force dark). Implemented as a dynamic UIColor provider so the
@@ -84,30 +90,43 @@ extension DuduTheme {
 
     /// General UI title text (settings rows, nav titles). → FontSettings app axis.
     static func titleFont(weight: Font.Weight = .semibold) -> Font {
-        .system(size: FontSettings.shared.scaledApp(titleSize), weight: weight)
+        baseFont(scaledSize: FontSettings.shared.scaledApp(titleSize), weight: weight)
     }
     /// General UI body text. → FontSettings app axis.
     static func bodyFont(weight: Font.Weight = .regular) -> Font {
-        .system(size: FontSettings.shared.scaledApp(bodySize), weight: weight)
+        baseFont(scaledSize: FontSettings.shared.scaledApp(bodySize), weight: weight)
     }
     /// Captions, timestamps, hints. → FontSettings app axis.
     static func captionFont(weight: Font.Weight = .regular) -> Font {
-        .system(size: FontSettings.shared.scaledApp(captionSize), weight: weight)
+        baseFont(scaledSize: FontSettings.shared.scaledApp(captionSize), weight: weight)
     }
     /// Chat message body (markdown base size). → FontSettings message axis.
     static func messageFont(weight: Font.Weight = .regular) -> Font {
-        .system(size: FontSettings.shared.scaledMessage(bodySize), weight: weight)
+        baseFont(scaledSize: FontSettings.shared.scaledMessage(bodySize), weight: weight)
     }
     /// Chat input field text. → FontSettings chat-input axis.
     static func inputFont(weight: Font.Weight = .regular) -> Font {
-        .system(size: FontSettings.shared.scaledChatInput(bodySize), weight: weight)
+        baseFont(scaledSize: FontSettings.shared.scaledChatInput(bodySize), weight: weight)
     }
     /// Monospace for code. Size is explicit at the call site (still scaled).
+    /// Always the system mono — an uploaded custom font never applies here,
+    /// so code stays readable.
     static func monoFont(size: CGFloat, weight: Font.Weight = .regular) -> Font {
         .system(size: FontSettings.shared.scaledMessage(size), weight: weight, design: .monospaced)
     }
     /// Heading H1: title base size plus a delta, semibold. → FontSettings app axis.
     static func headingFont(delta: CGFloat) -> Font {
-        .system(size: FontSettings.shared.scaledApp(titleSize + delta), weight: .semibold)
+        baseFont(scaledSize: FontSettings.shared.scaledApp(titleSize + delta), weight: .semibold)
+    }
+
+    /// Base font constructor (D12): an uploaded custom font wins over the
+    /// system font. The registered file is a single face, so weight is
+    /// synthesized by the OS. Sizes keep flowing through FontSettings —
+    /// upload changes the FAMILY, never the scale.
+    private static func baseFont(scaledSize: CGFloat, weight: Font.Weight) -> Font {
+        if let family = CustomFontManager.shared.activePostScriptName {
+            return Font.custom(family, size: scaledSize)
+        }
+        return .system(size: scaledSize, weight: weight)
     }
 }

@@ -48,8 +48,12 @@ struct DuduTabView: View {
         // sheet) so chat stays interactive while a request is pending.
         // D9: AI authorization prompt rides the same overlay; it only renders
         // when OffloadPermissionManager.pendingRequest is non-nil.
+        // D12: ThemeTryOnBanner rides here too — try-on previews staged by
+        // the AI (preview_theme) or theme-pack import must be visible from
+        // chat, with Save/Discard always one tap away.
         .overlay(alignment: .bottom) {
             VStack(spacing: 8) {
+                ThemeTryOnBanner()
                 AIAuthorizationPromptView()
                 MCPApprovalCardView()
             }
