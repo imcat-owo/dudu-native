@@ -64,6 +64,8 @@
 		58D5350E4CDC2A95C7F33B61 /* ThumbnailCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5AAE76C52D440B9F8235B12 /* ThumbnailCache.swift */; };
 		CD0B554FA59894A4FAEFF0B5 /* UserManualMirror.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3DFBDF97361719C904C7E7B /* UserManualMirror.swift */; };
 		F0EC57B14FA7C4656FA537D9 /* cl100k_base.tiktoken in Resources */ = {isa = PBXBuildFile; fileRef = 4ADDEBD727A0C4735EE662BB /* cl100k_base.tiktoken */; };
+		4FF373341209143426232AC7 /* DuduNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = F97A1DF23AB7C53C5102B5D5 /* DuduNotifications.swift */; };
+		EBD60F4B64B875B4180648E0 /* WebAppShortcut.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55802BEC33709AECE58098FC /* WebAppShortcut.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -177,6 +179,8 @@
 		8DFE9D00EF392D9F70333FD9 /* Unicode.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Unicode.hpp; sourceTree = "<group>"; };
 		DA0682FD76BC56CF0ED84730 /* UnicodeFile.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = UnicodeFile.hpp; sourceTree = "<group>"; };
 		411EB25D152CEE123CC42519 /* Utils.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Utils.hpp; sourceTree = "<group>"; };
+		F97A1DF23AB7C53C5102B5D5 /* DuduNotifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuduNotifications.swift; sourceTree = "<group>"; };
+		55802BEC33709AECE58098FC /* WebAppShortcut.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebAppShortcut.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -244,6 +248,7 @@
 				446EC06D890813FC27FE55C6 /* BPETokenizer.swift */,
 				463B4F56315A7B0EFB64B5B1 /* MarkdownStripper.swift */,
 				4ADDEBD727A0C4735EE662BB /* cl100k_base.tiktoken */,
+				55802BEC33709AECE58098FC /* WebAppShortcut.swift */,
 				57A5AB6973CD03FEB2E3BFFC /* SentenceSplitter.swift */,
 				58DFF59D9E9E6DF0B26C87B5 /* LLMSessionRegistry.swift */,
 				5DEDA2ED3EAD6E54FF136E28 /* NSTextContainerSetSizeGuard.m */,
@@ -277,6 +282,7 @@
 				ED3494045692F0EFF1D3B988 /* SessionBadgeStore.swift */,
 				F3D0DEA050C51B3327669E81 /* SharedContainerStore.swift */,
 				F5FF6FD309ACB1E1A5AFB24C /* LoggingManager.swift */,
+				F97A1DF23AB7C53C5102B5D5 /* DuduNotifications.swift */,
 				FCFF634E64545B97955F4EA0 /* ImagePayloadPrep.swift */,
 			);
 			path = Shared;
@@ -488,7 +494,6 @@
 				0959C2CD130DD9FCE05A974A /* ExternalFileImporter.swift in Sources */,
 				0B1DA20EF270C5F8FE1AABDA /* TextSegmenter.swift in Sources */,
 				1056489266E503A373E8BDAF /* EnvVarStore.swift in Sources */,
-				10FF20D60057976BCCEE309C /* BPETokenizer.swift in Sources */,
 				14F34D2C98F43A277072706B /* DuduPaths.swift in Sources */,
 				1704B76557C10CD3559ADAFF /* SharedEventLog.swift in Sources */,
 				1848D790E6FC55A4C0603934 /* SharedContainerStore.swift in Sources */,
@@ -501,7 +506,7 @@
 				3BD3A77601B6298C353EA229 /* AgentActivityAttributes.swift in Sources */,
 				3C79A9918B60E843F1A67E62 /* DeepLinkCoordinator.swift in Sources */,
 				4D11D4BBAAEA29A339F82AB8 /* LoggingManager.swift in Sources */,
-				4D7D4EFDA4C85A8F05983AE5 /* ImagePayloadPrep.swift in Sources */,
+				4FF373341209143426232AC7 /* DuduNotifications.swift in Sources */,
 				5405C5F18ECF7A543B8D3504 /* DuduUserAgent.swift in Sources */,
 				56439DE64FDF4C491009A136 /* PendingConfigChange.swift in Sources */,
 				58D5350E4CDC2A95C7F33B61 /* ThumbnailCache.swift in Sources */,
@@ -528,7 +533,7 @@
 				C26DE239894590D26AFE063F /* SessionBadgeStore.swift in Sources */,
 				CD0B554FA59894A4FAEFF0B5 /* UserManualMirror.swift in Sources */,
 				D9FBDEDBF7F811C9795B9758 /* ConfigField.swift in Sources */,
-				DCE9E9F6AE5E68E8C8701578 /* NetworkMonitor.swift in Sources */,
+				EBD60F4B64B875B4180648E0 /* WebAppShortcut.swift in Sources */,
 				F33B99F6A836912CA7233BFC /* ConfigRegistry.swift in Sources */,
 				F39E360FFD1B68776CCD5638 /* ConfigAuditEntry.swift in Sources */,
 				F668BB8733196FE97632B51F /* FontSettings.swift in Sources */,
@@ -608,13 +613,13 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Dudu/Dudu-Bridging-Header.h";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Dudu/Vendor/cppjieba/include",
 				);
+			};
+			name = Debug;
 		};
 		100000000000000000000017 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -639,13 +644,13 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Dudu/Dudu-Bridging-Header.h";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Dudu/Vendor/cppjieba/include",
 				);
+			};
+			name = Release;
 		};
 /* End XCBuildConfiguration section */
 

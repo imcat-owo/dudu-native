@@ -46,7 +46,12 @@ CPPJIEBA_INCLUDE = "$(SRCROOT)/Dudu/Vendor/cppjieba/include"
 #   P3 (Providers) re-enables: ConfigRegistry+Builtins, Collections/{Providers,
 #     Models, Groups, ThinkingRules} + reverts the builtinsRegistrar seam in
 #     Config/ConfigRegistry.swift to the direct Self.registerBuiltins call.
-#   P4 (chat core, SoulStore) re-enables: AppearanceStudio/ThemePack/ThemeLibrary.
+#   P4 (chat core, SoulStore) re-enables: AppearanceStudio/ThemePack/ThemeLibrary,
+#     ImagePayloadPrep (AgentMessage).
+#   P4/P7 re-enables: BPETokenizer (AgentContentPart).
+#   P7 (Diagnostics) sets AppLogger.crashLogSink; the background-notify part
+#     sets ConfigConfirmationGate's two hooks.
+#   P8 (iSH) re-enables: NetworkMonitor (ISHKernel).
 EXCLUDE = {
     "Dudu/Shared/Config/ConfigRegistry+Builtins.swift",
     "Dudu/Shared/Config/Collections/ProvidersCollection.swift",
@@ -56,6 +61,11 @@ EXCLUDE = {
     "Dudu/Shared/AppearanceStudio.swift",
     "Dudu/Shared/AppearanceThemePack.swift",
     "Dudu/Shared/AppearanceThemeLibrary.swift",
+    # P1 foundation files whose only missing deps are later-part types and
+    # which nothing in P1 references — re-enabled by their owning part:
+    "Dudu/Shared/BPETokenizer.swift",      # needs AgentContentPart (P4/P7)
+    "Dudu/Shared/ImagePayloadPrep.swift",   # needs AgentMessage (P4)
+    "Dudu/Shared/NetworkMonitor.swift",     # needs ISHKernel (P8)
 }
 
 SOURCE_EXTS = {".swift", ".m", ".mm"}
@@ -283,7 +293,7 @@ def sync_build_settings():
         m = re.search(
             r"(\t\t" + cfg_id + r" /\* (?:Debug|Release) \*/ = \{\n"
             r"\t\t\tisa = XCBuildConfiguration;\n"
-            r"\t\t\tbuildSettings = \{\n)(.*?)(\n\t\t\};)",
+            r"\t\t\tbuildSettings = \{\n)(.*?)(\n\t\t\t\};)",
             text, re.S)
         assert m, f"build configuration {cfg_id} not found"
         head, settings, tail = m.group(1), m.group(2), m.group(3)
