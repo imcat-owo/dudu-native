@@ -203,6 +203,17 @@ final class OurSpaceStore: ObservableObject {
 
     // MARK: Persistence
 
+    /// Re-read everything from UserDefaults, dropping in-memory state.
+    /// Used after a restore rollback rewrote the raw values behind this store.
+    func reloadFromDisk() {
+        aiStatus = load(Key.status, as: AIStatus.self)
+        herMood = load(Key.herMood, as: HerMood.self)
+        diary = (load(Key.diary, as: [DiaryEntry].self) ?? []).sorted { $0.createdAt > $1.createdAt }
+        moments = (load(Key.moments, as: [Moment].self) ?? []).sorted { $0.timestamp > $1.timestamp }
+        seeds = (load(Key.seeds, as: [MemorySeed].self) ?? []).sorted { $0.updatedAt > $1.updatedAt }
+        laterItems = sortLater(load(Key.later, as: [LaterItem].self) ?? [])
+    }
+
     private func load<T: Decodable>(_ key: String, as type: T.Type) -> T? {
         guard let data = defaults.data(forKey: key) else { return nil }
         return try? decoder.decode(T.self, from: data)
@@ -360,6 +371,126 @@ final class OurSpaceStore: ObservableObject {
     }
 
     var undoneLaterCount: Int { laterItems.filter { !$0.done }.count }
+
+    // MARK: - Backup / restore
+
+    /// Snapshot of every persisted section as the store's own UserDefaults
+    /// key → encoded bytes. Carried opaquely by the backup (`data/our_space.jsonl`)
+    /// so the package never pins a second copy of these models.
+    /// `count` is the number of items in the section (1 for singletons), for
+    /// honest category stats.
+    func backupRecords() -> [(key: String, data: Data, count: Int)] {
+        var out: [(key: String, data: Data, count: Int)] = []
+        if let d = defaults.data(forKey: Key.status),
+           (try? decoder.decode(AIStatus.self, from: d)) != nil {
+            out.append((Key.status, d, 1))
+        }
+        if let d = defaults.data(forKey: Key.herMood),
+           (try? decoder.decode(HerMood.self, from: d)) != nil {
+            out.append((Key.herMood, d, 1))
+        }
+        if let d = defaults.data(forKey: Key.diary),
+           let v = try? decoder.decode([DiaryEntry].self, from: d) {
+            out.append((Key.diary, d, v.count))
+        }
+        if let d = defaults.data(forKey: Key.moments),
+           let v = try? decoder.decode([Moment].self, from: d) {
+            out.append((Key.moments, d, v.count))
+        }
+        if let d = defaults.data(forKey: Key.seeds),
+           let v = try? decoder.decode([MemorySeed].self, from: d) {
+            out.append((Key.seeds, d, v.count))
+        }
+        if let d = defaults.data(forKey: Key.later),
+           let v = try? decoder.decode([LaterItem].self, from: d) {
+            out.append((Key.later, d, v.count))
+        }
+        return out
+    }
+
+    /// Every key this store may own, including absent ones — for restore
+    /// rollback, which must also remove keys the restore created.
+    /// Nonisolated so the backup engine can read it off the MainActor.
+    nonisolated static var backupAllKeys: [String] {
+        [Key.status, Key.herMood, Key.diary, Key.moments, Key.seeds, Key.later]
+    }
+
+    /// Merge one backup's records into the live store. Merge, never replace:
+    /// an entry already present locally keeps the local version (the restore
+    /// confirmation promises "nothing is deleted"), and only genuinely new
+    /// entries are added. Singleton sections (AI status, her mood) keep the
+    /// local value when one exists — a restore onto the device that produced
+    /// the backup must be a no-op. Returns (imported, skipped).
+    @discardableResult
+    func restoreBackupRecords(_ records: [(key: String, data: Data, count: Int)])
+        -> (imported: Int, skipped: Int) {
+        var imported = 0
+        var skipped = 0
+        for (key, data, _) in records {
+            switch key {
+            case Key.status:
+                if aiStatus == nil, let v = try? decoder.decode(AIStatus.self, from: data) {
+                    aiStatus = v; save(aiStatus, key: Key.status); imported += 1
+                } else { skipped += 1 }
+            case Key.herMood:
+                if herMood == nil, let v = try? decoder.decode(HerMood.self, from: data) {
+                    herMood = v; save(herMood, key: Key.herMood); imported += 1
+                } else { skipped += 1 }
+            case Key.diary:
+                guard let incoming = try? decoder.decode([DiaryEntry].self, from: data) else {
+                    skipped += 1; continue
+                }
+                let r = mergeIdentifiable(&diary, incoming: incoming)
+                diary.sort { $0.createdAt > $1.createdAt }
+                save(diary, key: Key.diary)
+                imported += r.added; skipped += r.skipped
+            case Key.moments:
+                guard let incoming = try? decoder.decode([Moment].self, from: data) else {
+                    skipped += 1; continue
+                }
+                let r = mergeIdentifiable(&moments, incoming: incoming)
+                moments.sort { $0.timestamp > $1.timestamp }
+                save(moments, key: Key.moments)
+                imported += r.added; skipped += r.skipped
+            case Key.seeds:
+                guard let incoming = try? decoder.decode([MemorySeed].self, from: data) else {
+                    skipped += 1; continue
+                }
+                let r = mergeIdentifiable(&seeds, incoming: incoming)
+                seeds.sort { $0.updatedAt > $1.updatedAt }
+                save(seeds, key: Key.seeds)
+                imported += r.added; skipped += r.skipped
+            case Key.later:
+                guard let incoming = try? decoder.decode([LaterItem].self, from: data) else {
+                    skipped += 1; continue
+                }
+                let r = mergeIdentifiable(&laterItems, incoming: incoming)
+                laterItems = sortLater(laterItems)
+                save(laterItems, key: Key.later)
+                imported += r.added; skipped += r.skipped
+            default:
+                // A newer writer's section this build doesn't know — ignore,
+                // don't fail (§2.2 rule 2).
+                skipped += 1
+            }
+        }
+        return (imported, skipped)
+    }
+
+    /// Union by id; local wins on collision. Every Our Space list item is
+    /// Identifiable with a String id.
+    private func mergeIdentifiable<T: Identifiable>(
+        _ current: inout [T], incoming: [T]
+    ) -> (added: Int, skipped: Int) where T.ID == String {
+        var ids = Set(current.map(\.id))
+        var added = 0
+        var skipped = 0
+        for item in incoming {
+            if ids.contains(item.id) { skipped += 1 }
+            else { ids.insert(item.id); current.append(item); added += 1 }
+        }
+        return (added, skipped)
+    }
 
     // MARK: Date helpers
 

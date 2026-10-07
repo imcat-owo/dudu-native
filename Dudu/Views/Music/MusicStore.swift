@@ -329,6 +329,123 @@ final class MusicStore: ObservableObject {
         }
     }
 
+    /// Re-read everything from UserDefaults, dropping in-memory state.
+    /// Used after a restore rollback rewrote the raw values behind this store.
+    func reloadFromDisk() {
+        tracks = (load(Key.tracks, as: [MusicTrack].self) ?? []).sorted { $0.createdAt > $1.createdAt }
+        playlists = load(Key.playlists, as: [MusicPlaylist].self) ?? []
+        comments = load(Key.comments, as: [MusicComment].self) ?? []
+        memories = load(Key.memories, as: [MusicMemory].self) ?? []
+        togetherListens = load(Key.togetherListens, as: [TogetherListen].self) ?? []
+        ensureDefaultPlaylists()
+    }
+
+    // MARK: - Backup / restore
+
+    /// Keys that describe HER library — the durable, user-authored half.
+    /// Transient playback state (queue order, now-playing, DJ intents, the
+    /// live together state) is deliberately excluded: it describes a moment,
+    /// not her collection.
+    private static let backupKeys = [
+        Key.tracks, Key.playlists, Key.comments, Key.memories, Key.togetherListens
+    ]
+
+    /// The durable keys, for the restore rollback snapshot.
+    /// Nonisolated so the backup engine can read it off the MainActor.
+    nonisolated static var backupKeysList: [String] {
+        [Key.tracks, Key.playlists, Key.comments, Key.memories, Key.togetherListens]
+    }
+
+    /// Snapshot as the store's own UserDefaults key → encoded bytes (opaque,
+    /// like OurSpaceStore.backupRecords). `count` is the item count per key,
+    /// for honest category stats.
+    func backupRecords() -> [(key: String, data: Data, count: Int)] {
+        Self.backupKeys.compactMap { key -> (String, Data, Int)? in
+            guard let data = defaults.data(forKey: key) else { return nil }
+            let count: Int
+            switch key {
+            case Key.tracks: count = (try? decoder.decode([MusicTrack].self, from: data))?.count ?? 0
+            case Key.playlists: count = (try? decoder.decode([MusicPlaylist].self, from: data))?.count ?? 0
+            case Key.comments: count = (try? decoder.decode([MusicComment].self, from: data))?.count ?? 0
+            case Key.memories: count = (try? decoder.decode([MusicMemory].self, from: data))?.count ?? 0
+            case Key.togetherListens: count = (try? decoder.decode([TogetherListen].self, from: data))?.count ?? 0
+            default: count = 0
+            }
+            return (key, data, count)
+        }
+    }
+
+    /// Merge one backup's records into the live store. Union by id (equality
+    /// for together-listens), local wins on collision — restoring must never
+    /// delete or roll back her library. Returns (imported, skipped).
+    @discardableResult
+    func restoreBackupRecords(_ records: [(key: String, data: Data, count: Int)])
+        -> (imported: Int, skipped: Int) {
+        var imported = 0
+        var skipped = 0
+        for (key, data, _) in records {
+            switch key {
+            case Key.tracks:
+                guard let incoming = try? decoder.decode([MusicTrack].self, from: data) else {
+                    skipped += 1; continue
+                }
+                let r = mergeIdentifiable(&tracks, incoming: incoming)
+                tracks.sort { $0.createdAt > $1.createdAt }
+                save(tracks, key: Key.tracks)
+                imported += r.added; skipped += r.skipped
+            case Key.playlists:
+                guard let incoming = try? decoder.decode([MusicPlaylist].self, from: data) else {
+                    skipped += 1; continue
+                }
+                let r = mergeIdentifiable(&playlists, incoming: incoming)
+                save(playlists, key: Key.playlists)
+                imported += r.added; skipped += r.skipped
+            case Key.comments:
+                guard let incoming = try? decoder.decode([MusicComment].self, from: data) else {
+                    skipped += 1; continue
+                }
+                let r = mergeIdentifiable(&comments, incoming: incoming)
+                save(comments, key: Key.comments)
+                imported += r.added; skipped += r.skipped
+            case Key.memories:
+                guard let incoming = try? decoder.decode([MusicMemory].self, from: data) else {
+                    skipped += 1; continue
+                }
+                let r = mergeIdentifiable(&memories, incoming: incoming)
+                save(memories, key: Key.memories)
+                imported += r.added; skipped += r.skipped
+            case Key.togetherListens:
+                guard let incoming = try? decoder.decode([TogetherListen].self, from: data) else {
+                    skipped += 1; continue
+                }
+                var seen = togetherListens
+                var added = 0
+                for item in incoming where !seen.contains(item) {
+                    seen.append(item); togetherListens.append(item); added += 1
+                }
+                save(togetherListens, key: Key.togetherListens)
+                imported += added; skipped += incoming.count - added
+            default:
+                skipped += 1
+            }
+        }
+        return (imported, skipped)
+    }
+
+    /// Union by id; local wins on collision.
+    private func mergeIdentifiable<T: Identifiable>(
+        _ current: inout [T], incoming: [T]
+    ) -> (added: Int, skipped: Int) where T.ID == String {
+        var ids = Set(current.map(\.id))
+        var added = 0
+        var skipped = 0
+        for item in incoming {
+            if ids.contains(item.id) { skipped += 1 }
+            else { ids.insert(item.id); current.append(item); added += 1 }
+        }
+        return (added, skipped)
+    }
+
     private static func newId(_ prefix: String) -> String {
         "\(prefix)-\(UUID().uuidString.prefix(8).lowercased())"
     }

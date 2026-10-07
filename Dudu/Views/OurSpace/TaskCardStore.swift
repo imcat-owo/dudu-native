@@ -118,6 +118,14 @@ final class TaskCardStore: ObservableObject {
         sweepStale()
     }
 
+    /// Re-read everything from UserDefaults, dropping in-memory state.
+    /// Used after a restore rollback rewrote the raw values behind this store.
+    func reloadFromDisk() {
+        tasks = []
+        load()
+        sweepStale()
+    }
+
     // MARK: Engine hook
 
     /// Create or update a task. Progress is clamped to 0...1.
@@ -242,6 +250,62 @@ final class TaskCardStore: ObservableObject {
 
     var activeTasks: [BackgroundTask] { tasks.filter { $0.status != .done } }
     var doneTasks: [BackgroundTask] { tasks.filter { $0.status == .done } }
+
+    // MARK: - Backup / restore
+
+    /// The task-card background photos live here; the backup carries them as
+    /// a file tree under `ourspace/taskcards/`.
+    nonisolated static var cardsDirectory: URL {
+        let base = FileManager.default.urls(for: .applicationSupportDirectory,
+                                            in: .userDomainMask)[0]
+        return base.appendingPathComponent("TaskCards", isDirectory: true)
+    }
+
+    /// Snapshot of every persisted task as the store's own
+    /// `dudu.taskcards.v1.<id>` key → encoded bytes (opaque, like
+    /// OurSpaceStore.backupRecords). The index record itself is not needed —
+    /// the importer rebuilds it from the task records.
+    func backupRecords() -> [(key: String, data: Data, count: Int)] {
+        tasks.compactMap { task in
+            let key = itemKey(task.id)
+            return defaults.data(forKey: key).map { (key, $0, 1) }
+        }
+    }
+
+    /// Every key this store may own, including absent ones — for restore
+    /// rollback, which must also remove keys the restore created.
+    nonisolated static var backupKeyPrefix: String { "dudu.taskcards.v1." }
+
+    /// Merge one backup's task records into the live store. Union by id,
+    /// local wins on collision — restoring must never roll a task's progress
+    /// back to an older snapshot. Returns (imported, skipped).
+    @discardableResult
+    func restoreBackupRecords(_ records: [(key: String, data: Data, count: Int)])
+        -> (imported: Int, skipped: Int) {
+        var imported = 0
+        var skipped = 0
+        var changed = false
+        for (key, data, _) in records {
+            guard key.hasPrefix("dudu.taskcards.v1."),
+                  key != indexKey,
+                  let task = try? decoder.decode(BackgroundTask.self, from: data) else {
+                skipped += 1
+                continue
+            }
+            if tasks.contains(where: { $0.id == task.id }) {
+                skipped += 1
+                continue
+            }
+            persist(task)
+            imported += 1
+            changed = true
+        }
+        if changed {
+            saveIndex()
+            resort()
+        }
+        return (imported, skipped)
+    }
 
     // MARK: Internals
 

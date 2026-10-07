@@ -22,10 +22,17 @@ import Foundation
 ///   - Records carry `t` (type) and `v` (record version) so a reader can
 ///     dispatch by type and migrate per record.
 enum BackupFormat {
-    /// Format major version. A reader that doesn't recognise it must refuse the
-    /// package and tell the user to update (§2.2 rule 1) — never attempt a
-    /// best-effort parse.
-    static let current = "dudubak/1"
+    /// Format version. A reader that doesn't recognise the MAJOR version must
+    /// refuse the package and tell the user to update (§2.2 rule 1) — never
+    /// attempt a best-effort parse. Minor bumps (1 → 1.1) are ADDITIVE only:
+    /// same-major readers must still import (§2.2 rule 2), ignoring category
+    /// keys they don't know.
+    ///
+    /// [T-backup-ourspace] 1.1 adds the `our_space` and `music` categories.
+    /// Nothing existing changed shape, so a 1.0 reader still imports a 1.1
+    /// package (it just skips the unknown categories) and a 1.1 reader still
+    /// imports every 1.0 package — backward compat both ways.
+    static let current = "dudubak/1.1"
 
     /// File extension registered to the app for "open to import".
     static let fileExtension = "dudubak"
@@ -72,6 +79,25 @@ enum BackupCategory: String, Codable, CaseIterable, Sendable {
     /// unknown category key, older packages simply don't have it.
     case appearance
 
+    /// [T-backup-ourspace] 我们的空间: diary entries, timeline moments, the
+    /// memory-garden seeds, AI status, her mood, the "tell her later" inbox
+    /// (OurSpaceStore UserDefaults payloads, opaque) plus the task-progress
+    /// cards (TaskCardStore payloads) and their background photos as a file
+    /// tree under `ourspace/taskcards/`.
+    ///
+    /// Before this category existed a restore brought back chats, memory and
+    /// providers but silently dropped everything in 我们的空间 — a new phone
+    /// lost all of it with zero warning. Pure addition like `appearance` was:
+    /// older readers ignore the unknown category key, older packages simply
+    /// don't have it.
+    case ourSpace = "our_space"
+    /// [T-backup-ourspace] 听歌房: the shared queue of tracks, playlists,
+    /// comments, song memories and "we listened together" dates
+    /// (MusicStore UserDefaults payloads, opaque). Transient playback state
+    /// (queue order, now-playing, DJ intents, live together state) is
+    /// deliberately NOT carried — it describes a moment, not her library.
+    case music
+
     /// Default checkbox state on the backup screen (§3 table).
     var defaultsOn: Bool { true }
 
@@ -92,9 +118,9 @@ enum BackupCategory: String, Codable, CaseIterable, Sendable {
     /// the §3.4 size cap applies to.
     var carriesFileTree: Bool {
         switch self {
-        case .chats, .sharedFiles, .skills, .appearance: return true
+        case .chats, .sharedFiles, .skills, .appearance, .ourSpace: return true
         case .memory, .providers, .mcpServers, .voiceCorrections,
-             .environmentVariables: return false
+             .environmentVariables, .music: return false
         }
     }
 }
@@ -463,6 +489,39 @@ struct BackupThinkingRuleRecord: Codable {
     var label: String
     var createdAt: Date
     var updatedAt: Date
+}
+
+/// [T-backup-ourspace] One opaque UserDefaults payload as carried in
+/// `data/our_space.jsonl` / `data/music.jsonl`.
+///
+/// `key` is the store's own UserDefaults key; `payload` is the store's own
+/// encoded bytes (base64 on the wire). Carried OPAQUELY on purpose: the
+/// models evolve in the app, and the backup must not pin a second copy of
+/// every model. The owning store decodes its own bytes and merges by id, so a
+/// newer app can still read an older package's records through its own
+/// tolerant decoder. `count` is the item count in the payload, carried so the
+/// manifest of a resumed run can still report what the package holds.
+struct BackupDefaultsPayload: Codable {
+    var key: String
+    var payload: Data
+    var count: Int
+
+    init(key: String, payload: Data, count: Int = 0) {
+        self.key = key
+        self.payload = payload
+        self.count = count
+    }
+
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        key = try c.decode(String.self, forKey: .key)
+        payload = try c.decode(Data.self, forKey: .payload)
+        count = try c.decodeIfPresent(Int.self, forKey: .count) ?? 0
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case key, payload, count
+    }
 }
 
 // MARK: - Errors
