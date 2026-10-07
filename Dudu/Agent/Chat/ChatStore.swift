@@ -2732,8 +2732,8 @@ actor ChatStore {
         invalidateSessionListCache()
         guard !messages.isEmpty else { return }
         // Phase D4 — drop any ephemeral (incognito) messages before touching SQLite.
-        let messages = messages.filter { !Self.isEphemeralSessionId($0.sessionId) }
-        guard !messages.isEmpty else {
+        let persistable = messages.filter { !Self.isEphemeralSessionId($0.sessionId) }
+        guard !persistable.isEmpty else {
             logger.info("[Store] appendMessages: all messages ephemeral — nothing written")
             return
         }
@@ -2741,7 +2741,7 @@ actor ChatStore {
         // a stream that aborts before producing any text or tool_use leaves an
         // assistant row with empty parts. On the next turn DeepSeek/OpenAI-compat
         // servers reject that history with `400 content or tool_calls must be set`.
-        let messages = messages.filter { msg in
+        let messages = persistable.filter { msg in
             guard msg.role == .assistant else { return true }
             return msg.parts.contains { part in
                 switch part {
