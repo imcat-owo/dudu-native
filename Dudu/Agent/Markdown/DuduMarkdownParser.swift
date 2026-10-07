@@ -717,23 +717,25 @@ extension BlockNode {
             if unsafeNode.children.contains(where: \.isTaskListItem) {
                 self = .taskList(
                     isTight: unsafeNode.isTightList,
-                    items: unsafeNode.children.map(RawTaskListItem.init(unsafeNode:))
+                    items: unsafeNode.children.compactMap(RawTaskListItem.init(unsafeNode:))
                 )
             } else {
                 switch unsafeNode.listType {
                 case CMARK_BULLET_LIST:
                     self = .bulletedList(
                         isTight: unsafeNode.isTightList,
-                        items: unsafeNode.children.map(RawListItem.init(unsafeNode:))
+                        items: unsafeNode.children.compactMap(RawListItem.init(unsafeNode:))
                     )
                 case CMARK_ORDERED_LIST:
                     self = .numberedList(
                         isTight: unsafeNode.isTightList,
                         start: unsafeNode.listStart,
-                        items: unsafeNode.children.map(RawListItem.init(unsafeNode:))
+                        items: unsafeNode.children.compactMap(RawListItem.init(unsafeNode:))
                     )
                 default:
-                    fatalError("cmark reported a list node without a list type.")
+                    // Defensive: cmark list nodes always carry a type; if a future
+                    // cmark ever reports otherwise, drop the node instead of crashing.
+                    return nil
                 }
             }
         case .codeBlock:
@@ -750,7 +752,7 @@ extension BlockNode {
         case .table:
             self = .table(
                 columnAlignments: unsafeNode.tableAlignments,
-                rows: unsafeNode.children.map(RawTableRow.init(unsafeNode:))
+                rows: unsafeNode.children.compactMap(RawTableRow.init(unsafeNode:))
             )
         case .thematicBreak:
             self = .thematicBreak
@@ -762,18 +764,20 @@ extension BlockNode {
 }
 
 extension RawListItem {
-    fileprivate init(unsafeNode: UnsafeNode) {
+    fileprivate init?(unsafeNode: UnsafeNode) {
         guard unsafeNode.nodeType == .item else {
-            fatalError("Expected a list item but got a '\(unsafeNode.nodeType)' instead.")
+            // Defensive: unexpected node type from cmark — skip instead of crashing.
+            return nil
         }
         self.init(children: unsafeNode.children.compactMap(BlockNode.init(unsafeNode:)))
     }
 }
 
 extension RawTaskListItem {
-    fileprivate init(unsafeNode: UnsafeNode) {
+    fileprivate init?(unsafeNode: UnsafeNode) {
         guard unsafeNode.nodeType == .taskListItem || unsafeNode.nodeType == .item else {
-            fatalError("Expected a list item but got a '\(unsafeNode.nodeType)' instead.")
+            // Defensive: unexpected node type from cmark — skip instead of crashing.
+            return nil
         }
         self.init(
             isCompleted: unsafeNode.isTaskListItemChecked,
@@ -783,18 +787,20 @@ extension RawTaskListItem {
 }
 
 extension RawTableRow {
-    fileprivate init(unsafeNode: UnsafeNode) {
+    fileprivate init?(unsafeNode: UnsafeNode) {
         guard unsafeNode.nodeType == .tableRow || unsafeNode.nodeType == .tableHead else {
-            fatalError("Expected a table row but got a '\(unsafeNode.nodeType)' instead.")
+            // Defensive: unexpected node type from cmark — skip instead of crashing.
+            return nil
         }
-        self.init(cells: unsafeNode.children.map(RawTableCell.init(unsafeNode:)))
+        self.init(cells: unsafeNode.children.compactMap(RawTableCell.init(unsafeNode:)))
     }
 }
 
 extension RawTableCell {
-    fileprivate init(unsafeNode: UnsafeNode) {
+    fileprivate init?(unsafeNode: UnsafeNode) {
         guard unsafeNode.nodeType == .tableCell else {
-            fatalError("Expected a table cell but got a '\(unsafeNode.nodeType)' instead.")
+            // Defensive: unexpected node type from cmark — skip instead of crashing.
+            return nil
         }
         self.init(content: unsafeNode.children.compactMap(InlineNode.init(unsafeNode:)))
     }
@@ -839,7 +845,9 @@ extension UnsafeNode {
     fileprivate var nodeType: NodeType {
         let typeString = String(cString: cmark_node_get_type_string(self))
         guard let nodeType = NodeType(rawValue: typeString) else {
-            fatalError("Unknown node type '\(typeString)' found.")
+            // Defensive: future cmark node types degrade to .unknown (handled by
+            // the default cases) instead of crashing the app.
+            return .unknown
         }
         return nodeType
     }
