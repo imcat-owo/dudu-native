@@ -402,6 +402,15 @@
 		C09741FEC8BADA625982E462 /* devil-10.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 91E4ACA76BC7E354A653EA25 /* devil-10.jpg */; };
 		14266D03E281C3CDD351B91D /* StickerPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85D5AD0AA864E4EDA3298ED /* StickerPickerView.swift */; };
 		247E674257B4DD9EBF5C767F /* StickerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4565C254D2262AFFA6A93C5F /* StickerStore.swift */; };
+		E65176E79154175FCB8FC1D7 /* DiarySection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92F229AA5A9378A5165EE8FE /* DiarySection.swift */; };
+		F971BE00E7C7003E3DE06728 /* GardenSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A90876BA76ECA920ECD0B17 /* GardenSection.swift */; };
+		CA32E9202C7A6FE30CDE6D96 /* LaterSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F042703ADDF3536A92B7481 /* LaterSection.swift */; };
+		171228BBD7CD3065316F4967 /* MomentsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37CE2DC9F6378EBA605E922C /* MomentsSection.swift */; };
+		D1707D6396F6D7DD61AAB829 /* OurSpaceStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E5EC2F20F5CEF32572A5EF /* OurSpaceStore.swift */; };
+		A251C4E5038A1EE52CEAF458 /* OurSpaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01BFBE52761C874B8CEBCF4 /* OurSpaceView.swift */; };
+		0DCF54428A253FD2F1658A99 /* StatusSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42C505BC90EA9DAE1C86C6FF /* StatusSection.swift */; };
+		812EC9610487F40697CC532A /* TaskCardStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6001E3C4D6EC9FED4AB7864E /* TaskCardStore.swift */; };
+		4099B39B909547A253201F6B /* TaskCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D85ACE397C64F397DA507DE /* TaskCardView.swift */; };
 /* End PBXBuildFile section */
 		F8F1403829CEFF47083C5520 /* RealTimeCutVADLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = AECFD4BE143BED595F298AF5 /* RealTimeCutVADLibrary */; };
 		BA894477DDF6C14EE49C54DE /* SwiftAnthropic in Frameworks */ = {isa = PBXBuildFile; productRef = 05812F6725F9E44AAB5A4A83 /* SwiftAnthropic */; };
@@ -920,6 +929,15 @@
 		91E4ACA76BC7E354A653EA25 /* devil-10.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "devil-10.jpg"; sourceTree = "<group>"; };
 		F85D5AD0AA864E4EDA3298ED /* StickerPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerPickerView.swift; sourceTree = "<group>"; };
 		4565C254D2262AFFA6A93C5F /* StickerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerStore.swift; sourceTree = "<group>"; };
+		92F229AA5A9378A5165EE8FE /* DiarySection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiarySection.swift; sourceTree = "<group>"; };
+		7A90876BA76ECA920ECD0B17 /* GardenSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GardenSection.swift; sourceTree = "<group>"; };
+		9F042703ADDF3536A92B7481 /* LaterSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaterSection.swift; sourceTree = "<group>"; };
+		37CE2DC9F6378EBA605E922C /* MomentsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsSection.swift; sourceTree = "<group>"; };
+		84E5EC2F20F5CEF32572A5EF /* OurSpaceStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OurSpaceStore.swift; sourceTree = "<group>"; };
+		C01BFBE52761C874B8CEBCF4 /* OurSpaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OurSpaceView.swift; sourceTree = "<group>"; };
+		42C505BC90EA9DAE1C86C6FF /* StatusSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusSection.swift; sourceTree = "<group>"; };
+		6001E3C4D6EC9FED4AB7864E /* TaskCardStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCardStore.swift; sourceTree = "<group>"; };
+		8D85ACE397C64F397DA507DE /* TaskCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCardView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 		30AC3C5C6C418C791E362178 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 
@@ -1853,6 +1871,7 @@
 				FC61A6675134359CB1A0BBA1 /* Chat */,
 				18E9DA5BE55C7A48F1D6BFB5 /* Knowledge */,
 				AA856D71B083C7F259E49862 /* MCP */,
+				74440DB741AE833BB66AF6C0 /* OurSpace */,
 				098E7EAFF306EFFA46763C5C /* Permissions */,
 				5C12BE9B55843E8E76492218 /* Providers */,
 				930C951A6A0C2D8A4A21F5B8 /* Settings */,
@@ -2008,6 +2027,22 @@
 			path = Stickers;
 			sourceTree = "<group>";
 		};
+		74440DB741AE833BB66AF6C0 /* OurSpace */ = {
+			isa = PBXGroup;
+			children = (
+				37CE2DC9F6378EBA605E922C /* MomentsSection.swift */,
+				42C505BC90EA9DAE1C86C6FF /* StatusSection.swift */,
+				6001E3C4D6EC9FED4AB7864E /* TaskCardStore.swift */,
+				7A90876BA76ECA920ECD0B17 /* GardenSection.swift */,
+				84E5EC2F20F5CEF32572A5EF /* OurSpaceStore.swift */,
+				8D85ACE397C64F397DA507DE /* TaskCardView.swift */,
+				92F229AA5A9378A5165EE8FE /* DiarySection.swift */,
+				9F042703ADDF3536A92B7481 /* LaterSection.swift */,
+				C01BFBE52761C874B8CEBCF4 /* OurSpaceView.swift */,
+			);
+			path = OurSpace;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -2149,6 +2184,7 @@
 				0B1DA20EF270C5F8FE1AABDA /* TextSegmenter.swift in Sources */,
 				0D290709292683F1CE5948F4 /* ClipboardDeviceTool.swift in Sources */,
 				0DB46B6AE6E65BFEEDF38EE9 /* ToolLoopDetector.swift in Sources */,
+				0DCF54428A253FD2F1658A99 /* StatusSection.swift in Sources */,
 				1056489266E503A373E8BDAF /* EnvVarStore.swift in Sources */,
 				1066B0C5D60899B8252B0A08 /* ContextPolicy.swift in Sources */,
 				10FF20D60057976BCCEE309C /* BPETokenizer.swift in Sources */,
@@ -2162,6 +2198,7 @@
 				14F34D2C98F43A277072706B /* DuduPaths.swift in Sources */,
 				167242263BF49BFD6C8F4258 /* BackupImporter.swift in Sources */,
 				1704B76557C10CD3559ADAFF /* SharedEventLog.swift in Sources */,
+				171228BBD7CD3065316F4967 /* MomentsSection.swift in Sources */,
 				17176D00E9D5E8CAFC6F30FB /* SyncTransport.swift in Sources */,
 				1848D790E6FC55A4C0603934 /* SharedContainerStore.swift in Sources */,
 				18E46D03DDFD90DF281D8C08 /* WebSearchProvider.swift in Sources */,
@@ -2218,6 +2255,7 @@
 				3C13D645F8410ECE6C229F41 /* MCPManagementTools.swift in Sources */,
 				3C79A9918B60E843F1A67E62 /* DeepLinkCoordinator.swift in Sources */,
 				3CBD70E700EAFD376348096D /* AIChatViewModel+SlashCommands.swift in Sources */,
+				4099B39B909547A253201F6B /* TaskCardView.swift in Sources */,
 				40B07B4B4C0C20C074C24095 /* TTSProviderBridge.swift in Sources */,
 				40FF72E3543F5E090B771167 /* AIChatViewModel+AskUser.swift in Sources */,
 				420B0E9D881E42261F39B383 /* FileMentionIndex.swift in Sources */,
@@ -2318,6 +2356,7 @@
 				7FE3537DCBB0AB677659F0D3 /* JiebaWrapper.mm in Sources */,
 				80B4ABE0DA1C27E7AC3A8DB7 /* VoiceLog.swift in Sources */,
 				80F5DE55B878FE5C1AA97136 /* PersonaStore.swift in Sources */,
+				812EC9610487F40697CC532A /* TaskCardStore.swift in Sources */,
 				813DBF29BB4F633151865141 /* ThinkingWireFormat.swift in Sources */,
 				81B7CF22A9D84D3A49CDC21B /* BackupExporter.swift in Sources */,
 				82D04E4BE82E34C61918863A /* ThinkingRuleResolver.swift in Sources */,
@@ -2357,6 +2396,7 @@
 				A05775DA475C514622B55956 /* FollowUpSessionIntent.swift in Sources */,
 				A06092493578FC211FBF896F /* DeepLinkRouter.swift in Sources */,
 				A1D0D5608CC044F384E0E0F9 /* LANTransport.swift in Sources */,
+				A251C4E5038A1EE52CEAF458 /* OurSpaceView.swift in Sources */,
 				A321A0BCA8C27961EE1874BA /* VoiceProvider+Vendors.swift in Sources */,
 				A3583A7F1DCDC1CAE60BD62E /* ThemeCustomCSS.swift in Sources */,
 				A382C9E8F945D60F8D6AF82F /* OpenAIProvider.swift in Sources */,
@@ -2408,6 +2448,7 @@
 				C57E7FCB0AC7CCC070E8BD5C /* ProviderTypes.swift in Sources */,
 				C8255D0704C348F557029B4D /* LLMTypes.swift in Sources */,
 				C9C2EDB9414F15245461F549 /* AIChatViewModel+MentionMenu.swift in Sources */,
+				CA32E9202C7A6FE30CDE6D96 /* LaterSection.swift in Sources */,
 				CA6C4898E137ACD9A534C196 /* MessageRowView.swift in Sources */,
 				CBAB2F22E0F79BA170E8240B /* ClaudeOAuthManager.swift in Sources */,
 				CC4599EEC31AA4C223C2A8B2 /* ImageOCRTier.swift in Sources */,
@@ -2418,6 +2459,7 @@
 				CE7CACC4F1CE676EF45631A8 /* TavilySearchProvider.swift in Sources */,
 				CE7CC8E8B6BBC084E396070C /* xAIModelsAPI.swift in Sources */,
 				CF2E548C26C3EAA89E9BB6DB /* AIChatViewModel+Attachments.swift in Sources */,
+				D1707D6396F6D7DD61AAB829 /* OurSpaceStore.swift in Sources */,
 				D29B19117F10315824A1EED7 /* CrashReporter.swift in Sources */,
 				D2FB82084DDBBB1FDD340546 /* PlayerOffloadBridge.swift in Sources */,
 				D38F0FFC7564AB3DD302A494 /* SoulStore.swift in Sources */,
@@ -2449,6 +2491,7 @@
 				E319637E1C05BA79AE7B8285 /* AgentLiveActivityManager.swift in Sources */,
 				E41B9AB164B1A512D4A5E63E /* DeviceTools.swift in Sources */,
 				E524231A57AC68DE22E4EEB7 /* BrowserHistory.swift in Sources */,
+				E65176E79154175FCB8FC1D7 /* DiarySection.swift in Sources */,
 				E78389E119025AB01911832B /* ThinkingLevelCatalog.swift in Sources */,
 				E8344525CD56D06E793AEE71 /* SessionLockStore.swift in Sources */,
 				E8DDF91E385B0DC8512F77BE /* GetSessionStatusIntent.swift in Sources */,
@@ -2483,6 +2526,7 @@
 				F87FAC01CC4169C1AED9B351 /* AIChatViewModel+Offloading.swift in Sources */,
 				F8A9AB05C2120FE0BCDE2A4E /* ChatLifecycleSupport.swift in Sources */,
 				F8B4F031A29A0308A7022B1C /* MCPDetailView.swift in Sources */,
+				F971BE00E7C7003E3DE06728 /* GardenSection.swift in Sources */,
 				F9D9D65BEF93460D38703B71 /* SettingsView.swift in Sources */,
 				F9E4294B15A06286CF74D6B7 /* ModelsCollection.swift in Sources */,
 				F9FB1B9E06748D5D047F512A /* SyncV2Bootstrap.swift in Sources */,
