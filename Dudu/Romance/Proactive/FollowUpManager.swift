@@ -105,6 +105,13 @@ final class FollowUpManager: ObservableObject {
         persist()
     }
 
+    /// Isolated mutator for the master toggle: property assignment from a
+    /// @Sendable tool-handler closure is rejected by the compiler, so callers
+    /// outside the actor use this method instead.
+    func setMasterEnabled(_ value: Bool) {
+        masterEnabled = value
+    }
+
     func cancel(id: String, reason: String) {
         guard let i = items.firstIndex(where: { $0.id == id }) else { return }
         items[i].cancelled = true
