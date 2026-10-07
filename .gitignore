@@ -1,0 +1,29 @@
+# Xcode
+*.xcuserdata/
+*.xcworkspace/xcuserdata/
+DerivedData/
+*.moved-aside
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+*.xccheckout
+*.xcscheme
+
+# SwiftPM
+.build/
+.swiftpm/
+Package.resolved
+
+# macOS
+.DS_Store
+
+# Build outputs
+build/
+*.ipa
+Payload/
+
+# Signing (never commit)
+*.p12
+*.mobileprovision
+*.cer

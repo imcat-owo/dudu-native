@@ -1,0 +1,43 @@
+name: Build iOS IPA (unsigned)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Show Xcode version
+        run: xcodebuild -version
+
+      - name: Archive (unsigned)
+        run: |
+          xcodebuild -project Dudu.xcodeproj \
+            -scheme Dudu \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -archivePath build/Dudu.xcarchive \
+            archive \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGN_IDENTITY=""
+
+      - name: Package IPA
+        run: |
+          APP_PATH=$(find build/Dudu.xcarchive/Products/Applications -maxdepth 1 -name "*.app" | head -1)
+          echo "App: $APP_PATH"
+          test -d "$APP_PATH" || (echo "no .app found" && exit 1)
+          mkdir -p Payload
+          cp -R "$APP_PATH" Payload/
+          zip -r -y Dudu-unsigned.ipa Payload
+          ls -lh Dudu-unsigned.ipa
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: Dudu-iOS-unsigned
+          path: Dudu-unsigned.ipa
+          if-no-files-found: error
