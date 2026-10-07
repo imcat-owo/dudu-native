@@ -100,6 +100,14 @@ enum DuduPaths {
             .appendingPathComponent("offloads", isDirectory: true)
     }
 
+    /// Persistent storage directory for a specific session's workspace.
+    /// (P4 addition: the chat core's AIChatViewModel used to own this; moved
+    /// here so DuduPaths stays the single path-helper family.)
+    static func duduWorkspacePersistentDir(for sid: String) -> URL {
+        duduPersistentBase.appendingPathComponent(sid, isDirectory: true)
+            .appendingPathComponent("workspace", isDirectory: true)
+    }
+
     /// Persistent storage directory for a specific session's attachments.
     static func duduAttachmentsPersistentDir(for sid: String) -> URL {
         duduPersistentBase.appendingPathComponent(sid, isDirectory: true)

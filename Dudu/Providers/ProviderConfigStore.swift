@@ -297,10 +297,10 @@ final class ProviderConfigStore: ObservableObject {
                 // and stamp the flag so the rest of the store stays consistent.
                 let migratedFlag = UserDefaults.standard.bool(forKey: "cloudSync.providerV3.migrationCompleted")
                 let dbNonEmpty = !(await db.isEmpty())
-                // P3: ProviderV3Bootstrap (Agent/Sync, P4) dropped with the iCloud refs; its
-                // default isEnabled=true, so the V3 DB stays authoritative when non-empty.
-                guard (migratedFlag || dbNonEmpty) else {
-                    logger.info("[GroupLoad] init: staying on V2 JSON config (P3: V3 bootstrap gate dropped; migrated=\(migratedFlag) dbNonEmpty=\(dbNonEmpty))")
+                // P4: ProviderV3Bootstrap gate restored (was dropped in P3 with the
+                // iCloud refs; the enum is extracted in Dudu/Agent/Chat/ProviderV3Bootstrap.swift).
+                guard ProviderV3Bootstrap.isEnabled, (migratedFlag || dbNonEmpty) else {
+                    logger.info("[GroupLoad] init: staying on V2 JSON config (v3Enabled=\(ProviderV3Bootstrap.isEnabled) migrated=\(migratedFlag) dbNonEmpty=\(dbNonEmpty))")
                     return
                 }
                 if !migratedFlag && dbNonEmpty {
@@ -807,7 +807,7 @@ final class ProviderConfigStore: ObservableObject {
         // V2 JSON path and drop inbound-synced group members.
         let migratedFlag = UserDefaults.standard.bool(forKey: "cloudSync.providerV3.migrationCompleted")
         var dbAuthoritative = false
-        if let db {  // P3: ProviderV3Bootstrap gate dropped with iCloud refs (default true)
+        if let db, ProviderV3Bootstrap.isEnabled {  // P4: gate restored (was dropped in P3)
             if migratedFlag {
                 dbAuthoritative = true
             } else {
