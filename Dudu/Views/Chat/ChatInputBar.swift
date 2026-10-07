@@ -11,12 +11,14 @@ import UIKit
 /// - The input is NEVER locked while processing: she can send follow-ups
 ///   anytime (the engine queues them; a badge shows how many are queued).
 /// - Photo attach button → PhotosPicker → vm.addImageAttachment (real).
-/// - No voice button: STT UI is a Phase-D surface (plan §8), and dead
-///   buttons are not shipped.
+/// - Mic button → SpeechRecognitionManager (SFSpeechRecognizer) — live
+///   transcript lands in the input field (Phase D1).
 struct ChatInputBar: View {
     @EnvironmentObject private var vm: AIChatViewModel
+    @StateObject private var stt = SpeechRecognitionManager.shared
 
     @State private var selectedPhoto: PhotosPickerItem?
+    @State private var recordStart: Date? = nil
 
     private var canSend: Bool {
         !vm.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
@@ -43,6 +45,12 @@ struct ChatInputBar: View {
                     .foregroundStyle(DuduTheme.duduTextDim)
             }
 
+            // [D1-stt] Live recording panel while the speech engine runs:
+            // elapsed time, audio levels, live transcript, stop hint.
+            if stt.state == .recording {
+                recordingPanel
+            }
+
             HStack(alignment: .bottom, spacing: 8) {
                 PhotosPicker(selection: $selectedPhoto, matching: .images) {
                     Image(systemName: "photo")
@@ -51,6 +59,18 @@ struct ChatInputBar: View {
                         .frame(width: 32, height: 32)
                 }
                 .accessibilityLabel("添加图片")
+
+                // [D1-stt] Mic: tap to record (SFSpeechRecognizer), tap again
+                // to stop — the transcript lands in the input field.
+                Button {
+                    toggleRecording()
+                } label: {
+                    Image(systemName: stt.state == .recording ? "mic.fill" : "mic")
+                        .font(DuduTheme.bodyFont())
+                        .foregroundStyle(stt.state == .recording ? DuduTheme.pink : DuduTheme.duduTextDim)
+                        .frame(width: 32, height: 32)
+                }
+                .accessibilityLabel(stt.state == .recording ? "停止录音" : "语音输入")
 
                 TextField("输入消息", text: $vm.inputText, axis: .vertical)
                     .font(DuduTheme.inputFont())
@@ -124,6 +144,100 @@ struct ChatInputBar: View {
                 }
             }
         }
+    }
+
+    // MARK: - STT recording (Phase D1)
+
+    /// Mic tap handler. Starts SFSpeechRecognizer capture (after the system
+    /// permission prompts) or stops an in-flight recording and drops the
+    /// transcript into the input field.
+    private func toggleRecording() {
+        if stt.state == .recording {
+            finishRecording()
+            return
+        }
+        Task { @MainActor in
+            guard await stt.requestPermissions() else {
+                ShareFeedbackToast.show("需要麦克风和语音识别权限")
+                return
+            }
+            do {
+                try stt.startRecording()
+                SpeechRecognitionManager.saveInputModePreference("voice")
+                recordStart = Date()
+            } catch {
+                ShareFeedbackToast.show("录音启动失败")
+            }
+        }
+    }
+
+    /// Stop capture; append the final transcript to the draft.
+    private func finishRecording() {
+        stt.stopRecording()
+        recordStart = nil
+        let text = stt.recognizedText.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !text.isEmpty else { return }
+        if vm.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            vm.inputText = text
+        } else {
+            vm.inputText += "\n" + text
+        }
+        stt.recognizedText = ""
+    }
+
+    /// Live panel above the input row while recording: pulsing dot,
+    /// elapsed time, audio level bars, live transcript, stop hint.
+    private var recordingPanel: some View {
+        HStack(spacing: 8) {
+            Circle()
+                .fill(DuduTheme.pink)
+                .frame(width: 8, height: 8)
+                .opacity(recordPulse ? 1 : 0.3)
+                .animation(.easeInOut(duration: 0.8).repeatForever(autoreverses: true),
+                           value: recordPulse)
+
+            TimelineView(.periodic(from: .now, by: 1)) { context in
+                Text(elapsedString(since: recordStart ?? context.date, at: context.date))
+                    .font(DuduTheme.captionFont(weight: .medium))
+                    .foregroundStyle(DuduTheme.duduTextDim)
+                    .monospacedDigit()
+            }
+
+            // Audio level bars from the engine's live RMS meter.
+            HStack(alignment: .center, spacing: 2) {
+                ForEach(0..<min(24, stt.audioLevels.count), id: \.self) { i in
+                    RoundedRectangle(cornerRadius: 1.5)
+                        .fill(DuduTheme.pink)
+                        .frame(width: 3, height: 2 + CGFloat(stt.audioLevels[i]) * 22)
+                }
+            }
+            .frame(height: 24)
+
+            if !stt.recognizedText.isEmpty {
+                Text(stt.recognizedText)
+                    .font(DuduTheme.captionFont())
+                    .foregroundStyle(DuduTheme.duduTextDim)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
+            }
+
+            Spacer()
+
+            Text("再点一下停止")
+                .font(DuduTheme.captionFont())
+                .foregroundStyle(DuduTheme.duduTextDim)
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .background(DuduTheme.duduIconChip, in: RoundedRectangle(cornerRadius: DuduTheme.radiusChip, style: .continuous))
+        .onAppear { recordPulse = true }
+    }
+
+    @State private var recordPulse = false
+
+    private func elapsedString(since start: Date, at now: Date) -> String {
+        let seconds = max(0, Int(now.timeIntervalSince(start)))
+        return String(format: "%d:%02d", seconds / 60, seconds % 60)
     }
 
     // MARK: - Attachment strip

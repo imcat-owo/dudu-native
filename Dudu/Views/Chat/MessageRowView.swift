@@ -22,8 +22,12 @@ struct MessageRowView: View {
         vm.isProcessing && message.id == vm.messages.last?.id
     }
 
-    /// Retry/delete are hidden for the message currently being generated.
+    /// Retry/delete/read-aloud are hidden for the message currently being generated.
     private var isActionable: Bool { !isLive }
+
+    /// Speaker button state: true from the local tap until playback actually
+    /// stops (either the local stop tap or the engine settling isReadingAloud).
+    @State private var readingAloud = false
 
     var body: some View {
         switch message.role {
@@ -145,6 +149,9 @@ struct MessageRowView: View {
                 if let error = message.error, !error.isEmpty {
                     assistantErrorRow(error)
                 }
+                if isActionable {
+                    readAloudFooter
+                }
             }
             Spacer(minLength: 44)
         }
@@ -167,6 +174,50 @@ struct MessageRowView: View {
         }
         .foregroundStyle(DuduTheme.duduTextDim)
         .padding(.top, 2)
+    }
+
+    // MARK: - Read aloud (Phase D1)
+
+    /// Speaker button under the assistant bubble. Tap → the engine reads the
+    /// message from the start (AVSpeechSynthesizer / configured TTS service /
+    /// voice group — whichever the resolution chain picks); tap again → stop.
+    private var readAloudFooter: some View {
+        HStack {
+            Spacer(minLength: 0)
+            Button {
+                toggleReadAloud()
+            } label: {
+                HStack(spacing: 4) {
+                    Image(systemName: isThisReading ? "stop.fill" : "speaker.wave.2.fill")
+                        .font(DuduTheme.captionFont())
+                    Text(isThisReading ? "停止" : "朗读")
+                        .font(DuduTheme.captionFont())
+                }
+                .foregroundStyle(DuduTheme.duduTextDim)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 5)
+                .background(DuduTheme.duduIconChip, in: Capsule())
+            }
+            .accessibilityLabel(isThisReading ? "停止朗读" : "朗读这条消息")
+        }
+        .onChange(of: vm.isReadingAloud) { _, reading in
+            if !reading { readingAloud = false }
+        }
+    }
+
+    /// True only while THIS message's playback is running.
+    private var isThisReading: Bool {
+        readingAloud && vm.isReadingAloud
+    }
+
+    private func toggleReadAloud() {
+        if isThisReading {
+            vm.stopSpeech()
+            readingAloud = false
+        } else {
+            readingAloud = true
+            vm.readReplyFromStart(message)
+        }
     }
 
     // MARK: - Divider / system info

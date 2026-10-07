@@ -360,6 +360,7 @@
 		4A055772F58E693828870A29 /* ProviderDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC655EAE3AF5A70BFEFA2C8D /* ProviderDetailView.swift */; };
 		8C7D4DE82130BFDABC9131DF /* ProviderListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A263C3932C0151A6A4E70A /* ProviderListView.swift */; };
 		F9D9D65BEF93460D38703B71 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E084A58363D98CF4058A6B90 /* SettingsView.swift */; };
+		3084BFCF3D674EB4A93DE70E /* TTSSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62130F8CEBD742CD8DA012ED /* TTSSettingsView.swift */; };
 		ABC64DFB635048C0BD78FAE4 /* MCPApprovalCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E49330ED8CE4C24BD056A09 /* MCPApprovalCardView.swift */; };
 		4B6BF44BA2D34E4CA883784D /* MCPDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A94E27241434CE3B75D0044 /* MCPDetailView.swift */; };
 		F63ED642258D4F9CB1D1C27C /* MCPListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7008220B684EA594D1B5AC /* MCPListView.swift */; };
@@ -839,6 +840,7 @@
 		EC655EAE3AF5A70BFEFA2C8D /* ProviderDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderDetailView.swift; sourceTree = "<group>"; };
 		A8A263C3932C0151A6A4E70A /* ProviderListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderListView.swift; sourceTree = "<group>"; };
 		E084A58363D98CF4058A6B90 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		62130F8CEBD742CD8DA012ED /* TTSSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTSSettingsView.swift; sourceTree = "<group>"; };
 		8E49330ED8CE4C24BD056A09 /* MCPApprovalCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCPApprovalCardView.swift; sourceTree = "<group>"; };
 		6A94E27241434CE3B75D0044 /* MCPDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCPDetailView.swift; sourceTree = "<group>"; };
 		2A7008220B684EA594D1B5AC /* MCPListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCPListView.swift; sourceTree = "<group>"; };
@@ -1830,6 +1832,7 @@
 		930C951A6A0C2D8A4A21F5B8 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				62130F8CEBD742CD8DA012ED /* TTSSettingsView.swift */,
 				E084A58363D98CF4058A6B90 /* SettingsView.swift */,
 			);
 			path = Settings;
@@ -2281,6 +2284,7 @@
 				F87FAC01CC4169C1AED9B351 /* AIChatViewModel+Offloading.swift in Sources */,
 				F8A9AB05C2120FE0BCDE2A4E /* ChatLifecycleSupport.swift in Sources */,
 				F9D9D65BEF93460D38703B71 /* SettingsView.swift in Sources */,
+				3084BFCF3D674EB4A93DE70E /* TTSSettingsView.swift in Sources */,
 				F9E4294B15A06286CF74D6B7 /* ModelsCollection.swift in Sources */,
 				F9FB1B9E06748D5D047F512A /* SyncV2Bootstrap.swift in Sources */,
 				FA85C8D46039670EEB1C22AB /* AIChatViewModel+BackgroundTask.swift in Sources */,

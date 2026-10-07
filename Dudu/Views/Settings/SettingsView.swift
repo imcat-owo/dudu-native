@@ -7,6 +7,7 @@ enum SettingsRoute: Hashable {
     case providerDetail(String)
     case appearance
     case fontScale
+    case ttsSettings
     case mcpServers
     case about
 }
@@ -45,6 +46,11 @@ struct SettingsView: View {
                         route: .fontScale
                     )
                     SettingsRow(
+                        icon: "speaker.wave.2.fill",
+                        title: "语音",
+                        route: .ttsSettings
+                    )
+                    SettingsRow(
                         icon: "server.rack",
                         title: "MCP 服务器",
                         route: .mcpServers
@@ -70,6 +76,8 @@ struct SettingsView: View {
                     AppearanceView()
                 case .fontScale:
                     FontScaleView()
+                case .ttsSettings:
+                    TTSSettingsView()
                 case .mcpServers:
                     MCPListView()
                 case .about:
