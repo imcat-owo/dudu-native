@@ -45,7 +45,7 @@ final class EnvVarStore: ObservableObject {
     /// Until then dirty marks are dropped — sync doesn't exist yet in P1.
     /// Set-once-at-launch, hence nonisolated(unsafe).
     nonisolated(unsafe) static var syncDirtyHook:
-        ((recordType: String, recordId: String, operation: String) -> Void)?
+        ((_ recordType: String, _ recordId: String, _ operation: String) -> Void)?
 
     @Published private(set) var entries: [EnvVarEntry] = []
 
@@ -91,11 +91,7 @@ final class EnvVarStore: ObservableObject {
             guard let self else { return }
             await MainActor.run {
                 self.markAllEntriesDirty()
-                Self.syncDirtyHook?(
-                    recordType: "EnvVar",
-                    recordId: "env-vars",
-                    operation: "delete"
-                )
+                Self.syncDirtyHook?("EnvVar", "env-vars", "delete")
                 UserDefaults.standard.set(true, forKey: Self.legacyCleanupKey)
                 logger.info("[EnvVarStore] legacy EnvVarV2 cleanup scheduled (\(self.entries.count) entries re-emitted as EnvVarItem)")
             }
@@ -139,11 +135,7 @@ final class EnvVarStore: ObservableObject {
     /// passes the entry's UUID (EnvVarEntry.id), which is also the
     /// EnvVarItem record's recordName.
     fileprivate func markEntryDirty(entryId: String, operation: String = "upsert") {
-        Self.syncDirtyHook?(
-            recordType: "EnvVarItem",
-            recordId: entryId,
-            operation: operation
-        )
+        Self.syncDirtyHook?("EnvVarItem", entryId, operation)
     }
 
     /// Re-emit per-key markDirty for every current entry. Used by
