@@ -56782,6 +56782,181 @@
           }
         }
       }
+    "sandbox.testConnection": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Test connection"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "测试连接"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "測試連接"
+          }
+        }
+      }
+    },
+    "sandbox.testConnectionNote": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The test opens a real SSH session through the relay with the credentials above — nothing is saved."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "测试会用上面填的账号信息，经传话员真的打开一次 SSH 会话——什么都不会保存。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "測試會用上面填的帳號資訊，經傳話員真的打開一次 SSH 會話——什麼都不會保存。"
+          }
+        }
+      }
+    },
+    "sandbox.testOk": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connection works — the relay opened a real SSH session."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "连接成功——传话员真的打开了一次 SSH 会话。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "連接成功——傳話員真的打開了一次 SSH 會話。"
+          }
+        }
+      }
+    },
+    "sandbox.testFailed": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connection failed"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "连接失败"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "連接失敗"
+          }
+        }
+      }
+    },
+    "crossapp.title": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open in other apps"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在其他 App 里打开"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在其他 App 裡打開"
+          }
+        }
+      }
+    },
+    "crossapp.note": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Opens the app through its URL scheme — the same mechanism as the AI's apple-open. Dudu can't see what happens inside the other app."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "通过 URL Scheme 打开对应 App——跟 AI 用的 apple-open 是同一套机制。嘟嘟看不到别的 App 里发生了什么。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "透過 URL Scheme 打開對應 App——跟 AI 用的 apple-open 是同一套機制。嘟嘟看不到別的 App 裡發生了什麼。"
+          }
+        }
+      }
+    },
+    "crossapp.open": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "打开"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "打開"
+          }
+        }
+      }
+    },
+    "crossapp.inApp": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Opens inside Dudu"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在嘟嘟内打开"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在嘟嘟內打開"
+          }
+        }
+      }
     }
   },
   "version": "1.0"
