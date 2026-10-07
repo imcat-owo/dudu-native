@@ -345,6 +345,7 @@ func backupCategoryLabel(_ rawValue: String) -> String {
     case "appearance": return "外观"
     case "our_space": return "我们的空间"
     case "music": return "音乐"
+    case "sandbox": return "沙箱"
     case "voice_corrections": return "语音修正"
     default: return rawValue
     }
@@ -439,7 +440,7 @@ struct BackupView: View {
                             Text("聊天、文件、技能、记忆、我们的空间、音乐、外观设置全部打包")
                                 .font(DuduTheme.captionFont())
                                 .foregroundStyle(DuduTheme.duduTextDim)
-                            Text("以下内容不会被备份：语音修正（功能未成熟）、浏览器登录态（仅保留在本机）")
+                            Text("以下内容不会被备份：语音修正（功能未成熟）、浏览器登录态（仅保留在本机）、知识库索引（文件原文都在备份里，恢复后重新索引即可）")
                                 .font(DuduTheme.captionFont())
                                 .foregroundStyle(DuduTheme.duduTextDim)
                         }

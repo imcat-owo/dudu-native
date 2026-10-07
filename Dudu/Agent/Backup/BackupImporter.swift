@@ -271,7 +271,9 @@ actor BackupImporter {
                 // (chats, skills, environment variables, …) fail before or
                 // without writing, and reporting "Rolled back" for the
                 // no-op would tell the user an undo happened that didn't.
-                if let snapshot, !snapshot.isEmpty, (try? rollback(snapshot)) != nil {
+                // [P3-3] rollback is async: its store reloads are awaited, so
+                // the loop only continues once every cache matches disk.
+                if let snapshot, !snapshot.isEmpty, (try? await rollback(snapshot)) != nil {
                     report.rolledBack.append(category.rawValue)
                 }
                 // §8.3: a failed category does not abort the ones already done.
@@ -458,10 +460,12 @@ actor BackupImporter {
         //
         // A category missing from this list is silently skipped, which is how
         // this one would have failed had it simply been appended to the enum.
+        // [P2-3] .sandbox must be listed here: a category missing from this
+        // list is silently skipped on import.
         let order: [BackupCategory] = [.chats, .sharedFiles, .skills, .memory,
                                        .providers, .environmentVariables,
                                        .mcpServers, .voiceCorrections, .appearance,
-                                       .ourSpace, .music]
+                                       .ourSpace, .music, .sandbox]
         return order.filter { wanted.contains($0) }
     }
 }

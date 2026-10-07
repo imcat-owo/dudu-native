@@ -355,6 +355,11 @@ actor BackupExporter {
         try await run(.music, AppLocalized("Exporting music…")) {
             try await exportMusic(dataDir: dataDir)
         }
+        // [P2-3] Sandbox backends (server list + active backend id). Secrets
+        // stay in the Keychain — they never enter the package.
+        try await run(.sandbox, AppLocalized("Exporting sandbox…")) {
+            try await exportSandbox(dataDir: dataDir)
+        }
         // [2026-08-15] Not reached in normal use: `.voiceCorrections` is absent
         // from `BackupCategory.backupable`, so it never appears in
         // `options.categories` and `run` skips it. Kept wired up rather than
@@ -1233,6 +1238,36 @@ actor BackupExporter {
             bytes = writer.totalBytes
         } else if alreadyStaged {
             entries = Self.countPayloadItems(dataDir: dataDir, base: "music")
+        }
+        return BackupManifest.CategoryStat(entries: entries, bytes: bytes,
+                                           encrypted: false)
+    }
+
+    /// [P2-3] Sandbox backends (opaque payloads, `data/sandbox.jsonl`).
+    /// Same shape as music: the store owns its encoding, the package never
+    /// pins a second copy of the models. Server secrets are not here by
+    /// design — SandboxKeychain holds them and the backup never touches
+    /// the Keychain.
+    private func exportSandbox(dataDir: URL) async throws
+        -> BackupManifest.CategoryStat {
+        let records = SandboxManager.backupRecords()
+
+        let alreadyStaged = Self.jsonlStaged(dataDir: dataDir, base: "sandbox")
+        var entries = 0
+        var bytes: Int64 = 0
+        if !records.isEmpty, !alreadyStaged {
+            let writer = BackupJSONLWriter(directory: dataDir, baseName: "sandbox")
+            defer { try? writer.close() }
+            for (key, data, count) in records {
+                try writer.write(BackupRecordEnvelope(
+                    t: "DefaultsPayload",
+                    d: BackupDefaultsPayload(key: key, payload: data, count: count)))
+                entries += count
+            }
+            try writer.close()
+            bytes = writer.totalBytes
+        } else if alreadyStaged {
+            entries = Self.countPayloadItems(dataDir: dataDir, base: "sandbox")
         }
         return BackupManifest.CategoryStat(entries: entries, bytes: bytes,
                                            encrypted: false)

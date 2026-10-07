@@ -256,6 +256,15 @@ actor KnowledgeStore {
     // MARK: File locations
 
     /// Same DuduChat folder the other databases live in.
+    ///
+    /// [P3-1] DELIBERATE backup exclusion: knowledge.db is NOT covered by
+    /// any backup category. It sits at the DuduChat root — outside the
+    /// per-session trees the chats category exports and outside every other
+    /// category's scope — and no category claims it, so it never enters a
+    /// package. This is intentional: the index is large (vector embeddings)
+    /// and fully derivable by re-running indexing over the backed-up sources
+    /// (chats / shared files). If this file ever moves under a backed-up
+    /// tree, add an explicit exclusion instead of relying on location.
     static func defaultURL() -> URL {
         let library = FileManager.default
             .urls(for: .libraryDirectory, in: .userDomainMask)[0]

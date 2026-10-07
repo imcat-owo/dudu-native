@@ -97,6 +97,13 @@ enum BackupCategory: String, Codable, CaseIterable, Sendable {
     /// (queue order, now-playing, DJ intents, live together state) is
     /// deliberately NOT carried — it describes a moment, not her library.
     case music
+    /// [P2-3] Sandbox backends: the server list (non-secret fields only —
+    /// SSH keys / passwords stay in the Keychain and never enter a package)
+    /// plus the active backend id, as opaque UserDefaults payloads in
+    /// `data/sandbox.jsonl`. Pure addition like `appearance` was: older
+    /// readers ignore the unknown category key, older packages simply don't
+    /// have it — the 1.1 format contract is untouched.
+    case sandbox
 
     /// Default checkbox state on the backup screen (§3 table).
     var defaultsOn: Bool { true }
@@ -120,7 +127,7 @@ enum BackupCategory: String, Codable, CaseIterable, Sendable {
         switch self {
         case .chats, .sharedFiles, .skills, .appearance, .ourSpace: return true
         case .memory, .providers, .mcpServers, .voiceCorrections,
-             .environmentVariables, .music: return false
+             .environmentVariables, .music, .sandbox: return false
         }
     }
 }

@@ -25,10 +25,10 @@ struct BackupRollbackSnapshot {
     /// live file → saved copy, for categories backed by a single file rather
     /// than a tree (provider-config.json).
     var files: [(live: URL, saved: URL)] = []
-    /// [T-backup-ourspace] UserDefaults key → raw value as it was before the
-    /// import, for the UserDefaults-backed categories (our_space, music,
-    /// persona dials). nil means the key was absent and must be removed on
-    /// rollback.
+    /// [T-backup-ourspace] UserDefaults key → plist-encoded value as it was
+    /// before the import, for the UserDefaults-backed categories (our_space,
+    /// music, sandbox, persona dials). nil means the key was ABSENT and must
+    /// be removed on rollback — never "present but not Data" ([P0-1]).
     var userDefaults: [(key: String, data: Data?)] = []
 
     /// True when nothing was captured, so a rollback would be a no-op and
@@ -154,18 +154,37 @@ extension BackupImporter {
         let udKeys: [String]
         switch category {
         case .ourSpace:
+            // [P2-1][P2-2] 甜蜜日常 (PhotoShare) and 纪念日 (romance) ride
+            // the our_space category — their keys need rollback coverage too.
             udKeys = OurSpaceStore.backupAllKeys
                 + Self.userDefaultsKeys(withPrefix: TaskCardStore.backupKeyPrefix)
+                + PhotoShareManager.backupAllKeys
+                + IntimacyManager.backupAllKeys
         case .memory:
             udKeys = Self.userDefaultsKeys(withPrefix: "dudu.personaDials.")
         case .music:
             udKeys = MusicStore.backupKeysList
+        case .sandbox:
+            udKeys = SandboxManager.backupAllKeys
         default:
             udKeys = []
         }
         if !udKeys.isEmpty {
             let defaults = UserDefaults.standard
-            snap.userDefaults = udKeys.map { ($0, defaults.data(forKey: $0)) }
+            // [P0-1] Snapshot via object(forKey:), plist-encoded — NEVER
+            // data(forKey:). data(forKey:) returns nil for non-Data values,
+            // and persona dial keys (dudu.personaDials.<id>.v1) hold
+            // DICTIONARIES ([String: Double], written via set(_:forKey:) in
+            // PersonaDialsStore). They snapshotted as (key, nil), so rollback
+            // treated them as absent and DELETED the user's dial settings.
+            // nil now strictly means "the key was absent".
+            snap.userDefaults = udKeys.map { key in
+                guard let value = defaults.object(forKey: key),
+                      let data = try? PropertyListSerialization.data(
+                          fromPropertyList: value, format: .binary, options: 0)
+                else { return (key, nil) }
+                return (key, data)
+            }
         }
         return snap
     }
@@ -179,7 +198,11 @@ extension BackupImporter {
             .filter { $0.hasPrefix(prefix) }
     }
 
-    func rollback(_ snapshot: BackupRollbackSnapshot) throws {
+    // [P3-3] async so the post-restore store reloads below are AWAITED:
+    // the import loop must not continue (and the UI must not read the
+    // stores) while their in-memory caches still show the half-merged
+    // state. The old fire-and-forget Task left exactly that window.
+    func rollback(_ snapshot: BackupRollbackSnapshot) async throws {
         let fm = FileManager.default
         for pair in snapshot.directories {
             try fm.createDirectory(at: pair.live.deletingLastPathComponent(),
@@ -199,18 +222,33 @@ extension BackupImporter {
         if !snapshot.userDefaults.isEmpty {
             let defaults = UserDefaults.standard
             for (key, data) in snapshot.userDefaults {
-                if let data {
-                    defaults.set(data, forKey: key)
+                // [P0-1] Values are plist-encoded (see snapshotForRollback):
+                // decode back to the original plist object before writing.
+                // Writing the encoded Data bytes themselves would corrupt
+                // every non-Data value (persona dial dictionaries, photoshare
+                // scalars, romance toggle) on restore.
+                if let data,
+                   let value = try? PropertyListSerialization.propertyList(
+                       from: data, options: [], format: nil) {
+                    defaults.set(value, forKey: key)
                 } else {
                     defaults.removeObject(forKey: key)
                 }
             }
             // The stores cache this state in memory; a raw UserDefaults write
             // leaves those caches showing the half-merged state otherwise.
-            Task { @MainActor in
+            // Awaited ([P3-3]) — the caller continues the import loop only
+            // after the caches match disk again. PhotoShareManager keeps no
+            // in-memory cache (it reads UserDefaults directly), so it needs
+            // no reload; IntimacyManager and SandboxManager DO cache in
+            // @Published vars that a failed import may have mutated live,
+            // so they re-read here.
+            await MainActor.run {
                 OurSpaceStore.shared.reloadFromDisk()
                 TaskCardStore.shared.reloadFromDisk()
                 MusicStore.shared.reloadFromDisk()
+                IntimacyManager.shared.reloadFromDisk()
+                SandboxManager.shared.reloadFromDisk()
             }
         }
         // A file-level provider rollback only rewrites the JSON on disk; the
@@ -221,7 +259,8 @@ extension BackupImporter {
             let rolledBackPersonas = snapshot.files.contains {
                 $0.live.lastPathComponent == "personas.json"
             }
-            Task { @MainActor in
+            // [P3-3] Awaited, same as the UserDefaults half above.
+            await MainActor.run {
                 await ProviderConfigStore.shared.reloadFromDisk()
                 if rolledBackPersonas { PersonaStore.shared.reloadFromDisk() }
             }
@@ -248,6 +287,7 @@ extension BackupImporter {
         case .appearance: return try await importAppearance(root: root, fileIndex: fileIndex)
         case .ourSpace: return try await importOurSpace(root: root, fileIndex: fileIndex)
         case .music: return try await importMusic(root: root)
+        case .sandbox: return try await importSandbox(root: root)
         }
     }
 
@@ -493,12 +533,20 @@ extension BackupImporter {
 
         var ourSpaceRecords: [(key: String, data: Data, count: Int)] = []
         var taskRecords: [(key: String, data: Data, count: Int)] = []
+        // [P2-1] 甜蜜日常 (PhotoShare) and [P2-2] 纪念日 (romance) ride the
+        // our_space category — routed by key prefix to their owning stores.
+        var photoShareRecords: [(key: String, data: Data, count: Int)] = []
+        var romanceRecords: [(key: String, data: Data, count: Int)] = []
         for rec in readJSONL(dataDir, base: "our_space", as: BackupDefaultsPayload.self) {
             let tuple = (key: rec.key, data: rec.payload, count: rec.count)
             if rec.key.hasPrefix("dudu.ourspace.") {
                 ourSpaceRecords.append(tuple)
             } else if rec.key.hasPrefix(TaskCardStore.backupKeyPrefix) {
                 taskRecords.append(tuple)
+            } else if rec.key.hasPrefix("dudu.photoshare.v1.") {
+                photoShareRecords.append(tuple)
+            } else if rec.key.hasPrefix("dudu.romance.") {
+                romanceRecords.append(tuple)
             } else {
                 // A newer writer's section this build doesn't know — ignore,
                 // don't fail (§2.2 rule 2).
@@ -511,8 +559,17 @@ extension BackupImporter {
         let taskOutcome = await MainActor.run {
             TaskCardStore.shared.restoreBackupRecords(taskRecords)
         }
+        // PhotoShareManager keeps no in-memory cache — a plain static call.
+        let photoShareOutcome = PhotoShareManager.restoreBackupRecords(photoShareRecords)
+        let romanceOutcome = await MainActor.run {
+            IntimacyManager.shared.restoreBackupRecords(romanceRecords)
+        }
         report.imported = ourSpaceOutcome.imported + taskOutcome.imported
-        report.skipped = ourSpaceOutcome.skipped + taskOutcome.skipped
+            + photoShareOutcome.imported + romanceOutcome.imported
+        // [P3-2] +=, not =: the loop above already counted unknown-section
+        // skips into report.skipped, and = would silently discard them.
+        report.skipped += ourSpaceOutcome.skipped + taskOutcome.skipped
+            + photoShareOutcome.skipped + romanceOutcome.skipped
 
         let cardsDir = TaskCardStore.cardsDirectory
         let files = try restoreFileTree(
@@ -547,6 +604,27 @@ extension BackupImporter {
             .map { (key: $0.key, data: $0.payload, count: $0.count) }
         let outcome = await MainActor.run {
             MusicStore.shared.restoreBackupRecords(tuples)
+        }
+        report.imported = outcome.imported
+        report.skipped = outcome.skipped
+        return report
+    }
+
+    // MARK: - Sandbox
+
+    /// [P2-3] Sandbox backends (opaque payloads, `data/sandbox.jsonl`).
+    ///
+    /// Same shape as music: opaque records routed to SandboxManager, merged
+    /// local-wins. Server SECRETS are not in the package by design (they
+    /// live in the Keychain) — a restored server reconnects after she
+    /// re-enters its secret, same as API keys after any restore.
+    private func importSandbox(root: URL) async throws -> CategoryReport {
+        var report = CategoryReport(category: BackupCategory.sandbox.rawValue)
+        let dataDir = root.appendingPathComponent("data", isDirectory: true)
+        let tuples = readJSONL(dataDir, base: "sandbox", as: BackupDefaultsPayload.self)
+            .map { (key: $0.key, data: $0.payload, count: $0.count) }
+        let outcome = await MainActor.run {
+            SandboxManager.shared.restoreBackupRecords(tuples)
         }
         report.imported = outcome.imported
         report.skipped = outcome.skipped
