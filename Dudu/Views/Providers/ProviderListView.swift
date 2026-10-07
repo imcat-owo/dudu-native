@@ -113,7 +113,7 @@ private struct ProviderRowView: View {
     private var configured: Bool {
         switch instance.credentialType {
         case .apiKey:
-            return ProviderConfigStore.apiKeySavedAt(instanceId: instance.id) != .distantPast
+            return ProviderKeychainHelper.apiKeySavedAt(instanceId: instance.id) != .distantPast
         case .oauth:
             return instance.providerType.oauthManager?.isAuthenticated(instanceId: instance.id) ?? false
         }

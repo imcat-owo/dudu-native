@@ -3,7 +3,7 @@ import SwiftUI
 // MARK: - ApiKeyFieldView · API Key 输入
 //
 // SecureField for key entry. The key goes straight to the Keychain via
-// ProviderConfigStore.saveAPIKey and is NEVER displayed back — only the
+// ProviderKeychainHelper.saveAPIKey and is NEVER displayed back — only the
 // saved-at status is shown.
 
 struct ApiKeyFieldView: View {
@@ -13,7 +13,7 @@ struct ApiKeyFieldView: View {
     @State private var savedMessage: String?
 
     private var savedAt: Date {
-        ProviderConfigStore.apiKeySavedAt(instanceId: instanceId)
+        ProviderKeychainHelper.apiKeySavedAt(instanceId: instanceId)
     }
 
     var body: some View {
@@ -34,7 +34,7 @@ struct ApiKeyFieldView: View {
                 Button("保存") {
                     let key = draft.trimmingCharacters(in: .whitespacesAndNewlines)
                     guard !key.isEmpty else { return }
-                    ProviderConfigStore.saveAPIKey(key, instanceId: instanceId)
+                    ProviderKeychainHelper.saveAPIKey(key, instanceId: instanceId)
                     draft = ""
                     savedMessage = "已保存到钥匙串"
                 }
@@ -45,7 +45,7 @@ struct ApiKeyFieldView: View {
 
                 if savedAt != .distantPast {
                     Button(role: .destructive) {
-                        ProviderConfigStore.deleteAPIKey(instanceId: instanceId)
+                        ProviderKeychainHelper.deleteAPIKey(instanceId: instanceId)
                     } label: {
                         Text("删除 Key")
                             .font(DuduTheme.bodyFont())
