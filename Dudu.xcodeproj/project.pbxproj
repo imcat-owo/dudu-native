@@ -390,6 +390,16 @@
 		25E85F3413301FED50E5DBB0 /* KnowledgePDFImport.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F2A83B1FF8D182ED87EBD7 /* KnowledgePDFImport.swift */; };
 		515CD77B6FB012CA930D57C4 /* KnowledgeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09191CBE50E5373B4F2A3FB3 /* KnowledgeStore.swift */; };
 		6540FD7FD8F9CCE22025E7EE /* KnowledgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02E7F7A84446E8C33BDC5668 /* KnowledgeView.swift */; };
+		184A806C99115C030920537E /* devil-01.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B9D04BA814DEACB5A3BE5B9E /* devil-01.jpg */; };
+		7F94852FE0E2491DE9F34B42 /* devil-02.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F83FAE364C1D7A681D14C5D6 /* devil-02.jpg */; };
+		FEC0EDB3EAE53ABDF0E87E40 /* devil-03.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1719128EB1028FEACFAAF210 /* devil-03.jpg */; };
+		2D12567BCA5606311AE6CE86 /* devil-04.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 87BD237611113BCF495FC1DF /* devil-04.jpg */; };
+		A970CC52B82FC2642EAA79CE /* devil-05.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F7DABBF057FEDDE671BCAD2F /* devil-05.jpg */; };
+		BF8EEA74CF884D1AF96AB5E1 /* devil-06.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C4952BF11B788D3615A8902B /* devil-06.jpg */; };
+		E911BF5355E2235E28AD9158 /* devil-07.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E8EEAE65C9F5A82918B095FF /* devil-07.jpg */; };
+		92DDC6EA135F9F9DA95B6FB8 /* devil-08.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4AB27BC230D8D31B729FF491 /* devil-08.jpg */; };
+		D02DC5EA366008601CE34138 /* devil-09.jpg in Resources */ = {isa = PBXBuildFile; fileRef = CA7B36D6E74DB3E86488B7A4 /* devil-09.jpg */; };
+		C09741FEC8BADA625982E462 /* devil-10.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 91E4ACA76BC7E354A653EA25 /* devil-10.jpg */; };
 /* End PBXBuildFile section */
 		F8F1403829CEFF47083C5520 /* RealTimeCutVADLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = AECFD4BE143BED595F298AF5 /* RealTimeCutVADLibrary */; };
 		BA894477DDF6C14EE49C54DE /* SwiftAnthropic in Frameworks */ = {isa = PBXBuildFile; productRef = 05812F6725F9E44AAB5A4A83 /* SwiftAnthropic */; };
@@ -896,6 +906,16 @@
 		D7F2A83B1FF8D182ED87EBD7 /* KnowledgePDFImport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgePDFImport.swift; sourceTree = "<group>"; };
 		09191CBE50E5373B4F2A3FB3 /* KnowledgeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeStore.swift; sourceTree = "<group>"; };
 		02E7F7A84446E8C33BDC5668 /* KnowledgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeView.swift; sourceTree = "<group>"; };
+		B9D04BA814DEACB5A3BE5B9E /* devil-01.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "devil-01.jpg"; sourceTree = "<group>"; };
+		F83FAE364C1D7A681D14C5D6 /* devil-02.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "devil-02.jpg"; sourceTree = "<group>"; };
+		1719128EB1028FEACFAAF210 /* devil-03.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "devil-03.jpg"; sourceTree = "<group>"; };
+		87BD237611113BCF495FC1DF /* devil-04.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "devil-04.jpg"; sourceTree = "<group>"; };
+		F7DABBF057FEDDE671BCAD2F /* devil-05.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "devil-05.jpg"; sourceTree = "<group>"; };
+		C4952BF11B788D3615A8902B /* devil-06.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "devil-06.jpg"; sourceTree = "<group>"; };
+		E8EEAE65C9F5A82918B095FF /* devil-07.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "devil-07.jpg"; sourceTree = "<group>"; };
+		4AB27BC230D8D31B729FF491 /* devil-08.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "devil-08.jpg"; sourceTree = "<group>"; };
+		CA7B36D6E74DB3E86488B7A4 /* devil-09.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "devil-09.jpg"; sourceTree = "<group>"; };
+		91E4ACA76BC7E354A653EA25 /* devil-10.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "devil-10.jpg"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 		30AC3C5C6C418C791E362178 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 
@@ -957,6 +977,7 @@
 		B74038F54FE45F5C50CC10B2 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				AFB4BDD262E7DC7638164E6C /* Stickers */,
 				5CFFD5760C8BD1E13C987132 /* hmm_model.utf8 */,
 				6516A7032270F3A4B0D92A89 /* user-manual.md */,
 				9DB572769E86C2548D659A45 /* Localizable.xcstrings */,
@@ -1956,6 +1977,23 @@
 			path = Knowledge;
 			sourceTree = "<group>";
 		};
+		AFB4BDD262E7DC7638164E6C /* Stickers */ = {
+			isa = PBXGroup;
+			children = (
+				1719128EB1028FEACFAAF210 /* devil-03.jpg */,
+				4AB27BC230D8D31B729FF491 /* devil-08.jpg */,
+				87BD237611113BCF495FC1DF /* devil-04.jpg */,
+				91E4ACA76BC7E354A653EA25 /* devil-10.jpg */,
+				B9D04BA814DEACB5A3BE5B9E /* devil-01.jpg */,
+				C4952BF11B788D3615A8902B /* devil-06.jpg */,
+				CA7B36D6E74DB3E86488B7A4 /* devil-09.jpg */,
+				E8EEAE65C9F5A82918B095FF /* devil-07.jpg */,
+				F7DABBF057FEDDE671BCAD2F /* devil-05.jpg */,
+				F83FAE364C1D7A681D14C5D6 /* devil-02.jpg */,
+			);
+			path = Stickers;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -2029,10 +2067,20 @@
 			files = (
 				0BCC4E92899C4BD304CA06FC /* jieba.dict.utf8 in Resources */,
 				100000000000000000000011 /* Assets.xcassets in Resources */,
+				184A806C99115C030920537E /* devil-01.jpg in Resources */,
+				2D12567BCA5606311AE6CE86 /* devil-04.jpg in Resources */,
+				7F94852FE0E2491DE9F34B42 /* devil-02.jpg in Resources */,
+				92DDC6EA135F9F9DA95B6FB8 /* devil-08.jpg in Resources */,
+				A970CC52B82FC2642EAA79CE /* devil-05.jpg in Resources */,
 				BD37939C56BFF9F8173706D7 /* hmm_model.utf8 in Resources */,
+				BF8EEA74CF884D1AF96AB5E1 /* devil-06.jpg in Resources */,
+				C09741FEC8BADA625982E462 /* devil-10.jpg in Resources */,
 				C0F9259685B5FB5331BD357A /* Localizable.xcstrings in Resources */,
 				C81C4201C5BF244192216D8E /* user-manual.md in Resources */,
+				D02DC5EA366008601CE34138 /* devil-09.jpg in Resources */,
+				E911BF5355E2235E28AD9158 /* devil-07.jpg in Resources */,
 				F0EC57B14FA7C4656FA537D9 /* cl100k_base.tiktoken in Resources */,
+				FEC0EDB3EAE53ABDF0E87E40 /* devil-03.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

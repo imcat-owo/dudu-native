@@ -113,7 +113,7 @@ EXCLUDE = {
 
 SOURCE_EXTS = {".swift", ".m", ".mm"}
 HEADER_EXTS = {".h", ".hpp"}
-RESOURCE_EXTS = {".tiktoken", ".utf8", ".md", ".xcstrings"}
+RESOURCE_EXTS = {".tiktoken", ".utf8", ".md", ".xcstrings", ".jpg", ".jpeg", ".png", ".webp"}
 
 FILE_TYPES = {
     ".swift": "sourcecode.swift",
@@ -125,6 +125,10 @@ FILE_TYPES = {
     ".utf8": "text",
     ".md": "text",
     ".xcstrings": "text.xcstrings",
+    ".jpg": "image.jpeg",
+    ".jpeg": "image.jpeg",
+    ".png": "image.png",
+    ".webp": "image.webp",
 }
 
 
