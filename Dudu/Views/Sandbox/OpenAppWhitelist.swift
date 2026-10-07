@@ -198,6 +198,7 @@ func lookupOpenAppEntry(id: String) -> OpenAppEntry? {
 
 enum OpenAppURLError: Error, LocalizedError {
     case missingRequiredParam(String, example: String)
+    case unknownEntry(String, entry: String)
     case unknownSlot(String, entry: String)
     case noWebVersion(String)
 
@@ -205,8 +206,10 @@ enum OpenAppURLError: Error, LocalizedError {
         switch self {
         case .missingRequiredParam(let name, let example):
             return "Missing required parameter \"\(name)\" (e.g. \(example))."
-        case .unknownSlot(let name, let entry):
+        case .unknownEntry(let name, let entry):
             return "Unknown entry \"\(name)\" in \"\(entry)\"."
+        case .unknownSlot(let name, let entry):
+            return "Unknown template slot \"\(name)\" in \"\(entry)\"."
         case .noWebVersion(let app):
             return "\"\(app)\" has no web version."
         }

@@ -39,7 +39,7 @@ enum CrossAppOpener {
     /// entry id, missing required params, or (for webview) no web version.
     static func resolve(entryId: String, args: [String: String] = [:]) throws -> (OpenAppEntry, CrossAppDestination) {
         guard let entry = lookupOpenAppEntry(id: entryId) else {
-            throw OpenAppURLError.unknownSlot(entryId, entry: "openapp")
+            throw OpenAppURLError.unknownEntry(entryId, entry: "openapp")
         }
         switch entry.mode {
         case .jump:
