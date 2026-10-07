@@ -309,7 +309,21 @@ final class SessionLockStore: ObservableObject {
         let backgroundedFor: TimeInterval? = appBackgroundedAt.map { Date().timeIntervalSince($0) }
         appBackgroundedAt = nil
 
-        guard appLockEnabled, BiometricAuth.isAvailable else {
+        guard appLockEnabled else {
+            appIsLocked = false
+            return
+        }
+        // [P0] Cold start: the capability probe is still in flight.
+        // isAvailable reads false until prewarm lands, which must NOT be
+        // mistaken for "no biometrics" — hold the current state (locked by
+        // default when the lock is enabled) until availability is actually
+        // determined. AppLockGate re-runs evaluateAppLock() once the probe
+        // resolves. No startup hang: we never block, we just don't unlock
+        // on an unknown.
+        guard BiometricAuth.isProbeResolved else { return }
+        guard BiometricAuth.isAvailable else {
+            // Honestly disabled: the device has no usable biometrics or
+            // passcode, so the lock cannot protect anything.
             appIsLocked = false
             return
         }
@@ -363,6 +377,17 @@ final class SessionLockStore: ObservableObject {
         appUnlockedAt = nil
     }
 
+    /// [P2] Immediate lock requested by the user (the 立即锁定 button).
+    /// Forces the lock overlay NOW, regardless of the idle-timeout setting —
+    /// including idle == 0 ("never auto-lock"), which only governs AUTOMATIC
+    /// re-locking, never an explicit user request. The next successful
+    /// unlock starts a fresh idle window per the setting.
+    func lockAppNow() {
+        guard appLockEnabled else { return }
+        appUnlockedAt = nil
+        appIsLocked = true
+    }
+
 }
 
 /// Thin LAContext wrapper. Keeps the LocalAuthentication import contained
@@ -388,6 +413,33 @@ enum BiometricAuth {
     /// optional Face ID menu item is briefly hidden — never a wrong unlock.
     private static let lock = NSLock()
     nonisolated(unsafe) private static var _cached: (available: Bool, name: String)?
+
+    /// Continuations parked in `awaitPrewarm()`, woken exactly once when
+    /// the probe resolves. Guarded by `lock`; resumed off the lock.
+    nonisolated(unsafe) private static var _waiters: [CheckedContinuation<Void, Never>] = []
+
+    /// Store a probe result exactly once per process and wake every parked
+    /// `awaitPrewarm()` waiter. First result wins; continuations resume
+    /// outside the lock so a waiter can never deadlock the probe.
+    private static func resolve(_ value: (available: Bool, name: String)) {
+        lock.lock()
+        let first = _cached == nil
+        if first { _cached = value }
+        let waiters = _waiters
+        _waiters.removeAll()
+        lock.unlock()
+        for w in waiters { w.resume() }
+    }
+
+    /// True once the capability probe has resolved — either prewarm()'s
+    /// background probe finished or an inline probe ran. Before this,
+    /// `isAvailable == false` means "not yet known", NOT "no biometrics".
+    /// Consumers that must not act on an unknown (e.g. the app-lock gate)
+    /// gate on this, not on isAvailable.
+    static var isProbeResolved: Bool {
+        lock.lock(); defer { lock.unlock() }
+        return _cached != nil
+    }
 
     private static func probe() -> (available: Bool, name: String) {
         let ctx = LAContext()
@@ -422,11 +474,15 @@ enum BiometricAuth {
     /// thread. Reads after prewarm are a single locked pointer load.
     private static func cached() -> (available: Bool, name: String) {
         lock.lock()
-        if let c = _cached { lock.unlock(); return c }
+        let c = _cached
         lock.unlock()
+        if let c { return c }
         let v = probe()
-        lock.lock(); _cached = v; lock.unlock()
-        return v
+        resolve(v)
+        lock.lock()
+        let stored = _cached
+        lock.unlock()
+        return stored ?? v
     }
 
     /// Run the capability probe off the main thread, once, at launch so the
@@ -439,15 +495,32 @@ enum BiometricAuth {
         lock.unlock()
         guard !alreadyDone else { return }
         DispatchQueue.global(qos: .utility).async {
-            let v = probe()
-            lock.lock(); if _cached == nil { _cached = v }; lock.unlock()
+            resolve(probe())
+        }
+    }
+
+    /// Suspend until the capability probe has resolved (once per process);
+    /// returns immediately if it already has. Lets the app-lock gate
+    /// re-evaluate exactly when availability becomes known, closing the
+    /// cold-start window where isAvailable is still false.
+    static func awaitPrewarm() async {
+        await withCheckedContinuation { (cont: CheckedContinuation<Void, Never>) in
+            lock.lock()
+            if _cached != nil {
+                lock.unlock()
+                cont.resume()
+            } else {
+                _waiters.append(cont)
+                lock.unlock()
+            }
         }
     }
 
     /// True when the device has a biometric sensor enrolled OR a passcode
     /// configured (we fall back to passcode automatically). Surfaces the
     /// "show Face ID section in Settings" gate. Returns `false` until the
-    /// launch-time `prewarm()` completes.
+    /// launch-time `prewarm()` completes — use `isProbeResolved` to tell
+    /// "not yet known" apart from "genuinely unavailable".
     static var isAvailable: Bool {
         lock.lock(); defer { lock.unlock() }
         return _cached?.available ?? false

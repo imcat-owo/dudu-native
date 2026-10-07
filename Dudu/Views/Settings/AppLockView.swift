@@ -69,7 +69,9 @@ struct AppLockView: View {
                             .foregroundStyle(DuduTheme.duduTextDim)
                     }
                 }
-                if !BiometricAuth.isAvailable {
+                // [P3] Tri-state: before the probe resolves we know nothing —
+                // show neither the toggle's honest-disable nor a fake "不可用".
+                if BiometricAuth.isProbeResolved && !BiometricAuth.isAvailable {
                     // Honest fallback: never pretend the lock is protecting
                     // anything when there is nothing to verify against.
                     HStack(spacing: 8) {
@@ -103,13 +105,14 @@ struct AppLockView: View {
 
                 Section {
                     Button("立即锁定") {
-                        store.clearAppUnlock()
-                        store.evaluateAppLock()
+                        // [P2] Force the lock now — idle == 0 ("never")
+                        // only governs automatic re-locking.
+                        store.lockAppNow()
                     }
                     .font(DuduTheme.bodyFont())
                     .foregroundStyle(DuduTheme.pink)
                 } footer: {
-                    Text("下次打开嘟嘟（或切回前台）时需要重新验证。")
+                    Text("点按后嘟嘟立即锁定，需要重新验证才能进入。")
                 }
             }
         }
@@ -118,7 +121,8 @@ struct AppLockView: View {
     }
 
     private var lockSubtitle: String {
-        if !BiometricAuth.isAvailable { return "不可用" }
+        // [P3] Only claim "不可用" once the probe has actually resolved.
+        if BiometricAuth.isProbeResolved && !BiometricAuth.isAvailable { return "不可用" }
         guard store.appLockEnabled else {
             return "用\(BiometricAuth.biometryDisplayName)确认是你，才能进嘟嘟"
         }
@@ -263,12 +267,22 @@ struct AppLockGate: ViewModifier {
                 }
             }
             .task {
+                // [P0] prewarm is an async ~552 ms XPC probe. The onAppear
+                // evaluate above intentionally HOLDS the locked state while
+                // the probe is in flight (see evaluateAppLock), so settle
+                // the real state with one more evaluate once the probe
+                // lands. This never blocks the UI — no startup white-screen:
+                // the initial state is locked (the overlay), and only a
+                // successful auth clears it.
                 BiometricAuth.prewarm()
+                await BiometricAuth.awaitPrewarm()
+                store.evaluateAppLock()
             }
             .onAppear {
                 // Cold launch: appIsLocked already starts true when the lock
-                // is enabled (SessionLockStore init); re-evaluate to settle
-                // the idle-window cases.
+                // is enabled (SessionLockStore init). While the capability
+                // probe is unresolved this evaluate holds that state instead
+                // of clearing it; the .task above settles it post-prewarm.
                 store.evaluateAppLock()
             }
             .onChange(of: phase) { _, newPhase in
