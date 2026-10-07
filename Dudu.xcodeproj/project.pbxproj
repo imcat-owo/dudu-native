@@ -385,6 +385,8 @@
 		3973EC92659FF2F843D48FF9 /* SessionSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D888578F6FFFAB12908535B8 /* SessionSearchView.swift */; };
 		32E368F7CCD668DA16921DDD /* AppLockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B169975641E9148AEE28E9 /* AppLockView.swift */; };
 		8F98429970333857FE4CD2E8 /* BackupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00CB3EF2E3464AB2704D220B /* BackupView.swift */; };
+		C0F9259685B5FB5331BD357A /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 9DB572769E86C2548D659A45 /* Localizable.xcstrings */; };
+		615729977F97B0C6D4BF6434 /* DuduL10n.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88046FF162C81BBEA226D29E /* DuduL10n.swift */; };
 /* End PBXBuildFile section */
 		C22E4BE16A67710000C9EBF0 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 30AC3C5C6C418C791E362178 /* libsqlite3.tbd */; };
 		F8F1403829CEFF47083C5520 /* RealTimeCutVADLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = AECFD4BE143BED595F298AF5 /* RealTimeCutVADLibrary */; };
@@ -886,6 +888,8 @@
 		D888578F6FFFAB12908535B8 /* SessionSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionSearchView.swift; sourceTree = "<group>"; };
 		B6B169975641E9148AEE28E9 /* AppLockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLockView.swift; sourceTree = "<group>"; };
 		00CB3EF2E3464AB2704D220B /* BackupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupView.swift; sourceTree = "<group>"; };
+		9DB572769E86C2548D659A45 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		88046FF162C81BBEA226D29E /* DuduL10n.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuduL10n.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 		30AC3C5C6C418C791E362178 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 
@@ -949,6 +953,7 @@
 			children = (
 				5CFFD5760C8BD1E13C987132 /* hmm_model.utf8 */,
 				6516A7032270F3A4B0D92A89 /* user-manual.md */,
+				9DB572769E86C2548D659A45 /* Localizable.xcstrings */,
 				AF87329B642E5C3F53A0DC51 /* jieba.dict.utf8 */,
 			);
 			path = Resources;
@@ -984,6 +989,7 @@
 				81B6495E825C43B2618008FA /* ObjCExceptionCatcher.m */,
 				84194C804C97FC25B417912D /* JiebaWrapper.mm */,
 				858ABEAA1DFA8960534429F6 /* TextSegmenter.swift */,
+				88046FF162C81BBEA226D29E /* DuduL10n.swift */,
 				8A573FCBEB83EEA430E46D00 /* AppLogger.swift */,
 				8EAAEFF44ECE9C0CF5A03A78 /* EnvVarPrivacyStore.swift */,
 				9E34264D632927D4E82FD6D2 /* MountedFolderManager.swift */,
@@ -1997,6 +2003,7 @@
 				0BCC4E92899C4BD304CA06FC /* jieba.dict.utf8 in Resources */,
 				100000000000000000000011 /* Assets.xcassets in Resources */,
 				BD37939C56BFF9F8173706D7 /* hmm_model.utf8 in Resources */,
+				C0F9259685B5FB5331BD357A /* Localizable.xcstrings in Resources */,
 				C81C4201C5BF244192216D8E /* user-manual.md in Resources */,
 				F0EC57B14FA7C4656FA537D9 /* cl100k_base.tiktoken in Resources */,
 			);
@@ -2165,6 +2172,7 @@
 				5EFEEAFD287B3313F7EAD0A3 /* ThinkingDrawerView.swift in Sources */,
 				5F786E3CEE6A8E09C02031C3 /* ChatSessionIdEnvironment.swift in Sources */,
 				60FB4E304E801C8C9AA86E5F /* TTSPaper.swift in Sources */,
+				615729977F97B0C6D4BF6434 /* DuduL10n.swift in Sources */,
 				61DA7635161432D2DE8D77D8 /* KimiOAuthManager.swift in Sources */,
 				62B4D31BC7667F62B4546371 /* ThemeRecolor.swift in Sources */,
 				630DE487919D013A8137B3AB /* BrowserUseActions.swift in Sources */,
