@@ -12,8 +12,13 @@ import Foundation
 // Siri voice phrases registered in DuduShortcutsProvider.
 //
 // SYNC RULE: `siriPhrases` must stay verbatim-identical to the phrases in
-// DuduShortcutsProvider.appShortcuts. When the engine adds/removes/renames a
-// phrase, update the matching entry here in the same commit.
+// DuduShortcutsProvider.appShortcuts AFTER `\(.applicationName)` resolution.
+// `\(.applicationName)` resolves to CFBundleDisplayName (Info.plist),
+// currently "嘟嘟" — so the displayed phrases use "嘟嘟" verbatim (e.g.
+// "Ask 嘟嘟"). These are the literal trigger words Siri listens for;
+// writing "Dudu" here would teach phrases Siri does not respond to.
+// When the engine adds/removes/renames a phrase, update the matching
+// entry here in the same commit.
 // `nil` phrases = the intent has no App Shortcut voice phrase; it is still
 // available in the Shortcuts app under "All Actions" (e.g. RetryRunIntent).
 
@@ -31,7 +36,8 @@ struct DuduShortcutDescriptor: Identifiable {
     /// Mirrors the intent's `openAppWhenRun`. true = the action opens Dudu and
     /// lands in the conversation; false = it runs headless in the background.
     let opensApp: Bool
-    /// Voice phrases from DuduShortcutsProvider, quoted verbatim for display.
+    /// Voice phrases from DuduShortcutsProvider, quoted verbatim for display
+    /// (after `\(.applicationName)` resolution = CFBundleDisplayName).
     let siriPhrases: [String]?
 }
 
@@ -44,7 +50,7 @@ enum DuduShortcutsCatalog {
             descriptionKey: "Talk to Dudu out loud — she opens the chat, sends your words, and answers right in front of you.",
             systemImage: "sparkles",
             opensApp: true,
-            siriPhrases: ["Ask Dudu", "Ask Dudu a question", "Talk to Dudu", "New Dudu chat"]
+            siriPhrases: ["Ask 嘟嘟", "Ask 嘟嘟 a question", "Talk to 嘟嘟", "New 嘟嘟 chat"]
         ),
         DuduShortcutDescriptor(
             id: "quicktask",
@@ -52,7 +58,7 @@ enum DuduShortcutsCatalog {
             descriptionKey: "Little everyday jobs — sleep check, weather, morning briefing. Pick one and Dudu handles it.",
             systemImage: "bolt.fill",
             opensApp: false,
-            siriPhrases: ["Run a Dudu quick task", "Use Dudu quick task"]
+            siriPhrases: ["Run a 嘟嘟 quick task", "Use 嘟嘟 quick task"]
         ),
         DuduShortcutDescriptor(
             id: "sendprompt",
@@ -60,7 +66,7 @@ enum DuduShortcutsCatalog {
             descriptionKey: "Slip Dudu a task in the background — she keeps working while you do other things.",
             systemImage: "paperplane.fill",
             opensApp: false,
-            siriPhrases: ["Send a prompt to Dudu", "Ask Dudu something", "Start a Dudu task"]
+            siriPhrases: ["Send a prompt to 嘟嘟", "Ask 嘟嘟 something", "Start a 嘟嘟 task"]
         ),
         DuduShortcutDescriptor(
             id: "sessionstatus",
@@ -68,7 +74,7 @@ enum DuduShortcutsCatalog {
             descriptionKey: "Peek at a running task — see what Dudu is up to and what she just said.",
             systemImage: "info.circle.fill",
             opensApp: false,
-            siriPhrases: ["Get Dudu session status", "Check Dudu task"]
+            siriPhrases: ["Get 嘟嘟 session status", "Check 嘟嘟 task"]
         ),
         DuduShortcutDescriptor(
             id: "listsessions",
@@ -76,7 +82,7 @@ enum DuduShortcutsCatalog {
             descriptionKey: "All your chats with Dudu, in one tidy list.",
             systemImage: "list.bullet",
             opensApp: false,
-            siriPhrases: ["List Dudu sessions", "Show Dudu chats"]
+            siriPhrases: ["List 嘟嘟 sessions", "Show 嘟嘟 chats"]
         ),
         DuduShortcutDescriptor(
             id: "followup",
@@ -84,7 +90,7 @@ enum DuduShortcutsCatalog {
             descriptionKey: "Wake an old conversation with one more question — Dudu picks up right where you left off.",
             systemImage: "arrowshape.turn.up.left.fill",
             opensApp: false,
-            siriPhrases: ["Follow up a Dudu session", "Continue a Dudu session"]
+            siriPhrases: ["Follow up a 嘟嘟 session", "Continue a 嘟嘟 session"]
         ),
         DuduShortcutDescriptor(
             id: "opensession",
@@ -92,7 +98,7 @@ enum DuduShortcutsCatalog {
             descriptionKey: "Jump straight into a chat — no scrolling through the list.",
             systemImage: "arrow.up.right.square",
             opensApp: true,
-            siriPhrases: ["Open a Dudu session"]
+            siriPhrases: ["Open a 嘟嘟 session"]
         ),
         DuduShortcutDescriptor(
             id: "retryrun",

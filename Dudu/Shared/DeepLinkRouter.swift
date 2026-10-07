@@ -36,7 +36,7 @@ extension Notification.Name {
 ///   dudu-clone://settings/background
 ///   dudu-clone://settings/about
 ///   dudu-clone://settings/permissions
-///   dudu-clone://settings/siri              (alias: siri-shortcuts, shortcuts)
+///   dudu-clone://settings/siri              (aliases: siri-shortcuts, siri_shortcuts, shortcuts)
 ///   dudu-clone://settings/environments[?create_key=…&create_value=…&create_note=…]
 ///   dudu-clone://settings/rootfs                     (alias: mirrors, rootfs-management, rootfs_management)
 ///
