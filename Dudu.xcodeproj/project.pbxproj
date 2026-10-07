@@ -460,6 +460,18 @@
 		1764D067E633D6F646C0EB5E /* ProactiveTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F388555614A8AC9C906EFEE /* ProactiveTools.swift */; };
 		1425F2AEADF473AB85F2B248 /* ProactiveViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64E8A124A9991D2D0F2B9B9 /* ProactiveViews.swift */; };
 		7D79E97CED3F149B8717C9F5 /* SelfPostManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7D2165AAB793BD416DB5CE /* SelfPostManager.swift */; };
+		995E66F94F32FB97505729D1 /* CallMicrophone.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBE733BD70AE0B2E00B4D037 /* CallMicrophone.swift */; };
+		A0B69ED478A9706FB05E6F28 /* CallProposalCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D99FF683E385D6676F7DACF7 /* CallProposalCenter.swift */; };
+		72AD31B2DD10C278B4D3248B /* DuplexTurnEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312CD488AA46EE7BED693ED7 /* DuplexTurnEngine.swift */; };
+		3EEF316DF7458CF6649A4299 /* EnergyVad.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF66F263FA5D0C8CA044130C /* EnergyVad.swift */; };
+		0914E63E0159CB0079AB68EC /* VoiceCallAI.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD3A85808237EFD27064D96D /* VoiceCallAI.swift */; };
+		A80006A545654557BCF46DF9 /* VoiceCallPaper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F759A1E807A0B795B19424B7 /* VoiceCallPaper.swift */; };
+		DBC0299AB2BB20B8FE46E25F /* VoiceCallSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7452B355D1FFB4BC9235A25 /* VoiceCallSession.swift */; };
+		8064FD6E07E0D64A489F23D2 /* VoiceCallTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE7E5D09DD0623EEDC24BF49 /* VoiceCallTools.swift */; };
+		131E304A3182DBADA1493EA7 /* VoiceCallTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E8F0CA3386683134E4BED60 /* VoiceCallTypes.swift */; };
+		3FE125E5C8A13E0C2F714E56 /* VoiceCallOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273B87DF21B4F5E4B988F99D /* VoiceCallOverlay.swift */; };
+		3E635B1418A4AAE81B0664A9 /* VoiceCallScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4B2E0DF72110A916F989034 /* VoiceCallScreen.swift */; };
+		6C2B943377C94E05CE97943E /* WaveformKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B40B17C87401086F61E4CBD /* WaveformKey.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1057,6 +1069,18 @@
 		3F388555614A8AC9C906EFEE /* ProactiveTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProactiveTools.swift; sourceTree = "<group>"; };
 		F64E8A124A9991D2D0F2B9B9 /* ProactiveViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProactiveViews.swift; sourceTree = "<group>"; };
 		0B7D2165AAB793BD416DB5CE /* SelfPostManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfPostManager.swift; sourceTree = "<group>"; };
+		EBE733BD70AE0B2E00B4D037 /* CallMicrophone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallMicrophone.swift; sourceTree = "<group>"; };
+		D99FF683E385D6676F7DACF7 /* CallProposalCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallProposalCenter.swift; sourceTree = "<group>"; };
+		312CD488AA46EE7BED693ED7 /* DuplexTurnEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuplexTurnEngine.swift; sourceTree = "<group>"; };
+		DF66F263FA5D0C8CA044130C /* EnergyVad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnergyVad.swift; sourceTree = "<group>"; };
+		CD3A85808237EFD27064D96D /* VoiceCallAI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceCallAI.swift; sourceTree = "<group>"; };
+		F759A1E807A0B795B19424B7 /* VoiceCallPaper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceCallPaper.swift; sourceTree = "<group>"; };
+		E7452B355D1FFB4BC9235A25 /* VoiceCallSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceCallSession.swift; sourceTree = "<group>"; };
+		FE7E5D09DD0623EEDC24BF49 /* VoiceCallTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceCallTools.swift; sourceTree = "<group>"; };
+		3E8F0CA3386683134E4BED60 /* VoiceCallTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceCallTypes.swift; sourceTree = "<group>"; };
+		273B87DF21B4F5E4B988F99D /* VoiceCallOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceCallOverlay.swift; sourceTree = "<group>"; };
+		E4B2E0DF72110A916F989034 /* VoiceCallScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceCallScreen.swift; sourceTree = "<group>"; };
+		4B40B17C87401086F61E4CBD /* WaveformKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveformKey.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 		30AC3C5C6C418C791E362178 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 
@@ -1491,6 +1515,7 @@
 		034DDDB1C5636F0CABDA3DEA /* Voice */ = {
 			isa = PBXGroup;
 			children = (
+				FDBD7EB7D1392E45A43B0EE7 /* Call */,
 				02F5A91D842BCC97277E8107 /* AIVoiceMessageComposer.swift */,
 				11A208C4089BF4A3499A5DD6 /* VoiceProvider+Vendors.swift */,
 				1AAD255BC16DBA3BAB3113AB /* VoiceCorrectionDB.swift */,
@@ -1994,6 +2019,7 @@
 			children = (
 				D10B8E531D0D2511BD797801 /* Appearance */,
 				337ECA3C31F601E393A7A740 /* Avatar */,
+				6118222DA01CD5526F8307B8 /* Call */,
 				FC61A6675134359CB1A0BBA1 /* Chat */,
 				18E9DA5BE55C7A48F1D6BFB5 /* Knowledge */,
 				AA856D71B083C7F259E49862 /* MCP */,
@@ -2265,6 +2291,32 @@
 			path = Proactive;
 			sourceTree = "<group>";
 		};
+		FDBD7EB7D1392E45A43B0EE7 /* Call */ = {
+			isa = PBXGroup;
+			children = (
+				312CD488AA46EE7BED693ED7 /* DuplexTurnEngine.swift */,
+				3E8F0CA3386683134E4BED60 /* VoiceCallTypes.swift */,
+				CD3A85808237EFD27064D96D /* VoiceCallAI.swift */,
+				D99FF683E385D6676F7DACF7 /* CallProposalCenter.swift */,
+				DF66F263FA5D0C8CA044130C /* EnergyVad.swift */,
+				E7452B355D1FFB4BC9235A25 /* VoiceCallSession.swift */,
+				EBE733BD70AE0B2E00B4D037 /* CallMicrophone.swift */,
+				F759A1E807A0B795B19424B7 /* VoiceCallPaper.swift */,
+				FE7E5D09DD0623EEDC24BF49 /* VoiceCallTools.swift */,
+			);
+			path = Call;
+			sourceTree = "<group>";
+		};
+		6118222DA01CD5526F8307B8 /* Call */ = {
+			isa = PBXGroup;
+			children = (
+				273B87DF21B4F5E4B988F99D /* VoiceCallOverlay.swift */,
+				4B40B17C87401086F61E4CBD /* WaveformKey.swift */,
+				E4B2E0DF72110A916F989034 /* VoiceCallScreen.swift */,
+			);
+			path = Call;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -2438,6 +2490,7 @@
 				0877B36A44441FC9114D734D /* MessageBlockView.swift in Sources */,
 				08B9C892C3AFBB905BD3215A /* MCPApprovalCardView.swift in Sources */,
 				08DB585EEBA85DEEE460F379 /* MusicDJTools.swift in Sources */,
+				0914E63E0159CB0079AB68EC /* VoiceCallAI.swift in Sources */,
 				093F308F93DEF3B6C24C25D6 /* OffloadPermissionManager.swift in Sources */,
 				0959C2CD130DD9FCE05A974A /* ExternalFileImporter.swift in Sources */,
 				0AB0F63F422A693954AB0C96 /* DuduSessionCleanupSeams.swift in Sources */,
@@ -2453,6 +2506,7 @@
 				11BD2B8509B845C93E816872 /* VoiceProviderResolver.swift in Sources */,
 				12A579F9BCBA9372EC766E66 /* BackupSecretsImporter.swift in Sources */,
 				12B6729FA6D44467BD310F96 /* StewardWorkContext.swift in Sources */,
+				131E304A3182DBADA1493EA7 /* VoiceCallTypes.swift in Sources */,
 				131F06560939DC0926AF1C62 /* OpenRouterModelsAPI.swift in Sources */,
 				13DDBEBE650C4B525340F0BE /* ModelGroupRouter.swift in Sources */,
 				14245C50DD31BEEA154BECE2 /* OAuthHTTPClient.swift in Sources */,
@@ -2522,6 +2576,9 @@
 				3C13D645F8410ECE6C229F41 /* MCPManagementTools.swift in Sources */,
 				3C79A9918B60E843F1A67E62 /* DeepLinkCoordinator.swift in Sources */,
 				3CBD70E700EAFD376348096D /* AIChatViewModel+SlashCommands.swift in Sources */,
+				3E635B1418A4AAE81B0664A9 /* VoiceCallScreen.swift in Sources */,
+				3EEF316DF7458CF6649A4299 /* EnergyVad.swift in Sources */,
+				3FE125E5C8A13E0C2F714E56 /* VoiceCallOverlay.swift in Sources */,
 				4099B39B909547A253201F6B /* TaskCardView.swift in Sources */,
 				40B07B4B4C0C20C074C24095 /* TTSProviderBridge.swift in Sources */,
 				40FF72E3543F5E090B771167 /* AIChatViewModel+AskUser.swift in Sources */,
@@ -2593,6 +2650,7 @@
 				6ACF5A18514E199DFE066F0A /* DuduTab.swift in Sources */,
 				6AFDD6549C89E57E77B02EFD /* AnthropicAgentProvider.swift in Sources */,
 				6BDCDE3DFD0C22817A8EA32E /* BridgeRelayProtocol.swift in Sources */,
+				6C2B943377C94E05CE97943E /* WaveformKey.swift in Sources */,
 				6C3AC49D2D4CBD25929C1DE3 /* ModelReleaseIndex.swift in Sources */,
 				6C63189B0609523E5E57921C /* BackupDestinations.swift in Sources */,
 				6D89428F07B5F9413E7A3631 /* SessionEntity.swift in Sources */,
@@ -2604,6 +2662,7 @@
 				722839FBC32AABF710579C5F /* ShellCommandRingBuffer.swift in Sources */,
 				722851F737BEFA977D3547BF /* TTSServiceModels.swift in Sources */,
 				725E07B4B624B1DD53B4BAA4 /* MountedFolderManager.swift in Sources */,
+				72AD31B2DD10C278B4D3248B /* DuplexTurnEngine.swift in Sources */,
 				731BF17B7F06C850869C88C7 /* AskDuduIntent.swift in Sources */,
 				73E493CDAA07BE571815A0E1 /* SyncCoreHydrators.swift in Sources */,
 				745D13BC63F9C332BAB2A7C6 /* ThemePackShareView.swift in Sources */,
@@ -2626,6 +2685,7 @@
 				7F63F36987FCADF907CF9E03 /* ModelPickerView.swift in Sources */,
 				7F98C16A84FAC05FC230BD0E /* IntimacyView.swift in Sources */,
 				7FE3537DCBB0AB677659F0D3 /* JiebaWrapper.mm in Sources */,
+				8064FD6E07E0D64A489F23D2 /* VoiceCallTools.swift in Sources */,
 				80B4ABE0DA1C27E7AC3A8DB7 /* VoiceLog.swift in Sources */,
 				80F5DE55B878FE5C1AA97136 /* PersonaStore.swift in Sources */,
 				812EC9610487F40697CC532A /* TaskCardStore.swift in Sources */,
@@ -2662,6 +2722,7 @@
 				96621CBAA9C292B538C99557 /* AlarmOffloadBridge.swift in Sources */,
 				97F5A3F2ADF4F363FD7EED37 /* AIChatViewModel+Fallback.swift in Sources */,
 				99103D2568ED5830329B525D /* ProviderConfigStore.swift in Sources */,
+				995E66F94F32FB97505729D1 /* CallMicrophone.swift in Sources */,
 				996EFB42632C8698C3025D11 /* ConfigCollection.swift in Sources */,
 				9A0AA10BF892ECB7BEA61B16 /* ICloudBackupManager.swift in Sources */,
 				9A71579CF9430CC025229D26 /* BridgeRelayTokenStore.swift in Sources */,
@@ -2673,6 +2734,7 @@
 				9D95E3DCBD058556C2736345 /* EnvVarPrivacyStore.swift in Sources */,
 				A05775DA475C514622B55956 /* FollowUpSessionIntent.swift in Sources */,
 				A06092493578FC211FBF896F /* DeepLinkRouter.swift in Sources */,
+				A0B69ED478A9706FB05E6F28 /* CallProposalCenter.swift in Sources */,
 				A1D0D5608CC044F384E0E0F9 /* LANTransport.swift in Sources */,
 				A251C4E5038A1EE52CEAF458 /* OurSpaceView.swift in Sources */,
 				A321A0BCA8C27961EE1874BA /* VoiceProvider+Vendors.swift in Sources */,
@@ -2685,6 +2747,7 @@
 				A5ED0CDBD2BB34E7D80BC939 /* DuduApp.swift in Sources */,
 				A6A1AADAA97351D9C7B3CAB9 /* AppLocalization.swift in Sources */,
 				A6EE906FF32044B54B560C9E /* BridgeRelayClient.swift in Sources */,
+				A80006A545654557BCF46DF9 /* VoiceCallPaper.swift in Sources */,
 				A8EEA0EE4990141973C32012 /* QuickTaskIntent.swift in Sources */,
 				AAFF3B7F148F85A70150587E /* DuduWebLoadError.swift in Sources */,
 				AB171940BB38B97123A6C02B /* ScheduledPromptsView.swift in Sources */,
@@ -2759,6 +2822,7 @@
 				D9FBDEDBF7F811C9795B9758 /* ConfigField.swift in Sources */,
 				DAB039AC54C20586C63B168C /* MCPAggregator.swift in Sources */,
 				DB80EDD03FCFE853B2945194 /* DuduISHSeams.swift in Sources */,
+				DBC0299AB2BB20B8FE46E25F /* VoiceCallSession.swift in Sources */,
 				DBF0A2BFA44F891E9D04874C /* ReportIssueTool.swift in Sources */,
 				DC424D926FBB9C37B1B86E69 /* OnDemandBash.swift in Sources */,
 				DCB945DB6318559F10CD063E /* GeminiOAuthManager.swift in Sources */,
