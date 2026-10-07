@@ -149,7 +149,7 @@ enum MusicDJTools {
             def(
                 "music_track_read",
                 summary: "列出歌单里的歌（可指定某个歌单）",
-                detail: "DJ 前先看有什么可放。最多列 30 首，附"一起听过"日期。",
+                detail: "DJ 前先看有什么可放。最多列 30 首，附\"一起听过\"日期。",
                 keywords: ["歌单", "歌曲列表", "list songs"],
                 schema: #"{"type":"object","properties":{"playlistId":{"type":"string"}}}"#
             ) { args in
@@ -318,7 +318,7 @@ enum MusicDJTools {
 
             def(
                 "dj_queue_add",
-                summary: "DJ：把一首歌加进"接下来"排队",
+                summary: "DJ：把一首歌加进\"接下来\"排队",
                 detail: "track 传 id 或歌名/歌手去搜。",
                 keywords: ["排队", "queue", "下一首放"],
                 schema: #"{"type":"object","properties":{"track":{"type":"string"}},"required":["track"]}"#
@@ -334,7 +334,7 @@ enum MusicDJTools {
 
             def(
                 "dj_queue_read",
-                summary: "DJ：看"接下来"排了哪些歌",
+                summary: "DJ：看\"接下来\"排了哪些歌",
                 detail: "",
                 keywords: ["排队列表", "queue list"],
                 schema: #"{"type":"object"}"#
@@ -350,7 +350,7 @@ enum MusicDJTools {
             def(
                 "dj_now_read",
                 summary: "读完整播放上下文：正在放的歌、排队、一起听状态、她点的歌词、留言",
-                detail: "她问"这句什么意思"或"在放什么"时调这个，里面有她点的那句歌词原文。",
+                detail: "她问\"这句什么意思\"或\"在放什么\"时调这个，里面有她点的那句歌词原文。",
                 keywords: ["在放什么", "now playing", "歌词什么意思"],
                 schema: #"{"type":"object"}"#
             ) { _ in
@@ -389,7 +389,7 @@ enum MusicDJTools {
 
             def(
                 "dj_together_start",
-                summary: "打开"一起听"模式（她说"一起听"或你邀请她时）",
+                summary: "打开\"一起听\"模式（她说\"一起听\"或你邀请她时）",
                 detail: "打开后，放的歌会自动记下日期，她在房里能看到"X月X日一起听过"。",
                 keywords: ["一起听", "together", "拉我一起听"],
                 schema: #"{"type":"object"}"#
@@ -401,7 +401,7 @@ enum MusicDJTools {
 
             def(
                 "dj_together_stop",
-                summary: "关掉"一起听"模式",
+                summary: "关掉\"一起听\"模式",
                 detail: "",
                 keywords: ["关一起听", "stop together"],
                 schema: #"{"type":"object"}"#
@@ -463,7 +463,7 @@ enum MusicDJTools {
 
             def(
                 "music_ours_add",
-                summary: "把一首歌标成"我们的歌"（进"我们的歌"歌单，跨会话记住）",
+                summary: "把一首歌标成\"我们的歌\"（进\"我们的歌\"歌单，跨会话记住）",
                 detail: "这是你们俩的歌，标进去 AI 会一直记得（存在本地，每次对话都能读到）。",
                 keywords: ["我们的歌", "our song", "特别的歌"],
                 schema: #"{"type":"object","properties":{"track":{"type":"string"}},"required":["track"]}"#
@@ -479,7 +479,7 @@ enum MusicDJTools {
 
             def(
                 "music_memory_add",
-                summary: "给一首歌存一条回忆小记（比如"那天她听到第二段哭了"）",
+                summary: "给一首歌存一条回忆小记（比如\"那天她听到第二段哭了\"）",
                 detail: "存在这首歌名下，房里能看到。",
                 keywords: ["回忆", "memory", "小记"],
                 schema: #"{"type":"object","properties":{"track":{"type":"string"},"text":{"type":"string"}},"required":["track","text"]}"#
