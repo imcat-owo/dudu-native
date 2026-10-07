@@ -390,7 +390,7 @@ enum MusicDJTools {
             def(
                 "dj_together_start",
                 summary: "打开\"一起听\"模式（她说\"一起听\"或你邀请她时）",
-                detail: "打开后，放的歌会自动记下日期，她在房里能看到"X月X日一起听过"。",
+                detail: "打开后，放的歌会自动记下日期，她在房里能看到\"X月X日一起听过\"。",
                 keywords: ["一起听", "together", "拉我一起听"],
                 schema: #"{"type":"object"}"#
             ) { _ in
