@@ -37,7 +37,10 @@ import Foundation
 //   机制，而不是塞进本文件。
 //
 // 注入点：AIChatViewModel.runAgentLoop 里组装 userSystemPrompt 的位置，
-// 紧跟 TTSPaper 的注入（同一模式：paperIfRelevant + 按需追加）。
+// 紧跟 TTSPaper 的注入（同一模式：paperIfRelevant + 按需追加）；另外
+// runAgentLoop 的 provider fallback 重组 userSystemPrompt 时也要补一次
+// 注入（D10 fix 2026-10-07，否则 fallback 那轮会丢纸条）——已下发过的
+// 纸条在那里只给 compact 提醒，不重塞全文（会话级去重保持不变）。
 // 状态：static 的 shownBySession 记录本会话已下发过的纸条 id，防重复注入。
 
 // MARK: - Paper registry
@@ -223,45 +226,45 @@ enum DuduToolPapers {
 /// 调用方（AIChatViewModel.runAgentLoop）在组装 userSystemPrompt 时调一次。
 enum DuduToolPapersWiring {
 
-    /// 本会话已下发过的纸条 id（防重复注入）。key 是 sessionId，无会话时用固定 key。
+    /// 本会话已下发过的纸条 id（防重复注入）。key 是 sessionId。
     /// 只在 @MainActor 上下文读写（调用点是 @MainActor 的 runAgentLoop）。
+    /// 每个会话最多记几张纸条的 id（短字符串），进程级内存占用可忽略。
+    /// 曾有 resetSession / shownPaperIDs 两个 API，但全仓零调用：
+    /// 真正的会话销毁路径在 ChatStore.deleteSession（D10 作用域外），
+    /// 在两个可编辑文件里找不到诚实的接线点，所以直接删除，不留死代码。
     private static var shownBySession: [String: Set<String>] = [:]
-    private static let noSessionKey = "__no_session__"
 
-    /// 话题相关的纸条拼进 prompt。已在本会话下发过的纸条不再重复塞全文，
-    /// 改为一句「已读过」的 compact 提示，告诉 AI 它已经知道这张纸条。
+    /// 话题相关的纸条拼进 prompt。本轮命中的纸条中，未下发过的塞全文；
+    /// 已在本会话下发过的只给一句「已读过」的 compact 提醒（同一轮里两种
+    /// 都要处理，不能因为塞了新纸条就吞掉旧纸条的提醒）。
     /// 无相关话题时 prompt 原样不动。
+    /// sessionID 为 nil 时不做去重：nil 是瞬时/测试上下文，没有稳定会话
+    /// 身份，用一个全局桶会把不同对话的已读状态混在一起（跨轮污染）。诚
+    /// 实做法是每次按话题重下全文——保证纸条不会在 provider fallback 或
+    /// 别的重组路径里被静默吞掉，代价只是多塞几个 token。
     @MainActor
     static func inject(into prompt: inout String, userMessage: String, sessionID: String?) {
         let matched = DuduToolPapers.matching(userMessage: userMessage)
-        let key = sessionID ?? noSessionKey
-        var shown = shownBySession[key] ?? Set<String>()
+        guard !matched.isEmpty else { return }
 
+        guard let sid = sessionID else {
+            prompt += "\n\n" + matched.map(\.body).joined(separator: "\n\n")
+            return
+        }
+
+        var shown = shownBySession[sid] ?? Set<String>()
         let fresh = matched.filter { !shown.contains($0.id) }
         if !fresh.isEmpty {
             prompt += "\n\n" + fresh.map(\.body).joined(separator: "\n\n")
             for p in fresh { shown.insert(p.id) }
-            shownBySession[key] = shown
-            return
+            shownBySession[sid] = shown
         }
 
-        // 话题命中但纸条都已下发过：告诉 AI 它已经读过，不再重复塞全文。
+        // 同一轮里：已下发过的纸条给 compact 提醒，不再重复塞全文。
         let known = matched.filter { shown.contains($0.id) }
         if !known.isEmpty {
             let names = known.map(\.title).joined(separator: "、")
             prompt += "\n\n【纸条已读】本会话你已读过这些工具纸条：" + names + "。按纸条里的步骤来，不用再问我要纸条。"
         }
-    }
-
-    /// 测试/诊断用：查某会话已下发过哪些纸条。
-    @MainActor
-    static func shownPaperIDs(for sessionID: String?) -> [String] {
-        Array(shownBySession[sessionID ?? noSessionKey] ?? []).sorted()
-    }
-
-    /// 会话结束时清掉该会话的下发记录（防长期累积）。
-    @MainActor
-    static func resetSession(_ sessionID: String?) {
-        shownBySession.removeValue(forKey: sessionID ?? noSessionKey)
     }
 }

@@ -5712,6 +5712,10 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                 if let ttsPaper = TTSPaper.paperIfRelevant(userMessage: Self.lastUserText(in: agentHistory)) {
                     userSystemPrompt += "\n\n" + ttsPaper
                 }
+                // [d10-tool-papers 2026-10-07 fix] fallback 重组 userSystemPrompt
+                // 时和第一注入点保持一致：已下发过的纸条只给 compact 提醒，
+                // 会话级去重不变，但这一轮不能丢纸条。
+                DuduToolPapersWiring.inject(into: &userSystemPrompt, userMessage: Self.lastUserText(in: agentHistory), sessionID: sessionId)
                 // [T-memory-toggle-gates-injection-and-tools-ios] Mirror
                 // the gate from the first injection site — fallback to a
                 // new provider must respect the per-session memoryEnabled
