@@ -439,6 +439,27 @@
 		8F8C3554C43789791C2B71CB /* MusicRoomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BDBA1AB03BD71A03C0B04D1 /* MusicRoomView.swift */; };
 		31FCC5B9605C2D91BE53F072 /* MusicSources.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03029377472ECFF993F08475 /* MusicSources.swift */; };
 		FF10317D42B1DE0D4D068C3B /* MusicStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A088D94876C87F23D6F8485 /* MusicStore.swift */; };
+		A34F6783B288ACF28AB251AA /* DoodleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B626BBB97FDE549EFEFF668 /* DoodleManager.swift */; };
+		C590C74FD9FBFE3714ADAB0A /* InteractiveTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637B518303003F5830B219C2 /* InteractiveTools.swift */; };
+		06605A3B2D68ACF908B405A5 /* PhotoShareManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17018145E61E950BB0441534 /* PhotoShareManager.swift */; };
+		06657F2807235D8DD122E005 /* PhotoShareViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 439E19C090E1D69E8C65594F /* PhotoShareViews.swift */; };
+		E203BFFD20EA7C436D2AE0A4 /* SegmentedSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E324EEFDB7AB8CB2F2885A7 /* SegmentedSender.swift */; };
+		8772C8D94944E3D765D01D7A /* StoryEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86EC690BC71F5A062BE0069D /* StoryEngine.swift */; };
+		FFB3263A3473103734955D42 /* StoryViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1533EB08A93BEF6532112D69 /* StoryViews.swift */; };
+		8516E30158AC0CC452FBEC28 /* IntimacyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD2C15728205FA8AA0117D7B /* IntimacyManager.swift */; };
+		7F98C16A84FAC05FC230BD0E /* IntimacyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F69DF8BE59C0BDAD99D068 /* IntimacyView.swift */; };
+		ACEB00C9C7FCB33C1F75514C /* MemoryGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF4B6AEF9665683EF75319A /* MemoryGraphView.swift */; };
+		4A89BEE423134041280D8EC1 /* PersonaDialsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DB9B1B9622A046334E732A7 /* PersonaDialsStore.swift */; };
+		84CCEA54DC9342DFAA3D1E1B /* PersonaDialsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EEAE9EC94B9C68C9F75E84C /* PersonaDialsView.swift */; };
+		C3E18887C56BEBCF705C2D31 /* PersonaEvolutionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DF323B85F771927AB346869 /* PersonaEvolutionStore.swift */; };
+		10CA72E4F5ABF14F031ADB4D /* PersonaEvolutionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16524C690BE9872C45647C19 /* PersonaEvolutionView.swift */; };
+		E52DF02199F8CA6709FC7E9D /* FollowUpManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6973EDD0465FF88C2DE37A5 /* FollowUpManager.swift */; };
+		5E11ABF302A5C962AA2185E5 /* MoodCheckInManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2E7924BBA4E97CC552A64A /* MoodCheckInManager.swift */; };
+		8864631BB9811AAD51E4CAD0 /* ProactiveEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCA3B6F6AD1EF57930D5C7C2 /* ProactiveEngine.swift */; };
+		5B5A0342E59F69E632C189CA /* ProactiveNotificationScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EBD5D4B403E57AC8C3F3194 /* ProactiveNotificationScheduler.swift */; };
+		1764D067E633D6F646C0EB5E /* ProactiveTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F388555614A8AC9C906EFEE /* ProactiveTools.swift */; };
+		1425F2AEADF473AB85F2B248 /* ProactiveViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64E8A124A9991D2D0F2B9B9 /* ProactiveViews.swift */; };
+		7D79E97CED3F149B8717C9F5 /* SelfPostManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7D2165AAB793BD416DB5CE /* SelfPostManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1015,6 +1036,27 @@
 		6BDBA1AB03BD71A03C0B04D1 /* MusicRoomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicRoomView.swift; sourceTree = "<group>"; };
 		03029377472ECFF993F08475 /* MusicSources.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicSources.swift; sourceTree = "<group>"; };
 		3A088D94876C87F23D6F8485 /* MusicStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicStore.swift; sourceTree = "<group>"; };
+		0B626BBB97FDE549EFEFF668 /* DoodleManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoodleManager.swift; sourceTree = "<group>"; };
+		637B518303003F5830B219C2 /* InteractiveTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractiveTools.swift; sourceTree = "<group>"; };
+		17018145E61E950BB0441534 /* PhotoShareManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoShareManager.swift; sourceTree = "<group>"; };
+		439E19C090E1D69E8C65594F /* PhotoShareViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoShareViews.swift; sourceTree = "<group>"; };
+		8E324EEFDB7AB8CB2F2885A7 /* SegmentedSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedSender.swift; sourceTree = "<group>"; };
+		86EC690BC71F5A062BE0069D /* StoryEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryEngine.swift; sourceTree = "<group>"; };
+		1533EB08A93BEF6532112D69 /* StoryViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryViews.swift; sourceTree = "<group>"; };
+		FD2C15728205FA8AA0117D7B /* IntimacyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntimacyManager.swift; sourceTree = "<group>"; };
+		47F69DF8BE59C0BDAD99D068 /* IntimacyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntimacyView.swift; sourceTree = "<group>"; };
+		3AF4B6AEF9665683EF75319A /* MemoryGraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryGraphView.swift; sourceTree = "<group>"; };
+		5DB9B1B9622A046334E732A7 /* PersonaDialsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonaDialsStore.swift; sourceTree = "<group>"; };
+		3EEAE9EC94B9C68C9F75E84C /* PersonaDialsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonaDialsView.swift; sourceTree = "<group>"; };
+		0DF323B85F771927AB346869 /* PersonaEvolutionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonaEvolutionStore.swift; sourceTree = "<group>"; };
+		16524C690BE9872C45647C19 /* PersonaEvolutionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonaEvolutionView.swift; sourceTree = "<group>"; };
+		E6973EDD0465FF88C2DE37A5 /* FollowUpManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowUpManager.swift; sourceTree = "<group>"; };
+		AC2E7924BBA4E97CC552A64A /* MoodCheckInManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodCheckInManager.swift; sourceTree = "<group>"; };
+		FCA3B6F6AD1EF57930D5C7C2 /* ProactiveEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProactiveEngine.swift; sourceTree = "<group>"; };
+		7EBD5D4B403E57AC8C3F3194 /* ProactiveNotificationScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProactiveNotificationScheduler.swift; sourceTree = "<group>"; };
+		3F388555614A8AC9C906EFEE /* ProactiveTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProactiveTools.swift; sourceTree = "<group>"; };
+		F64E8A124A9991D2D0F2B9B9 /* ProactiveViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProactiveViews.swift; sourceTree = "<group>"; };
+		0B7D2165AAB793BD416DB5CE /* SelfPostManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfPostManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 		30AC3C5C6C418C791E362178 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 
@@ -1055,6 +1097,7 @@
 				98D33E1B57063D4D0B324EED /* NativeOffloads */,
 				7141B862EB6F5CC4BBFBC795 /* Providers */,
 				B74038F54FE45F5C50CC10B2 /* Resources */,
+				AFB087BD542A97B3A50BC072 /* Romance */,
 				DBB77BA83C126F68CE9D0FEC /* ShareExtension */,
 				83DD9F9E09B4190637EDECDC /* Shared */,
 				28F72D370EE42DCB9E07C134 /* Vendor */,
@@ -2170,6 +2213,58 @@
 			path = Music;
 			sourceTree = "<group>";
 		};
+		AFB087BD542A97B3A50BC072 /* Romance */ = {
+			isa = PBXGroup;
+			children = (
+				F09AA008A255D42317E1968A /* Interactive */,
+				E884D55D802DB527408F8DA5 /* Persona */,
+				E486D6C419EF66CE422129E1 /* Proactive */,
+			);
+			path = Romance;
+			sourceTree = "<group>";
+		};
+		F09AA008A255D42317E1968A /* Interactive */ = {
+			isa = PBXGroup;
+			children = (
+				0B626BBB97FDE549EFEFF668 /* DoodleManager.swift */,
+				1533EB08A93BEF6532112D69 /* StoryViews.swift */,
+				17018145E61E950BB0441534 /* PhotoShareManager.swift */,
+				439E19C090E1D69E8C65594F /* PhotoShareViews.swift */,
+				637B518303003F5830B219C2 /* InteractiveTools.swift */,
+				86EC690BC71F5A062BE0069D /* StoryEngine.swift */,
+				8E324EEFDB7AB8CB2F2885A7 /* SegmentedSender.swift */,
+			);
+			path = Interactive;
+			sourceTree = "<group>";
+		};
+		E884D55D802DB527408F8DA5 /* Persona */ = {
+			isa = PBXGroup;
+			children = (
+				0DF323B85F771927AB346869 /* PersonaEvolutionStore.swift */,
+				16524C690BE9872C45647C19 /* PersonaEvolutionView.swift */,
+				3AF4B6AEF9665683EF75319A /* MemoryGraphView.swift */,
+				3EEAE9EC94B9C68C9F75E84C /* PersonaDialsView.swift */,
+				47F69DF8BE59C0BDAD99D068 /* IntimacyView.swift */,
+				5DB9B1B9622A046334E732A7 /* PersonaDialsStore.swift */,
+				FD2C15728205FA8AA0117D7B /* IntimacyManager.swift */,
+			);
+			path = Persona;
+			sourceTree = "<group>";
+		};
+		E486D6C419EF66CE422129E1 /* Proactive */ = {
+			isa = PBXGroup;
+			children = (
+				0B7D2165AAB793BD416DB5CE /* SelfPostManager.swift */,
+				3F388555614A8AC9C906EFEE /* ProactiveTools.swift */,
+				7EBD5D4B403E57AC8C3F3194 /* ProactiveNotificationScheduler.swift */,
+				AC2E7924BBA4E97CC552A64A /* MoodCheckInManager.swift */,
+				E6973EDD0465FF88C2DE37A5 /* FollowUpManager.swift */,
+				F64E8A124A9991D2D0F2B9B9 /* ProactiveViews.swift */,
+				FCA3B6F6AD1EF57930D5C7C2 /* ProactiveEngine.swift */,
+			);
+			path = Proactive;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -2335,6 +2430,8 @@
 				060DEDFA005DC9D02CD6729D /* AvatarView.swift in Sources */,
 				061634BB8C6B545949ACBFD2 /* AppearanceThemePack.swift in Sources */,
 				062182EF40D53B47DC86B8A7 /* ListSessionsIntent.swift in Sources */,
+				06605A3B2D68ACF908B405A5 /* PhotoShareManager.swift in Sources */,
+				06657F2807235D8DD122E005 /* PhotoShareViews.swift in Sources */,
 				06842974D85CC4EA30889D58 /* AppearanceStudio.swift in Sources */,
 				06A731A6304FF14D318BF6DC /* ThemeTryOn.swift in Sources */,
 				07D72A674C42EF2B57FAC7FD /* ThinkingRulesCollection.swift in Sources */,
@@ -2351,6 +2448,7 @@
 				0DCF54428A253FD2F1658A99 /* StatusSection.swift in Sources */,
 				1056489266E503A373E8BDAF /* EnvVarStore.swift in Sources */,
 				1066B0C5D60899B8252B0A08 /* ContextPolicy.swift in Sources */,
+				10CA72E4F5ABF14F031ADB4D /* PersonaEvolutionView.swift in Sources */,
 				10FF20D60057976BCCEE309C /* BPETokenizer.swift in Sources */,
 				11BD2B8509B845C93E816872 /* VoiceProviderResolver.swift in Sources */,
 				12A579F9BCBA9372EC766E66 /* BackupSecretsImporter.swift in Sources */,
@@ -2358,12 +2456,14 @@
 				131F06560939DC0926AF1C62 /* OpenRouterModelsAPI.swift in Sources */,
 				13DDBEBE650C4B525340F0BE /* ModelGroupRouter.swift in Sources */,
 				14245C50DD31BEEA154BECE2 /* OAuthHTTPClient.swift in Sources */,
+				1425F2AEADF473AB85F2B248 /* ProactiveViews.swift in Sources */,
 				14266D03E281C3CDD351B91D /* StickerPickerView.swift in Sources */,
 				14F34D2C98F43A277072706B /* DuduPaths.swift in Sources */,
 				167242263BF49BFD6C8F4258 /* BackupImporter.swift in Sources */,
 				1704B76557C10CD3559ADAFF /* SharedEventLog.swift in Sources */,
 				171228BBD7CD3065316F4967 /* MomentsSection.swift in Sources */,
 				17176D00E9D5E8CAFC6F30FB /* SyncTransport.swift in Sources */,
+				1764D067E633D6F646C0EB5E /* ProactiveTools.swift in Sources */,
 				1848D790E6FC55A4C0603934 /* SharedContainerStore.swift in Sources */,
 				18E46D03DDFD90DF281D8C08 /* WebSearchProvider.swift in Sources */,
 				19E031379BF4942599BD6211 /* ScheduledPromptManager.swift in Sources */,
@@ -2431,6 +2531,7 @@
 				433C50B687A3B8DB822FD5C5 /* SpeechRecognitionManager.swift in Sources */,
 				43D70D06FD32CDF437D9ED8A /* ShortcutRunTracker.swift in Sources */,
 				4A055772F58E693828870A29 /* ProviderDetailView.swift in Sources */,
+				4A89BEE423134041280D8EC1 /* PersonaDialsStore.swift in Sources */,
 				4B3C7B1EF8BCDFF2C01E8C8D /* BackupFormat.swift in Sources */,
 				4C29274E763868CC079C7B8A /* AudioSessionCoordinator.swift in Sources */,
 				4D11D4BBAAEA29A339F82AB8 /* LoggingManager.swift in Sources */,
@@ -2464,8 +2565,10 @@
 				5A0D937B53B1E4CA8F251306 /* VoiceInputModels.swift in Sources */,
 				5AC8C9CC1608FFAB04D360E4 /* DeviceIdentity.swift in Sources */,
 				5B298C778AF26DD11A90B6F5 /* DuduVoiceBubblePlayer.swift in Sources */,
+				5B5A0342E59F69E632C189CA /* ProactiveNotificationScheduler.swift in Sources */,
 				5CEB43284FA863D303812936 /* WebSearchService.swift in Sources */,
 				5DBE7ECBD28F29E7FDF38205 /* OffloadToolRunner.swift in Sources */,
+				5E11ABF302A5C962AA2185E5 /* MoodCheckInManager.swift in Sources */,
 				5EDB617F7A0C1048824A6E3F /* BackupSecrets.swift in Sources */,
 				5EFEEAFD287B3313F7EAD0A3 /* ThinkingDrawerView.swift in Sources */,
 				5F786E3CEE6A8E09C02031C3 /* ChatSessionIdEnvironment.swift in Sources */,
@@ -2517,9 +2620,11 @@
 				7C88B218A5F6EBB40F16A1C4 /* EnvVarRedactor.swift in Sources */,
 				7CFD8225A328FF3D1D8B02D3 /* WebSearchBridgeTool.swift in Sources */,
 				7D0B88C2AB926AF87C8ADE97 /* BrowserTabPool.swift in Sources */,
+				7D79E97CED3F149B8717C9F5 /* SelfPostManager.swift in Sources */,
 				7DD0CE5A9F5DD169FBD00C00 /* SyncableTypeRegistry.swift in Sources */,
 				7F626AC140C78E9D7A276989 /* RcloneBackendCatalog.swift in Sources */,
 				7F63F36987FCADF907CF9E03 /* ModelPickerView.swift in Sources */,
+				7F98C16A84FAC05FC230BD0E /* IntimacyView.swift in Sources */,
 				7FE3537DCBB0AB677659F0D3 /* JiebaWrapper.mm in Sources */,
 				80B4ABE0DA1C27E7AC3A8DB7 /* VoiceLog.swift in Sources */,
 				80F5DE55B878FE5C1AA97136 /* PersonaStore.swift in Sources */,
@@ -2529,10 +2634,14 @@
 				82D04E4BE82E34C61918863A /* ThinkingRuleResolver.swift in Sources */,
 				834E6F5F257BE8F7C85327A3 /* TypedVocabularyBuilder.swift in Sources */,
 				8462E911955304824495C680 /* TombstoneManager.swift in Sources */,
+				84CCEA54DC9342DFAA3D1E1B /* PersonaDialsView.swift in Sources */,
+				8516E30158AC0CC452FBEC28 /* IntimacyManager.swift in Sources */,
 				870DFA8ECDA55DF114BFE684 /* ConfigConfirmationGate.swift in Sources */,
+				8772C8D94944E3D765D01D7A /* StoryEngine.swift in Sources */,
 				882BC888E4FAECF8A3D1C5A6 /* ProviderMigration.swift in Sources */,
 				8831124F019B4500F8B8AD2F /* ThemeOffloadBridge.swift in Sources */,
 				88340EBC9E15EBB2832C7EB9 /* UserMessageEntity.swift in Sources */,
+				8864631BB9811AAD51E4CAD0 /* ProactiveEngine.swift in Sources */,
 				88BC441CF505086A8B38169A /* AvatarEmotionEngine.swift in Sources */,
 				891C010E6BBF45E90B3A31FD /* SendPromptIntent.swift in Sources */,
 				89A60E9133604A31DD694CD2 /* ShareViewModel.swift in Sources */,
@@ -2567,6 +2676,7 @@
 				A1D0D5608CC044F384E0E0F9 /* LANTransport.swift in Sources */,
 				A251C4E5038A1EE52CEAF458 /* OurSpaceView.swift in Sources */,
 				A321A0BCA8C27961EE1874BA /* VoiceProvider+Vendors.swift in Sources */,
+				A34F6783B288ACF28AB251AA /* DoodleManager.swift in Sources */,
 				A3583A7F1DCDC1CAE60BD62E /* ThemeCustomCSS.swift in Sources */,
 				A382C9E8F945D60F8D6AF82F /* OpenAIProvider.swift in Sources */,
 				A40DD19BD5EAA2735DE0AFF9 /* SendPromptResult.swift in Sources */,
@@ -2579,6 +2689,7 @@
 				AAFF3B7F148F85A70150587E /* DuduWebLoadError.swift in Sources */,
 				AB171940BB38B97123A6C02B /* ScheduledPromptsView.swift in Sources */,
 				ABAEC9A0F40E898848339356 /* AIChatViewModel+Persistence.swift in Sources */,
+				ACEB00C9C7FCB33C1F75514C /* MemoryGraphView.swift in Sources */,
 				AD1615C44F1FCB9236A5CC2D /* ToolApprovalGate.swift in Sources */,
 				AE68F737E1B2B9AFC6CF55F8 /* ShareCoordinator.swift in Sources */,
 				AE746349FABA4BD25D205CE7 /* VoiceCorrectionEngine.swift in Sources */,
@@ -2614,8 +2725,10 @@
 				C26D08705B2A15585E44B46D /* ChatEmptyStateView.swift in Sources */,
 				C26DE239894590D26AFE063F /* SessionBadgeStore.swift in Sources */,
 				C2F592DE6C1F27E864C77231 /* ProviderCustomizationGenerated.swift in Sources */,
+				C3E18887C56BEBCF705C2D31 /* PersonaEvolutionStore.swift in Sources */,
 				C3EB998F09CCEC5E6EC1C100 /* VoiceNowPlaying.swift in Sources */,
 				C57E7FCB0AC7CCC070E8BD5C /* ProviderTypes.swift in Sources */,
+				C590C74FD9FBFE3714ADAB0A /* InteractiveTools.swift in Sources */,
 				C8255D0704C348F557029B4D /* LLMTypes.swift in Sources */,
 				C9C2EDB9414F15245461F549 /* AIChatViewModel+MentionMenu.swift in Sources */,
 				CA32E9202C7A6FE30CDE6D96 /* LaterSection.swift in Sources */,
@@ -2657,10 +2770,12 @@
 				E13F41C59C7AF0AB23F6CFC7 /* CorrectionAdmission.swift in Sources */,
 				E1418FA53E7CD5B6CD1C4CF8 /* DuduTabView.swift in Sources */,
 				E1B5A4C96C5CF8A02DCBB9CB /* ForceSyncHelper.swift in Sources */,
+				E203BFFD20EA7C436D2AE0A4 /* SegmentedSender.swift in Sources */,
 				E2EF410EDE144CB9ADC6B664 /* AIChatViewModel+Compaction.swift in Sources */,
 				E319637E1C05BA79AE7B8285 /* AgentLiveActivityManager.swift in Sources */,
 				E41B9AB164B1A512D4A5E63E /* DeviceTools.swift in Sources */,
 				E524231A57AC68DE22E4EEB7 /* BrowserHistory.swift in Sources */,
+				E52DF02199F8CA6709FC7E9D /* FollowUpManager.swift in Sources */,
 				E65176E79154175FCB8FC1D7 /* DiarySection.swift in Sources */,
 				E78389E119025AB01911832B /* ThinkingLevelCatalog.swift in Sources */,
 				E8344525CD56D06E793AEE71 /* SessionLockStore.swift in Sources */,
@@ -2710,6 +2825,7 @@
 				FF10317D42B1DE0D4D068C3B /* MusicStore.swift in Sources */,
 				FF44D82CCC8700F439CB95EB /* BackupRunController.swift in Sources */,
 				FF49549E7C6942072F161608 /* DuduURLPathDecoding.swift in Sources */,
+				FFB3263A3473103734955D42 /* StoryViews.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
