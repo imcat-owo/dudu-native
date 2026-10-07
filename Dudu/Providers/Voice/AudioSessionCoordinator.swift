@@ -33,6 +33,13 @@ final class AudioSessionCoordinator {
         case replyTTS = 1
         case mediaAttachment = 2
         case capture = 3
+        // [D21] Full-duplex voice call: mic + speaker at the same time.
+        // .playAndRecord + .voiceChat puts the OS hardware echo canceller in
+        // the path (barge-in's extra-dB guard is the software backstop; the
+        // AEC itself is not verified on-device in CI — see VoiceCallSession).
+        // Highest priority: while a call is live nothing else may steal the
+        // session profile.
+        case voiceCall = 4
     }
 
     private let logger = AppLogger(category: "AudioSession")
@@ -136,6 +143,10 @@ final class AudioSessionCoordinator {
             return (.playback, .spokenAudio, [.duckOthers])
         case .backgroundKeepAlive:
             return (.playback, .default, [.mixWithOthers])
+        case .voiceCall:
+            // Earpiece by default (like a phone call); the call screen's
+            // speaker toggle flips the route via overrideOutputAudioPort.
+            return (.playAndRecord, .voiceChat, [.allowBluetooth])
         }
     }
 

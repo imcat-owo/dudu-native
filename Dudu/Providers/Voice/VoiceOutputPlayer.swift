@@ -350,6 +350,30 @@ final class VoiceOutputPlayer: NSObject, ObservableObject {
         pumpPlayback()
     }
 
+    /// [D21] Enqueue one sentence of a LIVE voice call. Unlike `enqueue`, this
+    /// bypasses the read-aloud master switch: accepting/starting a call IS the
+    /// explicit opt-in to hear the AI speak. Barge-in / hang-up stop only this
+    /// call's audio via `stopSession(_:)` (the sessionId is call-scoped).
+    func enqueueForCall(_ text: String, sessionId: String) {
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        let unit = Unit(seq: nextSeq, text: trimmed, ownerSessionId: sessionId); nextSeq += 1
+        queue.append(unit)
+        VoiceLog.log("TTS call enqueue #\(unit.seq) owner=\(String(sessionId.prefix(16))) chars=\(trimmed.count)")
+        pumpPrefetch()
+        pumpPlayback()
+    }
+
+    /// [D21] Whether anything can actually synthesize speech right now.
+    /// Mirrors pumpPrefetch's candidate resolution (TTS service first, then
+    /// the model-group chain). The voice call preflights this: a call she
+    /// can't hear is a fake call, so it refuses to start instead.
+    var hasUsableOutputTargets: Bool {
+        if !Self.resolvedServiceCandidates().isEmpty { return true }
+        let group = VoiceProviderResolver.resolvedOutputCandidates()
+        return group.contains { VoiceProviderResolver.outputProvider(for: $0) != nil }
+    }
+
     /// Sanitize, split into speech-sized segments using the streaming segmenter,
     /// and enqueue each segment. Used by long-press "Read Aloud" / markdown
     /// preview / "Read Selected" — same splitting as live streaming TTS.
