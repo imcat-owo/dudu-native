@@ -1050,6 +1050,20 @@ extension AIChatViewModel {
                 messages[msgIdx].blocks[blockIdx].content = toolOutput
             }
 
+        case "set_wallpaper", "set_theme", "set_ai_avatar", "get_theme",
+             "apply_theme_coordinates", "apply_surface_tokens", "apply_preset",
+             "preview_theme", "confirm_theme", "rollback_theme",
+             "read_theme_css", "replace_theme_css", "append_theme_css",
+             "edit_theme_css", "insert_theme_css", "delete_theme_css":
+            // [D12] 16 AI theme tools: handlers in AIChatViewModel+ThemeTools.swift,
+            // every one calls the live theme engine (no stubs).
+            let (themeText, themeOK) = await handleThemeTool(name: tu.name, args: toolArgs)
+            toolOutput = themeText
+            toolSuccess = themeOK
+            if msgIdx < messages.count, blockIdx < messages[msgIdx].blocks.count {
+                messages[msgIdx].blocks[blockIdx].content = toolOutput
+            }
+
         default:
             toolOutput = "Error: Unknown tool '\(tu.name)'"
             toolSuccess = false

@@ -259,6 +259,20 @@ extension AIChatViewModel {
         // add_mcp/remove_mcp 两段式（先探、请她确认再落盘）；skill 白名单门控在人设层。
         tools.append(contentsOf: MCPManagementTools.dialogDefinitions())
 
+        // [D12] 16 AI theme tools, ported from old Dudu
+        // (~/workspace/openmuse/apps/mobile/src/theme/tools.ts):
+        // set_wallpaper, set_theme, set_ai_avatar, get_theme,
+        // apply_theme_coordinates, apply_surface_tokens, apply_preset,
+        // preview_theme, confirm_theme, rollback_theme,
+        // read_theme_css, replace_theme_css, append_theme_css,
+        // edit_theme_css, insert_theme_css, delete_theme_css.
+        // Definitions + real handlers live in AIChatViewModel+ThemeTools.swift;
+        // every handler calls the live engine (AppearanceStudio / ThemeTryOn /
+        // ThemeCustomCSS) — no stubs. NOTE: they deliberately do NOT go
+        // through ThemeOffloadBridge's @objc entry points: those block on a
+        // DispatchSemaphore and would deadlock on this @MainActor view model.
+        tools.append(contentsOf: themeToolDefinitions())
+
         return tools
     }
 
