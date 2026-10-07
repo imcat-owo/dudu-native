@@ -444,7 +444,7 @@ final class AppleMusicSource: MusicSource {
             throw MusicError.sourceUnavailable("Apple Music 还没连上：" + state.hint)
         }
         let request = MusicCatalogResourceRequest<Song>(matching: \.id, equalTo: MusicItemID(rawValue: track.playableRef))
-        let response: MusicItemCollection<Song>
+        let response: MusicCatalogResourceResponse<Song>
         do {
             response = try await request.response()
         } catch {
@@ -487,7 +487,7 @@ final class AppleMusicSource: MusicSource {
 
     func getStatus() async -> SourceStatus {
         let player = ApplicationMusicPlayer.shared
-        let playing = player.playbackStatus == .playing
+        let playing = player.state.playbackStatus == .playing
         let prev = status
         var songId = status.trackId
         if let entry = player.queue.currentEntry, let song = entry.item as? Song {

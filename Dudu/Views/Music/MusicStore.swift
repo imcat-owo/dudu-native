@@ -81,6 +81,38 @@ struct MusicTrack: Codable, Identifiable, Equatable {
         return !audioUri.trimmingCharacters(in: .whitespaces).isEmpty
     }
 
+    /// Explicit memberwise init: a custom init(from:) suppresses the
+    /// synthesized one, and addTrack depends on this exact signature.
+    init(
+        id: String,
+        title: String,
+        artist: String,
+        album: String,
+        source: TrackSource,
+        sourceRef: String,
+        audioUri: String,
+        coverUri: String,
+        artworkUrl: String,
+        lyrics: [LyricLine],
+        addedBy: MusicAuthor,
+        playCount: Int,
+        createdAt: Date
+    ) {
+        self.id = id
+        self.title = title
+        self.artist = artist
+        self.album = album
+        self.source = source
+        self.sourceRef = sourceRef
+        self.audioUri = audioUri
+        self.coverUri = coverUri
+        self.artworkUrl = artworkUrl
+        self.lyrics = lyrics
+        self.addedBy = addedBy
+        self.playCount = playCount
+        self.createdAt = createdAt
+    }
+
     /// Migration guard: old stored tracks may lack newer fields.
     init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
