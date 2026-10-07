@@ -277,10 +277,14 @@ def sync_sources():
         for i in range(1, len(parts) + 1):
             d = os.sep.join(parts[:i])
             dirs.setdefault(d, {"subdirs": set(), "files": []})
+            # Link every ancestor, not just the immediate parent of a file:
+            # a dir with files only in subdirs (e.g. Dudu/Agent) must still
+            # be attached to its parent, or its group is orphaned and Xcode
+            # resolves its files against the project root.
+            if i > 1:
+                parent = os.sep.join(parts[:i - 1])
+                dirs[parent]["subdirs"].add(d)
         dirs[dir_rel]["files"].append((rel, fn))
-        if len(parts) > 1:
-            parent = os.sep.join(parts[:-1])
-            dirs[parent]["subdirs"].add(dir_rel)
 
     # Ensure PBXGroup for every dir (except Dudu root which already exists)
     for dir_rel in sorted(dirs):

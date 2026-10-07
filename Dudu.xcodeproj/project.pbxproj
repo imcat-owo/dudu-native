@@ -452,10 +452,12 @@
 		100000000000000000000007 /* Dudu */ = {
 			isa = PBXGroup;
 			children = (
+				8EB1780A12FAD15AFB82A154 /* Agent */,
 				72E8ADE620468EA6EF24496B /* Generated */,
 				7141B862EB6F5CC4BBFBC795 /* Providers */,
 				B74038F54FE45F5C50CC10B2 /* Resources */,
 				83DD9F9E09B4190637EDECDC /* Shared */,
+				28F72D370EE42DCB9E07C134 /* Vendor */,
 				129D94B13E4A50C15AAB7687 /* ContentView.swift */,
 				A3C99F4CFE1464EB44C78829 /* Dudu-Bridging-Header.h */,
 				F8CC5DC1C7D36D6E6B19B9B1 /* DuduApp.swift */,
@@ -606,6 +608,7 @@
 		28F72D370EE42DCB9E07C134 /* Vendor */ = {
 			isa = PBXGroup;
 			children = (
+				EFEE726DDBCA3139E7BD7845 /* cppjieba */,
 			);
 			path = Vendor;
 			sourceTree = "<group>";
