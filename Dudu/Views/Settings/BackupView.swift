@@ -82,7 +82,7 @@ final class BackupCenterModel: ObservableObject {
                     localURL = try BackupDelivery.moveToVisibleStorage(summary.packageURL)
                 } catch {
                     BackupHistory.shared.fail(
-                        recordId, "备份已生成，但保存到本机失败：\(error.localizedDescription)")
+                        recordId, message: "备份已生成，但保存到本机失败：\(error.localizedDescription)")
                     self.notice = "保存到本机失败：\(error.localizedDescription)"
                     self.noticeIsError = true
                     return
@@ -887,14 +887,14 @@ struct RemoteAddSheet: View {
                 name: trimmedName,
                 backend: backend.type,
                 params: params,
-                path: path.trimmingCharacters(in: .whitespaces),
-                secret: secret)
+                secret: secret,
+                path: path.trimmingCharacters(in: .whitespaces))
             // Make rclone see it now, not just after the next launch.
             RcloneRemoteStore.syncToRclone()
             onDone()
             dismiss()
-        } catch {
-            error = error.localizedDescription
+        } catch let e {
+            error = e.localizedDescription
         }
     }
 }
@@ -959,9 +959,11 @@ struct RestoreSheet: View {
                 }
             }
             if manifest.encryption != nil {
-                Section("密码") {
+                Section {
                     SecureField("备份包密码", text: $passphrase)
                         .font(DuduTheme.bodyFont())
+                } header: {
+                    Text("密码")
                 } footer: {
                     Text("这个备份包是加密的，需要当时设置的密码才能恢复。")
                 }
