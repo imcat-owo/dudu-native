@@ -1,9 +1,21 @@
 #!/usr/bin/env python3
-"""Sync Dudu.xcodeproj/project.pbxproj with the Swift files under Dudu/.
+"""Sync Dudu.xcodeproj/project.pbxproj with the source files under Dudu/.
 
 Idempotent: UUIDs are deterministic (md5 of the relative path), so running
-this twice produces no diff. Builders: copy .swift files into Dudu/<subdir>/,
+this twice produces no diff. Builders: copy files into Dudu/<subdir>/,
 then run:  python3 scripts/sync_pbxproj.py
+
+What gets synced:
+  - .swift/.m/.mm            -> target Sources build phase
+  - .h/.hpp                  -> file refs only (project navigator)
+  - .tiktoken/.utf8/.md      -> target Resources build phase
+  - EXCLUDE                  -> files ported to disk but not yet buildable
+                               (missing cross-part types); they get file refs
+                               but no build phase entry. Remove entries as
+                               their owning parts land.
+
+Also ensures the Dudu target's build settings carry the bridging header and
+the cppjieba header search path (needed by Shared/JiebaWrapper.mm).
 
 Also supports wiring a local SwiftPM package:
   python3 scripts/sync_pbxproj.py --add-local-package BridgeCore BridgeCore BridgeCore
@@ -21,6 +33,45 @@ SRC_DIR = os.path.join(ROOT, "Dudu")
 TARGET_ID = "100000000000000000000002"   # PBXNativeTarget "Dudu"
 DUDU_GROUP_ID = "100000000000000000000007"  # PBXGroup path=Dudu
 SOURCES_PHASE_ID = "100000000000000000000003"
+RESOURCES_PHASE_ID = "100000000000000000000004"
+TARGET_CONFIG_IDS = [  # XCBuildConfiguration for PBXNativeTarget "Dudu"
+    "100000000000000000000016",  # Debug
+    "100000000000000000000017",  # Release
+]
+BRIDGING_HEADER = "$(SRCROOT)/Dudu/Dudu-Bridging-Header.h"
+CPPJIEBA_INCLUDE = "$(SRCROOT)/Dudu/Vendor/cppjieba/include"
+
+# Files ported to disk but NOT compiled yet: they reference types owned by
+# later parts. They still get file refs (visible in the navigator).
+#   P3 (Providers) re-enables: ConfigRegistry+Builtins, Collections/{Providers,
+#     Models, Groups, ThinkingRules} + reverts the builtinsRegistrar seam in
+#     Config/ConfigRegistry.swift to the direct Self.registerBuiltins call.
+#   P4 (chat core, SoulStore) re-enables: AppearanceStudio/ThemePack/ThemeLibrary.
+EXCLUDE = {
+    "Dudu/Shared/Config/ConfigRegistry+Builtins.swift",
+    "Dudu/Shared/Config/Collections/ProvidersCollection.swift",
+    "Dudu/Shared/Config/Collections/ModelsCollection.swift",
+    "Dudu/Shared/Config/Collections/GroupsCollection.swift",
+    "Dudu/Shared/Config/Collections/ThinkingRulesCollection.swift",
+    "Dudu/Shared/AppearanceStudio.swift",
+    "Dudu/Shared/AppearanceThemePack.swift",
+    "Dudu/Shared/AppearanceThemeLibrary.swift",
+}
+
+SOURCE_EXTS = {".swift", ".m", ".mm"}
+HEADER_EXTS = {".h", ".hpp"}
+RESOURCE_EXTS = {".tiktoken", ".utf8", ".md"}
+
+FILE_TYPES = {
+    ".swift": "sourcecode.swift",
+    ".m": "sourcecode.c.objc",
+    ".mm": "sourcecode.cpp.objcpp",
+    ".h": "sourcecode.c.h",
+    ".hpp": "sourcecode.cpp.h",
+    ".tiktoken": "text",
+    ".utf8": "text",
+    ".md": "text",
+}
 
 
 def uuid_for(key: str) -> str:
@@ -85,31 +136,55 @@ def set_array_field(text, obj_id, field, items):
     s, e, inner = loc
     lines = "".join(f"\n\t\t\t\t{item}," for item in items)
     new_inner, n = re.subn(
-        field + r" = \(\n.*?\n\t\t\t\);",
+        field + r" = \(\n(.*?\n)?\t\t\t\);",
         field + " = (" + lines + "\n\t\t\t);",
         inner, flags=re.S)
     assert n == 1, f"field {field} not found exactly once in {obj_id}"
     return text[:s] + text[s:e].replace(inner, new_inner) + text[e:]
 
 
+def current_phase_entries(text, phase_id):
+    """Raw `files` entries currently in a build phase (no trailing commas)."""
+    loc = get_object_block(text, phase_id)
+    if not loc:
+        return []
+    m = re.search(r"files = \(\n(.*?)\n\t\t\t\);", loc[2], re.S)
+    if not m:
+        return []
+    return [ln.strip().rstrip(",") for ln in m.group(1).splitlines()
+            if ln.strip()]
+
+
+def kind_of(fn):
+    ext = os.path.splitext(fn)[1].lower()
+    if ext in SOURCE_EXTS:
+        return "source"
+    if ext in HEADER_EXTS:
+        return "header"
+    if ext in RESOURCE_EXTS:
+        return "resource"
+    return None
+
+
 def sync_sources():
     with open(PROJ) as f:
         text = f.read()
 
-    # Collect swift files: rel -> (dir_rel, filename)
+    # Collect files: rel -> (dir_rel, filename, kind)
     files = {}
     for dirpath, _, filenames in os.walk(SRC_DIR):
         for fn in filenames:
-            if not fn.endswith(".swift"):
+            kind = kind_of(fn)
+            if kind is None:
                 continue
             full = os.path.join(dirpath, fn)
             rel = os.path.relpath(full, ROOT)          # Dudu/Shared/Foo.swift
             dir_rel = os.path.relpath(dirpath, ROOT)   # Dudu/Shared
-            files[rel] = (dir_rel, fn)
+            files[rel] = (dir_rel, fn, kind)
 
     # Build dir tree: dir_rel -> (subdirs, files)
     dirs = {}
-    for rel, (dir_rel, fn) in files.items():
+    for rel, (dir_rel, fn, kind) in files.items():
         parts = dir_rel.split(os.sep)  # ['Dudu', 'Shared', ...]
         for i in range(1, len(parts) + 1):
             d = os.sep.join(parts[:i])
@@ -136,22 +211,33 @@ def sync_sources():
 
     # Ensure file refs + build files, collect children per dir and phase files
     phase_files = []
+    resource_files = []
     dir_children = {d: [] for d in dirs}
     for rel in sorted(files):
-        dir_rel, fn = files[rel]
+        dir_rel, fn, kind = files[rel]
         fr_id = uuid_for("fileref:" + rel)
         bf_id = uuid_for("buildfile:" + rel)
+        ftype = FILE_TYPES[os.path.splitext(fn)[1].lower()]
         if not section_has(text, "PBXFileReference", fr_id):
             entry = (f"\t\t{fr_id} /* {fn} */ = {{isa = PBXFileReference; "
-                     f"lastKnownFileType = sourcecode.swift; path = {fn}; "
+                     f"lastKnownFileType = {ftype}; path = {fn}; "
                      f'sourceTree = "<group>"; }};\n')
             text = append_to_section(text, "PBXFileReference", entry)
-        if not section_has(text, "PBXBuildFile", bf_id):
-            entry = (f"\t\t{bf_id} /* {fn} in Sources */ = {{isa = PBXBuildFile; "
-                     f"fileRef = {fr_id} /* {fn} */; }};\n")
-            text = append_to_section(text, "PBXBuildFile", entry)
         dir_children[dir_rel].append(f"{fr_id} /* {fn} */")
-        phase_files.append(f"{bf_id} /* {fn} in Sources */")
+        if rel in EXCLUDE:
+            continue  # file ref only; owning part re-enables the build entry
+        if kind == "source":
+            if not section_has(text, "PBXBuildFile", bf_id):
+                entry = (f"\t\t{bf_id} /* {fn} in Sources */ = {{isa = PBXBuildFile; "
+                         f"fileRef = {fr_id} /* {fn} */; }};\n")
+                text = append_to_section(text, "PBXBuildFile", entry)
+            phase_files.append(f"{bf_id} /* {fn} in Sources */")
+        elif kind == "resource":
+            if not section_has(text, "PBXBuildFile", bf_id):
+                entry = (f"\t\t{bf_id} /* {fn} in Resources */ = {{isa = PBXBuildFile; "
+                         f"fileRef = {fr_id} /* {fn} */; }};\n")
+                text = append_to_section(text, "PBXBuildFile", entry)
+            resource_files.append(f"{bf_id} /* {fn} in Resources */")
 
     # Set children for each group (subdirs first, then files)
     for dir_rel in sorted(dirs):
@@ -165,12 +251,66 @@ def sync_sources():
         children.extend(sorted(dir_children[dir_rel]))
         text = set_array_field(text, gid, "children", children)
 
-    # Set Sources build phase files
+    # Set Sources + Resources build phase files.
+    # Keep pre-existing entries the script doesn't manage
+    # (e.g. Assets.xcassets, already in Resources).
+    managed_bf = {uuid_for("buildfile:" + rel) for rel in files}
     text = set_array_field(text, SOURCES_PHASE_ID, "files", sorted(phase_files))
+    kept = [e for e in current_phase_entries(text, RESOURCES_PHASE_ID)
+            if not any(bf in e for bf in managed_bf)]
+    text = set_array_field(text, RESOURCES_PHASE_ID, "files",
+                           sorted(kept + resource_files))
 
     with open(PROJ, "w") as f:
         f.write(text)
-    print(f"synced {len(files)} swift files into project.pbxproj")
+    n_src = len(phase_files)
+    n_res = len(resource_files)
+    n_exc = sum(1 for rel in files if rel in EXCLUDE)
+    print(f"synced {n_src} sources + {n_res} resources into project.pbxproj "
+          f"({n_exc} excluded, {len(files)} files total)")
+
+
+def sync_build_settings():
+    """Ensure the Dudu target builds with the bridging header and the
+    cppjieba header search path. Idempotent."""
+    with open(PROJ) as f:
+        text = f.read()
+
+    for cfg_id in TARGET_CONFIG_IDS:
+        m = re.search(
+            r"(\t\t" + cfg_id + r" /\* (?:Debug|Release) \*/ = \{\n"
+            r"\t\t\tisa = XCBuildConfiguration;\n"
+            r"\t\t\tbuildSettings = \{\n)(.*?)(\n\t\t\};)",
+            text, re.S)
+        assert m, f"build configuration {cfg_id} not found"
+        head, settings, tail = m.group(1), m.group(2), m.group(3)
+
+        # SWIFT_OBJC_BRIDGING_HEADER
+        if not re.search(r"^\t\t\t\tSWIFT_OBJC_BRIDGING_HEADER =",
+                         settings, re.M):
+            settings += (f"\n\t\t\t\tSWIFT_OBJC_BRIDGING_HEADER = "
+                         f"\"{BRIDGING_HEADER}\";")
+
+        # HEADER_SEARCH_PATHS must contain the cppjieba include dir
+        hm = re.search(
+            r"^\t\t\t\tHEADER_SEARCH_PATHS = \(\n(.*?)\n\t\t\t\t\);",
+            settings, re.M | re.S)
+        if not hm:
+            settings += (
+                "\n\t\t\t\tHEADER_SEARCH_PATHS = (\n"
+                "\t\t\t\t\t\"$(inherited)\",\n"
+                f"\t\t\t\t\t\"{CPPJIEBA_INCLUDE}\",\n"
+                "\t\t\t\t);")
+        elif CPPJIEBA_INCLUDE not in hm.group(1):
+            new_list = hm.group(1) + f",\n\t\t\t\t\t\"{CPPJIEBA_INCLUDE}\""
+            settings = (settings[:hm.start(1)] + new_list
+                        + settings[hm.end(1):])
+
+        text = text[:m.start()] + head + settings + tail + text[m.end():]
+
+    with open(PROJ, "w") as f:
+        text = f.write(text)
+    print("build settings synced (bridging header + cppjieba search path)")
 
 
 def add_local_package(name, relpath, product):
@@ -235,5 +375,6 @@ if __name__ == "__main__":
         add_local_package(sys.argv[2], sys.argv[3], sys.argv[4])
     elif len(sys.argv) == 1:
         sync_sources()
+        sync_build_settings()
     else:
         sys.exit("usage: sync_pbxproj.py [--add-local-package <name> <relpath> <product>]")
