@@ -25,10 +25,15 @@ struct BackupRollbackSnapshot {
     /// live file → saved copy, for categories backed by a single file rather
     /// than a tree (provider-config.json).
     var files: [(live: URL, saved: URL)] = []
+    /// [T-backup-ourspace] UserDefaults key → raw value as it was before the
+    /// import, for the UserDefaults-backed categories (our_space, music,
+    /// persona dials). nil means the key was absent and must be removed on
+    /// rollback.
+    var userDefaults: [(key: String, data: Data?)] = []
 
     /// True when nothing was captured, so a rollback would be a no-op and
     /// must not be reported as one having happened.
-    var isEmpty: Bool { directories.isEmpty && files.isEmpty }
+    var isEmpty: Bool { directories.isEmpty && files.isEmpty && userDefaults.isEmpty }
 }
 
 extension BackupImporter {
@@ -70,18 +75,25 @@ extension BackupImporter {
         let liveDirs: [URL]
         switch category {
         case .sharedFiles: liveDirs = [DuduPaths.duduSharedPersistentDir]
-        case .memory: liveDirs = [DuduPaths.duduMemoryPersistentDir]
+        // [T-backup-ourspace] The evolution notes live in DuduConfig/evolution,
+        // outside the memory tree — snapshotted alongside it.
+        case .memory:
+            liveDirs = [DuduPaths.duduMemoryPersistentDir,
+                        DuduPaths.duduConfigRoot.appendingPathComponent(
+                            "evolution", isDirectory: true)]
         // [PIC-2] The appearance tree is directory-backed like shared
         // files, so it gets the same copy-aside rollback.
         case .appearance: liveDirs = [AppearanceStudio.appearanceAssetsDirectory]
         case .mcpServers: liveDirs = [MCPStore.syncFileURL.deletingLastPathComponent()]
+        // [T-backup-ourspace] Task-card background photos.
+        case .ourSpace: liveDirs = [TaskCardStore.cardsDirectory]
         // [review B3] Providers had NO rollback at all. It is a single JSON
         // file rather than a directory, so it is snapshotted via a dedicated
         // file-level entry instead of the directory copy-aside used above.
         case .providers: liveDirs = []
         // Environment variables merge into the live store rather than
         // replacing a file, so there is nothing to snapshot.
-        case .chats, .skills, .voiceCorrections, .environmentVariables:
+        case .chats, .skills, .voiceCorrections, .environmentVariables, .music:
             liveDirs = []
         }
 
@@ -135,7 +147,36 @@ extension BackupImporter {
                 to: saved.appendingPathComponent(".live-path"), options: .atomic)
             snap.directories.append((live: live, saved: saved))
         }
+
+        // [T-backup-ourspace] UserDefaults-backed state: snapshot the raw
+        // values before the import touches them, so a failed category can be
+        // put back. Absent keys are recorded as nil and removed on rollback.
+        let udKeys: [String]
+        switch category {
+        case .ourSpace:
+            udKeys = OurSpaceStore.backupAllKeys
+                + Self.userDefaultsKeys(withPrefix: TaskCardStore.backupKeyPrefix)
+        case .memory:
+            udKeys = Self.userDefaultsKeys(withPrefix: "dudu.personaDials.")
+        case .music:
+            udKeys = MusicStore.backupKeysList
+        default:
+            udKeys = []
+        }
+        if !udKeys.isEmpty {
+            let defaults = UserDefaults.standard
+            snap.userDefaults = udKeys.map { ($0, defaults.data(forKey: $0)) }
+        }
         return snap
+    }
+
+    /// Every UserDefaults key currently present under `prefix`. Used for the
+    /// rollback snapshot of stores whose key set is dynamic (task-card ids,
+    /// persona ids). UserDefaults has no key enumeration, so this goes through
+    /// dictionaryRepresentation — one read.
+    private static func userDefaultsKeys(withPrefix prefix: String) -> [String] {
+        UserDefaults.standard.dictionaryRepresentation().keys
+            .filter { $0.hasPrefix(prefix) }
     }
 
     func rollback(_ snapshot: BackupRollbackSnapshot) throws {
@@ -151,6 +192,26 @@ extension BackupImporter {
         }
         for pair in snapshot.files {
             _ = try? FileManager.default.replaceItemAt(pair.live, withItemAt: pair.saved)
+        }
+        // [T-backup-ourspace] UserDefaults half of the snapshot: put every
+        // key back to its pre-import value, removing the ones the failed
+        // import created.
+        if !snapshot.userDefaults.isEmpty {
+            let defaults = UserDefaults.standard
+            for (key, data) in snapshot.userDefaults {
+                if let data {
+                    defaults.set(data, forKey: key)
+                } else {
+                    defaults.removeObject(forKey: key)
+                }
+            }
+            // The stores cache this state in memory; a raw UserDefaults write
+            // leaves those caches showing the half-merged state otherwise.
+            Task { @MainActor in
+                OurSpaceStore.shared.reloadFromDisk()
+                TaskCardStore.shared.reloadFromDisk()
+                MusicStore.shared.reloadFromDisk()
+            }
         }
         // A file-level provider rollback only rewrites the JSON on disk; the
         // in-memory store still holds the merged config, so it must be reloaded
@@ -185,6 +246,8 @@ extension BackupImporter {
         case .environmentVariables:
             return try await importEnvironmentVariables(root: root)
         case .appearance: return try await importAppearance(root: root, fileIndex: fileIndex)
+        case .ourSpace: return try await importOurSpace(root: root, fileIndex: fileIndex)
+        case .music: return try await importMusic(root: root)
         }
     }
 
@@ -413,6 +476,83 @@ extension BackupImporter {
         return out
     }
 
+    // MARK: - Our Space
+
+    /// [T-backup-ourspace] 我们的空间.
+    ///
+    /// The JSONL records are routed to the owning store by key prefix; each
+    /// store decodes its own bytes and merges by id with local-wins, so a
+    /// restore never deletes or rolls back what is already here (§8.3's
+    /// "nothing is deleted"). Task-card background photos are restored as a
+    /// file tree under `ourspace/taskcards/`; the merge semantics match
+    /// shared files (package files overwrite, unmentioned files stay).
+    private func importOurSpace(root: URL, fileIndex: [BackupFileIndexEntry]) async throws
+        -> CategoryReport {
+        var report = CategoryReport(category: BackupCategory.ourSpace.rawValue)
+        let dataDir = root.appendingPathComponent("data", isDirectory: true)
+
+        var ourSpaceRecords: [(key: String, data: Data, count: Int)] = []
+        var taskRecords: [(key: String, data: Data, count: Int)] = []
+        for rec in readJSONL(dataDir, base: "our_space", as: BackupDefaultsPayload.self) {
+            let tuple = (key: rec.key, data: rec.payload, count: rec.count)
+            if rec.key.hasPrefix("dudu.ourspace.") {
+                ourSpaceRecords.append(tuple)
+            } else if rec.key.hasPrefix(TaskCardStore.backupKeyPrefix) {
+                taskRecords.append(tuple)
+            } else {
+                // A newer writer's section this build doesn't know — ignore,
+                // don't fail (§2.2 rule 2).
+                report.skipped += 1
+            }
+        }
+        let ourSpaceOutcome = await MainActor.run {
+            OurSpaceStore.shared.restoreBackupRecords(ourSpaceRecords)
+        }
+        let taskOutcome = await MainActor.run {
+            TaskCardStore.shared.restoreBackupRecords(taskRecords)
+        }
+        report.imported = ourSpaceOutcome.imported + taskOutcome.imported
+        report.skipped = ourSpaceOutcome.skipped + taskOutcome.skipped
+
+        let cardsDir = TaskCardStore.cardsDirectory
+        let files = try restoreFileTree(
+            root: root, fileIndex: fileIndex, category: .ourSpace,
+            destinationFor: { path in
+                guard path.hasPrefix("ourspace/taskcards/") else { return nil }
+                let name = String(path.dropFirst("ourspace/taskcards/".count))
+                // Filenames are `task_<id>.jpg` — flat, no `..` can hide here,
+                // and the containment check below still runs.
+                guard !name.isEmpty, !name.contains("/") else { return nil }
+                return cardsDir.appendingPathComponent(name)
+            })
+        report.filesWritten = files.written
+        report.bytesWritten = files.bytes
+        report.missingBlobs = files.missingBlobs
+        // The stores were merged live above, so the UI already shows the
+        // restored state — no reload needed.
+        return report
+    }
+
+    // MARK: - Music
+
+    /// [T-backup-ourspace] 听歌房 library.
+    ///
+    /// Same shape as Our Space: opaque records routed to MusicStore, merged by
+    /// id with local-wins. Transient playback state was never exported, so
+    /// there is nothing to restore for it.
+    private func importMusic(root: URL) async throws -> CategoryReport {
+        var report = CategoryReport(category: BackupCategory.music.rawValue)
+        let dataDir = root.appendingPathComponent("data", isDirectory: true)
+        let tuples = readJSONL(dataDir, base: "music", as: BackupDefaultsPayload.self)
+            .map { (key: $0.key, data: $0.payload, count: $0.count) }
+        let outcome = await MainActor.run {
+            MusicStore.shared.restoreBackupRecords(tuples)
+        }
+        report.imported = outcome.imported
+        report.skipped = outcome.skipped
+        return report
+    }
+
     // MARK: - Skills
 
     private func importSkills(root: URL, fileIndex: [BackupFileIndexEntry]) async throws
@@ -587,6 +727,75 @@ extension BackupImporter {
         // SOUL.md is cached in memory; a raw file write leaves that cache stale
         // until something else refreshes it.
         await MainActor.run { SoulStore.refreshCache() }
+
+        // [T-backup-ourspace] 人设进化笔记 data/memory/evolution/*.json →
+        // DuduConfig/evolution/。旧包没有它时跳过；单文件走与 md 同样的
+        // hash 比对 + staged swap。
+        var evolutionImported = false
+        let evolutionSrc = src.appendingPathComponent("evolution", isDirectory: true)
+        if fm.fileExists(atPath: evolutionSrc.path) {
+            let evolutionDst = DuduPaths.duduConfigRoot
+                .appendingPathComponent("evolution", isDirectory: true)
+            try fm.createDirectory(at: evolutionDst, withIntermediateDirectories: true)
+            for name in (try? fm.contentsOfDirectory(atPath: evolutionSrc.path)) ?? []
+            where name.hasPrefix("evolution_") && name.hasSuffix(".json") {
+                let from = evolutionSrc.appendingPathComponent(name)
+                let to = evolutionDst.appendingPathComponent(name)
+                if let localData = try? Data(contentsOf: to),
+                   let pkgData = try? Data(contentsOf: from),
+                   localData == pkgData {
+                    report.skipped += 1
+                    continue
+                }
+                let staged = evolutionDst
+                    .appendingPathComponent(".restore-\(UUID().uuidString).tmp")
+                do {
+                    try fm.copyItem(at: from, to: staged)
+                    if fm.fileExists(atPath: to.path) {
+                        _ = try fm.replaceItemAt(to, withItemAt: staged)
+                    } else {
+                        try fm.moveItem(at: staged, to: to)
+                    }
+                    report.imported += 1
+                    evolutionImported = true
+                } catch {
+                    try? fm.removeItem(at: staged)
+                    throw error
+                }
+            }
+        }
+        if evolutionImported {
+            // The store reads its file on open(); drop the cached list so the
+            // restored notes show without reopening the persona.
+            await MainActor.run { PersonaEvolutionStore.shared.reload() }
+        }
+
+        // [T-backup-ourspace] 人设旋钮 data/memory/persona_dials.json →
+        // UserDefaults。MERGE 而非替换：本地已有的 personaID 保持不动（可能
+        // 比备份新），只补备份里有、本地没有的。旧包没有它时跳过。
+        let dialsSrc = src.appendingPathComponent("persona_dials.json")
+        var dialsImported = false
+        if fm.fileExists(atPath: dialsSrc.path),
+           let dialsData = try? Data(contentsOf: dialsSrc),
+           let dials = try? JSONDecoder().decode(
+            [String: [String: Double]].self, from: dialsData) {
+            let defaults = UserDefaults.standard
+            for (personaID, values) in dials {
+                let key = "dudu.personaDials.\(personaID).v1"
+                if defaults.object(forKey: key) != nil {
+                    report.skipped += 1
+                    continue
+                }
+                defaults.set(values, forKey: key)
+                report.imported += 1
+                dialsImported = true
+            }
+        }
+        if dialsImported {
+            // The store caches the current persona's dials in memory; re-read
+            // so the restored values show immediately.
+            await MainActor.run { PersonaDialsStore.shared.reload() }
+        }
         // 注册表落盘后内存里的 PersonaStore 还是旧表，重载一次，
         // 否则恢复完人设列表不变——看起来像"恢复后人设全丢"没修好。
         if registryRestored {
@@ -985,7 +1194,10 @@ extension BackupImporter {
         case .skills: return DuduPaths.duduSkillsPersistentDir
         case .memory: return DuduPaths.duduMemoryPersistentDir
         case .appearance: return AppearanceStudio.appearanceAssetsDirectory
-        case .providers, .mcpServers, .voiceCorrections, .environmentVariables:
+        // [T-backup-ourspace] Task-card background photos.
+        case .ourSpace: return TaskCardStore.cardsDirectory
+        case .providers, .mcpServers, .voiceCorrections, .environmentVariables,
+             .music:
             // These write single known files, not index-driven trees; give them
             // the app-group root so the check is still meaningful if one ever
             // starts using restoreFileTree.

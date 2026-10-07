@@ -343,6 +343,18 @@ actor BackupExporter {
         try await run(.appearance, AppLocalized("Exporting appearance…")) {
             try await exportAppearance(dataDir: dataDir, trees: trees)
         }
+        // [T-backup-ourspace] 我们的空间 + task cards. Missing this used to
+        // mean a new phone silently lost the diary, moments, garden,
+        // tell-her-later inbox and every task card.
+        try await run(.ourSpace, AppLocalized("Exporting Our Space…")) {
+            try await exportOurSpace(dataDir: dataDir, trees: trees)
+        }
+        // [T-backup-ourspace] 听歌房 library (tracks / playlists / comments /
+        // song memories / together-listens). Transient playback state is
+        // deliberately excluded — see MusicStore.backupKeys.
+        try await run(.music, AppLocalized("Exporting music…")) {
+            try await exportMusic(dataDir: dataDir)
+        }
         // [2026-08-15] Not reached in normal use: `.voiceCorrections` is absent
         // from `BackupCategory.backupable`, so it never appears in
         // `options.categories` and `run` skips it. Kept wired up rather than
@@ -864,7 +876,65 @@ actor BackupExporter {
             }
         }
 
+        // [T-backup-ourspace] 人设进化笔记 DuduConfig/evolution/evolution_<id>.json。
+        // 和上面的 md 文件一样走快照纪律 + resume 计；旧包没有 evolution 目录时跳过。
+        let evolutionSrc = DuduPaths.duduConfigRoot.appendingPathComponent("evolution", isDirectory: true)
+        if fm.fileExists(atPath: evolutionSrc.path) {
+            let evolutionDst = dst.appendingPathComponent("evolution", isDirectory: true)
+            try fm.createDirectory(at: evolutionDst, withIntermediateDirectories: true)
+            for name in (try? fm.contentsOfDirectory(atPath: evolutionSrc.path)) ?? []
+            where name.hasPrefix("evolution_") && name.hasSuffix(".json") {
+                let from = evolutionSrc.appendingPathComponent(name)
+                guard (try? from.resourceValues(forKeys: [.isRegularFileKey]))?.isRegularFile == true
+                else { continue }
+                let to = evolutionDst.appendingPathComponent(name)
+                if fm.fileExists(atPath: to.path) {
+                    count += 1
+                    bytes += (try? fm.attributesOfItem(atPath: to.path)[.size] as? Int64) ?? 0
+                    continue
+                }
+                let mtime = (try? from.resourceValues(forKeys: [.contentModificationDateKey]))?.contentModificationDate
+                if let mtime, mtime > snapshotAt { continue }
+                try fm.copyItem(at: from, to: to)
+                count += 1
+                bytes += (try? fm.attributesOfItem(atPath: from.path)[.size] as? Int64) ?? 0
+            }
+        }
+
+        // [T-backup-ourspace] 人设旋钮 dudu.personaDials.<personaID>.v1（UserDefaults）。
+        // personaID → {dial: value} 写进 data/memory/persona_dials.json；恢复时
+        // 按 personaID 写回。旧包没有它时跳过。
+        let dialEntries = Self.personaDialEntries()
+        if !dialEntries.isEmpty {
+            let to = dst.appendingPathComponent("persona_dials.json")
+            if fm.fileExists(atPath: to.path) {
+                count += 1
+                bytes += (try? fm.attributesOfItem(atPath: to.path)[.size] as? Int64) ?? 0
+            } else {
+                try BackupJSONFile.write(dialEntries, to: to)
+                count += 1
+                bytes += (try? fm.attributesOfItem(atPath: to.path)[.size] as? Int64) ?? 0
+            }
+        }
+
         return BackupManifest.CategoryStat(entries: count, bytes: bytes, encrypted: false)
+    }
+
+    /// All `dudu.personaDials.<personaID>.v1` values currently in UserDefaults,
+    /// keyed by personaID. UserDefaults has no key enumeration, so this goes
+    /// through dictionaryRepresentation — one read, fine for a backup.
+    private static func personaDialEntries() -> [String: [String: Double]] {
+        let prefix = "dudu.personaDials."
+        let suffix = ".v1"
+        var out: [String: [String: Double]] = [:]
+        for (key, value) in UserDefaults.standard.dictionaryRepresentation() {
+            guard key.hasPrefix(prefix), key.hasSuffix(suffix),
+                  let dict = value as? [String: Double] else { continue }
+            let personaID = String(key.dropFirst(prefix.count).dropLast(suffix.count))
+            guard !personaID.isEmpty else { continue }
+            out[personaID] = dict
+        }
+        return out
     }
 
     // MARK: - Providers
@@ -1086,6 +1156,118 @@ actor BackupExporter {
         }
         return BackupManifest.CategoryStat(
             entries: entries, bytes: bytes, encrypted: false, files: r.filesIncluded)
+    }
+
+    // MARK: - Our Space & music
+
+    /// [T-backup-ourspace] 我们的空间.
+    ///
+    /// Store sections (diary, moments, garden seeds, AI status, her mood,
+    /// tell-her-later) and task cards ride as opaque UserDefaults payloads in
+    /// `data/our_space.jsonl` — the stores own their encoding, so the package
+    /// never pins a second copy of the models. Task-card background photos go
+    /// through the file tree under `ourspace/taskcards/`.
+    ///
+    /// Resume discipline matches exportMemory: a staged file from the
+    /// interrupted attempt IS the snapshot and is never overwritten with
+    /// live state.
+    private func exportOurSpace(dataDir: URL, trees: BackupFileTreeExporter) async throws
+        -> BackupManifest.CategoryStat {
+        let records = await MainActor.run {
+            OurSpaceStore.shared.backupRecords()
+                + TaskCardStore.shared.backupRecords()
+        }
+
+        let alreadyStaged = Self.jsonlStaged(dataDir: dataDir, base: "our_space")
+        var entries = 0
+        var bytes: Int64 = 0
+        if !records.isEmpty, !alreadyStaged {
+            let writer = BackupJSONLWriter(directory: dataDir, baseName: "our_space")
+            defer { try? writer.close() }
+            for (key, data, count) in records {
+                try writer.write(BackupRecordEnvelope(
+                    t: "DefaultsPayload",
+                    d: BackupDefaultsPayload(key: key, payload: data, count: count)))
+                entries += count
+            }
+            try writer.close()
+            bytes = writer.totalBytes
+        } else if alreadyStaged {
+            // Count what the interrupted attempt actually staged, so the
+            // manifest describes the package rather than this run.
+            entries = Self.countPayloadItems(dataDir: dataDir, base: "our_space")
+        }
+
+        // Task-card background photos. Filenames are `task_<id>.jpg` —
+        // deterministic, so merge on restore is by name.
+        let cardsDir = TaskCardStore.cardsDirectory
+        var fileCount = 0
+        if fm.fileExists(atPath: cardsDir.path) {
+            let r = try trees.export(root: cardsDir, logicalPrefix: "ourspace/taskcards",
+                                     category: .ourSpace)
+            fileCount = r.filesIncluded
+            bytes += r.bytesIncluded
+        }
+        return BackupManifest.CategoryStat(
+            entries: entries, bytes: bytes, encrypted: false, files: fileCount)
+    }
+
+    /// [T-backup-ourspace] 听歌房 library (opaque payloads, `data/music.jsonl`).
+    private func exportMusic(dataDir: URL) async throws
+        -> BackupManifest.CategoryStat {
+        let records = await MainActor.run { MusicStore.shared.backupRecords() }
+
+        let alreadyStaged = Self.jsonlStaged(dataDir: dataDir, base: "music")
+        var entries = 0
+        var bytes: Int64 = 0
+        if !records.isEmpty, !alreadyStaged {
+            let writer = BackupJSONLWriter(directory: dataDir, baseName: "music")
+            defer { try? writer.close() }
+            for (key, data, count) in records {
+                try writer.write(BackupRecordEnvelope(
+                    t: "DefaultsPayload",
+                    d: BackupDefaultsPayload(key: key, payload: data, count: count)))
+                entries += count
+            }
+            try writer.close()
+            bytes = writer.totalBytes
+        } else if alreadyStaged {
+            entries = Self.countPayloadItems(dataDir: dataDir, base: "music")
+        }
+        return BackupManifest.CategoryStat(entries: entries, bytes: bytes,
+                                           encrypted: false)
+    }
+
+    /// True when a previous attempt already staged this JSONL stream (any
+    /// shard) — a resume must not overwrite it with live state.
+    private static func jsonlStaged(dataDir: URL, base: String) -> Bool {
+        ((try? FileManager.default.contentsOfDirectory(atPath: dataDir.path)) ?? [])
+            .contains { $0 == "\(base).jsonl"
+                || ($0.hasPrefix("\(base)-") && $0.hasSuffix(".jsonl")) }
+    }
+
+    /// Sum the per-record `count` fields of an already-staged stream, so a
+    /// resumed run's manifest still reports what the package holds.
+    private static func countPayloadItems(dataDir: URL, base: String) -> Int {
+        let fm = FileManager.default
+        let names = ((try? fm.contentsOfDirectory(atPath: dataDir.path)) ?? [])
+            .filter { $0 == "\(base).jsonl"
+                || ($0.hasPrefix("\(base)-") && $0.hasSuffix(".jsonl")) }
+            .sorted()
+        let decoder = JSONDecoder()
+        var total = 0
+        for name in names {
+            guard let data = try? Data(contentsOf: dataDir.appendingPathComponent(name))
+            else { continue }
+            for line in data.split(separator: 0x0A) where !line.isEmpty {
+                if let env = try? decoder.decode(
+                    BackupRecordEnvelope<BackupDefaultsPayload>.self,
+                    from: Data(line)) {
+                    total += env.d.count
+                }
+            }
+        }
+        return total
     }
 
     // MARK: - Environment variables
