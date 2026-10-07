@@ -123,11 +123,11 @@ final class BackupCenterModel: ObservableObject {
                     self.noticeIsError = true
                 }
             } catch is CancellationError {
-                BackupHistory.shared.fail(recordId, "备份已取消")
+                BackupHistory.shared.fail(recordId, message: "备份已取消")
                 self.notice = "备份已取消。"
                 self.noticeIsError = false
             } catch {
-                BackupHistory.shared.fail(recordId, error.localizedDescription)
+                BackupHistory.shared.fail(recordId, message: error.localizedDescription)
                 self.notice = "备份失败：\(error.localizedDescription)"
                 self.noticeIsError = true
             }
