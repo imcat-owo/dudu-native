@@ -21,6 +21,14 @@ private let gateLogger = AppLogger(category: "ConfigConfirmGate")
 final class ConfigConfirmationGate: ObservableObject {
     static let shared = ConfigConfirmationGate()
 
+    /// P1 seam: background-notification plumbing lives in a later part
+    /// (BackgroundKeepAliveManager + NotificationCategoryRegistry).
+    /// That part sets these once at launch; until then bg-notify is inert —
+    /// the enabled-check fails closed (false) and category registration
+    /// no-ops. Set-once-at-launch, hence nonisolated(unsafe).
+    nonisolated(unsafe) static var isBackgroundNotifyEnabled: () -> Bool = { false }
+    nonisolated(unsafe) static var registerNotificationCategory: (UNNotificationCategory) -> Void = { _ in }
+
     /// 120-second wall-clock window. After this, the request auto-rejects
     /// and the bridge returns exit code 124 to the CLI.
     ///
@@ -203,7 +211,7 @@ final class ConfigConfirmationGate: ObservableObject {
     /// Sent at most once per change id (guarded by `notifiedIds`).
     private func notifyIfBackgrounded(_ change: PendingConfigChange) {
         guard UIApplication.shared.applicationState != .active else { return }
-        guard BackgroundKeepAliveManager.shared.backgroundNotificationsEnabled else {
+        guard Self.isBackgroundNotifyEnabled() else {
             gateLogger.info("bg-notify skipped id=\(change.id) — backgroundNotificationsEnabled=false")
             return
         }
@@ -212,7 +220,7 @@ final class ConfigConfirmationGate: ObservableObject {
 
         let center = UNUserNotificationCenter.current()
         center.requestAuthorization(options: [.alert, .sound, .badge]) { _, _ in }
-        NotificationCategoryRegistry.register(
+        Self.registerNotificationCategory(
             UNNotificationCategory(identifier: Self.notifyCategoryId, actions: [], intentIdentifiers: [])
         )
 

@@ -37,6 +37,16 @@ struct EnvVarEntry: Identifiable, Codable {
 final class EnvVarStore: ObservableObject {
     static let shared = EnvVarStore()
 
+    /// P1 seam: sync dirty-tracking lives on ChatStore (P4, chat core).
+    /// P4 sets this once at launch, e.g.:
+    /// `{ recordType, recordId, operation in
+    ///      Task { await ChatStore.shared.markDirty(recordType: recordType,
+    ///          recordId: recordId, operation: operation) } }`.
+    /// Until then dirty marks are dropped — sync doesn't exist yet in P1.
+    /// Set-once-at-launch, hence nonisolated(unsafe).
+    nonisolated(unsafe) static var syncDirtyHook:
+        ((recordType: String, recordId: String, operation: String) -> Void)?
+
     @Published private(set) var entries: [EnvVarEntry] = []
 
     private let fileURL: URL
@@ -81,11 +91,11 @@ final class EnvVarStore: ObservableObject {
             guard let self else { return }
             await MainActor.run {
                 self.markAllEntriesDirty()
-                Task { await ChatStore.shared.markDirty(
+                Self.syncDirtyHook?(
                     recordType: "EnvVar",
                     recordId: "env-vars",
                     operation: "delete"
-                ) }
+                )
                 UserDefaults.standard.set(true, forKey: Self.legacyCleanupKey)
                 logger.info("[EnvVarStore] legacy EnvVarV2 cleanup scheduled (\(self.entries.count) entries re-emitted as EnvVarItem)")
             }
@@ -129,11 +139,11 @@ final class EnvVarStore: ObservableObject {
     /// passes the entry's UUID (EnvVarEntry.id), which is also the
     /// EnvVarItem record's recordName.
     fileprivate func markEntryDirty(entryId: String, operation: String = "upsert") {
-        Task { await ChatStore.shared.markDirty(
+        Self.syncDirtyHook?(
             recordType: "EnvVarItem",
             recordId: entryId,
             operation: operation
-        ) }
+        )
     }
 
     /// Re-emit per-key markDirty for every current entry. Used by

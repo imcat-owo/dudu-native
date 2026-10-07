@@ -3,6 +3,13 @@ import Foundation
 struct AppLogger {
     let category: String
 
+    /// P1 seam: the crash-report ring buffer lives in Diagnostics/CrashReporter
+    /// (later part). That part sets this once at launch to
+    /// `{ CrashReporter.shared.appendLog($0) }`; until then the sink stays nil
+    /// and log lines are NSLog-only (same as before, minus the ring buffer).
+    /// Set-once-at-launch like `activeSessionId`, hence nonisolated(unsafe).
+    nonisolated(unsafe) static var crashLogSink: ((String) -> Void)?
+
     init(subsystem: String = "com.dudu.ios", category: String) {
         self.category = category
     }
@@ -30,7 +37,7 @@ struct AppLogger {
         if level == "INFO" || level == "WARN" || level == "ERROR" {
             let ts = Date().formatted(.dateTime.hour().minute().second())
             let line = "[\(ts)] [\(category)] \(message)"
-            CrashReporter.shared.appendLog(line)
+            Self.crashLogSink?(line)
         }
     }
 }
