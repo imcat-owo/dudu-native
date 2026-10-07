@@ -65,6 +65,10 @@ extension AIChatViewModel {
             // sentinel, so probe callers can tell "no backend" apart from a
             // real failed exec. (All OnDemandBash consumers only distinguish
             // 0 from non-zero, so the value change is behaviour-neutral there.)
+            // Note: `try?` also maps a mid-exec throw (seam non-nil, backend
+            // failed) onto the same sentinel — acceptable here because probe
+            // callers only care 0 vs non-zero, but do not reuse this pattern
+            // where the nil-vs-throw distinction matters.
             let r = try? await DuduISHSeams.execute?(sid, command, timeout, { _ in }, { _ in })
             return r?.exitCode ?? Self.ishBackendUnavailableSentinel
         })
