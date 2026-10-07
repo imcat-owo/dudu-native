@@ -11,7 +11,7 @@
 import Foundation
 import SwiftUI
 import UIKit
-import SQLite3
+import CSQLiteVec
 import Compression
 import os.log
 

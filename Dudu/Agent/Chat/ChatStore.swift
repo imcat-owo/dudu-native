@@ -2,7 +2,7 @@
 //  P4/P5 PORT (2026-10-07): ported from OpenMinis Agent/Chat/ChatStore.swift — renames Minis->Dudu, bundle/group ids, minis->dudu prefixes;
 //  iCloud container refs dropped (no iCloud entitlement).
 import Foundation
-import SQLite3
+import CSQLiteVec
 import SwiftAnthropic
 import UIKit
 import os.log

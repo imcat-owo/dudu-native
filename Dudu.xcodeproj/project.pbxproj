@@ -391,7 +391,6 @@
 		515CD77B6FB012CA930D57C4 /* KnowledgeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09191CBE50E5373B4F2A3FB3 /* KnowledgeStore.swift */; };
 		6540FD7FD8F9CCE22025E7EE /* KnowledgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02E7F7A84446E8C33BDC5668 /* KnowledgeView.swift */; };
 /* End PBXBuildFile section */
-		C22E4BE16A67710000C9EBF0 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 30AC3C5C6C418C791E362178 /* libsqlite3.tbd */; };
 		F8F1403829CEFF47083C5520 /* RealTimeCutVADLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = AECFD4BE143BED595F298AF5 /* RealTimeCutVADLibrary */; };
 		BA894477DDF6C14EE49C54DE /* SwiftAnthropic in Frameworks */ = {isa = PBXBuildFile; productRef = 05812F6725F9E44AAB5A4A83 /* SwiftAnthropic */; };
 		F4220CBAED6349998A34AED9 /* SQLiteVec in Frameworks */ = {isa = PBXBuildFile; productRef = 2BC90F86F661471B97A971D5 /* SQLiteVec */; };
@@ -909,7 +908,6 @@
 					F4220CBAED6349998A34AED9,
 					BA894477DDF6C14EE49C54DE,
 				F8F1403829CEFF47083C5520,
-				C22E4BE16A67710000C9EBF0,
 					EC3002C461A82F71F1798455,
 					F25C8FD390728E9381D795D7,
 					5A9D84CC2DAA442210A98192,

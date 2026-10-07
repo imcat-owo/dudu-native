@@ -1,5 +1,5 @@
 import Foundation
-import SQLite3
+import CSQLiteVec
 
 private let logger = AppLogger(category: "VoiceCorrection")
 

@@ -12,7 +12,7 @@
 //  iCloud container refs dropped (no iCloud entitlement).
 
 import Foundation
-import SQLite3
+import CSQLiteVec
 import Compression
 
 // MARK: - Skill Model

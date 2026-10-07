@@ -6,7 +6,7 @@ import Combine
 import CryptoKit
 import Foundation
 import ImageIO
-import SQLite3
+import CSQLiteVec
 import UIKit
 import os.log
 

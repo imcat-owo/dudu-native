@@ -16,7 +16,7 @@
 //
 
 import Foundation
-import SQLite3
+import CSQLiteVec
 
 #if canImport(AlarmKit)
 import AlarmKit
