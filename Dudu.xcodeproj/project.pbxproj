@@ -475,6 +475,23 @@
 		B69EB3FDC3618E38A4851B11 /* ComputerBackend.swift in Sources */ = {isa = PBXBuildFile; fileRef = C487739E6663445CBED696F5 /* ComputerBackend.swift */; };
 		D88D77BC5F7C3886A27DB31C /* ComputerTerminalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B908F67FB95CBE877B9348 /* ComputerTerminalView.swift */; };
 		7F675F59958AA975DC967091 /* ComputerTerminalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF64B7EA879778610416D3FE /* ComputerTerminalViewModel.swift */; };
+		FEA05E0EF36EA49DE7EA81DA /* DuduShortcutsCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 252D96FCAF919663A498C636 /* DuduShortcutsCatalog.swift */; };
+		BE73F1D749C829CB548940E0 /* SiriShortcutsHubView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAAF51D05A759F1C31878723 /* SiriShortcutsHubView.swift */; };
+		D27CE5FA1C673711247B72AF /* ModelGroupDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F9AD281C95F6463217D73DC /* ModelGroupDetailView.swift */; };
+		9FA0289322FD6CFC10541331 /* ModelGroupListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1C3D52FEF6F3BC0FDF77970 /* ModelGroupListView.swift */; };
+		AC46A28053CB194C225493E2 /* CrossAppOpener.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6D0F28524E74243183AD83C /* CrossAppOpener.swift */; };
+		77296DA526C47E1BB62E3AEA /* OpenAppWhitelist.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9F88B775FD861480DE0E370 /* OpenAppWhitelist.swift */; };
+		BE14D650F3156C6F583B20AA /* SandboxCloudBackend.swift in Sources */ = {isa = PBXBuildFile; fileRef = B873ACA1133F95E9985F50CB /* SandboxCloudBackend.swift */; };
+		5A873B3217A731EF7D910701 /* SandboxKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47432925827CD6C6F340AC18 /* SandboxKeychain.swift */; };
+		0F0616B66D7340AAD133E0D0 /* SandboxLocalBackend.swift in Sources */ = {isa = PBXBuildFile; fileRef = C62F37E9D144A6FE01A36D5B /* SandboxLocalBackend.swift */; };
+		72396A543F082C33112A8170 /* SandboxManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB5B8401DC536573A3C07FD /* SandboxManager.swift */; };
+		F3BD69BD2EF491D60E2D6636 /* SandboxModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5364919A74880BE972BAF8 /* SandboxModels.swift */; };
+		44E296BD15CEC7188DB317C2 /* SandboxRelayTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB30AE1BB235B51147F8D19A /* SandboxRelayTransport.swift */; };
+		0C1B49B8D5FBE677C64AFF9D /* SandboxSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53BEDDA72EADA933F9F5EEAD /* SandboxSettingsView.swift */; };
+		7C68C0F96DAEFF48E7C0C351 /* ProviderQRScanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BF3CB807E51424651FA2702 /* ProviderQRScanView.swift */; };
+		C5E1426922FEEA542825EEB2 /* ProviderQRShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF471B5AFDCB487AA2A5E000 /* ProviderQRShareView.swift */; };
+		4DFA5767B87A318AB6143CF5 /* ProviderShareCodec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E12BE1F78FB5E80F4042265 /* ProviderShareCodec.swift */; };
+		AADDE2A35C5FEAF1199EC8A7 /* QRCodeImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB6E0781B60454ED1F804DF /* QRCodeImage.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1087,6 +1104,23 @@
 		C487739E6663445CBED696F5 /* ComputerBackend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComputerBackend.swift; sourceTree = "<group>"; };
 		E6B908F67FB95CBE877B9348 /* ComputerTerminalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComputerTerminalView.swift; sourceTree = "<group>"; };
 		AF64B7EA879778610416D3FE /* ComputerTerminalViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComputerTerminalViewModel.swift; sourceTree = "<group>"; };
+		252D96FCAF919663A498C636 /* DuduShortcutsCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuduShortcutsCatalog.swift; sourceTree = "<group>"; };
+		EAAF51D05A759F1C31878723 /* SiriShortcutsHubView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiriShortcutsHubView.swift; sourceTree = "<group>"; };
+		9F9AD281C95F6463217D73DC /* ModelGroupDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelGroupDetailView.swift; sourceTree = "<group>"; };
+		F1C3D52FEF6F3BC0FDF77970 /* ModelGroupListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelGroupListView.swift; sourceTree = "<group>"; };
+		D6D0F28524E74243183AD83C /* CrossAppOpener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrossAppOpener.swift; sourceTree = "<group>"; };
+		F9F88B775FD861480DE0E370 /* OpenAppWhitelist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAppWhitelist.swift; sourceTree = "<group>"; };
+		B873ACA1133F95E9985F50CB /* SandboxCloudBackend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SandboxCloudBackend.swift; sourceTree = "<group>"; };
+		47432925827CD6C6F340AC18 /* SandboxKeychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SandboxKeychain.swift; sourceTree = "<group>"; };
+		C62F37E9D144A6FE01A36D5B /* SandboxLocalBackend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SandboxLocalBackend.swift; sourceTree = "<group>"; };
+		4EB5B8401DC536573A3C07FD /* SandboxManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SandboxManager.swift; sourceTree = "<group>"; };
+		DC5364919A74880BE972BAF8 /* SandboxModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SandboxModels.swift; sourceTree = "<group>"; };
+		AB30AE1BB235B51147F8D19A /* SandboxRelayTransport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SandboxRelayTransport.swift; sourceTree = "<group>"; };
+		53BEDDA72EADA933F9F5EEAD /* SandboxSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SandboxSettingsView.swift; sourceTree = "<group>"; };
+		6BF3CB807E51424651FA2702 /* ProviderQRScanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderQRScanView.swift; sourceTree = "<group>"; };
+		AF471B5AFDCB487AA2A5E000 /* ProviderQRShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderQRShareView.swift; sourceTree = "<group>"; };
+		8E12BE1F78FB5E80F4042265 /* ProviderShareCodec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderShareCodec.swift; sourceTree = "<group>"; };
+		6AB6E0781B60454ED1F804DF /* QRCodeImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeImage.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 		30AC3C5C6C418C791E362178 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 
@@ -2028,13 +2062,17 @@
 				6118222DA01CD5526F8307B8 /* Call */,
 				FC61A6675134359CB1A0BBA1 /* Chat */,
 				12FCC3EC64521BAD1C37E6E7 /* Computer */,
+				D79477E0FDBD82305022D02B /* Intents */,
 				18E9DA5BE55C7A48F1D6BFB5 /* Knowledge */,
 				AA856D71B083C7F259E49862 /* MCP */,
 				6D7AF697BE452E1C125B5155 /* Music */,
+				EA0C68FA82DB5BB807333612 /* Orchestration */,
 				74440DB741AE833BB66AF6C0 /* OurSpace */,
 				098E7EAFF306EFFA46763C5C /* Permissions */,
 				5C12BE9B55843E8E76492218 /* Providers */,
+				F024CE843C027B1E9FBBBD54 /* Sandbox */,
 				930C951A6A0C2D8A4A21F5B8 /* Settings */,
+				3C1DD273B975669FCAE1376F /* ShareImport */,
 				F3B905EA2EE48C52F8156403 /* Shell */,
 				4FEB8D2DF9669524BACEE766 /* Stickers */,
 				3ADCBF358DC9CFDB2F2EC897 /* Theme */,
@@ -2334,6 +2372,51 @@
 			path = Computer;
 			sourceTree = "<group>";
 		};
+		D79477E0FDBD82305022D02B /* Intents */ = {
+			isa = PBXGroup;
+			children = (
+				252D96FCAF919663A498C636 /* DuduShortcutsCatalog.swift */,
+				EAAF51D05A759F1C31878723 /* SiriShortcutsHubView.swift */,
+			);
+			path = Intents;
+			sourceTree = "<group>";
+		};
+		EA0C68FA82DB5BB807333612 /* Orchestration */ = {
+			isa = PBXGroup;
+			children = (
+				9F9AD281C95F6463217D73DC /* ModelGroupDetailView.swift */,
+				F1C3D52FEF6F3BC0FDF77970 /* ModelGroupListView.swift */,
+			);
+			path = Orchestration;
+			sourceTree = "<group>";
+		};
+		F024CE843C027B1E9FBBBD54 /* Sandbox */ = {
+			isa = PBXGroup;
+			children = (
+				47432925827CD6C6F340AC18 /* SandboxKeychain.swift */,
+				4EB5B8401DC536573A3C07FD /* SandboxManager.swift */,
+				53BEDDA72EADA933F9F5EEAD /* SandboxSettingsView.swift */,
+				AB30AE1BB235B51147F8D19A /* SandboxRelayTransport.swift */,
+				B873ACA1133F95E9985F50CB /* SandboxCloudBackend.swift */,
+				C62F37E9D144A6FE01A36D5B /* SandboxLocalBackend.swift */,
+				D6D0F28524E74243183AD83C /* CrossAppOpener.swift */,
+				DC5364919A74880BE972BAF8 /* SandboxModels.swift */,
+				F9F88B775FD861480DE0E370 /* OpenAppWhitelist.swift */,
+			);
+			path = Sandbox;
+			sourceTree = "<group>";
+		};
+		3C1DD273B975669FCAE1376F /* ShareImport */ = {
+			isa = PBXGroup;
+			children = (
+				6AB6E0781B60454ED1F804DF /* QRCodeImage.swift */,
+				6BF3CB807E51424651FA2702 /* ProviderQRScanView.swift */,
+				8E12BE1F78FB5E80F4042265 /* ProviderShareCodec.swift */,
+				AF471B5AFDCB487AA2A5E000 /* ProviderQRShareView.swift */,
+			);
+			path = ShareImport;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -2513,9 +2596,11 @@
 				0AB0F63F422A693954AB0C96 /* DuduSessionCleanupSeams.swift in Sources */,
 				0ABFDA00A952DC0AF54FFE64 /* PhoneticNormalizer.swift in Sources */,
 				0B1DA20EF270C5F8FE1AABDA /* TextSegmenter.swift in Sources */,
+				0C1B49B8D5FBE677C64AFF9D /* SandboxSettingsView.swift in Sources */,
 				0D290709292683F1CE5948F4 /* ClipboardDeviceTool.swift in Sources */,
 				0DB46B6AE6E65BFEEDF38EE9 /* ToolLoopDetector.swift in Sources */,
 				0DCF54428A253FD2F1658A99 /* StatusSection.swift in Sources */,
+				0F0616B66D7340AAD133E0D0 /* SandboxLocalBackend.swift in Sources */,
 				1056489266E503A373E8BDAF /* EnvVarStore.swift in Sources */,
 				1066B0C5D60899B8252B0A08 /* ContextPolicy.swift in Sources */,
 				10CA72E4F5ABF14F031ADB4D /* PersonaEvolutionView.swift in Sources */,
@@ -2604,6 +2689,7 @@
 				433B53963730BE2DFDE06803 /* AgentLiveActivityWidget.swift in Sources */,
 				433C50B687A3B8DB822FD5C5 /* SpeechRecognitionManager.swift in Sources */,
 				43D70D06FD32CDF437D9ED8A /* ShortcutRunTracker.swift in Sources */,
+				44E296BD15CEC7188DB317C2 /* SandboxRelayTransport.swift in Sources */,
 				4A055772F58E693828870A29 /* ProviderDetailView.swift in Sources */,
 				4A89BEE423134041280D8EC1 /* PersonaDialsStore.swift in Sources */,
 				4B3C7B1EF8BCDFF2C01E8C8D /* BackupFormat.swift in Sources */,
@@ -2612,6 +2698,7 @@
 				4D7D4EFDA4C85A8F05983AE5 /* ImagePayloadPrep.swift in Sources */,
 				4DC570DB08623E0FCB6F9CD8 /* SyncDirtyScanner.swift in Sources */,
 				4DE566C76BED45B1D7B2A89B /* AIChatViewModel+Misc.swift in Sources */,
+				4DFA5767B87A318AB6143CF5 /* ProviderShareCodec.swift in Sources */,
 				4E77C6B819872BAE86BE9687 /* MountedFolderCoordinator.swift in Sources */,
 				4EDEFCBC9C18CBD9EC7B09C1 /* StewardSensitiveApprovalGate.swift in Sources */,
 				4F3CDF1B644655332FCE2C13 /* DuduRcloneStub.m in Sources */,
@@ -2637,6 +2724,7 @@
 				5998A8C0B9430129CDBED404 /* ClaudeOAuthRefreshCoordinator.swift in Sources */,
 				59F83DF3BD978CECA9D64C6E /* ChatModels.swift in Sources */,
 				5A0D937B53B1E4CA8F251306 /* VoiceInputModels.swift in Sources */,
+				5A873B3217A731EF7D910701 /* SandboxKeychain.swift in Sources */,
 				5AC8C9CC1608FFAB04D360E4 /* DeviceIdentity.swift in Sources */,
 				5B298C778AF26DD11A90B6F5 /* DuduVoiceBubblePlayer.swift in Sources */,
 				5B5A0342E59F69E632C189CA /* ProactiveNotificationScheduler.swift in Sources */,
@@ -2678,6 +2766,7 @@
 				71A176B229909FF6F6B17B43 /* ArtifactModel.swift in Sources */,
 				722839FBC32AABF710579C5F /* ShellCommandRingBuffer.swift in Sources */,
 				722851F737BEFA977D3547BF /* TTSServiceModels.swift in Sources */,
+				72396A543F082C33112A8170 /* SandboxManager.swift in Sources */,
 				725E07B4B624B1DD53B4BAA4 /* MountedFolderManager.swift in Sources */,
 				72AD31B2DD10C278B4D3248B /* DuplexTurnEngine.swift in Sources */,
 				731BF17B7F06C850869C88C7 /* AskDuduIntent.swift in Sources */,
@@ -2687,12 +2776,14 @@
 				750D6959384BE052FB7059EE /* RcloneRemoteStore.swift in Sources */,
 				761F4D086C9100A513AFCC20 /* OAuthRefreshCoordinator.swift in Sources */,
 				765098CEC2079346EFE211F2 /* AIChatViewModel+ThemeTools.swift in Sources */,
+				77296DA526C47E1BB62E3AEA /* OpenAppWhitelist.swift in Sources */,
 				77E2F7B9B92594706DDC002C /* BashismDetector.swift in Sources */,
 				77EFA3ED57736203DFE92AEB /* Syncable.swift in Sources */,
 				79A31EFC56E9B93237A9EC0B /* WeatherOffloadBridge.swift in Sources */,
 				7A4A2F0720CD0F635FBD1BDB /* ProvidersCollection.swift in Sources */,
 				7BE834043097152B89728978 /* NSTextContainerSetSizeGuard.m in Sources */,
 				7BF31961A4395DE33856F4E1 /* BrowserUseManager.swift in Sources */,
+				7C68C0F96DAEFF48E7C0C351 /* ProviderQRScanView.swift in Sources */,
 				7C88B218A5F6EBB40F16A1C4 /* EnvVarRedactor.swift in Sources */,
 				7CFD8225A328FF3D1D8B02D3 /* WebSearchBridgeTool.swift in Sources */,
 				7D0B88C2AB926AF87C8ADE97 /* BrowserTabPool.swift in Sources */,
@@ -2750,6 +2841,7 @@
 				9BFBD131549ED265B073426B /* OpenAIModelsAPI.swift in Sources */,
 				9C0A540F16FDF749570BB532 /* RcloneChunkedUpload.swift in Sources */,
 				9D95E3DCBD058556C2736345 /* EnvVarPrivacyStore.swift in Sources */,
+				9FA0289322FD6CFC10541331 /* ModelGroupListView.swift in Sources */,
 				A05775DA475C514622B55956 /* FollowUpSessionIntent.swift in Sources */,
 				A06092493578FC211FBF896F /* DeepLinkRouter.swift in Sources */,
 				A0B69ED478A9706FB05E6F28 /* CallProposalCenter.swift in Sources */,
@@ -2767,9 +2859,11 @@
 				A6EE906FF32044B54B560C9E /* BridgeRelayClient.swift in Sources */,
 				A80006A545654557BCF46DF9 /* VoiceCallPaper.swift in Sources */,
 				A8EEA0EE4990141973C32012 /* QuickTaskIntent.swift in Sources */,
+				AADDE2A35C5FEAF1199EC8A7 /* QRCodeImage.swift in Sources */,
 				AAFF3B7F148F85A70150587E /* DuduWebLoadError.swift in Sources */,
 				AB171940BB38B97123A6C02B /* ScheduledPromptsView.swift in Sources */,
 				ABAEC9A0F40E898848339356 /* AIChatViewModel+Persistence.swift in Sources */,
+				AC46A28053CB194C225493E2 /* CrossAppOpener.swift in Sources */,
 				ACEB00C9C7FCB33C1F75514C /* MemoryGraphView.swift in Sources */,
 				AD1615C44F1FCB9236A5CC2D /* ToolApprovalGate.swift in Sources */,
 				AE68F737E1B2B9AFC6CF55F8 /* ShareCoordinator.swift in Sources */,
@@ -2797,7 +2891,9 @@
 				BB62BD64173669FB4B122381 /* MCPOAuthController.swift in Sources */,
 				BC04CE1F04812EE7F699FA69 /* AntigravityOAuthManager.swift in Sources */,
 				BC7FAF4E5FB322667FD3213D /* ChatStore.swift in Sources */,
+				BE14D650F3156C6F583B20AA /* SandboxCloudBackend.swift in Sources */,
 				BE30E04D63F3694125A89853 /* VoiceCorrectionRecorder.swift in Sources */,
+				BE73F1D749C829CB548940E0 /* SiriShortcutsHubView.swift in Sources */,
 				BEA610EA74347D7D1D78EE8E /* URLBuilding.swift in Sources */,
 				BFA6530A58F1F801FBDFB283 /* AntigravityProvider.swift in Sources */,
 				C00F1C6AC7507660A775BC51 /* VocabularyFilter.swift in Sources */,
@@ -2811,6 +2907,7 @@
 				C3EB998F09CCEC5E6EC1C100 /* VoiceNowPlaying.swift in Sources */,
 				C57E7FCB0AC7CCC070E8BD5C /* ProviderTypes.swift in Sources */,
 				C590C74FD9FBFE3714ADAB0A /* InteractiveTools.swift in Sources */,
+				C5E1426922FEEA542825EEB2 /* ProviderQRShareView.swift in Sources */,
 				C8255D0704C348F557029B4D /* LLMTypes.swift in Sources */,
 				C9C2EDB9414F15245461F549 /* AIChatViewModel+MentionMenu.swift in Sources */,
 				CA32E9202C7A6FE30CDE6D96 /* LaterSection.swift in Sources */,
@@ -2825,6 +2922,7 @@
 				CE7CC8E8B6BBC084E396070C /* xAIModelsAPI.swift in Sources */,
 				CF2E548C26C3EAA89E9BB6DB /* AIChatViewModel+Attachments.swift in Sources */,
 				D1707D6396F6D7DD61AAB829 /* OurSpaceStore.swift in Sources */,
+				D27CE5FA1C673711247B72AF /* ModelGroupDetailView.swift in Sources */,
 				D29B19117F10315824A1EED7 /* CrashReporter.swift in Sources */,
 				D2FB82084DDBBB1FDD340546 /* PlayerOffloadBridge.swift in Sources */,
 				D38F0FFC7564AB3DD302A494 /* SoulStore.swift in Sources */,
@@ -2882,6 +2980,7 @@
 				F24271C552C89EA1A6345E04 /* BackupActivityLock.swift in Sources */,
 				F33B99F6A836912CA7233BFC /* ConfigRegistry.swift in Sources */,
 				F39E360FFD1B68776CCD5638 /* ConfigAuditEntry.swift in Sources */,
+				F3BD69BD2EF491D60E2D6636 /* SandboxModels.swift in Sources */,
 				F41C74E5247254EC2A7944FF /* ChatStoreSyncHydrators.swift in Sources */,
 				F5E99F74B302E253E245C0E3 /* CacheKeepAliveManager.swift in Sources */,
 				F606A39F8DA406D88425FA38 /* GroupsCollection.swift in Sources */,
@@ -2906,6 +3005,7 @@
 				FC6580876255C20F22147C6D /* VoiceProvider+System.swift in Sources */,
 				FC7CC80B1889F3EAA664981A /* LLMSessionRegistry.swift in Sources */,
 				FD2F9FA79434BE3C41B79706 /* KaTeXRenderer.swift in Sources */,
+				FEA05E0EF36EA49DE7EA81DA /* DuduShortcutsCatalog.swift in Sources */,
 				FF10317D42B1DE0D4D068C3B /* MusicStore.swift in Sources */,
 				FF44D82CCC8700F439CB95EB /* BackupRunController.swift in Sources */,
 				FF49549E7C6942072F161608 /* DuduURLPathDecoding.swift in Sources */,
