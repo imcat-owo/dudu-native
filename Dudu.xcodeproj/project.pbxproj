@@ -438,6 +438,9 @@
 			productName = Dudu;
 			productReference = 100000000000000000000009 /* Dudu.app */;
 			productType = "com.apple.product-type.application";
+			packageProductDependencies = (
+				F24EC660251DF7082EE0B0AC /* BridgeCore */,
+			);
 		};
 /* End PBXNativeTarget section */
 
@@ -674,6 +677,21 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		777F3A508E55B56E9030C792 /* BridgeCore */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = BridgeCore;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		F24EC660251DF7082EE0B0AC /* BridgeCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 777F3A508E55B56E9030C792 /* BridgeCore */;
+			productName = BridgeCore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 100000000000000000000001 /* Project object */;
 }
