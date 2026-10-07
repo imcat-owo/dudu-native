@@ -61,6 +61,16 @@ struct RefusingSelfPostSink: SelfPostFeedSink {
     }
 }
 
+/// D20: the native Our Space timeline (我们的时光) is the feed the self-post
+/// feature publishes into. Never throws — addMoment validates and returns
+/// nil on empty text, which we treat as a quiet no-op, never a faked publish.
+@MainActor
+struct OurSpaceMomentFeedSink: SelfPostFeedSink {
+    func publishSelfPost(text: String) async throws {
+        _ = OurSpaceStore.shared.addMoment(title: text, kind: .moment)
+    }
+}
+
 // MARK: - Manager
 
 @MainActor

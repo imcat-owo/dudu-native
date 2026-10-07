@@ -33,6 +33,9 @@ extension AIChatViewModel {
     func enterIncognito() {
         resetViewState()
         isIncognito = true
+        // D20: keep the proactive engine + the @Sendable context mirror in sync
+        ProactiveEngine.shared.incognito = true
+        Self.activeSessionIsIncognito = true
         incognitoLogger.info("[Incognito] entered — in-memory only from here")
     }
 
@@ -43,6 +46,9 @@ extension AIChatViewModel {
         guard isIncognito else { return }
         resetViewState()
         isIncognito = false
+        // D20: keep the proactive engine + the @Sendable context mirror in sync
+        ProactiveEngine.shared.incognito = false
+        Self.activeSessionIsIncognito = false
         incognitoLogger.info("[Incognito] exited (confirmed=\(confirmed)) — in-memory transcript discarded")
     }
 

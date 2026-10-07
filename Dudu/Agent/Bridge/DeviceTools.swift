@@ -15,6 +15,7 @@ enum DeviceTools {
     /// 全部工具注册名：重试注册前先逐个注销已注册的，避免"上次注册到一半
     /// 失败"时 duplicateName 把重试堵死（unregister 不存在的名直接返回 false）。
     /// D19: 听歌房 DJ 工具名拼在后面（MusicDJTools.toolNames）。
+    /// D20: 甜蜜日常工具名拼在后面（ProactiveTools / InteractiveTools）。
     static let toolNames: [String] = [
         ClipboardDeviceTool.toolName,
         ClipboardDeviceTool.readToolName,
@@ -27,6 +28,8 @@ enum DeviceTools {
         PhotosDeviceTool.deleteToolName,
         BluetoothDeviceTool.toolName,
     ] + MusicDJTools.toolNames
+        + ProactiveTools.toolNames
+        + InteractiveTools.toolNames
 
     static func registerAll(into registry: ToolRegistry) async throws {
         try await ClipboardDeviceTool.register(into: registry)
@@ -36,5 +39,9 @@ enum DeviceTools {
         try await BluetoothDeviceTool.register(into: registry)
         // D19: 听歌房 DJ 工具（AI 从对话框点歌/切歌/管歌单/记我们的歌）
         try await MusicDJTools.register(into: registry)
+        // D20: 甜蜜日常——主动关怀工具（提醒/心情/自发动态）
+        try await ProactiveTools.register(into: registry)
+        // D20: 甜蜜日常——互动工具（照片分享/涂鸦/故事）
+        try await InteractiveTools.register(into: registry)
     }
 }

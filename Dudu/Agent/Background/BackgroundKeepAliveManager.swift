@@ -503,7 +503,11 @@ final class BackgroundKeepAliveManager: NSObject, ObservableObject, CLLocationMa
         // we snapshot them too for the crash-time timeline.
         NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in self?.logLifecycleSnapshot("Inactive") }
+            .sink { [weak self] _ in
+                self?.logLifecycleSnapshot("Inactive")
+                // D20: proactive engine foreground/background hook
+                ProactiveEngine.shared.appWillResignActive()
+            }
             .store(in: &cancellables)
 
         NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)
@@ -511,6 +515,8 @@ final class BackgroundKeepAliveManager: NSObject, ObservableObject, CLLocationMa
             .sink { [weak self] _ in
                 self?.logLifecycleSnapshot("Active")
                 self?.retractOrphanedLocationSession(caller: "didBecomeActive")
+                // D20: proactive engine foreground/background hook
+                ProactiveEngine.shared.appDidBecomeActive()
             }
             .store(in: &cancellables)
 

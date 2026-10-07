@@ -11,6 +11,8 @@ enum OurSpaceSection: String, CaseIterable, Identifiable {
     case moments
     case garden
     case later
+    // D20: 甜蜜日常（主动关怀/互动/人设成长）
+    case romance
 
     var id: String { rawValue }
 
@@ -21,6 +23,7 @@ enum OurSpaceSection: String, CaseIterable, Identifiable {
         case .moments: return "时光"
         case .garden: return "花园"
         case .later: return "稍后"
+        case .romance: return "甜蜜日常"
         }
     }
 
@@ -31,6 +34,7 @@ enum OurSpaceSection: String, CaseIterable, Identifiable {
         case .moments: return "clock"
         case .garden: return "leaf"
         case .later: return "tray"
+        case .romance: return "heart"
         }
     }
 }
@@ -180,6 +184,33 @@ struct OurSpaceView: View {
         case .moments: MomentsSection()
         case .garden: GardenSection()
         case .later: LaterSection()
+        case .romance: RomanceSection()
+        }
+    }
+}
+
+// MARK: - D20 甜蜜日常 section
+//
+// Stacks the 8 proactive / interactive / persona views with the shared
+// section header. Scrolling comes from OurSpaceView's outer ScrollView —
+// no nested ScrollView here.
+struct RomanceSection: View {
+    private var personaID: String { PersonaStore.currentID() }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 18) {
+            OurSpaceSectionHeader(title: "甜蜜日常")
+            // D20a
+            ProactiveSettingsView()
+            MoodTimelineView()
+            // D20b
+            PhotoShareSectionView()
+            StoryCenterView()
+            // D20c
+            PersonaEvolutionView(personaID: personaID)
+            PersonaDialsView(personaID: personaID)
+            IntimacyView()
+            MemoryGraphView()
         }
     }
 }

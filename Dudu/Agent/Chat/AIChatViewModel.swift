@@ -177,6 +177,12 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
     private var bgHintForegroundObserver: Any?
     private var snapshotForegroundObserver: Any?
     private var detachedLoopEndObserver: Any?
+    /// D20: observer for the proactive engine's due-actions tick.
+    private var proactiveDueActionsObserver: Any?
+    /// D20: quiet context line from the proactive engine, injected as a
+    /// <system-reminder> user part on the NEXT send. The UI keeps showing
+    /// only her own text — never a system announcement, never a ping.
+    private var pendingProactiveHint: String?
     /// Timestamp of the most recent background-entry, used to detect that a
     /// long-running browser task actually spanned a background period.
     private var bgHintBackgroundEntryDate: Date?
@@ -473,6 +479,47 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                 self.objectWillChange.send()
                 if !enabled { self.stopSpeech() }
             }
+
+        // D20: the proactive engine posts .proactiveDueActions when its
+        // foreground tick finds due actions (follow-up / mood check /
+        // self-post). The chat engine surfaces ONE quiet context line to the
+        // AI — never a system announcement, never a ping.
+        proactiveDueActionsObserver = NotificationCenter.default.addObserver(
+            forName: .proactiveDueActions, object: nil, queue: .main
+        ) { [weak self] note in
+            guard let self else { return }
+            self.handleProactiveDueActions(note)
+        }
+    }
+
+    /// D20: fold the proactive tick's due actions into ONE quiet context line,
+    /// held until the next send(). Injected as a <system-reminder> user part —
+    /// the same mechanism the engine already uses for image-batch tips —
+    /// so the UI keeps showing only her own text.
+    private func handleProactiveDueActions(_ note: Notification) {
+        guard let actions = note.userInfo?["actions"] as? [[String: String]],
+              !actions.isEmpty else { return }
+        var bits: [String] = []
+        for action in actions {
+            switch action["kind"] {
+            case "selfpost":
+                bits.append("已在我们的空间发了一条动态")
+            case "followup":
+                if let t = action["text"], !t.isEmpty {
+                    bits.append("已提醒过她「\(t)」")
+                } else {
+                    bits.append("已发过一次跟进提醒")
+                }
+            case "moodcheck":
+                bits.append("已发过心情问候")
+            default:
+                break
+            }
+        }
+        guard !bits.isEmpty else { return }
+        pendingProactiveHint =
+            "<system-reminder>主动关怀刚刚触发过：" + bits.joined(separator: "；")
+            + "。这是系统侧的动作记录，不要在回复里复述，也不要重复提醒。</system-reminder>"
     }
 
     deinit {
@@ -501,6 +548,9 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
             NotificationCenter.default.removeObserver(observer)
         }
         if let observer = detachedLoopEndObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
+        if let observer = proactiveDueActionsObserver {
             NotificationCenter.default.removeObserver(observer)
         }
     }
@@ -1984,7 +2034,13 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
         // don't regress model behavior that depended on it.
         //
         // ［persona］按本会话的人设渲染身份段（读该人设的 SOUL.md）。
-        SystemPromptBuilder.identitySection(for: sessionPersonaId ?? PersonaStore.currentID())
+        // D20: 人设刻度 + 成长记录 + 亲密度段（dials 先行），全部 nonisolated，
+        // 空段返回空字符串所以是安全 no-op。
+        let personaID = sessionPersonaId ?? PersonaStore.currentID()
+        return SystemPromptBuilder.identitySection(for: personaID)
+            + PersonaDialsStore.promptSection(for: personaID)
+            + PersonaEvolutionStore.promptSection(for: personaID)
+            + IntimacyManager.promptSection()
             + "You should proactively use shell commands to accomplish the user's tasks — installing packages (apk add), "
             + "writing and running scripts, managing files, networking, and any other operations a Linux terminal can perform.\n\n"
             + "Available tools:\n"
@@ -2240,6 +2296,10 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
     /// Currently active session ID — accessible from anywhere for dudu-clone:// URL resolution.
     /// Updated whenever a session is loaded.
     nonisolated(unsafe) static var activeSessionId: String?
+    /// D20: nonisolated mirror of the active session's incognito state.
+    /// Kept in sync by enterIncognito()/exitIncognito() for @Sendable
+    /// consumers (InteractiveTools.contextProvider) that can't touch @MainActor.
+    nonisolated(unsafe) static var activeSessionIsIncognito = false
     /// REPRO-DIAG(2026-05-16): global round counter — each runAgentLoop
     /// invocation bumps this. Use `ROUND \d+` to slice the log by attempt.
     nonisolated(unsafe) private static var diagRoundCounter: Int = 0
@@ -2905,9 +2965,24 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
             if !text.isEmpty {
                 userParts.append(.text(text))
             }
+            // D20: inject the pending proactive context line first. It rides
+            // as a <system-reminder> user part (UI untouched — only her own
+            // text renders), consumed once.
+            if let hint = pendingProactiveHint {
+                userParts.insert(.text(hint), at: 0)
+                pendingProactiveHint = nil
+            }
             let userMessage = AgentMessage(role: .user, parts: userParts)
             let userIdx = self.agentHistory.count
             self.agentHistory.append(userMessage)
+
+            // D20: proactive hooks — record her activity for the engine's
+            // cadence logic, and let the follow-up manager cancel any pending
+            // reminder she just mentioned herself.
+            await MainActor.run {
+                ProactiveEngine.shared.recordUserActivity()
+                _ = FollowUpManager.shared.mentionsEvent(text)
+            }
 
             // Persist user message and write the DB id back into agentHistory so
             // compact can later resolve boundaries by id.
@@ -5207,6 +5282,21 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
         if let sid = sessionId,
            let mcpFragment = MCPStore.shared.systemPromptSnippet(for: sid, personaID: sessionPersonaId) {
             userSystemPrompt += "\n\n" + mcpFragment
+        }
+
+        // D20: story mode — the active story for this thread, if any.
+        // buildSection returns "" when incognito / no active story / persona
+        // mismatch, so this is a safe no-op outside story mode.
+        if let sid = sessionId {
+            let story = await StoryStore.shared.findByThread(sid)
+            let storySection = StoryPrompt.buildSection(
+                story: story,
+                personaId: sessionPersonaId ?? PersonaStore.currentID(),
+                incognito: isIncognito
+            )
+            if !storySection.isEmpty {
+                userSystemPrompt += "\n\n" + storySection
+            }
         }
 
         // [tts-paper 2026-10-02] TTS 能力纸条：用户这轮在聊语音/TTS 才塞进
