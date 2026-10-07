@@ -41,5 +41,10 @@ struct DuduTabView: View {
             selection = .settings
         }
         .appFontScale()
+        // Phase D3: tool-approval card floats above everything (overlay, not a
+        // sheet) so chat stays interactive while a request is pending.
+        .overlay(alignment: .bottom) {
+            MCPApprovalCardView()
+        }
     }
 }

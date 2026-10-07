@@ -360,6 +360,9 @@
 		4A055772F58E693828870A29 /* ProviderDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC655EAE3AF5A70BFEFA2C8D /* ProviderDetailView.swift */; };
 		8C7D4DE82130BFDABC9131DF /* ProviderListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A263C3932C0151A6A4E70A /* ProviderListView.swift */; };
 		F9D9D65BEF93460D38703B71 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E084A58363D98CF4058A6B90 /* SettingsView.swift */; };
+		ABC64DFB635048C0BD78FAE4 /* MCPApprovalCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E49330ED8CE4C24BD056A09 /* MCPApprovalCardView.swift */; };
+		4B6BF44BA2D34E4CA883784D /* MCPDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A94E27241434CE3B75D0044 /* MCPDetailView.swift */; };
+		F63ED642258D4F9CB1D1C27C /* MCPListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7008220B684EA594D1B5AC /* MCPListView.swift */; };
 /* End PBXBuildFile section */
 		C22E4BE16A67710000C9EBF0 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 30AC3C5C6C418C791E362178 /* libsqlite3.tbd */; };
 		F8F1403829CEFF47083C5520 /* RealTimeCutVADLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = AECFD4BE143BED595F298AF5 /* RealTimeCutVADLibrary */; };
@@ -836,6 +839,9 @@
 		EC655EAE3AF5A70BFEFA2C8D /* ProviderDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderDetailView.swift; sourceTree = "<group>"; };
 		A8A263C3932C0151A6A4E70A /* ProviderListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderListView.swift; sourceTree = "<group>"; };
 		E084A58363D98CF4058A6B90 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		8E49330ED8CE4C24BD056A09 /* MCPApprovalCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCPApprovalCardView.swift; sourceTree = "<group>"; };
+		6A94E27241434CE3B75D0044 /* MCPDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCPDetailView.swift; sourceTree = "<group>"; };
+		2A7008220B684EA594D1B5AC /* MCPListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCPListView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 		30AC3C5C6C418C791E362178 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 
@@ -1759,6 +1765,7 @@
 			children = (
 				D10B8E531D0D2511BD797801 /* Appearance */,
 				FC61A6675134359CB1A0BBA1 /* Chat */,
+				4B0B905E45854D309EB92C30 /* MCP */,
 				5C12BE9B55843E8E76492218 /* Providers */,
 				930C951A6A0C2D8A4A21F5B8 /* Settings */,
 				F3B905EA2EE48C52F8156403 /* Shell */,
@@ -1826,6 +1833,16 @@
 				E084A58363D98CF4058A6B90 /* SettingsView.swift */,
 			);
 			path = Settings;
+			sourceTree = "<group>";
+		};
+		4B0B905E45854D309EB92C30 /* MCP */ = {
+			isa = PBXGroup;
+			children = (
+				8E49330ED8CE4C24BD056A09 /* MCPApprovalCardView.swift */,
+				6A94E27241434CE3B75D0044 /* MCPDetailView.swift */,
+				2A7008220B684EA594D1B5AC /* MCPListView.swift */,
+			);
+			path = MCP;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2275,6 +2292,9 @@
 				FD2F9FA79434BE3C41B79706 /* KaTeXRenderer.swift in Sources */,
 				FF44D82CCC8700F439CB95EB /* BackupRunController.swift in Sources */,
 				FF49549E7C6942072F161608 /* DuduURLPathDecoding.swift in Sources */,
+				ABC64DFB635048C0BD78FAE4 /* MCPApprovalCardView.swift in Sources */,
+				4B6BF44BA2D34E4CA883784D /* MCPDetailView.swift in Sources */,
+				F63ED642258D4F9CB1D1C27C /* MCPListView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
