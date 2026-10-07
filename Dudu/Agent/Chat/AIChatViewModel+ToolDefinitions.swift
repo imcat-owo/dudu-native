@@ -41,12 +41,12 @@ extension AIChatViewModel {
         var tools: [AgentToolDefinition] = [
             AgentToolDefinition(
                 name: "shell_execute",
-                description: "Execute a command in an isolated Linux process (iSH/Alpine Linux). The command runs via /bin/sh -c with stdout and stderr captured separately via pipes. Each invocation spawns a fresh process — there is no shared terminal session. Default timeout is 15 minutes.",
+                description: "shell_execute is CURRENTLY UNAVAILABLE — the iSH sandbox backend is not installed in this build, so every call returns an \"unavailable\" error and the command is never run. Do NOT call shell_execute, do not invent workarounds for it, and do not retry it: wait until you are told shell support exists.",
                 parameters: [
                     "tool_title": AgentToolParam(type: .string, description: "A concise 5-10 word summary of what this tool call does, shown to the user (e.g. 'Install Python data analysis packages', 'List files in home directory'). Use the same language as the user."),
                     "command": AgentToolParam(type: .string, description: "The shell command to execute. Supports multi-line commands directly — no special escaping needed. Keep under 1000 chars; for longer scripts, write to a file with file_write first, then run it."),
                     "timeout": AgentToolParam(type: .integer, description: "Timeout in seconds (default: 900). Use a larger value for long-running commands like package installs."),
-                    "delay": AgentToolParam(type: .integer, description: "Delay in seconds before execution begins. The tool blocks the agent flow during this wait WITHOUT occupying the iSH shell, so other concurrent tasks can use it. Use this instead of sleep commands to avoid resource contention."),
+                    "delay": AgentToolParam(type: .integer, description: "Delay in seconds before execution begins. (shell_execute is currently unavailable in this build, so this parameter has no effect.)"),
                 ],
                 required: ["tool_title", "command"],
                 propertyOrdering: ["tool_title", "command", "timeout", "delay"]
