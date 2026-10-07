@@ -14,6 +14,7 @@ import BridgeCore
 enum DeviceTools {
     /// 全部工具注册名：重试注册前先逐个注销已注册的，避免"上次注册到一半
     /// 失败"时 duplicateName 把重试堵死（unregister 不存在的名直接返回 false）。
+    /// D19: 听歌房 DJ 工具名拼在后面（MusicDJTools.toolNames）。
     static let toolNames: [String] = [
         ClipboardDeviceTool.toolName,
         ClipboardDeviceTool.readToolName,
@@ -25,7 +26,7 @@ enum DeviceTools {
         PhotosDeviceTool.writeToolName,
         PhotosDeviceTool.deleteToolName,
         BluetoothDeviceTool.toolName,
-    ]
+    ] + MusicDJTools.toolNames
 
     static func registerAll(into registry: ToolRegistry) async throws {
         try await ClipboardDeviceTool.register(into: registry)
@@ -33,5 +34,7 @@ enum DeviceTools {
         try await NotificationDeviceTool.register(into: registry)
         try await PhotosDeviceTool.register(into: registry)
         try await BluetoothDeviceTool.register(into: registry)
+        // D19: 听歌房 DJ 工具（AI 从对话框点歌/切歌/管歌单/记我们的歌）
+        try await MusicDJTools.register(into: registry)
     }
 }

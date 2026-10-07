@@ -37,6 +37,9 @@ enum OurSpaceSection: String, CaseIterable, Identifiable {
 
 struct OurSpaceView: View {
     @StateObject private var cards = TaskCardStore.shared
+    // D19: 听歌房入口卡片
+    @ObservedObject private var musicStore = MusicStore.shared
+    @StateObject private var dj = AIDJ.shared
 
     @State private var section: OurSpaceSection = .status
     @State private var showingNewTask = false
@@ -48,6 +51,9 @@ struct OurSpaceView: View {
                     if !cards.tasks.isEmpty {
                         taskCardsBlock
                     }
+                    // D19: 听歌房入口（旧手册：the room lives in Our Space
+                    // as the 听歌 card）
+                    musicRoomCard
                     OurSpaceSegmentedControl(selection: $section)
                     sectionBody
                 }
@@ -61,6 +67,64 @@ struct OurSpaceView: View {
                 NewTaskSheet(store: cards)
             }
         }
+    }
+
+    // MARK: - Music room entry (D19)
+
+    /// 听歌 card: tap to enter the room; the round button toggles playback.
+    private var musicRoomCard: some View {
+        HStack(spacing: 10) {
+            NavigationLink {
+                MusicRoomView()
+            } label: {
+                HStack(spacing: 10) {
+                    ZStack {
+                        Circle()
+                            .fill(DuduTheme.duduIconChip)
+                            .frame(width: 40, height: 40)
+                        Image(systemName: "music.note")
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundStyle(DuduTheme.pink)
+                    }
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("听歌房")
+                            .font(DuduTheme.bodyFont(weight: .semibold))
+                            .foregroundStyle(DuduTheme.duduText)
+                        if let now = dj.currentTrack {
+                            Text("\(now.title) — \(now.artist.isEmpty ? "未知艺人" : now.artist)")
+                                .font(DuduTheme.captionFont())
+                                .foregroundStyle(DuduTheme.duduTextDim)
+                                .lineLimit(1)
+                        } else {
+                            Text("\(musicStore.tracks.count) 首歌 · 跟我说歌名，我来放")
+                                .font(DuduTheme.captionFont())
+                                .foregroundStyle(DuduTheme.duduTextDim)
+                                .lineLimit(1)
+                        }
+                    }
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(DuduTheme.duduTextDim)
+                }
+                .padding(12)
+            }
+            .buttonStyle(.plain)
+
+            Button {
+                Task { await dj.togglePlayPause() }
+            } label: {
+                Image(systemName: dj.status.playing ? "pause.fill" : "play.fill")
+                    .font(.system(size: 14))
+                    .foregroundStyle(DuduTheme.duduText)
+                    .frame(width: 40, height: 40)
+                    .background(DuduTheme.pinkSoft, in: Circle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(dj.status.playing ? "暂停" : "播放")
+            .padding(.trailing, 12)
+        }
+        .background(DuduTheme.duduCard, in: RoundedRectangle(cornerRadius: DuduTheme.radiusCard))
     }
 
     // MARK: Task cards

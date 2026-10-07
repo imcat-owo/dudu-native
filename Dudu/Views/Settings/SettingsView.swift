@@ -11,6 +11,7 @@ enum SettingsRoute: Hashable {
     case mcpServers
     case backup
     case appLock
+    case musicKit
     case about
 }
 
@@ -57,6 +58,12 @@ struct SettingsView: View {
                         title: "MCP 服务器",
                         route: .mcpServers
                     )
+                    // D19: Apple Music（developer token 她自己粘贴）
+                    SettingsRow(
+                        icon: "music.note",
+                        title: "Apple Music",
+                        route: .musicKit
+                    )
                 }
                 // D8/D11: 备份与恢复 / 应用锁
                 Section {
@@ -99,6 +106,8 @@ struct SettingsView: View {
                     BackupView()
                 case .appLock:
                     AppLockView()
+                case .musicKit:
+                    AppleMusicSettingsView()
                 case .about:
                     AboutView()
                 }
