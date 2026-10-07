@@ -720,6 +720,18 @@ extension AIChatViewModel {
 
         case "read_image":
             let pathArg = toolArgs["path"] as? String ?? ""
+            // [incognito-read-guard] Refuse blocked-root image reads in
+            // incognito BEFORE any resolution — same persistent roots as the
+            // file_read/file_write guards, so no past-memory content can
+            // reach the model via read_image either.
+            if let refusal = incognitoReadRefusal(toolName: "read_image", path: pathArg) {
+                if msgIdx < messages.count, blockIdx < messages[msgIdx].blocks.count {
+                    messages[msgIdx].blocks[blockIdx].content = refusal.output
+                }
+                toolOutput = refusal.output
+                toolSuccess = refusal.success
+                break
+            }
             let resolvedURL = await resolveDuduPath(pathArg)
             ctLogger.info("[read_image] pathArg=\(pathArg) resolvedURL=\(resolvedURL?.path ?? "nil") exists=\(resolvedURL.map { FileManager.default.fileExists(atPath: $0.path) } ?? false)")
             // [IMG-10] One read, one shared gate (the browser-screenshot

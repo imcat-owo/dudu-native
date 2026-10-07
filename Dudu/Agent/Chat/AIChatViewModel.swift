@@ -2216,16 +2216,18 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
     /// model knows the tools won't be registered, the memory files won't
     /// be injected, and what to tell the user if they ask about memory.
     private var memoryStatusFragment: String {
-        // [incognito-write-guard, Wave 1 privacy fix 2026-10-08] In
-        // incognito the "ENABLED" wording below would lie: memory_write
-        // refuses every call, the memory-instruction section is suppressed,
-        // and file_write/file_edit refuse persistent-root writes. Land an
-        // authoritative override so the model knows memory is off here and
-        // what to tell the user.
+        // [incognito-write-guard + incognito-read-guard, Wave 1 privacy fix
+        // 2026-10-08] In incognito the "ENABLED" wording below would lie:
+        // memory_write refuses every call, memory_get refuses every call,
+        // the memory-instruction section is suppressed, file_write/file_edit
+        // refuse persistent-root writes, and file_read/read_image refuse
+        // persistent-root reads (no past-memory content may reach the
+        // model). Land an authoritative override so the model knows memory
+        // is off here and what to tell the user.
         if isIncognito {
             return "\n\nMemory status: INCOGNITO — memory is disabled for this session. "
                 + "Do not read or write /var/dudu/memory/ (GLOBAL.md, daily logs) with the file tools: "
-                + "file_write and file_edit refuse memory, skills, shared, mcp-servers, and mounted-folder paths in incognito mode, and memory_write / memory_get will not persist anything. "
+                + "file_read, file_write and file_edit refuse memory, skills, shared, mcp-servers, and mounted-folder paths in incognito mode (read_image refuses the same paths), and memory_write will not save anything while memory_get will not read anything. "
                 + "If the user asks you to remember something, tell them memory is unavailable in incognito and they can save it in a normal session."
         }
         if memoryEnabled {

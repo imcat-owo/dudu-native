@@ -102,6 +102,24 @@ extension AIChatViewModel {
         )
     }
 
+    /// Incognito refusal for a READ tool call (file_read, read_image), or nil
+    /// when the read is allowed. Reuses the SAME blocked roots as the write
+    /// guard: in incognito no past-memory content may reach the model through
+    /// ANY file tool (Wave 1 Item 6 re-review, 2026-10-08 — file_read had no
+    /// read guard, so /var/dudu/memory/... was reachable via reads). Checked
+    /// on the RAW path BEFORE any resolution, so the guard holds regardless
+    /// of which branch resolvePathForDirectRead / resolveDuduPath takes.
+    /// Visible to the model: success=false + plain-language message.
+    /// Internal (not private): the read_image executor lives in
+    /// AIChatViewModel+ConcurrentTools.swift.
+    func incognitoReadRefusal(toolName: String, path: String) -> FileToolResult? {
+        guard isIncognito, let blocked = Self.incognitoBlockedNamespace(for: path) else { return nil }
+        return FileToolResult(
+            output: "\(toolName) is disabled for \(blocked) paths in incognito mode — past data is not accessible.",
+            success: false
+        )
+    }
+
     /// Snapshot all files under /var/dudu/ with their modification dates.
     func snapshotDuduFiles() -> [String: Date] {
         let fm = FileManager.default
@@ -332,6 +350,14 @@ extension AIChatViewModel {
               let dict = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
               let path = dict["path"] as? String else {
             return FileToolResult(output: "Error: Missing required 'path' parameter", success: false)
+        }
+
+        // [incognito-read-guard] Refuse blocked-root reads in incognito
+        // BEFORE any resolution — no past-memory content may reach the
+        // model via file_read. Same roots as the write guard; session
+        // namespaces (workspace/attachments/offloads/browser) still read.
+        if let refusal = incognitoReadRefusal(toolName: "file_read", path: path) {
+            return refusal
         }
 
         guard let hostURL = await resolvePathForDirectRead(path) else {
