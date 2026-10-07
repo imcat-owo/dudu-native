@@ -192,17 +192,22 @@ struct MCPApprovalCardView: View {
             // 会话放行只在"允许"时有意义；拒绝没有会话放行概念。
             suspension.respond(id: request.id, decision: approved ? .approved(grantSession: true) : .denied)
         case .alwaysAllow:
-            if let t = target {
-                // 引擎级持久：以后这个工具直接放行，不再走审批。
+            // Only persist when aligned with the button: "always allow" takes effect
+            // only when the user actually approved. Denying with "always allow"
+            // selected denies just this request and persists nothing.
+            if approved, let t = target {
                 MCPToolApprovalStore.shared.setNeedsApproval(false, serverId: t.server, tool: t.tool)
                 denyList.setDenied(false, serverId: t.server, tool: t.tool)
             }
             suspension.respond(id: request.id, decision: approved ? .approved(grantSession: false) : .denied)
         case .alwaysDeny:
-            if let t = target {
+            // Only persist when aligned with the button: "always deny" takes effect
+            // only when the user actually denied. Allowing with "always deny"
+            // selected approves just this request and persists nothing.
+            if !approved, let t = target {
                 denyList.setDenied(true, serverId: t.server, tool: t.tool)
             }
-            suspension.respond(id: request.id, decision: .denied)
+            suspension.respond(id: request.id, decision: approved ? .approved(grantSession: false) : .denied)
         }
     }
 }
