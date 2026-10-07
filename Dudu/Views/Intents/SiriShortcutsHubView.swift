@@ -28,19 +28,20 @@ import SwiftUI
 // personal phrase to any Dudu action or builds automations around it. The
 // explainer card on this screen says exactly this — no dead button, no fake.
 //
-// Execution-result routing (requirement: no dead ends) — all already wired in
-// the engine, documented here so the hub never promises what it doesn't own:
+// Execution-result routing (requirement: no dead ends) — HONEST STATE,
+// hand-verified 2026-10-08: NOT fully wired. What exists:
 //   - AskDuduIntent / OpenSessionIntent (openAppWhenRun = true): post
-//     `.openSessionFromIntent` with the session id (plus a
-//     NotificationNavigationStore buffer for the cold-launch path).
-//   - SendPromptIntent / FollowUpSessionIntent / QuickTaskIntent /
-//     RetryRunIntent (headless): post a completion notification carrying the
-//     session id; tapping it goes through ShortcutNotificationDelegate, which
-//     buffers + posts the same `.openSessionFromIntent` event.
-//   - `dudu-clone://sessions/<id>` deep links post the same event.
-//   The warm-path consumer (ContentView's `.onReceive(.openSessionFromIntent)`,
-//   popping the stack to root and opening the session) is owned by Phase C;
-//   the cold-launch buffer in NotificationNavigationStore covers the gap.
+//     `.openSessionFromIntent` with the session id, and NotificationNavigationStore
+//     has a consume side (SendPromptIntent.swift:401-439) that buffers the
+//     completion notifications for the cold-launch path.
+// What is MISSING — do not claim this works:
+//   - No view currently observes `.openSessionFromIntent` (ContentView has no
+//     such observer; the only mentions are comments).
+//   - Nothing calls NotificationNavigationStore's consume side.
+// So today, tapping a Siri-intent / scheduled-prompt completion notification
+// posts into the void and does NOT navigate to the session. The consumer ends
+// (ContentView observer, consume-side callers) are DEFERRED to a later phase;
+// wiring them is Phase C's territory, not this hub's.
 
 /// Resolves a catalog i18n key through the same bundle AppLocalized uses, so
 /// the in-app language override keeps working once it lands. Keys are the

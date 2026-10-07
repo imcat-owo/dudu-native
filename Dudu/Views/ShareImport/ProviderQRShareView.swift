@@ -92,6 +92,10 @@ struct ProviderQRShareView: View {
                             .font(DuduTheme.captionFont())
                             .foregroundStyle(DuduTheme.duduDestructive)
                     }
+                } else if instance == nil {
+                    Text(AppLocalized("orchestration.reasonNoProvider"))
+                        .font(DuduTheme.captionFont())
+                        .foregroundStyle(DuduTheme.duduTextDim)
                 } else {
                     Text(AppLocalized("shareimport.qrTooBig"))
                         .font(DuduTheme.captionFont())

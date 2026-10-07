@@ -106,7 +106,7 @@ struct ModelGroupListView: View {
     private var groupsSection: some View {
         Section {
             if store.modelGroups.isEmpty {
-                Text(AppLocalized("orchestration.noMembers"))
+                Text(AppLocalized("orchestration.noGroups"))
                     .font(DuduTheme.captionFont())
                     .foregroundStyle(DuduTheme.duduTextDim)
             }
