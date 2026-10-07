@@ -11,6 +11,9 @@ import UIKit
 /// - The input is NEVER locked while processing: she can send follow-ups
 ///   anytime (the engine queues them; a badge shows how many are queued).
 /// - Photo attach button → PhotosPicker → vm.addImageAttachment (real).
+/// - Sticker button → StickerPickerView sheet → tap inserts the sticker into
+///   the draft as an image attachment via vm.addImageAttachment (real,
+///   bundled mascot art); she still presses send herself.
 /// - Mic button → SpeechRecognitionManager (SFSpeechRecognizer) — live
 ///   transcript lands in the input field (Phase D1).
 struct ChatInputBar: View {
@@ -18,6 +21,7 @@ struct ChatInputBar: View {
     @StateObject private var stt = SpeechRecognitionManager.shared
 
     @State private var selectedPhoto: PhotosPickerItem?
+    @State private var showStickerPicker = false
     @State private var recordStart: Date? = nil
 
     private var canSend: Bool {
@@ -59,6 +63,20 @@ struct ChatInputBar: View {
                         .frame(width: 32, height: 32)
                 }
                 .accessibilityLabel("添加图片")
+
+                // [D17-stickers] Sticker button: opens the sticker picker
+                // sheet; a tap there inserts the sticker into the draft as
+                // an image attachment via vm.addImageAttachment — the same
+                // pipeline the photo button uses.
+                Button {
+                    showStickerPicker = true
+                } label: {
+                    Image(systemName: "face.smiling")
+                        .font(DuduTheme.bodyFont())
+                        .foregroundStyle(DuduTheme.duduTextDim)
+                        .frame(width: 32, height: 32)
+                }
+                .accessibilityLabel("表情包")
 
                 // [D1-stt] Mic: tap to record (SFSpeechRecognizer), tap again
                 // to stop — the transcript lands in the input field.
@@ -133,6 +151,12 @@ struct ChatInputBar: View {
         .padding(.vertical, 10)
         // iOS system material only — no custom blur overlays.
         .background(.ultraThinMaterial)
+        // [D17-stickers] Sticker picker sheet. StickerPickerView reads
+        // vm (AIChatViewModel) from the environment, inherited through the
+        // sheet like the rest of this view hierarchy.
+        .sheet(isPresented: $showStickerPicker) {
+            StickerPickerView()
+        }
         .onChange(of: selectedPhoto) { _, item in
             guard let item else { return }
             selectedPhoto = nil
