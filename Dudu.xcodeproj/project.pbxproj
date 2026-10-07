@@ -366,6 +366,15 @@
 		4B6BF44BA2D34E4CA883784D /* MCPDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A94E27241434CE3B75D0044 /* MCPDetailView.swift */; };
 		F63ED642258D4F9CB1D1C27C /* MCPListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7008220B684EA594D1B5AC /* MCPListView.swift */; };
 		B4D330FAE059BF2C52DEE04F /* AIChatViewModel+Incognito.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D11138A5F26C7DA527F6C8 /* AIChatViewModel+Incognito.swift */; };
+		F8478E51A0A82B937740D46C /* DuduToolPapersWiring.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DD79E8EF5480901E5DA318 /* DuduToolPapersWiring.swift */; };
+		71A176B229909FF6F6B17B43 /* ArtifactModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C04AA2B421AC1FA2F63A5D7 /* ArtifactModel.swift */; };
+		EFC35370BA8268A1A8F85A21 /* ArtifactPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 602CE94495F851FF895E867B /* ArtifactPreviewView.swift */; };
+		08B9C892C3AFBB905BD3215A /* MCPApprovalCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87D84E577E16AA3B5B765752 /* MCPApprovalCardView.swift */; };
+		F8B4F031A29A0308A7022B1C /* MCPDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623E9EFAB2E43077AD5D772D /* MCPDetailView.swift */; };
+		D6E078FD804110B3D9EEEAEA /* MCPListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D55C43CFBE3C5F68A01A68E0 /* MCPListView.swift */; };
+		05AAEDF89BE114347E59613A /* AIAuthorizationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC00A5FAB73F3B351B90E21 /* AIAuthorizationCoordinator.swift */; };
+		1C07E7F023BEC271BE4DEE05 /* AIAuthorizationPromptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11E6E208B570BC2937827B32 /* AIAuthorizationPromptView.swift */; };
+		266F27CBD48407036D67D137 /* TTSSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B01CB96F538F928059CFCED3 /* TTSSettingsView.swift */; };
 /* End PBXBuildFile section */
 		C22E4BE16A67710000C9EBF0 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 30AC3C5C6C418C791E362178 /* libsqlite3.tbd */; };
 		F8F1403829CEFF47083C5520 /* RealTimeCutVADLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = AECFD4BE143BED595F298AF5 /* RealTimeCutVADLibrary */; };
@@ -848,6 +857,15 @@
 		6A94E27241434CE3B75D0044 /* MCPDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCPDetailView.swift; sourceTree = "<group>"; };
 		2A7008220B684EA594D1B5AC /* MCPListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCPListView.swift; sourceTree = "<group>"; };
 		C0D11138A5F26C7DA527F6C8 /* AIChatViewModel+Incognito.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AIChatViewModel+Incognito.swift"; sourceTree = "<group>"; };
+		E2DD79E8EF5480901E5DA318 /* DuduToolPapersWiring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuduToolPapersWiring.swift; sourceTree = "<group>"; };
+		6C04AA2B421AC1FA2F63A5D7 /* ArtifactModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtifactModel.swift; sourceTree = "<group>"; };
+		602CE94495F851FF895E867B /* ArtifactPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtifactPreviewView.swift; sourceTree = "<group>"; };
+		87D84E577E16AA3B5B765752 /* MCPApprovalCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCPApprovalCardView.swift; sourceTree = "<group>"; };
+		623E9EFAB2E43077AD5D772D /* MCPDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCPDetailView.swift; sourceTree = "<group>"; };
+		D55C43CFBE3C5F68A01A68E0 /* MCPListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCPListView.swift; sourceTree = "<group>"; };
+		3DC00A5FAB73F3B351B90E21 /* AIAuthorizationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIAuthorizationCoordinator.swift; sourceTree = "<group>"; };
+		11E6E208B570BC2937827B32 /* AIAuthorizationPromptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIAuthorizationPromptView.swift; sourceTree = "<group>"; };
+		B01CB96F538F928059CFCED3 /* TTSSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTSSettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 		30AC3C5C6C418C791E362178 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 
@@ -1379,6 +1397,7 @@
 				BD562B84E13C401A401EEDE7 /* StewardSensitiveApprovalGate.swift */,
 				CEA2E3921E00D22727093D98 /* NotificationDeviceTool.swift */,
 				DE375843E9875A78913E3741 /* MCPManagementTools.swift */,
+				E2DD79E8EF5480901E5DA318 /* DuduToolPapersWiring.swift */,
 				F68FEF67E68C3DD603CC8300 /* PhotosDeviceTool.swift */,
 				FFEB411AC7D8BDC4D6D8E48C /* OffloadToolRunner.swift */,
 			);
@@ -1428,6 +1447,7 @@
 				A87ABCD01DC341AC79210463 /* AIChatViewModel+FileTools.swift */,
 				AD257852920EE5671FBBB9BB /* AIChatViewModel.swift */,
 				B7AA21F86E773B723FBF7D8A /* AIChatViewModel+TitleGeneration.swift */,
+				C0D11138A5F26C7DA527F6C8 /* AIChatViewModel+Incognito.swift */,
 				C338FCA1EF85A35F9F19F9C3 /* AIChatViewModel+BackgroundTask.swift */,
 				CB1ED87FCEFBA4F996602DF3 /* AIChatViewModel+MemoryTools.swift */,
 				D03F55ACB67856414FC154E5 /* AIChatViewModel+ISHCommand.swift */,
@@ -1438,7 +1458,6 @@
 				E9AE3A073CEECE603D4935A7 /* AIChatViewModel+AskUser.swift */,
 				EDCB01ED3F9B898B6643DBD1 /* DuduISHSeams.swift */,
 				F1CE402FD81EBD4B129CBF85 /* DuduVoiceBubblePlayer.swift */,
-				C0D11138A5F26C7DA527F6C8 /* AIChatViewModel+Incognito.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -1772,7 +1791,8 @@
 			children = (
 				D10B8E531D0D2511BD797801 /* Appearance */,
 				FC61A6675134359CB1A0BBA1 /* Chat */,
-				4B0B905E45854D309EB92C30 /* MCP */,
+				AA856D71B083C7F259E49862 /* MCP */,
+				098E7EAFF306EFFA46763C5C /* Permissions */,
 				5C12BE9B55843E8E76492218 /* Providers */,
 				930C951A6A0C2D8A4A21F5B8 /* Settings */,
 				F3B905EA2EE48C52F8156403 /* Shell */,
@@ -1789,7 +1809,9 @@
 				4B3623FCD02AEC5DD6EA48F1 /* ChatInputBar.swift */,
 				54CAF7D84593B2D1B946693C /* ThinkingIndicatorSlot.swift */,
 				5B29F59070DF420B9D142BC5 /* MessageBlockView.swift */,
+				602CE94495F851FF895E867B /* ArtifactPreviewView.swift */,
 				6993B0AF0F282E7D6046D493 /* ThinkingDrawerView.swift */,
+				6C04AA2B421AC1FA2F63A5D7 /* ArtifactModel.swift */,
 				7C2DB0C154BD454AFAC4DB7A /* SessionDrawerView.swift */,
 				A11E38BB2F202107950A2CBA /* MessageListView.swift */,
 				AD5FEF1AA02738BFD9F5BA39 /* MessageRowView.swift */,
@@ -1838,7 +1860,7 @@
 		930C951A6A0C2D8A4A21F5B8 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				62130F8CEBD742CD8DA012ED /* TTSSettingsView.swift */,
+				B01CB96F538F928059CFCED3 /* TTSSettingsView.swift */,
 				E084A58363D98CF4058A6B90 /* SettingsView.swift */,
 			);
 			path = Settings;
@@ -1852,6 +1874,25 @@
 				2A7008220B684EA594D1B5AC /* MCPListView.swift */,
 			);
 			path = MCP;
+			sourceTree = "<group>";
+		};
+		AA856D71B083C7F259E49862 /* MCP */ = {
+			isa = PBXGroup;
+			children = (
+				623E9EFAB2E43077AD5D772D /* MCPDetailView.swift */,
+				87D84E577E16AA3B5B765752 /* MCPApprovalCardView.swift */,
+				D55C43CFBE3C5F68A01A68E0 /* MCPListView.swift */,
+			);
+			path = MCP;
+			sourceTree = "<group>";
+		};
+		098E7EAFF306EFFA46763C5C /* Permissions */ = {
+			isa = PBXGroup;
+			children = (
+				11E6E208B570BC2937827B32 /* AIAuthorizationPromptView.swift */,
+				3DC00A5FAB73F3B351B90E21 /* AIAuthorizationCoordinator.swift */,
+			);
+			path = Permissions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1967,12 +2008,13 @@
 				02B7BEAB587874D24C5AAFC4 /* StreamingHangLogger.swift in Sources */,
 				03DD616DCD08FD35FAC588E0 /* ChatURLBrokerage.swift in Sources */,
 				04C5732B164DB3E717C53EA9 /* AIChatViewModel+ToolPreflight.swift in Sources */,
+				05AAEDF89BE114347E59613A /* AIAuthorizationCoordinator.swift in Sources */,
 				061634BB8C6B545949ACBFD2 /* AppearanceThemePack.swift in Sources */,
 				062182EF40D53B47DC86B8A7 /* ListSessionsIntent.swift in Sources */,
 				06842974D85CC4EA30889D58 /* AppearanceStudio.swift in Sources */,
 				07D72A674C42EF2B57FAC7FD /* ThinkingRulesCollection.swift in Sources */,
 				0877B36A44441FC9114D734D /* MessageBlockView.swift in Sources */,
-				5EFEEAFD287B3313F7EAD0A3 /* ThinkingDrawerView.swift in Sources */,
+				08B9C892C3AFBB905BD3215A /* MCPApprovalCardView.swift in Sources */,
 				093F308F93DEF3B6C24C25D6 /* OffloadPermissionManager.swift in Sources */,
 				0959C2CD130DD9FCE05A974A /* ExternalFileImporter.swift in Sources */,
 				0AB0F63F422A693954AB0C96 /* DuduSessionCleanupSeams.swift in Sources */,
@@ -1998,6 +2040,7 @@
 				19E031379BF4942599BD6211 /* ScheduledPromptManager.swift in Sources */,
 				1AA4989A9C191F714AF36087 /* AppStorageFields.swift in Sources */,
 				1ADF5A5E182FAAB74F3E36A9 /* ConfigConfirmSheet.swift in Sources */,
+				1C07E7F023BEC271BE4DEE05 /* AIAuthorizationPromptView.swift in Sources */,
 				1C4E804FC99D0D0FB6946BC1 /* DuduMarkdownParser.swift in Sources */,
 				1D050B834629689057DB0570 /* BluetoothDeviceTool.swift in Sources */,
 				1DD22A170850E4C802A572A7 /* BackupExportJournal.swift in Sources */,
@@ -2009,6 +2052,7 @@
 				249CCFCDA4A9509B6CAADA3E /* ModelsDevAPI.swift in Sources */,
 				25D829F2DC587CDCB8D47832 /* ModelSelectionEntity.swift in Sources */,
 				26022CB918AABDE24697FD48 /* ConfigRegistry+Builtins.swift in Sources */,
+				266F27CBD48407036D67D137 /* TTSSettingsView.swift in Sources */,
 				26A9FEB4135417CC5B6B6E6F /* ShareViewController.swift in Sources */,
 				26FA200CDBF5EF17251C1E9B /* AudioTogglePlaybackIntent.swift in Sources */,
 				28EDC0D5E5F94119D2FDF043 /* WebSearchKeys.swift in Sources */,
@@ -2084,6 +2128,7 @@
 				5CEB43284FA863D303812936 /* WebSearchService.swift in Sources */,
 				5DBE7ECBD28F29E7FDF38205 /* OffloadToolRunner.swift in Sources */,
 				5EDB617F7A0C1048824A6E3F /* BackupSecrets.swift in Sources */,
+				5EFEEAFD287B3313F7EAD0A3 /* ThinkingDrawerView.swift in Sources */,
 				5F786E3CEE6A8E09C02031C3 /* ChatSessionIdEnvironment.swift in Sources */,
 				60FB4E304E801C8C9AA86E5F /* TTSPaper.swift in Sources */,
 				61DA7635161432D2DE8D77D8 /* KimiOAuthManager.swift in Sources */,
@@ -2110,6 +2155,7 @@
 				6F25BCD0CBE8ECF2031ED37A /* XAITokenStorage.swift in Sources */,
 				7063555737FF6E9285CB7E48 /* BackupDelivery.swift in Sources */,
 				70716F220A3F45E9BCE6846E /* VoiceOutputPlayer.swift in Sources */,
+				71A176B229909FF6F6B17B43 /* ArtifactModel.swift in Sources */,
 				722839FBC32AABF710579C5F /* ShellCommandRingBuffer.swift in Sources */,
 				722851F737BEFA977D3547BF /* TTSServiceModels.swift in Sources */,
 				725E07B4B624B1DD53B4BAA4 /* MountedFolderManager.swift in Sources */,
@@ -2196,6 +2242,7 @@
 				B328CC3C8EA4D8CF34DBF356 /* BackupCrypto.swift in Sources */,
 				B3399D5143FF38CD7D98D35E /* SentenceSplitter.swift in Sources */,
 				B3E2ECFC581E50F1B6363D02 /* VoiceBubblePlaybackState.swift in Sources */,
+				B4D330FAE059BF2C52DEE04F /* AIChatViewModel+Incognito.swift in Sources */,
 				B53A7D8D45188FB227A2384C /* AnthropicProvider.swift in Sources */,
 				B77005D9C86D80F3D5EF4A9C /* BackupImporter+Categories.swift in Sources */,
 				B7A0894222ADCCAE19070C05 /* SpeechSegmenter.swift in Sources */,
@@ -2237,6 +2284,7 @@
 				D4A987F7B307D29A51981EBD /* DuduShortcutsProvider.swift in Sources */,
 				D4C1A744F64B0DDD0BBEB654 /* CorrectionStrategy.swift in Sources */,
 				D5CCEF4B6575E36BD6F08298 /* LocationDeviceTool.swift in Sources */,
+				D6E078FD804110B3D9EEEAEA /* MCPListView.swift in Sources */,
 				D6EC296962DAFD85920625F5 /* AppearanceThemeLibrary.swift in Sources */,
 				D7415DA85BBAA8D5C0DDFCB6 /* OpenRouterOAuthManager.swift in Sources */,
 				D79A3CAFF1302E0F61BEB2C3 /* BridgeExternalMCPService.swift in Sources */,
@@ -2273,6 +2321,7 @@
 				ED789F45FE7AC2B700D9CB0E /* CloudSyncEngine.swift in Sources */,
 				EE42C3A2EF174A47EC706CB1 /* AttributeQueryRecorder.m in Sources */,
 				EEACA4FAE211E1FAC17F7567 /* LLMError.swift in Sources */,
+				EFC35370BA8268A1A8F85A21 /* ArtifactPreviewView.swift in Sources */,
 				EFE77131D3FBBE595E98F633 /* GeminiAgentProvider.swift in Sources */,
 				F14AF3D911C49A3310325720 /* AnthropicModelsAPI.swift in Sources */,
 				F202091F608996BF01490D36 /* SyncCore.swift in Sources */,
@@ -2287,11 +2336,12 @@
 				F74D823D3161BB4A424BC17E /* BashismReminder.swift in Sources */,
 				F79A8B355D610992A2B53DB5 /* MarkdownStripper.swift in Sources */,
 				F7C29E59BC2B955A6AF5A6D7 /* DuduConfigPermissionStore.swift in Sources */,
+				F8478E51A0A82B937740D46C /* DuduToolPapersWiring.swift in Sources */,
 				F875E22B66B3196E4A90345B /* VoiceTextSanitizer.swift in Sources */,
 				F87FAC01CC4169C1AED9B351 /* AIChatViewModel+Offloading.swift in Sources */,
 				F8A9AB05C2120FE0BCDE2A4E /* ChatLifecycleSupport.swift in Sources */,
+				F8B4F031A29A0308A7022B1C /* MCPDetailView.swift in Sources */,
 				F9D9D65BEF93460D38703B71 /* SettingsView.swift in Sources */,
-				3084BFCF3D674EB4A93DE70E /* TTSSettingsView.swift in Sources */,
 				F9E4294B15A06286CF74D6B7 /* ModelsCollection.swift in Sources */,
 				F9FB1B9E06748D5D047F512A /* SyncV2Bootstrap.swift in Sources */,
 				FA85C8D46039670EEB1C22AB /* AIChatViewModel+BackgroundTask.swift in Sources */,
@@ -2303,10 +2353,6 @@
 				FD2F9FA79434BE3C41B79706 /* KaTeXRenderer.swift in Sources */,
 				FF44D82CCC8700F439CB95EB /* BackupRunController.swift in Sources */,
 				FF49549E7C6942072F161608 /* DuduURLPathDecoding.swift in Sources */,
-				ABC64DFB635048C0BD78FAE4 /* MCPApprovalCardView.swift in Sources */,
-				4B6BF44BA2D34E4CA883784D /* MCPDetailView.swift in Sources */,
-				F63ED642258D4F9CB1D1C27C /* MCPListView.swift in Sources */,
-				B4D330FAE059BF2C52DEE04F /* AIChatViewModel+Incognito.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

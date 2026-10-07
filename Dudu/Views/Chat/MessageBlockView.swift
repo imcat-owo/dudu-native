@@ -17,6 +17,11 @@ struct MessageBlockView: View {
     var body: some View {
         if block.imageFilePath != nil {
             imageBlock
+        } else if let artifact = Artifact(envelope: block.content) {
+            // Artifact block: a future /artifacts tool writes
+            // Artifact.envelopeString into block.content (kind stays .text);
+            // the card renders only for a real, parseable artifact.
+            ArtifactCardView(artifact: artifact)
         } else {
             switch block.kind {
             case .text:
