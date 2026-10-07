@@ -56,6 +56,9 @@ struct ChatSession: Identifiable, Codable, Hashable {
     var remoteDeviceName: String? // human-readable name of the remote device
     var pinnedAt: Date?       // non-nil if session is pinned; timestamp of when it was pinned
     var folderId: String?     // non-nil if filed into a folder; NULL = ungrouped
+    /// D6 — non-nil if session is archived; timestamp of when it was archived.
+    /// Device-local (not synced): inbound sync merges never touch archived_at.
+    var archivedAt: Date? = nil
     /// ［persona］归属人设 id。nil = 老数据，视为默认人设。
     var personaId: String? = nil
 
@@ -64,6 +67,9 @@ struct ChatSession: Identifiable, Codable, Hashable {
 
     /// Whether this session is pinned to the top of the list.
     var isPinned: Bool { pinnedAt != nil }
+
+    /// D6 — whether this session is archived (hidden from the active list).
+    var isArchived: Bool { archivedAt != nil }
 
     /// Whether this session belongs to a folder.
     var isFiled: Bool { folderId != nil }
@@ -92,6 +98,10 @@ struct ChatSession: Identifiable, Codable, Hashable {
         lhs.id == rhs.id
             && lhs.updatedAt == rhs.updatedAt
             && lhs.pinnedAt == rhs.pinnedAt
+            // D6 — archive state changes without a content write (setSessionArchivedAt
+            // does not bump updated_at), so it must be compared or the drawer
+            // would not re-render on archive/restore.
+            && lhs.archivedAt == rhs.archivedAt
             // `folderId` MUST be compared: moving a session between folders
             // changes neither `updatedAt` nor any other compared field, so
             // without this the sidebar would keep rendering the row in its old
@@ -647,6 +657,18 @@ actor ChatStore {
         // leaves references behind). Such orphans render as ungrouped rather
         // than failing a constraint — see foldersById callers in ContentView.
         addColumnIfMissing(table: "sessions", column: "folder_id", definition: "TEXT")
+        // D6 — sessions.pinned_at was read by listSessions/getSession and written by
+        // setSessionPinnedAt, but the column was never created: it is in neither the
+        // CREATE TABLE DDL above nor any migration. On a fresh DB the listSessions
+        // SELECT failed ("no such column: s.pinned_at") and the whole session list
+        // came back empty. Verified 2026-10-07 against a scratch DB built from the
+        // repo's own DDL + migrations. Added here (idempotent, PRAGMA-guarded) so
+        // both fresh and existing DBs get the column.
+        addColumnIfMissing(table: "sessions", column: "pinned_at", definition: "REAL")
+        // D6 — session archiving. archived_at mirrors pinned_at: non-nil = archived.
+        // Device-local (not part of the sync record schema): inbound sync merges
+        // never write it, so archiving survives iCloud merges on this device.
+        addColumnIfMissing(table: "sessions", column: "archived_at", definition: "REAL")
         // Folder pinning (mirrors sessions.pinned_at). Also present in the
         // CREATE TABLE DDL above — per the add-column wipe trap, a new column
         // must exist in BOTH the initial DDL and the idempotent migration.
@@ -1326,7 +1348,9 @@ actor ChatStore {
                    -- by index, so a new column goes at the end to leave every
                    -- existing index untouched.
                    s.folder_id,
-                   s.persona_id
+                   s.persona_id,
+                   -- D6: archive timestamp (index 16). NULL = active.
+                   s.archived_at
             FROM sessions s
             WHERE (s.persona_id IS ?1 OR (s.persona_id IS NULL AND ?2 = '\(PersonaStore.defaultPersonaID)'))
             ORDER BY s.updated_at DESC
@@ -1404,13 +1428,16 @@ actor ChatStore {
                     ? Date(timeIntervalSince1970: sqlite3_column_double(stmt, 11)) : nil
                 let folderId = Self.colTextOpt(stmt, 14)
                 let personaId = Self.colTextOpt(stmt, 15)
+                // D6 — index 16, appended last per the SELECT comment above.
+                let archivedAt: Date? = sqlite3_column_type(stmt, 16) != SQLITE_NULL
+                    ? Date(timeIntervalSince1970: sqlite3_column_double(stmt, 16)) : nil
 
                 sessions.append(ChatSession(
                     id: id, title: title, category: category, modelId: modelId,
                     createdAt: createdAt, updatedAt: updatedAt, lastMessage: lastMessage,
                     source: source, lastSyncedAt: lastSyncedAt,
                     remoteDeviceId: remoteDeviceId, pinnedAt: pinnedAt,
-                    folderId: folderId, personaId: personaId
+                    folderId: folderId, personaId: personaId, archivedAt: archivedAt
                 ))
             }
         }
@@ -1629,7 +1656,8 @@ actor ChatStore {
             SELECT DISTINCT s.id, s.title, s.model_id, s.created_at, s.updated_at, s.category,
                    (SELECT m2.parts_json FROM messages m2
                     WHERE m2.session_id = s.id AND m2.parts_json LIKE ?
-                    ORDER BY m2.sort_order DESC LIMIT 1)
+                    ORDER BY m2.sort_order DESC LIMIT 1),
+                   s.archived_at
             FROM sessions s
             LEFT JOIN messages m ON m.session_id = s.id
             WHERE s.title LIKE ? OR m.parts_json LIKE ?
@@ -1656,10 +1684,14 @@ actor ChatStore {
 
                 let titleMatched = title?.lowercased().contains(lowerQuery) == true
                 let snippet = matchedPartsJSON.flatMap { extractTextFromPartsJSON($0) }
+                // D6 — index 7: archive state for the "已归档" badge in search results.
+                let archivedAt: Date? = sqlite3_column_type(stmt, 7) != SQLITE_NULL
+                    ? Date(timeIntervalSince1970: sqlite3_column_double(stmt, 7)) : nil
 
                 let session = ChatSession(
                     id: id, title: title, category: category, modelId: modelId,
-                    createdAt: createdAt, updatedAt: updatedAt, lastMessage: snippet
+                    createdAt: createdAt, updatedAt: updatedAt, lastMessage: snippet,
+                    archivedAt: archivedAt
                 )
                 results.append(SearchResult(session: session, matchSnippet: snippet, titleMatched: titleMatched))
             }
@@ -2001,7 +2033,8 @@ actor ChatStore {
     }
 
     func getSession(_ id: String) -> ChatSession? {
-        let sql = "SELECT id, title, model_id, created_at, updated_at, category, source, pinned_at, folder_id FROM sessions WHERE id = ?"
+        // D6: archived_at appended last (index 9) — same convention as listSessions.
+        let sql = "SELECT id, title, model_id, created_at, updated_at, category, source, pinned_at, folder_id, archived_at FROM sessions WHERE id = ?"
         var stmt: OpaquePointer?
         var session: ChatSession?
 
@@ -2017,11 +2050,13 @@ actor ChatStore {
                 let pinnedAt: Date? = sqlite3_column_type(stmt, 7) != SQLITE_NULL
                     ? Date(timeIntervalSince1970: sqlite3_column_double(stmt, 7)) : nil
                 let folderId = sqlite3_column_text(stmt, 8).map { String(cString: $0) }
+                let archivedAt: Date? = sqlite3_column_type(stmt, 9) != SQLITE_NULL
+                    ? Date(timeIntervalSince1970: sqlite3_column_double(stmt, 9)) : nil
 
                 session = ChatSession(
                     id: id, title: title, category: category, modelId: modelId,
                     createdAt: createdAt, updatedAt: updatedAt, source: source,
-                    pinnedAt: pinnedAt, folderId: folderId
+                    pinnedAt: pinnedAt, folderId: folderId, archivedAt: archivedAt
                 )
             }
         }
@@ -2111,6 +2146,27 @@ actor ChatStore {
         }
         sqlite3_finalize(stmt)
         markDirty(recordType: "Session", recordId: id)
+    }
+
+    /// D6 — archive or restore a session. Mirrors setSessionPinnedAt.
+    /// Device-local: archived_at is not part of the sync record schema, so
+    /// unlike pinning this deliberately does NOT markDirty — there is nothing
+    /// to upload, and skipping it avoids pointless sync churn. Inbound merges
+    /// never write archived_at, so the archive state survives iCloud sync.
+    func setSessionArchivedAt(_ archivedAt: Date?, forSession id: String) {
+        invalidateSessionListCache()
+        let sql = "UPDATE sessions SET archived_at = ? WHERE id = ?"
+        var stmt: OpaquePointer?
+        if sqlite3_prepare_v2(db, sql, -1, &stmt, nil) == SQLITE_OK {
+            if let archivedAt {
+                sqlite3_bind_double(stmt, 1, archivedAt.timeIntervalSince1970)
+            } else {
+                sqlite3_bind_null(stmt, 1)
+            }
+            sqlite3_bind_text(stmt, 2, (id as NSString).utf8String, -1, nil)
+            sqlite3_step(stmt)
+        }
+        sqlite3_finalize(stmt)
     }
 
     // MARK: - Folders
