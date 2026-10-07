@@ -105,6 +105,8 @@ final class CallProposalCenter: ObservableObject {
     func acceptProposal(id: String, entry: ModelEntry?, chatSessionId: String?) async -> VoiceCallSession? {
         guard let proposal = await setStatus(id: id, status: .accepted),
               ringingProposal?.id == id else { return nil }
+        // Never stack calls: end any live one first (honest, like a phone).
+        if activeSession != nil { await endActiveCall() }
         cancelRingNotification(id: id)
         ringingProposal = nil
         ringTasks[id]?.cancel()
