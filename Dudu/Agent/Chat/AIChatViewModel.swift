@@ -5205,6 +5205,10 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
             userSystemPrompt += "\n\n" + ttsPaper
         }
 
+        // [d10-tool-papers 2026-10-07] 工具纸条：话题相关时才把对应纸条塞进
+        // system prompt（见 DuduToolPapersWiring），一会话一纸条只下发一次。
+        DuduToolPapersWiring.inject(into: &userSystemPrompt, userMessage: Self.lastUserText(in: agentHistory), sessionID: sessionId)
+
         // [T-memory-toggle-gates-injection-and-tools-ios] Memory injection
         // (GLOBAL.md + recent daily logs) is gated by the per-session
         // memoryEnabled toggle. SOUL.md (identity / persona) is rendered
