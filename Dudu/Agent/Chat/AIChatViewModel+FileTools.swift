@@ -112,7 +112,8 @@ extension AIChatViewModel {
     /// Falls back to resolveHostPath for non-/var/dudu/ paths (e.g. /tmp, /root).
     func resolvePathForDirectRead(_ linuxPath: String) async -> URL? {
         if linuxPath.hasPrefix("/var/dudu/") || linuxPath == "/var/dudu" {
-            if let resolved = await ISHExecutionCoordinator.shared.hostURL(for: linuxPath) {
+            // P6 ISH seam: P8 assigns the real mount-table lookup.
+            if let resolved = await DuduISHSeams.hostURL?(linuxPath, nil) {
                 let exists = FileManager.default.fileExists(atPath: resolved.path)
                 logger.notice("📂[RESOLVE] \(linuxPath) → \(resolved.path) exists=\(exists) sid=\(self.sessionId ?? "nil")")
                 if exists { return resolved }
@@ -419,14 +420,18 @@ extension AIChatViewModel {
         // folder. Force a mount prime here so the lookup hits the real path.
         if path.hasPrefix("/var/dudu/mounts/"), let sid = self.sessionId {
             #if DEBUG
-            let beforeSnap = await ISHExecutionCoordinator.shared.debugMountSnapshot()
-            print("[FileWrite] ensureMounted BEFORE sid=\(sid) mountedSid=\(beforeSnap.sessionId ?? "<nil>") mountedPaths.count=\(beforeSnap.paths.count) keys=\(Array(beforeSnap.paths.keys))")
+            // P6 ISH seam (DEBUG-only upstream; P8 assigns the real snapshot).
+            let beforeSnap = await DuduISHSeams.debugMountSnapshot?()
+            let beforeSid: String? = beforeSnap?.sessionId ?? nil
+            print("[FileWrite] ensureMounted BEFORE sid=\(sid) mountedSid=\(beforeSid ?? "<nil>") mountedPaths.count=\(beforeSnap?.paths.count ?? 0) keys=\(beforeSnap.map { Array($0.paths.keys) } ?? [])")
             #endif
-            await ISHExecutionCoordinator.shared.ensureMounted(for: sid)
+            // P6 ISH seam: P8 assigns the real mount prime.
+            await DuduISHSeams.ensureMounted?(sid)
             #if DEBUG
-            let afterSnap = await ISHExecutionCoordinator.shared.debugMountSnapshot()
-            print("[FileWrite] ensureMounted AFTER sid=\(sid) mountedSid=\(afterSnap.sessionId ?? "<nil>") mountedPaths.count=\(afterSnap.paths.count) keys=\(Array(afterSnap.paths.keys))")
-            for (k, v) in afterSnap.paths {
+            let afterSnap = await DuduISHSeams.debugMountSnapshot?()
+            let afterSid: String? = afterSnap?.sessionId ?? nil
+            print("[FileWrite] ensureMounted AFTER sid=\(sid) mountedSid=\(afterSid ?? "<nil>") mountedPaths.count=\(afterSnap?.paths.count ?? 0) keys=\(afterSnap.map { Array($0.paths.keys) } ?? [])")
+            for (k, v) in afterSnap?.paths ?? [:] {
                 print("[FileWrite]   mount[\(k)] -> \(v.path)")
             }
             #endif
@@ -453,7 +458,8 @@ extension AIChatViewModel {
         // into iSH and visible in iOS Files).
         let hostURL: URL?
         if path.hasPrefix("/var/dudu/mounts/") {
-            let mountURL = await ISHExecutionCoordinator.shared.hostURL(for: path)
+            // P6 ISH seam: P8 assigns the real mount-table lookup.
+            let mountURL = await DuduISHSeams.hostURL?(path, nil)
             #if DEBUG
             print("[FileWrite] hostURL(for:\(path)) → \(mountURL?.path ?? "<nil>")")
             #endif

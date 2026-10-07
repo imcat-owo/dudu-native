@@ -60,9 +60,9 @@ extension AIChatViewModel {
     /// Executor adapter handing OnDemandBash a way to run guest commands.
     private func ishExecutor(sessionId sid: String) -> OnDemandBash.Executor {
         OnDemandBash.Executor(run: { command, timeout in
-            let r = try? await ISHExecutionCoordinator.shared.execute(
-                sessionId: sid, command: command, timeout: timeout,
-                lineCallback: { _ in }, pidCallback: { _ in })
+            // P6 ISH seam: P8 assigns the real coordinator-backed implementation.
+            // Nil (pre-P8) behaves like a failed exec: exit code -1.
+            let r = try? await DuduISHSeams.execute?(sid, command, timeout, { _ in }, { _ in })
             return r?.exitCode ?? -1
         })
     }
@@ -155,12 +155,15 @@ extension AIChatViewModel {
         // may never be scheduled, which is the main path we need to cover. An
         // `await` on the error path is structured and always runs. `exitCode`
         // stays nil so the entry records an abort, not a fake exit status.
-        let result: ISHCommandResult
+        let result: (output: String, exitCode: Int)?
         do {
-            result = try await ISHExecutionCoordinator.shared.execute(
-                sessionId: sid,
-                command: command,
-                timeout: effectiveTimeout,
+            // P6 ISH seam: P8 assigns the real coordinator-backed implementation
+            // (field-for-field mapping of ISHCommandResult). Nil pre-P8 → nil
+            // result; the abort path below records it, same as a failed exec.
+            result = try await DuduISHSeams.execute?(
+                sid,
+                command,
+                effectiveTimeout,
                 // ISHShellExecutor dispatches every line on the main queue
                 // already (ISHShellExecutor.m:780/812), so we're guaranteed to
                 // run on the main thread here. Calling the MainActor-isolated
@@ -170,10 +173,10 @@ extension AIChatViewModel {
                 // per line) and starve other MainActor work such as
                 // BrowserUseOffloadBridge's semaphore signal, causing
                 // execute_js/navigate to hang inside a Python subprocess.
-                lineCallback: { line in
+                { line in
                     MainActor.assumeIsolated { lineCallback(line) }
                 },
-                pidCallback: { [weak self] pid in
+                { [weak self] pid in
                     // Unlike lineCallback, pidCallback is invoked from the
                     // coordinator actor context (not the main queue), so we
                     // can't MainActor.assumeIsolated here. It only fires 1-2
@@ -189,14 +192,14 @@ extension AIChatViewModel {
             throw error
         }
 
-        await ShellCommandRingBuffer.shared.didExit(index: cmdIdx, exitCode: result.exitCode)
+        await ShellCommandRingBuffer.shared.didExit(index: cmdIdx, exitCode: result?.exitCode ?? -1)
 
         // Fold carriage-return sequences: simulate terminal line-overwrite behaviour.
         // Tools like yt-dlp emit "\r[download] X%" to overwrite the current line; without a TTY
         // every update is captured verbatim, ballooning the output with hundreds of redundant lines.
         // We replay each \r as a real terminal would: later text on the same line overwrites earlier text,
         // so only the final state of each line is kept — matching what you would actually see on screen.
-        var output = Self.sanitizeTerminalOutput(result.output)
+        var output = Self.sanitizeTerminalOutput(result?.output ?? "")
 
         // Apply truncation — keep head + tail so the model sees both the beginning and end
         if output.count > Self.kMaxToolResultChars {
@@ -212,7 +215,7 @@ extension AIChatViewModel {
                 + "\nUse file_read tool to read specific sections."
         }
 
-        return CommandResult(output: output, exitCode: result.exitCode)
+        return CommandResult(output: output, exitCode: result?.exitCode ?? -1)
     }
 
     /// Sanitize raw shell output so it matches what a user would actually see on a terminal.

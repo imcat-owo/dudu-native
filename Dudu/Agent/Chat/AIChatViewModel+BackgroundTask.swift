@@ -660,7 +660,8 @@ extension AIChatViewModel {
             //
             // Killing needs nothing from the actor but the pid, which is
             // mirrored under a lock, so this runs right here on the caller.
-            let killed = ISHExecutionCoordinator.stopAllNonisolated()
+            // P6 ISH seam: P8 assigns the real nonisolated kill. Nil pre-P8 = 0 killed.
+            let killed = DuduISHSeams.stopAllNonisolated?(nil) ?? 0
             logger.info("⏹️ stopCurrentCommand — signalled \(killed) shell pid(s)")
         }
         runningCommandPids.removeAll()

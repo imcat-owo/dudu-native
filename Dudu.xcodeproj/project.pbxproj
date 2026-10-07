@@ -160,6 +160,28 @@
 		FF49549E7C6942072F161608 /* DuduURLPathDecoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7415FEE0FAD87BECDC7DA6CF /* DuduURLPathDecoding.swift */; };
 		1202DACE9988450F62211F63 /* ProviderV3Bootstrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8660C6DDE530B25899D84818 /* ProviderV3Bootstrap.swift */; };
 		E8344525CD56D06E793AEE71 /* SessionLockStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A505CFDA84599F260C0ACA2F /* SessionLockStore.swift */; };
+		7CFD8225A328FF3D1D8B02D3 /* WebSearchBridgeTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D72A0BE384ED055155D91F /* WebSearchBridgeTool.swift */; };
+		E524231A57AC68DE22E4EEB7 /* BrowserHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 332676CCB6CA2EBC59D316DC /* BrowserHistory.swift */; };
+		630DE487919D013A8137B3AB /* BrowserUseActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAEB01E971E8C45AA45F569 /* BrowserUseActions.swift */; };
+		6A53636380AC29015566575B /* BrowserUseJavaScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCB0C6AC79FDD73DB21A5145 /* BrowserUseJavaScript.swift */; };
+		296F93A2AF71819172037474 /* CookieAuditLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759F93AF1AF7DA6652E8F647 /* CookieAuditLogger.swift */; };
+		8BB564FAFF8441017EBA804E /* CookieBackupStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A58D5942BF5F274CD94B7DA /* CookieBackupStore.swift */; };
+		DB80EDD03FCFE853B2945194 /* DuduISHSeams.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCB01ED3F9B898B6643DBD1 /* DuduISHSeams.swift */; };
+		FD2F9FA79434BE3C41B79706 /* KaTeXRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 507B15DDDE16012D7737A37D /* KaTeXRenderer.swift */; };
+		FB430B122E9BDE02F9A2B391 /* BraveSearchProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D797AC560301EE5D0553D99 /* BraveSearchProvider.swift */; };
+		CE7CACC4F1CE676EF45631A8 /* TavilySearchProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C653066AC5DEB5AC62C89BC /* TavilySearchProvider.swift */; };
+		28EDC0D5E5F94119D2FDF043 /* WebSearchKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30E5966C52C635213321DA9 /* WebSearchKeys.swift */; };
+		18E46D03DDFD90DF281D8C08 /* WebSearchProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBD6ED833922FAD872BA4A85 /* WebSearchProvider.swift */; };
+		5CEB43284FA863D303812936 /* WebSearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF4E322FF085F169230C7D6 /* WebSearchService.swift */; };
+		BAA3A613FB7401AC4455785C /* ConversationContextTruncator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA37F349217C3AA3CD5D0F0D /* ConversationContextTruncator.swift */; };
+		E13F41C59C7AF0AB23F6CFC7 /* CorrectionAdmission.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00046B6CFBA481FBF42F159 /* CorrectionAdmission.swift */; };
+		213D8C9D2BFBA67D19336772 /* CorrectionContextBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D3F822DCBE3295A9E0DBA6 /* CorrectionContextBuilder.swift */; };
+		433C50B687A3B8DB822FD5C5 /* SpeechRecognitionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A981EC17AB2A1B48DDE542B5 /* SpeechRecognitionManager.swift */; };
+		C00F1C6AC7507660A775BC51 /* VocabularyFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62C9CE22923C25533F1EF9A9 /* VocabularyFilter.swift */; };
+		54BD83B4A498064028EBC24B /* VoiceCorrectionDiff.swift in Sources */ = {isa = PBXBuildFile; fileRef = AACEF9F7CB49A3A339AC2CDB /* VoiceCorrectionDiff.swift */; };
+		AE746349FABA4BD25D205CE7 /* VoiceCorrectionEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1576F32A56C84CA71C0290 /* VoiceCorrectionEngine.swift */; };
+		BE30E04D63F3694125A89853 /* VoiceCorrectionRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771017A45BEFBCF798120257 /* VoiceCorrectionRecorder.swift */; };
+		D4C1A744F64B0DDD0BBEB654 /* CorrectionStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAD9052E48CB96CE9404DF2E /* CorrectionStrategy.swift */; };
 /* End PBXBuildFile section */
 		C22E4BE16A67710000C9EBF0 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 30AC3C5C6C418C791E362178 /* libsqlite3.tbd */; };
 		F8F1403829CEFF47083C5520 /* RealTimeCutVADLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = AECFD4BE143BED595F298AF5 /* RealTimeCutVADLibrary */; };
@@ -422,6 +444,35 @@
 		A505CFDA84599F260C0ACA2F /* SessionLockStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionLockStore.swift; sourceTree = "<group>"; };
 		89A55E900646B6776A51A97B /* SkillStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillStore.swift; sourceTree = "<group>"; };
 		476D9662AC1938E9BEF1D431 /* SoulStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoulStore.swift; sourceTree = "<group>"; };
+		332676CCB6CA2EBC59D316DC /* BrowserHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserHistory.swift; sourceTree = "<group>"; };
+		C12C75F63549762FC6BCF816 /* BrowserManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserManagementView.swift; sourceTree = "<group>"; };
+		D38A48A4395A6D0B8D60CDE0 /* BrowserSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserSheetView.swift; sourceTree = "<group>"; };
+		6FCC75BAD1A8B26EB6789885 /* BrowserTabPool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserTabPool.swift; sourceTree = "<group>"; };
+		2AAEB01E971E8C45AA45F569 /* BrowserUseActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserUseActions.swift; sourceTree = "<group>"; };
+		FCB0C6AC79FDD73DB21A5145 /* BrowserUseJavaScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserUseJavaScript.swift; sourceTree = "<group>"; };
+		D4D34BD6BB9081C1C88739B2 /* BrowserUseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserUseManager.swift; sourceTree = "<group>"; };
+		4C4C03AF452E5A982BD99BAA /* BrowserWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserWebView.swift; sourceTree = "<group>"; };
+		759F93AF1AF7DA6652E8F647 /* CookieAuditLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CookieAuditLogger.swift; sourceTree = "<group>"; };
+		6A58D5942BF5F274CD94B7DA /* CookieBackupStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CookieBackupStore.swift; sourceTree = "<group>"; };
+		EDCB01ED3F9B898B6643DBD1 /* DuduISHSeams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuduISHSeams.swift; sourceTree = "<group>"; };
+		2F354ACB14EF4383D2BF276A /* DuduMarkdownParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuduMarkdownParser.swift; sourceTree = "<group>"; };
+		507B15DDDE16012D7737A37D /* KaTeXRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaTeXRenderer.swift; sourceTree = "<group>"; };
+		0DA6EC357DAC2FA666FCAA51 /* MathRenderScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathRenderScheduler.swift; sourceTree = "<group>"; };
+		84A301B4E666239E20360CE8 /* SwiftMathRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftMathRenderer.swift; sourceTree = "<group>"; };
+		2D797AC560301EE5D0553D99 /* BraveSearchProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BraveSearchProvider.swift; sourceTree = "<group>"; };
+		5C653066AC5DEB5AC62C89BC /* TavilySearchProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TavilySearchProvider.swift; sourceTree = "<group>"; };
+		A30E5966C52C635213321DA9 /* WebSearchKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSearchKeys.swift; sourceTree = "<group>"; };
+		BBD6ED833922FAD872BA4A85 /* WebSearchProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSearchProvider.swift; sourceTree = "<group>"; };
+		9AF4E322FF085F169230C7D6 /* WebSearchService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSearchService.swift; sourceTree = "<group>"; };
+		CA37F349217C3AA3CD5D0F0D /* ConversationContextTruncator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationContextTruncator.swift; sourceTree = "<group>"; };
+		E00046B6CFBA481FBF42F159 /* CorrectionAdmission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CorrectionAdmission.swift; sourceTree = "<group>"; };
+		B0D3F822DCBE3295A9E0DBA6 /* CorrectionContextBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CorrectionContextBuilder.swift; sourceTree = "<group>"; };
+		A981EC17AB2A1B48DDE542B5 /* SpeechRecognitionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechRecognitionManager.swift; sourceTree = "<group>"; };
+		83ADF3554FB57107772EE76B /* TypedVocabularyBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypedVocabularyBuilder.swift; sourceTree = "<group>"; };
+		62C9CE22923C25533F1EF9A9 /* VocabularyFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VocabularyFilter.swift; sourceTree = "<group>"; };
+		AACEF9F7CB49A3A339AC2CDB /* VoiceCorrectionDiff.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceCorrectionDiff.swift; sourceTree = "<group>"; };
+		5B1576F32A56C84CA71C0290 /* VoiceCorrectionEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceCorrectionEngine.swift; sourceTree = "<group>"; };
+		771017A45BEFBCF798120257 /* VoiceCorrectionRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceCorrectionRecorder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 		30AC3C5C6C418C791E362178 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 
@@ -908,9 +959,13 @@
 			isa = PBXGroup;
 			children = (
 				EDF1A694F9AA6D81A390696E /* Bridge */,
+				9E678748052B0C677FDC143C /* BrowserUse */,
 				A26AEA0301367CADEEBD18FE /* Chat */,
+				7A7395E17947EE7A63F3CC58 /* Markdown */,
 				F7B6CDCCD756384DC1BEFA4A /* Offload */,
+				0BE578F84114150F9AEAF78E /* Search */,
 				3472DFCFBA04F8D290623603 /* Session */,
+				084D6A8BAD82AC5B5FCF8122 /* Speech */,
 			);
 			path = Agent;
 			sourceTree = "<group>";
@@ -990,6 +1045,7 @@
 				DB10FE3048FE1B9D44E086C3 /* DuduSessionCleanupSeams.swift */,
 				DD25C9102A526698D4E42D95 /* AIChatViewModel+RequestBudget.swift */,
 				E9AE3A073CEECE603D4935A7 /* AIChatViewModel+AskUser.swift */,
+				EDCB01ED3F9B898B6643DBD1 /* DuduISHSeams.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -1016,6 +1072,62 @@
 				E7CA4A850CFC6726768DE622 /* SessionForkManager.swift */,
 			);
 			path = Session;
+			sourceTree = "<group>";
+		};
+		9E678748052B0C677FDC143C /* BrowserUse */ = {
+			isa = PBXGroup;
+			children = (
+				2AAEB01E971E8C45AA45F569 /* BrowserUseActions.swift */,
+				332676CCB6CA2EBC59D316DC /* BrowserHistory.swift */,
+				4C4C03AF452E5A982BD99BAA /* BrowserWebView.swift */,
+				6A58D5942BF5F274CD94B7DA /* CookieBackupStore.swift */,
+				6FCC75BAD1A8B26EB6789885 /* BrowserTabPool.swift */,
+				759F93AF1AF7DA6652E8F647 /* CookieAuditLogger.swift */,
+				C12C75F63549762FC6BCF816 /* BrowserManagementView.swift */,
+				D38A48A4395A6D0B8D60CDE0 /* BrowserSheetView.swift */,
+				D4D34BD6BB9081C1C88739B2 /* BrowserUseManager.swift */,
+				FCB0C6AC79FDD73DB21A5145 /* BrowserUseJavaScript.swift */,
+			);
+			path = BrowserUse;
+			sourceTree = "<group>";
+		};
+		7A7395E17947EE7A63F3CC58 /* Markdown */ = {
+			isa = PBXGroup;
+			children = (
+				0DA6EC357DAC2FA666FCAA51 /* MathRenderScheduler.swift */,
+				2F354ACB14EF4383D2BF276A /* DuduMarkdownParser.swift */,
+				507B15DDDE16012D7737A37D /* KaTeXRenderer.swift */,
+				84A301B4E666239E20360CE8 /* SwiftMathRenderer.swift */,
+			);
+			path = Markdown;
+			sourceTree = "<group>";
+		};
+		0BE578F84114150F9AEAF78E /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				2D797AC560301EE5D0553D99 /* BraveSearchProvider.swift */,
+				5C653066AC5DEB5AC62C89BC /* TavilySearchProvider.swift */,
+				9AF4E322FF085F169230C7D6 /* WebSearchService.swift */,
+				A30E5966C52C635213321DA9 /* WebSearchKeys.swift */,
+				BBD6ED833922FAD872BA4A85 /* WebSearchProvider.swift */,
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
+		084D6A8BAD82AC5B5FCF8122 /* Speech */ = {
+			isa = PBXGroup;
+			children = (
+				5B1576F32A56C84CA71C0290 /* VoiceCorrectionEngine.swift */,
+				62C9CE22923C25533F1EF9A9 /* VocabularyFilter.swift */,
+				771017A45BEFBCF798120257 /* VoiceCorrectionRecorder.swift */,
+				83ADF3554FB57107772EE76B /* TypedVocabularyBuilder.swift */,
+				A981EC17AB2A1B48DDE542B5 /* SpeechRecognitionManager.swift */,
+				AACEF9F7CB49A3A339AC2CDB /* VoiceCorrectionDiff.swift */,
+				B0D3F822DCBE3295A9E0DBA6 /* CorrectionContextBuilder.swift */,
+				CA37F349217C3AA3CD5D0F0D /* ConversationContextTruncator.swift */,
+				E00046B6CFBA481FBF42F159 /* CorrectionAdmission.swift */,
+			);
+			path = Speech;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1136,12 +1248,16 @@
 				14F34D2C98F43A277072706B /* DuduPaths.swift in Sources */,
 				1704B76557C10CD3559ADAFF /* SharedEventLog.swift in Sources */,
 				1848D790E6FC55A4C0603934 /* SharedContainerStore.swift in Sources */,
+				18E46D03DDFD90DF281D8C08 /* WebSearchProvider.swift in Sources */,
 				1AA4989A9C191F714AF36087 /* AppStorageFields.swift in Sources */,
 				1ADF5A5E182FAAB74F3E36A9 /* ConfigConfirmSheet.swift in Sources */,
+				213D8C9D2BFBA67D19336772 /* CorrectionContextBuilder.swift in Sources */,
 				2199BEA93B328984E882D617 /* AppLogger.swift in Sources */,
 				241EC1EBB90EBA7813AE57B9 /* ModelEntry.swift in Sources */,
 				249CCFCDA4A9509B6CAADA3E /* ModelsDevAPI.swift in Sources */,
 				26FA200CDBF5EF17251C1E9B /* AudioTogglePlaybackIntent.swift in Sources */,
+				28EDC0D5E5F94119D2FDF043 /* WebSearchKeys.swift in Sources */,
+				296F93A2AF71819172037474 /* CookieAuditLogger.swift in Sources */,
 				2C9F4E98EFD9BA15F707C48D /* VoiceProviderTemplate.swift in Sources */,
 				2FDB86929AA1A1E4D00FFD22 /* LLMProviderFactory.swift in Sources */,
 				2FF53A575F667462901F5ABB /* GeminiProvider.swift in Sources */,
@@ -1154,25 +1270,30 @@
 				3BD3A77601B6298C353EA229 /* AgentActivityAttributes.swift in Sources */,
 				3C79A9918B60E843F1A67E62 /* DeepLinkCoordinator.swift in Sources */,
 				40B07B4B4C0C20C074C24095 /* TTSProviderBridge.swift in Sources */,
+				433C50B687A3B8DB822FD5C5 /* SpeechRecognitionManager.swift in Sources */,
 				4C29274E763868CC079C7B8A /* AudioSessionCoordinator.swift in Sources */,
 				4D11D4BBAAEA29A339F82AB8 /* LoggingManager.swift in Sources */,
 				4D7D4EFDA4C85A8F05983AE5 /* ImagePayloadPrep.swift in Sources */,
 				4EDEFCBC9C18CBD9EC7B09C1 /* StewardSensitiveApprovalGate.swift in Sources */,
 				4FF373341209143426232AC7 /* DuduNotifications.swift in Sources */,
 				5405C5F18ECF7A543B8D3504 /* DuduUserAgent.swift in Sources */,
+				54BD83B4A498064028EBC24B /* VoiceCorrectionDiff.swift in Sources */,
 				56439DE64FDF4C491009A136 /* PendingConfigChange.swift in Sources */,
 				57447C4738D3A9CE4DC2F680 /* XAIOAuthManager.swift in Sources */,
 				58D5350E4CDC2A95C7F33B61 /* ThumbnailCache.swift in Sources */,
 				5998A8C0B9430129CDBED404 /* ClaudeOAuthRefreshCoordinator.swift in Sources */,
 				5A0D937B53B1E4CA8F251306 /* VoiceInputModels.swift in Sources */,
 				5AC8C9CC1608FFAB04D360E4 /* DeviceIdentity.swift in Sources */,
+				5CEB43284FA863D303812936 /* WebSearchService.swift in Sources */,
 				5F786E3CEE6A8E09C02031C3 /* ChatSessionIdEnvironment.swift in Sources */,
 				60FB4E304E801C8C9AA86E5F /* TTSPaper.swift in Sources */,
 				61DA7635161432D2DE8D77D8 /* KimiOAuthManager.swift in Sources */,
+				630DE487919D013A8137B3AB /* BrowserUseActions.swift in Sources */,
 				636220D5B76F3A916E13621D /* OAuthRefreshSingleFlight.swift in Sources */,
 				643ACF98144CFE939E187E97 /* CorrectionSignalSource.swift in Sources */,
 				66FCA5F2BB5BC4C5B9C362D9 /* SafeKVCSetTrue.m in Sources */,
 				6954C6F94DDC99A2E47033F1 /* KimiModelsAPI.swift in Sources */,
+				6A53636380AC29015566575B /* BrowserUseJavaScript.swift in Sources */,
 				6AFDD6549C89E57E77B02EFD /* AnthropicAgentProvider.swift in Sources */,
 				6BDCDE3DFD0C22817A8EA32E /* BridgeRelayProtocol.swift in Sources */,
 				6C3AC49D2D4CBD25929C1DE3 /* ModelReleaseIndex.swift in Sources */,
@@ -1184,6 +1305,7 @@
 				7A4A2F0720CD0F635FBD1BDB /* ProvidersCollection.swift in Sources */,
 				7BE834043097152B89728978 /* NSTextContainerSetSizeGuard.m in Sources */,
 				7C88B218A5F6EBB40F16A1C4 /* EnvVarRedactor.swift in Sources */,
+				7CFD8225A328FF3D1D8B02D3 /* WebSearchBridgeTool.swift in Sources */,
 				7FE3537DCBB0AB677659F0D3 /* JiebaWrapper.mm in Sources */,
 				80B4ABE0DA1C27E7AC3A8DB7 /* VoiceLog.swift in Sources */,
 				813DBF29BB4F633151865141 /* ThinkingWireFormat.swift in Sources */,
@@ -1192,6 +1314,7 @@
 				882BC888E4FAECF8A3D1C5A6 /* ProviderMigration.swift in Sources */,
 				89B3EFC36CACF9FA835AD3FD /* ContentView.swift in Sources */,
 				8B8D6D1163E1B06F7EB53330 /* VisionGroupResolver.swift in Sources */,
+				8BB564FAFF8441017EBA804E /* CookieBackupStore.swift in Sources */,
 				8D1E4BD68420DF9836986E67 /* EnvVarsCollection.swift in Sources */,
 				8FCE740B6D52F5AE503C2C4D /* ImageTextCache.swift in Sources */,
 				90518BF15A6AD71E99CD269B /* AgentProvider.swift in Sources */,
@@ -1211,6 +1334,7 @@
 				A5ED0CDBD2BB34E7D80BC939 /* DuduApp.swift in Sources */,
 				A6A1AADAA97351D9C7B3CAB9 /* AppLocalization.swift in Sources */,
 				AE68F737E1B2B9AFC6CF55F8 /* ShareCoordinator.swift in Sources */,
+				AE746349FABA4BD25D205CE7 /* VoiceCorrectionEngine.swift in Sources */,
 				AE91B96C01574BFD92EC39B6 /* TTSDiskCache.swift in Sources */,
 				AFC8F717F7BCF966FEC7CBE8 /* QuickActionRouter.swift in Sources */,
 				B14BD78E795825B2B44C492A /* OpenAIAgentProvider.swift in Sources */,
@@ -1219,9 +1343,12 @@
 				B3E2ECFC581E50F1B6363D02 /* VoiceBubblePlaybackState.swift in Sources */,
 				B53A7D8D45188FB227A2384C /* AnthropicProvider.swift in Sources */,
 				B7A0894222ADCCAE19070C05 /* SpeechSegmenter.swift in Sources */,
+				BAA3A613FB7401AC4455785C /* ConversationContextTruncator.swift in Sources */,
 				BC04CE1F04812EE7F699FA69 /* AntigravityOAuthManager.swift in Sources */,
+				BE30E04D63F3694125A89853 /* VoiceCorrectionRecorder.swift in Sources */,
 				BEA610EA74347D7D1D78EE8E /* URLBuilding.swift in Sources */,
 				BFA6530A58F1F801FBDFB283 /* AntigravityProvider.swift in Sources */,
+				C00F1C6AC7507660A775BC51 /* VocabularyFilter.swift in Sources */,
 				C0386D1053422608AF9B33E0 /* CodexOAuthManager.swift in Sources */,
 				C1642A588C195C97EF2DBD6E /* AIVoiceMessageComposer.swift in Sources */,
 				C26DE239894590D26AFE063F /* SessionBadgeStore.swift in Sources */,
@@ -1234,13 +1361,18 @@
 				CC4D5362917D56553884BF4A /* AntigravityModelsAPI.swift in Sources */,
 				CC84B6BCCCA8348530ACB3DF /* DuduAgentProviderFactory.swift in Sources */,
 				CD0B554FA59894A4FAEFF0B5 /* UserManualMirror.swift in Sources */,
+				CE7CACC4F1CE676EF45631A8 /* TavilySearchProvider.swift in Sources */,
 				CE7CC8E8B6BBC084E396070C /* xAIModelsAPI.swift in Sources */,
+				D4C1A744F64B0DDD0BBEB654 /* CorrectionStrategy.swift in Sources */,
 				D7415DA85BBAA8D5C0DDFCB6 /* OpenRouterOAuthManager.swift in Sources */,
 				D9FBDEDBF7F811C9795B9758 /* ConfigField.swift in Sources */,
+				DB80EDD03FCFE853B2945194 /* DuduISHSeams.swift in Sources */,
 				DBF0A2BFA44F891E9D04874C /* ReportIssueTool.swift in Sources */,
 				DCB945DB6318559F10CD063E /* GeminiOAuthManager.swift in Sources */,
 				DEFABC6E8686F4D13563CD1C /* LLMProvider.swift in Sources */,
 				DF16FC5BD421C73260408EA3 /* GeminiModelsAPI.swift in Sources */,
+				E13F41C59C7AF0AB23F6CFC7 /* CorrectionAdmission.swift in Sources */,
+				E524231A57AC68DE22E4EEB7 /* BrowserHistory.swift in Sources */,
 				E78389E119025AB01911832B /* ThinkingLevelCatalog.swift in Sources */,
 				E8344525CD56D06E793AEE71 /* SessionLockStore.swift in Sources */,
 				EA12FFE29C4D1BB30AA21FBD /* TTSGroupStore.swift in Sources */,
@@ -1260,9 +1392,11 @@
 				F7C29E59BC2B955A6AF5A6D7 /* DuduConfigPermissionStore.swift in Sources */,
 				F875E22B66B3196E4A90345B /* VoiceTextSanitizer.swift in Sources */,
 				F9E4294B15A06286CF74D6B7 /* ModelsCollection.swift in Sources */,
+				FB430B122E9BDE02F9A2B391 /* BraveSearchProvider.swift in Sources */,
 				FB9CEA966E6B687A45DCA154 /* SystemVoiceCatalog.swift in Sources */,
 				FC6580876255C20F22147C6D /* VoiceProvider+System.swift in Sources */,
 				FC7CC80B1889F3EAA664981A /* LLMSessionRegistry.swift in Sources */,
+				FD2F9FA79434BE3C41B79706 /* KaTeXRenderer.swift in Sources */,
 				FF49549E7C6942072F161608 /* DuduURLPathDecoding.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

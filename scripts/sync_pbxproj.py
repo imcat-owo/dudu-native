@@ -71,7 +71,7 @@ CPPJIEBA_INCLUDE = "$(SRCROOT)/Dudu/Vendor/cppjieba/include"
 #     DuduToast (ported from MinisToast), restore the original call site.
 EXCLUDE = {
     "Dudu/Shared/Config/ConfigRegistry+Builtins.swift",  # needs SoulStore + AIChatViewModel (P4)
-    "Dudu/Providers/Voice/CorrectionStrategy.swift",     # needs Agent/Speech types (P6)
+    # P6 re-enabled (2026-10-07): ConversationContext now in Agent/Speech.
     "Dudu/Providers/Voice/VoiceActivityDetector.swift",  # needs BackgroundKeepAliveManager (P7); no in-Providers dependents
     "Dudu/Shared/AppearanceStudio.swift",
     "Dudu/Shared/AppearanceThemePack.swift",
@@ -90,7 +90,8 @@ EXCLUDE = {
     #     TypedVocabularyBuilder (Agent/Speech, P6), ISHExecutionCoordinator
     #     (Agent/ISH, P8), ScrollMetricsRecorder (Agent/MessageList, P7) ---
     "Dudu/Agent/Chat/AIChatViewModel.swift",
-    "Dudu/Agent/Chat/ChatModels.swift",
+    "Dudu/Agent/Chat/ChatModels.swift",  # P6: MarkdownContent now exists but the file ALSO needs
+                                         # MediaRef/ToolSnapshot/RawMessage from ChatStore (P7 Sync) — stays out.
     "Dudu/Agent/Chat/ChatStore.swift",
     "Dudu/Agent/Chat/AIChatViewModel+SSEStream.swift",       # MarkdownContent (P6)
     "Dudu/Agent/Chat/AIChatViewModel+ToolDefinitions.swift",  # BrowserAction/WebSearchService (P6)
@@ -129,7 +130,6 @@ EXCLUDE = {
     "Dudu/Agent/Bridge/MCPManagementTools.swift",  # ISHExecutionCoordinator (P8)
     "Dudu/Agent/Bridge/OffloadToolRunner.swift",   # ISHExecutionCoordinator (P8)
     "Dudu/Agent/Bridge/BridgeKernelAssembly.swift",# ISHExecutionCoordinator (P8)
-    "Dudu/Agent/Bridge/WebSearchBridgeTool.swift", # WebSearchService (P6 Search)
     "Dudu/Agent/Bridge/Relay/BridgeRelayClient.swift", # BackgroundKeepAliveManager (P7)
     # --- Bridge cascade: need excluded Bridge/Session types ---
     "Dudu/Agent/Bridge/BluetoothDeviceTool.swift",
@@ -144,6 +144,26 @@ EXCLUDE = {
     "Dudu/Agent/Offload/OffloadPermissionManager.swift",
     "Dudu/Agent/Offload/ToolApprovalGate.swift",
     "Dudu/Agent/Offload/ToolSuspensionService.swift",
+    # --- P6 (2026-10-07): ported to disk with renames, but excluded from the
+    #     target — per-file blockers named; re-enable when the owning part lands.
+    #     Browser engine cascade: BrowserUseManager is the root blocker.
+    "Dudu/Agent/BrowserUse/BrowserUseManager.swift",  # WebLoadError (Views) +
+        # BrowserResourceMonitor (P7 Diagnostics) + RootfsManager (P8 iSH) +
+        # ViewModelCache / AIChatViewModel.resolveDuduURL (P4, needs P7/P8)
+    "Dudu/Agent/BrowserUse/BrowserTabPool.swift",      # BrowserUseManager (excluded) +
+        # BrowserResourceMonitor (P7 Diagnostics)
+    "Dudu/Agent/BrowserUse/BrowserWebView.swift",      # BrowserUseManager (excluded)
+    "Dudu/Agent/BrowserUse/BrowserSheetView.swift",    # BrowserUseManager (excluded) +
+        # WebLoadErrorOverlay (Views/Chat/WebLoadError.swift)
+    "Dudu/Agent/BrowserUse/BrowserManagementView.swift",  # BrowserTabPool (excluded)
+    # --- P6 Speech: TypedVocabularyBuilder mines ChatStore (P7 Sync) ---
+    "Dudu/Agent/Speech/TypedVocabularyBuilder.swift",  # ChatStore (P7 Sync)
+    # --- P6 Markdown: parsers need SPM products not yet wired into Dudu.xcodeproj;
+    #     wire XCRemoteSwiftPackageReference swift-cmark (cmark_gfm/cmark_gfm_extensions)
+    #     + SwiftMath (github.com/mgriebling/SwiftMath, like SwiftAnthropic) then re-enable.
+    "Dudu/Agent/Markdown/DuduMarkdownParser.swift",  # swift-cmark SPM; provides MarkdownContent
+    "Dudu/Agent/Markdown/SwiftMathRenderer.swift",    # SwiftMath SPM
+    "Dudu/Agent/Markdown/MathRenderScheduler.swift",  # MathAttachment (Views/Chat/SelectableMarkdownView.swift)
 }
 
 SOURCE_EXTS = {".swift", ".m", ".mm"}

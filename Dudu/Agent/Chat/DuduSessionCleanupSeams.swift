@@ -7,13 +7,20 @@
 //  chat session is torn down (clearChat):
 //
 //    - ishSessionDidTerminate:      ISHExecutionCoordinator.shared.sessionDidTerminate (P8, Agent/ISH)
-//    - browserReleasePool:          BrowserUseOffloadBridge.releasePool (P6, Agent/BrowserUse)
-//    - browserDeletePersistedData:  BrowserTabPool.deletePersistedData (P6, Agent/BrowserUse)
+//    - browserReleasePool:          BrowserUseOffloadBridge.releasePool (P7, NativeOffloads/
+//                                   BrowserUseOffloadBridge.swift — NOT P6; P7 assigns)
+//    - browserDeletePersistedData:  BrowserTabPool.deletePersistedData (P6, Agent/BrowserUse/
+//                                   BrowserTabPool.swift — EXCLUDED in P6: needs WebLoadError
+//                                   (Views), BrowserResourceMonitor (P7), and the
+//                                   BrowserUseManager cascade. Whoever re-enables
+//                                   BrowserTabPool assigns:
+//                                     DuduSessionCleanupSeams.browserDeletePersistedData =
+//                                       BrowserTabPool.deletePersistedData(for:)
 //
-//  Each defaults to a no-op so the chat core (P4) compiles and runs before
-//  those parts land. P6/P8 assign the real implementations at startup
-//  (e.g. in their assembly/bootstrap), after which these forward to the real
-//  engines. Do NOT duplicate the engines here — assign, don't re-implement.
+//  Each defaults to a no-op so the chat core compiles and runs before those
+//  parts land. P6/P8 assign the real implementations at startup (e.g. in their
+//  assembly/bootstrap), after which these forward to the real engines. Do NOT
+//  duplicate the engines here — assign, don't re-implement.
 
 import Foundation
 
