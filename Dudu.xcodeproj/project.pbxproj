@@ -432,6 +432,13 @@
 		10526035FEEDE2DFACCE84F1 /* waiting_loop.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 294F32E28E63F6F91832C9E5 /* waiting_loop.mp4 */; };
 		88BC441CF505086A8B38169A /* AvatarEmotionEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBC980C31D14CE8D224EC60 /* AvatarEmotionEngine.swift */; };
 		060DEDFA005DC9D02CD6729D /* AvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A620D2178CF0173961FE68 /* AvatarView.swift */; };
+		08DB585EEBA85DEEE460F379 /* MusicDJTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA9039B5F2CDB9C0D60C1B /* MusicDJTools.swift */; };
+		1B87C67108D65ECE8F68D509 /* AIDJ.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DDFB9D532852C9236154892 /* AIDJ.swift */; };
+		C16F6F6C813AB421FBF26210 /* AppleMusicSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CA5667A4680B8937AC29D6 /* AppleMusicSettingsView.swift */; };
+		3658A9AA8F7A6B049DA3B044 /* MusicLibrarySheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27562886892884A2F98FA470 /* MusicLibrarySheets.swift */; };
+		8F8C3554C43789791C2B71CB /* MusicRoomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BDBA1AB03BD71A03C0B04D1 /* MusicRoomView.swift */; };
+		31FCC5B9605C2D91BE53F072 /* MusicSources.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03029377472ECFF993F08475 /* MusicSources.swift */; };
+		FF10317D42B1DE0D4D068C3B /* MusicStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A088D94876C87F23D6F8485 /* MusicStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1001,6 +1008,13 @@
 		294F32E28E63F6F91832C9E5 /* waiting_loop.mp4 */ = {isa = PBXFileReference; lastKnownFileType = video.mp4; path = waiting_loop.mp4; sourceTree = "<group>"; };
 		0EBC980C31D14CE8D224EC60 /* AvatarEmotionEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarEmotionEngine.swift; sourceTree = "<group>"; };
 		F7A620D2178CF0173961FE68 /* AvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarView.swift; sourceTree = "<group>"; };
+		04BA9039B5F2CDB9C0D60C1B /* MusicDJTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicDJTools.swift; sourceTree = "<group>"; };
+		4DDFB9D532852C9236154892 /* AIDJ.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIDJ.swift; sourceTree = "<group>"; };
+		D0CA5667A4680B8937AC29D6 /* AppleMusicSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleMusicSettingsView.swift; sourceTree = "<group>"; };
+		27562886892884A2F98FA470 /* MusicLibrarySheets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicLibrarySheets.swift; sourceTree = "<group>"; };
+		6BDBA1AB03BD71A03C0B04D1 /* MusicRoomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicRoomView.swift; sourceTree = "<group>"; };
+		03029377472ECFF993F08475 /* MusicSources.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicSources.swift; sourceTree = "<group>"; };
+		3A088D94876C87F23D6F8485 /* MusicStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 		30AC3C5C6C418C791E362178 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 
@@ -1528,6 +1542,7 @@
 				0D25F386EB129C99AF046C33 /* ExternalMCP */,
 				6EDB5A6B41E8BE7295496C5A /* Relay */,
 				0359F724A4EABE8A4FF2DC07 /* LocationDeviceTool.swift */,
+				04BA9039B5F2CDB9C0D60C1B /* MusicDJTools.swift */,
 				107B40487334DE236B7814B3 /* StewardWorkContext.swift */,
 				1682FD7E4B953E3290C3955C /* BluetoothDeviceTool.swift */,
 				1DE3E9E9B65C6B5B4E4B75B5 /* DeviceTools.swift */,
@@ -1939,6 +1954,7 @@
 				FC61A6675134359CB1A0BBA1 /* Chat */,
 				18E9DA5BE55C7A48F1D6BFB5 /* Knowledge */,
 				AA856D71B083C7F259E49862 /* MCP */,
+				6D7AF697BE452E1C125B5155 /* Music */,
 				74440DB741AE833BB66AF6C0 /* OurSpace */,
 				098E7EAFF306EFFA46763C5C /* Permissions */,
 				5C12BE9B55843E8E76492218 /* Providers */,
@@ -2141,6 +2157,19 @@
 			path = Avatar;
 			sourceTree = "<group>";
 		};
+		6D7AF697BE452E1C125B5155 /* Music */ = {
+			isa = PBXGroup;
+			children = (
+				03029377472ECFF993F08475 /* MusicSources.swift */,
+				27562886892884A2F98FA470 /* MusicLibrarySheets.swift */,
+				3A088D94876C87F23D6F8485 /* MusicStore.swift */,
+				4DDFB9D532852C9236154892 /* AIDJ.swift */,
+				6BDBA1AB03BD71A03C0B04D1 /* MusicRoomView.swift */,
+				D0CA5667A4680B8937AC29D6 /* AppleMusicSettingsView.swift */,
+			);
+			path = Music;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -2311,6 +2340,7 @@
 				07D72A674C42EF2B57FAC7FD /* ThinkingRulesCollection.swift in Sources */,
 				0877B36A44441FC9114D734D /* MessageBlockView.swift in Sources */,
 				08B9C892C3AFBB905BD3215A /* MCPApprovalCardView.swift in Sources */,
+				08DB585EEBA85DEEE460F379 /* MusicDJTools.swift in Sources */,
 				093F308F93DEF3B6C24C25D6 /* OffloadPermissionManager.swift in Sources */,
 				0959C2CD130DD9FCE05A974A /* ExternalFileImporter.swift in Sources */,
 				0AB0F63F422A693954AB0C96 /* DuduSessionCleanupSeams.swift in Sources */,
@@ -2339,6 +2369,7 @@
 				19E031379BF4942599BD6211 /* ScheduledPromptManager.swift in Sources */,
 				1AA4989A9C191F714AF36087 /* AppStorageFields.swift in Sources */,
 				1ADF5A5E182FAAB74F3E36A9 /* ConfigConfirmSheet.swift in Sources */,
+				1B87C67108D65ECE8F68D509 /* AIDJ.swift in Sources */,
 				1C07E7F023BEC271BE4DEE05 /* AIAuthorizationPromptView.swift in Sources */,
 				1C4E804FC99D0D0FB6946BC1 /* DuduMarkdownParser.swift in Sources */,
 				1D050B834629689057DB0570 /* BluetoothDeviceTool.swift in Sources */,
@@ -2368,6 +2399,7 @@
 				2FF53A575F667462901F5ABB /* GeminiProvider.swift in Sources */,
 				31CCB5418C039123A1DA6093 /* VoiceActivityDetector.swift in Sources */,
 				31DC668EFF158F0266418982 /* DuduMarkdownPrepRegex.swift in Sources */,
+				31FCC5B9605C2D91BE53F072 /* MusicSources.swift in Sources */,
 				323DDC2F2A913E137EAEEFBC /* UploadPolicy.swift in Sources */,
 				32E368F7CCD668DA16921DDD /* AppLockView.swift in Sources */,
 				33AD360F88F0F2A73202DA78 /* AIChatViewModel+FileTools.swift in Sources */,
@@ -2376,6 +2408,7 @@
 				34968C5C3D2FEF2C1FE6D3C6 /* BackupProgressReporter.swift in Sources */,
 				361C2B3AE1DF75BF40E95181 /* AIChatViewModel+SuspensionResume.swift in Sources */,
 				3626F7A0A08125798FD516DB /* ThinkingIndicatorSlot.swift in Sources */,
+				3658A9AA8F7A6B049DA3B044 /* MusicLibrarySheets.swift in Sources */,
 				3771E4D044124F1800F5C5CA /* GeminiWireFormat.swift in Sources */,
 				389D8D99DE74E73C3C5094AB /* ConfigError.swift in Sources */,
 				390C5D8C9838C194237CCBE8 /* ModelGroup.swift in Sources */,
@@ -2510,6 +2543,7 @@
 				8D1E4BD68420DF9836986E67 /* EnvVarsCollection.swift in Sources */,
 				8DBC10601A1AACD2115AAA9A /* BrowserWebView.swift in Sources */,
 				8E9832DE5E4A229FE2EC0E3A /* MCPStore.swift in Sources */,
+				8F8C3554C43789791C2B71CB /* MusicRoomView.swift in Sources */,
 				8F98429970333857FE4CD2E8 /* BackupView.swift in Sources */,
 				8FCE740B6D52F5AE503C2C4D /* ImageTextCache.swift in Sources */,
 				90518BF15A6AD71E99CD269B /* AgentProvider.swift in Sources */,
@@ -2576,6 +2610,7 @@
 				C00F1C6AC7507660A775BC51 /* VocabularyFilter.swift in Sources */,
 				C0386D1053422608AF9B33E0 /* CodexOAuthManager.swift in Sources */,
 				C1642A588C195C97EF2DBD6E /* AIVoiceMessageComposer.swift in Sources */,
+				C16F6F6C813AB421FBF26210 /* AppleMusicSettingsView.swift in Sources */,
 				C26D08705B2A15585E44B46D /* ChatEmptyStateView.swift in Sources */,
 				C26DE239894590D26AFE063F /* SessionBadgeStore.swift in Sources */,
 				C2F592DE6C1F27E864C77231 /* ProviderCustomizationGenerated.swift in Sources */,
@@ -2672,6 +2707,7 @@
 				FC6580876255C20F22147C6D /* VoiceProvider+System.swift in Sources */,
 				FC7CC80B1889F3EAA664981A /* LLMSessionRegistry.swift in Sources */,
 				FD2F9FA79434BE3C41B79706 /* KaTeXRenderer.swift in Sources */,
+				FF10317D42B1DE0D4D068C3B /* MusicStore.swift in Sources */,
 				FF44D82CCC8700F439CB95EB /* BackupRunController.swift in Sources */,
 				FF49549E7C6942072F161608 /* DuduURLPathDecoding.swift in Sources */,
 			);
