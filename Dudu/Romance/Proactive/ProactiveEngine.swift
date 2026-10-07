@@ -254,13 +254,21 @@ final class ProactiveEngine: ObservableObject {
         // schedules a notification (her rule).
         if let item = FollowUpManager.shared.peekBackgroundDue() {
             FollowUpManager.shared.consume(item.id)
-            await ProactiveNotificationScheduler.shared.scheduleAtMostOne(
-                id: "followup-\(item.id)",
-                title: "嘟嘟记着一件事",
-                body: "\(item.text)，后来怎么样了？",
-                afterSeconds: 2 * 3600,
-                userInfo: ["kind": "followup", "id": item.id]
-            )
+            // The shared gate applies on the background path too: incognito,
+            // sleep window, daily cap, 60-min collision. Veto = silent.
+            switch ProactiveEngine.shared.gate(kind: "followup", now: now) {
+            case .allow:
+                ProactiveEngine.shared.recordSend(kind: "followup", now: now)
+                await ProactiveNotificationScheduler.shared.scheduleAtMostOne(
+                    id: "followup-\(item.id)",
+                    title: "嘟嘟记着一件事",
+                    body: "\(item.text)，后来怎么样了？",
+                    afterSeconds: 2 * 3600,
+                    userInfo: ["kind": "followup", "id": item.id]
+                )
+            case .veto(let reason):
+                logger.info("[followup] background vetoed (consumed): \(reason)")
+            }
             return
         }
         let mood = MoodCheckInManager.shared.shouldNudge()

@@ -129,6 +129,13 @@ final class FollowUpManager: ObservableObject {
         var fired: [FollowUpItem] = []
         for i in items.indices where items[i].isPending {
             guard let fire = items[i].fireDate, fire <= now else { continue }
+            // 15-min grace (initiative.ts): a slot missed by more than 15 min
+            // is consumed silently — never delivered, never backfilled.
+            guard now.timeIntervalSince(fire) <= 15 * 60 else {
+                items[i].delivered = true
+                logger.info("[followup] expired (consumed silently)")
+                continue
+            }
             // Consume the slot first: never retried, whatever happens.
             items[i].delivered = true
             switch ProactiveEngine.shared.gate(kind: "followup", now: now) {
@@ -148,7 +155,11 @@ final class FollowUpManager: ObservableObject {
     /// as a single template notification. Call consume(_:) after scheduling.
     func peekBackgroundDue(now: Date = Date()) -> FollowUpItem? {
         guard masterEnabled else { return nil }
-        return pendingItems().first { ($0.fireDate ?? .distantFuture) <= now }
+        // 15-min grace: background never backfills a missed slot.
+        return pendingItems().first {
+            guard let fire = $0.fireDate, fire <= now else { return false }
+            return now.timeIntervalSince(fire) <= 15 * 60
+        }
     }
 
     func consume(_ id: String) {

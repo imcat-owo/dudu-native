@@ -457,7 +457,10 @@ enum ProactiveTools {
                     return ToolOutput(text: "次日跟进的开关只能她定：请先问她，同意后再带 confirm=true 调用。",
                                       isError: true)
                 }
-                await MainActor.run { mgr.masterEnabled = args.bool("enabled") ?? true }
+                // Direct await hops to the manager's actor; no MainActor.run
+                // wrapper (which would capture non-Sendable mgr in a
+                // @Sendable handler).
+                await mgr.masterEnabled = args.bool("enabled") ?? true
                 let on2 = await mgr.masterEnabled
                 return ToolOutput(text: "已按她的要求：次日跟进\(on2 ? "开" : "关")。")
             },
