@@ -22,28 +22,6 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<!-- D25: URL schemes the cross-app whitelist may query (canOpenURL).
-	     Mirrors OPEN_APP_QUERIED_SCHEMES in Views/Sandbox/OpenAppWhitelist.swift
-	     (ported from openmuse QUERIED_SCHEMES). -->
-	<key>LSApplicationQueriesSchemes</key>
-	<array>
-		<string>tel</string>
-		<string>sms</string>
-		<string>mailto</string>
-		<string>weixin</string>
-		<string>alipay</string>
-		<string>taobao</string>
-		<string>openapp.jdmobile</string>
-		<string>bilibili</string>
-		<string>music</string>
-		<string>orpheus</string>
-		<string>qqmusic</string>
-		<string>iosamap</string>
-		<string>shortcuts</string>
-		<string>bear</string>
-		<string>things</string>
-		<string>drafts</string>
-	</array>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>嘟嘟的听歌房需要访问 Apple Music，帮你搜歌、放歌。</string>
 	<key>NSCameraUsageDescription</key>

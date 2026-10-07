@@ -54869,666 +54869,6 @@
         }
       }
     },
-    "Siri & Shortcuts": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Siri & Shortcuts"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Siri 与捷径"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Siri 與捷徑"
-          }
-        }
-      }
-    },
-    "Dudu lives in the Shortcuts app too. Seven voice shortcuts work out of the box — just say the phrase and Dudu gets moving.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dudu lives in the Shortcuts app too. Seven voice shortcuts work out of the box — just say the phrase and Dudu gets moving."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "嘟嘟也住在捷径 App 里。七个语音捷径开箱即用——喊出口令，嘟嘟就开工。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "嘟嘟也住在捷徑 App 裡。七個語音捷徑開箱即用——喊出口令，嘟嘟就開工。"
-          }
-        }
-      }
-    },
-    "Apple doesn't let apps record their own Siri phrases, so Add to Siri opens the Shortcuts app — give any action a phrase of your own there.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Apple doesn't let apps record their own Siri phrases, so Add to Siri opens the Shortcuts app — give any action a phrase of your own there."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "苹果不允许 App 自己录制 Siri 口令，所以「添加到 Siri」会打开捷径 App——在那里给任何动作起一个自己的口令。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "蘋果不允許 App 自己錄製 Siri 口令，所以「加入到 Siri」會打開捷徑 App——在那裡給任何動作起一個自己的口令。"
-          }
-        }
-      }
-    },
-    "Siri phrases": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Siri phrases"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Siri 口令"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Siri 口令"
-          }
-        }
-      }
-    },
-    "Try saying": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Try saying"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "试试喊"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "試試喊"
-          }
-        }
-      }
-    },
-    "All actions": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "All actions"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "全部动作"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "全部動作"
-          }
-        }
-      }
-    },
-    "Opens the app": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Opens the app"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "打开 App"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "打開 App"
-          }
-        }
-      }
-    },
-    "Runs in background": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Runs in background"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "后台运行"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "背景執行"
-          }
-        }
-      }
-    },
-    "Also in the Shortcuts app, under All Actions.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Also in the Shortcuts app, under All Actions."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在捷径 App 的「全部动作」里也能找到。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在捷徑 App 的「全部動作」裡也能找到。"
-          }
-        }
-      }
-    },
-    "Add to Siri": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add to Siri"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "添加到 Siri"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "加入到 Siri"
-          }
-        }
-      }
-    },
-    "On a schedule": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "On a schedule"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "定时"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "定時"
-          }
-        }
-      }
-    },
-    "Wake Dudu on a schedule": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Wake Dudu on a schedule"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "定时叫醒嘟嘟"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "定時叫醒嘟嘟"
-          }
-        }
-      }
-    },
-    "A notification at your chosen time — tap it and Dudu runs your preset prompt.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "A notification at your chosen time — tap it and Dudu runs your preset prompt."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "到点发一条通知，点一下，嘟嘟就按你写好的话开工。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "到點發一條通知，點一下，嘟嘟就按你寫好的話開工。"
-          }
-        }
-      }
-    },
-    "Scheduled Prompts": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Scheduled Prompts"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "定时提醒"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "定時提醒"
-          }
-        }
-      }
-    },
-    "Ask Dudu": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ask Dudu"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "问嘟嘟"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "問嘟嘟"
-          }
-        }
-      }
-    },
-    "Talk to Dudu out loud — she opens the chat, sends your words, and answers right in front of you.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Talk to Dudu out loud — she opens the chat, sends your words, and answers right in front of you."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "直接跟嘟嘟说话——她会打开聊天，把你的话发出去，当场回答你。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "直接跟嘟嘟說話——她會打開聊天，把你的話發出去，當場回答你。"
-          }
-        }
-      }
-    },
-    "Quick Task": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Quick Task"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "快捷任务"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "快捷任務"
-          }
-        }
-      }
-    },
-    "Little everyday jobs — sleep check, weather, morning briefing. Pick one and Dudu handles it.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Little everyday jobs — sleep check, weather, morning briefing. Pick one and Dudu handles it."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "日常小任务——睡眠复盘、查天气、晨间简报，选一个，嘟嘟搞定。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "日常小任務——睡眠復盤、查天氣、晨間簡報，選一個，嘟嘟搞定。"
-          }
-        }
-      }
-    },
-    "Send Prompt": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Send Prompt"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "发任务"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "發任務"
-          }
-        }
-      }
-    },
-    "Slip Dudu a task in the background — she keeps working while you do other things.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Slip Dudu a task in the background — she keeps working while you do other things."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "悄悄给嘟嘟塞个后台任务——你忙你的，她接着干。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "悄悄給嘟嘟塞個背景任務——你忙你的，她接著幹。"
-          }
-        }
-      }
-    },
-    "Session Status": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Session Status"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "任务状态"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "任務狀態"
-          }
-        }
-      }
-    },
-    "Peek at a running task — see what Dudu is up to and what she just said.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Peek at a running task — see what Dudu is up to and what she just said."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "瞄一眼正在跑的任务——看看嘟嘟在干嘛、刚说了什么。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "瞄一眼正在跑的任務——看看嘟嘟在幹嘛、剛說了什麼。"
-          }
-        }
-      }
-    },
-    "List Sessions": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "List Sessions"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "聊天列表"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "聊天列表"
-          }
-        }
-      }
-    },
-    "All your chats with Dudu, in one tidy list.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "All your chats with Dudu, in one tidy list."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "你和嘟嘟的所有聊天，一张清单收好。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "你和嘟嘟的所有聊天，一張清單收好。"
-          }
-        }
-      }
-    },
-    "Follow Up": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Follow Up"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "继续聊"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "繼續聊"
-          }
-        }
-      }
-    },
-    "Wake an old conversation with one more question — Dudu picks up right where you left off.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Wake an old conversation with one more question — Dudu picks up right where you left off."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "用一个问题叫醒旧对话——嘟嘟接着上次的地方继续。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "用一個問題叫醒舊對話——嘟嘟接著上次的地方繼續。"
-          }
-        }
-      }
-    },
-    "Open Session": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Open Session"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "打开聊天"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "打開聊天"
-          }
-        }
-      }
-    },
-    "Jump straight into a chat — no scrolling through the list.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Jump straight into a chat — no scrolling through the list."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "一头扎进某个聊天——不用在列表里翻。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "一頭扎進某個聊天——不用在列表裡翻。"
-          }
-        }
-      }
-    },
-    "Retry Run": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Retry Run"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "重跑一次"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "重跑一次"
-          }
-        }
-      }
-    },
-    "Dudu went sideways? Rewind to any of your messages and let her try that turn again.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dudu went sideways? Rewind to any of your messages and let her try that turn again."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "嘟嘟跑偏了？回到你的任意一条消息，让她那一轮重来。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "嘟嘟跑偏了？回到你的任意一條消息，讓她那一輪重來。"
-          }
-        }
-      }
-    },
     "shareimport.qrFailed": {
       "localizations": {
         "en": {
@@ -56782,6 +56122,7 @@
           }
         }
       }
+    },
     "sandbox.testConnection": {
       "localizations": {
         "en": {
@@ -56954,6 +56295,666 @@
           "stringUnit": {
             "state": "translated",
             "value": "在嘟嘟內打開"
+          }
+        }
+      }
+    },
+    "Siri & Shortcuts": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Siri & Shortcuts"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Siri 与捷径"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Siri 與捷徑"
+          }
+        }
+      }
+    },
+    "Dudu lives in the Shortcuts app too. Seven voice shortcuts work out of the box — just say the phrase and Dudu gets moving.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dudu lives in the Shortcuts app too. Seven voice shortcuts work out of the box — just say the phrase and Dudu gets moving."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "嘟嘟也住在捷径 App 里。七个语音捷径开箱即用——喊出口令，嘟嘟就开工。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "嘟嘟也住在捷徑 App 裡。七個語音捷徑開箱即用——喊出口令，嘟嘟就開工。"
+          }
+        }
+      }
+    },
+    "Apple doesn't let apps record their own Siri phrases, so Add to Siri opens the Shortcuts app — give any action a phrase of your own there.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple doesn't let apps record their own Siri phrases, so Add to Siri opens the Shortcuts app — give any action a phrase of your own there."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "苹果不允许 App 自己录制 Siri 口令，所以「添加到 Siri」会打开捷径 App——在那里给任何动作起一个自己的口令。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "蘋果不允許 App 自己錄製 Siri 口令，所以「加入到 Siri」會打開捷徑 App——在那裡給任何動作起一個自己的口令。"
+          }
+        }
+      }
+    },
+    "Siri phrases": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Siri phrases"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Siri 口令"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Siri 口令"
+          }
+        }
+      }
+    },
+    "Try saying": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try saying"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "试试喊"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "試試喊"
+          }
+        }
+      }
+    },
+    "All actions": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All actions"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "全部动作"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "全部動作"
+          }
+        }
+      }
+    },
+    "Opens the app": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Opens the app"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "打开 App"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "打開 App"
+          }
+        }
+      }
+    },
+    "Runs in background": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Runs in background"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "后台运行"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "背景執行"
+          }
+        }
+      }
+    },
+    "Also in the Shortcuts app, under All Actions.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Also in the Shortcuts app, under All Actions."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在捷径 App 的「全部动作」里也能找到。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在捷徑 App 的「全部動作」裡也能找到。"
+          }
+        }
+      }
+    },
+    "Add to Siri": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add to Siri"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "添加到 Siri"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "加入到 Siri"
+          }
+        }
+      }
+    },
+    "On a schedule": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On a schedule"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "定时"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "定時"
+          }
+        }
+      }
+    },
+    "Wake Dudu on a schedule": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wake Dudu on a schedule"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "定时叫醒嘟嘟"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "定時叫醒嘟嘟"
+          }
+        }
+      }
+    },
+    "A notification at your chosen time — tap it and Dudu runs your preset prompt.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A notification at your chosen time — tap it and Dudu runs your preset prompt."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "到点发一条通知，点一下，嘟嘟就按你写好的话开工。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "到點發一條通知，點一下，嘟嘟就按你寫好的話開工。"
+          }
+        }
+      }
+    },
+    "Scheduled Prompts": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scheduled Prompts"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "定时提醒"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "定時提醒"
+          }
+        }
+      }
+    },
+    "Ask Dudu": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ask Dudu"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "问嘟嘟"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "問嘟嘟"
+          }
+        }
+      }
+    },
+    "Talk to Dudu out loud — she opens the chat, sends your words, and answers right in front of you.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Talk to Dudu out loud — she opens the chat, sends your words, and answers right in front of you."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "直接跟嘟嘟说话——她会打开聊天，把你的话发出去，当场回答你。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "直接跟嘟嘟說話——她會打開聊天，把你的話發出去，當場回答你。"
+          }
+        }
+      }
+    },
+    "Quick Task": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quick Task"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "快捷任务"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "快捷任務"
+          }
+        }
+      }
+    },
+    "Little everyday jobs — sleep check, weather, morning briefing. Pick one and Dudu handles it.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Little everyday jobs — sleep check, weather, morning briefing. Pick one and Dudu handles it."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "日常小任务——睡眠复盘、查天气、晨间简报，选一个，嘟嘟搞定。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "日常小任務——睡眠復盤、查天氣、晨間簡報，選一個，嘟嘟搞定。"
+          }
+        }
+      }
+    },
+    "Send Prompt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Send Prompt"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "发任务"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "發任務"
+          }
+        }
+      }
+    },
+    "Slip Dudu a task in the background — she keeps working while you do other things.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Slip Dudu a task in the background — she keeps working while you do other things."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "悄悄给嘟嘟塞个后台任务——你忙你的，她接着干。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "悄悄給嘟嘟塞個背景任務——你忙你的，她接著幹。"
+          }
+        }
+      }
+    },
+    "Session Status": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Session Status"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "任务状态"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "任務狀態"
+          }
+        }
+      }
+    },
+    "Peek at a running task — see what Dudu is up to and what she just said.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Peek at a running task — see what Dudu is up to and what she just said."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "瞄一眼正在跑的任务——看看嘟嘟在干嘛、刚说了什么。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "瞄一眼正在跑的任務——看看嘟嘟在幹嘛、剛說了什麼。"
+          }
+        }
+      }
+    },
+    "List Sessions": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "List Sessions"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "聊天列表"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "聊天列表"
+          }
+        }
+      }
+    },
+    "All your chats with Dudu, in one tidy list.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All your chats with Dudu, in one tidy list."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "你和嘟嘟的所有聊天，一张清单收好。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "你和嘟嘟的所有聊天，一張清單收好。"
+          }
+        }
+      }
+    },
+    "Follow Up": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Follow Up"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "继续聊"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "繼續聊"
+          }
+        }
+      }
+    },
+    "Wake an old conversation with one more question — Dudu picks up right where you left off.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wake an old conversation with one more question — Dudu picks up right where you left off."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用一个问题叫醒旧对话——嘟嘟接着上次的地方继续。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用一個問題叫醒舊對話——嘟嘟接著上次的地方繼續。"
+          }
+        }
+      }
+    },
+    "Open Session": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open Session"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "打开聊天"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "打開聊天"
+          }
+        }
+      }
+    },
+    "Jump straight into a chat — no scrolling through the list.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jump straight into a chat — no scrolling through the list."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "一头扎进某个聊天——不用在列表里翻。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "一頭扎進某個聊天——不用在列表裡翻。"
+          }
+        }
+      }
+    },
+    "Retry Run": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Retry Run"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "重跑一次"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "重跑一次"
+          }
+        }
+      }
+    },
+    "Dudu went sideways? Rewind to any of your messages and let her try that turn again.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dudu went sideways? Rewind to any of your messages and let her try that turn again."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "嘟嘟跑偏了？回到你的任意一条消息，让她那一轮重来。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "嘟嘟跑偏了？回到你的任意一條消息，讓她那一輪重來。"
           }
         }
       }
