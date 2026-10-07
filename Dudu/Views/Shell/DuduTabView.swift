@@ -64,5 +64,10 @@ struct DuduTabView: View {
                 MCPApprovalCardView()
             }
         }
+        // [D21] Voice call: ringing banner (top) + full-screen call screen.
+        // Rides above every tab, like the approval cards above.
+        .overlay(alignment: .top) {
+            VoiceCallOverlay()
+        }
     }
 }

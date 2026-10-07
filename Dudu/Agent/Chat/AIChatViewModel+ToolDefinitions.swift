@@ -273,6 +273,13 @@ extension AIChatViewModel {
         // DispatchSemaphore and would deadlock on this @MainActor view model.
         tools.append(contentsOf: themeToolDefinitions())
 
+        // [D21] Voice call tools, ported from old Dudu
+        // (~/workspace/openmuse/apps/mobile/src/voice-call/tools.ts):
+        // propose_voice_call, list_voice_calls. Definitions + handlers live
+        // in Dudu/Providers/Voice/Call/VoiceCallTools.swift; the AI may only
+        // PROPOSE — it can never auto-start audio or auto-answer.
+        tools.append(contentsOf: voiceCallToolDefinitions())
+
         return tools
     }
 

@@ -5306,6 +5306,12 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
             userSystemPrompt += "\n\n" + ttsPaper
         }
 
+        // [D21] Voice call paper: only when she's talking about calls —
+        // same on-demand pattern as the TTS paper above.
+        if let callPaper = VoiceCallPaper.paperIfRelevant(userMessage: Self.lastUserText(in: agentHistory)) {
+            userSystemPrompt += "\n\n" + callPaper
+        }
+
         // [d10-tool-papers 2026-10-07] 工具纸条：话题相关时才把对应纸条塞进
         // system prompt（见 DuduToolPapersWiring），一会话一纸条只下发一次。
         DuduToolPapersWiring.inject(into: &userSystemPrompt, userMessage: Self.lastUserText(in: agentHistory), sessionID: sessionId)
@@ -5812,6 +5818,10 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                 // [tts-paper 2026-10-02] fallback 换模型时和第一注入点保持一致。
                 if let ttsPaper = TTSPaper.paperIfRelevant(userMessage: Self.lastUserText(in: agentHistory)) {
                     userSystemPrompt += "\n\n" + ttsPaper
+                }
+                // [D21] Voice call paper: fallback mirrors the first site.
+                if let callPaper = VoiceCallPaper.paperIfRelevant(userMessage: Self.lastUserText(in: agentHistory)) {
+                    userSystemPrompt += "\n\n" + callPaper
                 }
                 // [d10-tool-papers 2026-10-07 fix] fallback 重组 userSystemPrompt
                 // 时和第一注入点保持一致：已下发过的纸条只给 compact 提醒，

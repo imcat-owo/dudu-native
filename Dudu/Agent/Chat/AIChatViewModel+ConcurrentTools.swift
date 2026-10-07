@@ -900,6 +900,30 @@ extension AIChatViewModel {
             toolOutput = askResult.output
             toolSuccess = askResult.success
 
+        case "propose_voice_call":
+            // [D21] AI-initiated call: the AI may only PROPOSE — the phone
+            // rings with WHO + WHY and SHE accepts or declines. Handlers live
+            // in Dudu/Providers/Voice/Call/VoiceCallTools.swift.
+            let proposeResult = await VoiceCallToolHandler.propose(
+                args: toolArgs,
+                isIncognito: isIncognito,
+                personas: PersonaStore.shared.personas,
+                currentPersonaId: PersonaStore.shared.currentPersonaID)
+            if msgIdx < messages.count, blockIdx < messages[msgIdx].blocks.count {
+                messages[msgIdx].blocks[blockIdx].content = proposeResult.output
+            }
+            toolOutput = proposeResult.output
+            toolSuccess = proposeResult.success
+
+        case "list_voice_calls":
+            // [D21] List call proposals (ringing / accepted / declined / missed).
+            let listResult = await VoiceCallToolHandler.list()
+            if msgIdx < messages.count, blockIdx < messages[msgIdx].blocks.count {
+                messages[msgIdx].blocks[blockIdx].content = listResult.output
+            }
+            toolOutput = listResult.output
+            toolSuccess = listResult.success
+
         case "web_search":
             // [s2-search] 第 18 条联网搜索：查资料。query 为空直接拦；
             // key 没配好时工具根本不会注册到模型面前，这里是双保险。

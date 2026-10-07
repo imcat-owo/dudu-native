@@ -173,7 +173,7 @@ final class CallProposalCenter: ObservableObject {
     /// Start an outgoing call. Returns the session (already connecting).
     func startOutgoingCall(personaName: String, entry: ModelEntry?, chatSessionId: String?) async -> VoiceCallSession {
         // Never stack calls: end any live one first (honest, like a phone).
-        if activeSession != nil { endActiveCall() }
+        if activeSession != nil { await endActiveCall() }
         let session = VoiceCallSession(personaName: personaName, entry: entry)
         activeChatSessionId = chatSessionId
         activeSession = session
@@ -185,7 +185,7 @@ final class CallProposalCenter: ObservableObject {
     /// No info loss: the full call transcript lands in the chat as one
     /// assistant message — unless the chat is incognito (nothing is
     /// persisted there, by the incognito contract).
-    func endActiveCall() {
+    func endActiveCall() async {
         guard let session = activeSession else { return }
         session.end(reason: "user-ended")
         let summary = session.makeSummary()
@@ -200,7 +200,7 @@ final class CallProposalCenter: ObservableObject {
             role: .assistant,
             parts: [.text(summary)],
             createdAt: Date())
-        ChatStore.shared.appendMessage(msg)
+        await ChatStore.shared.appendMessage(msg)
         handoffSessionId = sid
         handoffToken &+= 1
         logger.info("call summary handed to chat sid=\(sid.prefix(8))")

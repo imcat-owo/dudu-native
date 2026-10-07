@@ -111,6 +111,19 @@ struct ChatView: View {
                             .foregroundStyle(vm.isIncognito ? DuduTheme.pink : DuduTheme.duduText)
                     }
                     .accessibilityLabel(vm.isIncognito ? "退出隐身聊天" : "隐身聊天")
+                    // [D21] Voice call: full-duplex call with barge-in.
+                    Button {
+                        Task { @MainActor in
+                            await CallProposalCenter.shared.startOutgoingCall(
+                                personaName: PersonaStore.shared.current.name,
+                                entry: vm.resolveCurrentEntry(),
+                                chatSessionId: vm.sessionId)
+                        }
+                    } label: {
+                        Image(systemName: "phone")
+                            .foregroundStyle(DuduTheme.duduText)
+                    }
+                    .accessibilityLabel("语音通话")
                     Button {
                         showModelPicker = true
                     } label: {
