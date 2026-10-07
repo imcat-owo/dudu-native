@@ -1,6 +1,28 @@
 {
   "sourceLanguage": "en",
   "strings": {
+    "Read aloud is unavailable in incognito mode — synthesized audio would have to be written to disk.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Read aloud is unavailable in incognito mode — synthesized audio would have to be written to disk."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "隐身模式下无法朗读——语音音频需要写入磁盘。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "隱身模式下無法朗讀——語音音訊需要寫入磁碟。"
+          }
+        }
+      }
+    },
     "a11y.agentBrowserPreview": {
       "localizations": {
         "en": {

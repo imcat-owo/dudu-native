@@ -1461,11 +1461,29 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
         syncSpeechStateToGlobal()
     }
 
+    /// Incognito gate for EXPLICIT read-aloud taps (footer speaker button,
+    /// "Read from Start" menu, "Read Selection" menu). Streaming auto-read is
+    /// silently suppressed by `canSpeakNow`, but a deliberate tap must get an
+    /// honest answer, not silence — same pattern as the send_voice refusal in
+    /// AIChatViewModel+ConcurrentTools ("silence is better than a leak" does
+    /// not apply when the user explicitly asked). Returns true when the tap
+    /// was refused; callers check this BEFORE any side effects (stopSpeech,
+    /// force-enabling read-replies) so a refused tap leaves no trace.
+    func refuseIncognitoReadAloud() -> Bool {
+        guard isIncognito else { return false }
+        ShareFeedbackToast.show(AppLocalized(
+            "Read aloud is unavailable in incognito mode — synthesized audio would have to be written to disk."))
+        return true
+    }
+
     /// Read an entire assistant reply aloud FROM THE START. Clears any in-progress
     /// TTS (so it doesn't overlap), enables read-replies, then queues the whole
     /// reply split into sentences. No-op while that reply is still streaming (the
     /// caller greys the menu item out, but we guard here too).
     func readReplyFromStart(_ message: ChatMessage) {
+        // Phase D4 — incognito privacy: an explicit tap gets an honest
+        // refusal, never a silent no-op.
+        guard !refuseIncognitoReadAloud() else { return }
         // Build the reply's plain text from its text blocks.
         let fullText = message.blocks
             .compactMap { block -> String? in
@@ -1800,11 +1818,16 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
     }
 
     /// Whether reply TTS may speak right now: enabled AND the mic isn't capturing
-    /// (capture and playback are mutually exclusive — no echo / session fight).
+    /// (capture and playback are mutually exclusive — no echo / session fight)
+    /// AND not incognito. Incognito has a hard "no message content touches
+    /// disk" contract and cloud TTS persists synthesized audio to TTSDiskCache,
+    /// so every speak path is dead here — same stance as the send_voice
+    /// refusal in AIChatViewModel+ConcurrentTools.
     private var canSpeakNow: Bool {
-        // Enabled AND not muted AND not capturing. `canPlay` folds in the temporary
-        // mute (capsule speaker) on top of the full on/off `isEnabled`.
-        VoiceOutputState.shared.canPlay && !VoiceModePreference.shared.isCapturing
+        // Enabled AND not muted AND not capturing AND not incognito. `canPlay`
+        // folds in the temporary mute (capsule speaker) on top of the full
+        // on/off `isEnabled`.
+        VoiceOutputState.shared.canPlay && !VoiceModePreference.shared.isCapturing && !isIncognito
     }
 
     /// True when a configured cloud TTS model is selected (not the offline System

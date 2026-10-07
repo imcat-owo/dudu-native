@@ -1559,6 +1559,9 @@ extension CollectionViewMessageListV3 {
             // instruction to append it after a different reply's queued speech.
             bridge.onSpeakText = { [weak vm] text in
                 guard let vm else { return }
+                // Incognito: refuse BEFORE stopSpeech / force-enabling
+                // read-replies — a refused tap must leave no side effects.
+                guard !vm.refuseIncognitoReadAloud() else { return }
                 vm.stopSpeech()
                 if !vm.speakEnabled {
                     vm.speakEnabled = true
