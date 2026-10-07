@@ -36,9 +36,6 @@ enum SettingsDeepLinkTarget: Equatable {
     case terminal
     /// [T-tts-first-use-nudge 09-13] Voice Services list (TTS service layer).
     case voiceServices
-    /// D22: Siri & Shortcuts hub (Dudu/Views/Intents/SiriShortcutsHubView).
-    /// Reachable as `dudu-clone://settings/siri`.
-    case siriShortcuts
 }
 
 @MainActor

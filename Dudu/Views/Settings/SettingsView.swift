@@ -13,8 +13,6 @@ enum SettingsRoute: Hashable {
     case appLock
     case musicKit
     case about
-    // D22: Siri & Shortcuts hub (Dudu/Views/Intents/).
-    case siriShortcuts
 }
 
 /// Owns the Settings tab's NavigationStack path so deep pushes
@@ -66,13 +64,6 @@ struct SettingsView: View {
                         title: "Apple Music",
                         route: .musicKit
                     )
-                    // D22: Siri & Shortcuts hub — the 8 App Intents, Siri
-                    // phrases, Add-to-Siri buttons, scheduled prompts link.
-                    SettingsRow(
-                        icon: "mic.fill",
-                        title: AppLocalized("Siri & Shortcuts"),
-                        route: .siriShortcuts
-                    )
                 }
                 // D8/D11: 备份与恢复 / 应用锁
                 Section {
@@ -119,17 +110,7 @@ struct SettingsView: View {
                     AppleMusicSettingsView()
                 case .about:
                     AboutView()
-                case .siriShortcuts:
-                    SiriShortcutsHubView()
                 }
-            }
-            .onReceive(DeepLinkCoordinator.shared.$pendingSettingsTarget) { target in
-                // D22: `dudu-clone://settings/siri` lands here. DuduTabView
-                // already switched to the Settings tab; push the hub and clear
-                // the one-shot target so a later plain navigation doesn't re-push.
-                guard target == .siriShortcuts else { return }
-                DeepLinkCoordinator.shared.pendingSettingsTarget = nil
-                navigator.path.append(SettingsRoute.siriShortcuts)
             }
         }
         .environmentObject(navigator)

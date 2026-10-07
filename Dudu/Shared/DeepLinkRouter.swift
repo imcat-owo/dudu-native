@@ -36,7 +36,6 @@ extension Notification.Name {
 ///   dudu-clone://settings/background
 ///   dudu-clone://settings/about
 ///   dudu-clone://settings/permissions
-///   dudu-clone://settings/siri              (alias: siri-shortcuts, shortcuts)
 ///   dudu-clone://settings/environments[?create_key=…&create_value=…&create_note=…]
 ///   dudu-clone://settings/rootfs                     (alias: mirrors, rootfs-management, rootfs_management)
 ///
@@ -193,10 +192,6 @@ enum DeepLinkRouter {
         // [T-tts-first-use-nudge 09-13] Voice Services (TTS service layer).
         case "voice", "voice-services", "voice_services", "tts", "tts-services":
             coord.pendingSettingsTarget = .voiceServices
-
-        // D22: Siri & Shortcuts hub (Settings → Siri & Shortcuts).
-        case "siri", "siri-shortcuts", "siri_shortcuts", "shortcuts":
-            coord.pendingSettingsTarget = .siriShortcuts
 
         case "environments":
             // `create_key` is the only required param. Missing
