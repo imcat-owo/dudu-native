@@ -168,6 +168,13 @@ extension AIChatViewModel {
     /// keywords they contain, sorted by confidence descending. The model can decide
     /// how to use partial matches.
     func executeMemoryGet(from json: String) -> FileToolResult {
+        // Incognito contract ("无消息内容落盘"): past memory must not be
+        // readable while isIncognito is true — an incognito session means
+        // "fresh, no history." Refuse VISIBLY, same pattern as the
+        // memory_write incognito guard above (before any file read).
+        guard !isIncognito else {
+            return FileToolResult(output: "memory_get is disabled in incognito mode — past memory is not accessible.", success: false)
+        }
         // [T-memory-toggle-gates-injection-and-tools-ios] Defense in depth:
         // when memory is disabled, makeAgentTools() drops memory_get from
         // the registered tools, so the model normally cannot emit this
