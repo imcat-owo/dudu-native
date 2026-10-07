@@ -232,7 +232,7 @@ struct ComputerTerminalView: View {
                 .buttonStyle(ComputerButtonStyle(primary: false))
             }
             HStack(spacing: 8) {
-                TextField("pwd", text: $viewModel.commandText)
+                TextField(L10n.string("term.commandPlaceholder"), text: $viewModel.commandText)
                     .font(DuduTheme.monoFont(size: 13))
                     .foregroundStyle(DuduTheme.duduText)
                     .keyboardType(.asciiCapable)
@@ -329,6 +329,7 @@ private struct ComputerCommandReceiptView: View {
         return word
     }
 
+    @MainActor
     private var statusColor: Color {
         switch record.status {
         case .running: return DuduTheme.pink
@@ -340,6 +341,7 @@ private struct ComputerCommandReceiptView: View {
 
 // MARK: - Local button style (DuduTheme tokens only)
 
+@MainActor
 private struct ComputerButtonStyle: ButtonStyle {
     let primary: Bool
 
