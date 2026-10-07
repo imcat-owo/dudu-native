@@ -14,6 +14,14 @@ jobs:
       - name: Show Xcode version
         run: xcodebuild -version
 
+      - name: Prepare ProviderCustomization.xcconfig
+        # The filled xcconfig is never committed (gitignored). CI builds with
+        # the shipped .example defaults; release signing can inject real values.
+        run: |
+          if [ ! -f Configs/ProviderCustomization.xcconfig ]; then
+            cp Configs/ProviderCustomization.xcconfig.example Configs/ProviderCustomization.xcconfig
+          fi
+
       - name: Archive (unsigned)
         run: |
           xcodebuild -project Dudu.xcodeproj \
