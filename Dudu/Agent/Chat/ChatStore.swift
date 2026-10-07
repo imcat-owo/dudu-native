@@ -1437,7 +1437,7 @@ actor ChatStore {
                     createdAt: createdAt, updatedAt: updatedAt, lastMessage: lastMessage,
                     source: source, lastSyncedAt: lastSyncedAt,
                     remoteDeviceId: remoteDeviceId, pinnedAt: pinnedAt,
-                    folderId: folderId, personaId: personaId, archivedAt: archivedAt
+                    folderId: folderId, archivedAt: archivedAt, personaId: personaId
                 ))
             }
         }
