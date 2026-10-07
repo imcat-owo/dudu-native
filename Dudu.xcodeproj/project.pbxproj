@@ -348,6 +348,13 @@
 		E1418FA53E7CD5B6CD1C4CF8 /* DuduTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34947BEA13ACF9BC967DE68 /* DuduTabView.swift */; };
 		012D449068845DE82971959E /* SettingsStubView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E7CFF749FB97F62FD39107 /* SettingsStubView.swift */; };
 		D8AB9C6299EA8D6BF8C580B0 /* DuduTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4F03EEF77B47173E669EE2 /* DuduTheme.swift */; };
+		00F558AF19CE8A6FF5AF001B /* ChatInputBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3623FCD02AEC5DD6EA48F1 /* ChatInputBar.swift */; };
+		BA91917F74EF319C2E8F2351 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2081B51CFD9DBA50BF0D4F00 /* ChatView.swift */; };
+		0877B36A44441FC9114D734D /* MessageBlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B29F59070DF420B9D142BC5 /* MessageBlockView.swift */; };
+		50DE4EB06BC58C19806C96EC /* MessageListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11E38BB2F202107950A2CBA /* MessageListView.swift */; };
+		CA6C4898E137ACD9A534C196 /* MessageRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5FEF1AA02738BFD9F5BA39 /* MessageRowView.swift */; };
+		7F63F36987FCADF907CF9E03 /* ModelPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A46D393F44AE1B899BFDCB /* ModelPickerView.swift */; };
+		D48D08B56BF7A6BA7A85B6C3 /* SessionDrawerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2DB0C154BD454AFAC4DB7A /* SessionDrawerView.swift */; };
 /* End PBXBuildFile section */
 		C22E4BE16A67710000C9EBF0 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 30AC3C5C6C418C791E362178 /* libsqlite3.tbd */; };
 		F8F1403829CEFF47083C5520 /* RealTimeCutVADLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = AECFD4BE143BED595F298AF5 /* RealTimeCutVADLibrary */; };
@@ -812,6 +819,13 @@
 		F34947BEA13ACF9BC967DE68 /* DuduTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuduTabView.swift; sourceTree = "<group>"; };
 		F0E7CFF749FB97F62FD39107 /* SettingsStubView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStubView.swift; sourceTree = "<group>"; };
 		DC4F03EEF77B47173E669EE2 /* DuduTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuduTheme.swift; sourceTree = "<group>"; };
+		4B3623FCD02AEC5DD6EA48F1 /* ChatInputBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatInputBar.swift; sourceTree = "<group>"; };
+		2081B51CFD9DBA50BF0D4F00 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
+		5B29F59070DF420B9D142BC5 /* MessageBlockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBlockView.swift; sourceTree = "<group>"; };
+		A11E38BB2F202107950A2CBA /* MessageListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageListView.swift; sourceTree = "<group>"; };
+		AD5FEF1AA02738BFD9F5BA39 /* MessageRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageRowView.swift; sourceTree = "<group>"; };
+		E2A46D393F44AE1B899BFDCB /* ModelPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelPickerView.swift; sourceTree = "<group>"; };
+		7C2DB0C154BD454AFAC4DB7A /* SessionDrawerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionDrawerView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 		30AC3C5C6C418C791E362178 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 
@@ -1744,7 +1758,14 @@
 			isa = PBXGroup;
 			children = (
 				0E2157FE4002AC1569ADA5F7 /* DuduMarkdownView.swift */,
+				2081B51CFD9DBA50BF0D4F00 /* ChatView.swift */,
+				4B3623FCD02AEC5DD6EA48F1 /* ChatInputBar.swift */,
 				54CAF7D84593B2D1B946693C /* ThinkingIndicatorSlot.swift */,
+				5B29F59070DF420B9D142BC5 /* MessageBlockView.swift */,
+				7C2DB0C154BD454AFAC4DB7A /* SessionDrawerView.swift */,
+				A11E38BB2F202107950A2CBA /* MessageListView.swift */,
+				AD5FEF1AA02738BFD9F5BA39 /* MessageRowView.swift */,
+				E2A46D393F44AE1B899BFDCB /* ModelPickerView.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -1873,6 +1894,7 @@
 			files = (
 				0064B0528468354CE8BB2A02 /* AIChatViewModel+ToolDefinitions.swift in Sources */,
 				00D65C4685ADEB965953EEC6 /* BackupBlobStore.swift in Sources */,
+				00F558AF19CE8A6FF5AF001B /* ChatInputBar.swift in Sources */,
 				01143848CEE0E32FC8AC7873 /* ConfigAuditLog.swift in Sources */,
 				012D449068845DE82971959E /* SettingsStubView.swift in Sources */,
 				01EDE2720259FF8357A4AE71 /* AIChatViewModel+ProviderFactory.swift in Sources */,
@@ -1884,6 +1906,7 @@
 				062182EF40D53B47DC86B8A7 /* ListSessionsIntent.swift in Sources */,
 				06842974D85CC4EA30889D58 /* AppearanceStudio.swift in Sources */,
 				07D72A674C42EF2B57FAC7FD /* ThinkingRulesCollection.swift in Sources */,
+				0877B36A44441FC9114D734D /* MessageBlockView.swift in Sources */,
 				093F308F93DEF3B6C24C25D6 /* OffloadPermissionManager.swift in Sources */,
 				0959C2CD130DD9FCE05A974A /* ExternalFileImporter.swift in Sources */,
 				0AB0F63F422A693954AB0C96 /* DuduSessionCleanupSeams.swift in Sources */,
@@ -1971,6 +1994,7 @@
 				4F774D0ED2029D8FB7BC3D3B /* BackupFileTreeExporter.swift in Sources */,
 				4FF373341209143426232AC7 /* DuduNotifications.swift in Sources */,
 				50CCFE84494B9E678A3B93FC /* BackupKeepAlive.swift in Sources */,
+				50DE4EB06BC58C19806C96EC /* MessageListView.swift in Sources */,
 				516FC3E3C5C14B8EACD80A50 /* BackupHistory.swift in Sources */,
 				51EADD5D0E8B539B21B37B75 /* ConfigOffloadBridge.swift in Sources */,
 				5281A8E8D87D0FF711A7AA3D /* OpenSessionIntent.swift in Sources */,
@@ -2038,6 +2062,7 @@
 				7D0B88C2AB926AF87C8ADE97 /* BrowserTabPool.swift in Sources */,
 				7DD0CE5A9F5DD169FBD00C00 /* SyncableTypeRegistry.swift in Sources */,
 				7F626AC140C78E9D7A276989 /* RcloneBackendCatalog.swift in Sources */,
+				7F63F36987FCADF907CF9E03 /* ModelPickerView.swift in Sources */,
 				7FE3537DCBB0AB677659F0D3 /* JiebaWrapper.mm in Sources */,
 				80B4ABE0DA1C27E7AC3A8DB7 /* VoiceLog.swift in Sources */,
 				80F5DE55B878FE5C1AA97136 /* PersonaStore.swift in Sources */,
@@ -2107,6 +2132,7 @@
 				B7A0894222ADCCAE19070C05 /* SpeechSegmenter.swift in Sources */,
 				B881EB9AC1CFB39DB5E69E97 /* AIChatViewModel+MemoryTools.swift in Sources */,
 				B9B10169860420B84F878EAB /* ToolSuspensionService.swift in Sources */,
+				BA91917F74EF319C2E8F2351 /* ChatView.swift in Sources */,
 				BAA3A613FB7401AC4455785C /* ConversationContextTruncator.swift in Sources */,
 				BB4BD9CECC993B51A75E9321 /* SessionsOffloadBridge.swift in Sources */,
 				BB62BD64173669FB4B122381 /* MCPOAuthController.swift in Sources */,
@@ -2125,6 +2151,7 @@
 				C57E7FCB0AC7CCC070E8BD5C /* ProviderTypes.swift in Sources */,
 				C8255D0704C348F557029B4D /* LLMTypes.swift in Sources */,
 				C9C2EDB9414F15245461F549 /* AIChatViewModel+MentionMenu.swift in Sources */,
+				CA6C4898E137ACD9A534C196 /* MessageRowView.swift in Sources */,
 				CBAB2F22E0F79BA170E8240B /* ClaudeOAuthManager.swift in Sources */,
 				CC4599EEC31AA4C223C2A8B2 /* ImageOCRTier.swift in Sources */,
 				CC4D5362917D56553884BF4A /* AntigravityModelsAPI.swift in Sources */,
@@ -2137,6 +2164,7 @@
 				D29B19117F10315824A1EED7 /* CrashReporter.swift in Sources */,
 				D2FB82084DDBBB1FDD340546 /* PlayerOffloadBridge.swift in Sources */,
 				D38F0FFC7564AB3DD302A494 /* SoulStore.swift in Sources */,
+				D48D08B56BF7A6BA7A85B6C3 /* SessionDrawerView.swift in Sources */,
 				D4A987F7B307D29A51981EBD /* DuduShortcutsProvider.swift in Sources */,
 				D4C1A744F64B0DDD0BBEB654 /* CorrectionStrategy.swift in Sources */,
 				D5CCEF4B6575E36BD6F08298 /* LocationDeviceTool.swift in Sources */,

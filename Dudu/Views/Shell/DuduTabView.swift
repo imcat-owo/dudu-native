@@ -14,7 +14,7 @@ struct DuduTabView: View {
 
     var body: some View {
         TabView(selection: $selection) {
-            ChatEmptyStateView(selection: $selection)
+            ChatView(selection: $selection)
                 .tabItem {
                     Label(DuduTab.chat.title, systemImage: DuduTab.chat.systemImage)
                 }

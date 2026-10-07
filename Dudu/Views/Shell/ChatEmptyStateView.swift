@@ -3,9 +3,7 @@ import SwiftUI
 /// First-run empty state for the Chat tab (plan §7, step 7 acceptance).
 ///
 /// This is REAL UI, not a stand-in: with no provider configured it points at
-/// Settings; the step-2 Chat builder keeps this view and presents the real
-/// ChatView once a provider exists. The "chat screen under construction" line
-/// is honest about what C1 does and does not ship.
+/// Settings; once a provider exists, sending a message starts the chat.
 struct ChatEmptyStateView: View {
     @Binding var selection: DuduTab
     @EnvironmentObject private var providers: ProviderConfigStore
@@ -33,7 +31,7 @@ struct ChatEmptyStateView: View {
                 .foregroundStyle(DuduTheme.duduText)
 
             Text(hasEnabledProvider
-                 ? "聊天界面正在构建中（Phase C 第 2 步），模型服务已经就绪，很快就能开聊。"
+                 ? "模型服务已经就绪，在下方输入框发消息开始聊天。"
                  : "还没有配置模型服务，先去设置里添加一个，回来就能开聊。")
                 .font(DuduTheme.bodyFont())
                 .foregroundStyle(DuduTheme.duduTextDim)
