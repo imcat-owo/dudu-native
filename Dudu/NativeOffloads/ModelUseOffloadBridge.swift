@@ -1852,7 +1852,7 @@ private let logger = AppLogger(category: "ModelUseOffload")
 
         // http(s):// — not supported. Tell the agent how to do it.
         if url.hasPrefix("http://") || url.hasPrefix("https://") {
-            throw ModelUseError.invalidInput("http(s):// image URLs are not supported by dudu-model-use. Download first with `shell_execute` (curl/wget) into /var/dudu/workspace/, then reference the local path.")
+            throw ModelUseError.invalidInput("http(s):// image URLs are not supported by dudu-model-use. Download the image first with browser_use (fetch action), then reference the dudu-clone:// URL or /var/dudu/ local path. shell_execute is unavailable in this build.")
         }
 
         // file:// — keep behavior, but throw on missing.

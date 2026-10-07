@@ -696,7 +696,7 @@ struct LLMModel: Equatable, Hashable, Identifiable, Sendable, Codable {
             parts.append("You can natively process \(can.joined(separator: " and ")) in this conversation.")
         }
         parts.append("You cannot natively process \(cannot.joined(separator: " or ")).")
-        parts.append("To handle unsupported media, use shell_execute to run ffmpeg or other CLI tools.")
+        parts.append("shell_execute is currently unavailable in this build, so CLI tools like ffmpeg cannot be run — explain the limitation to the user instead of attempting to process the media.")
 
         return parts.joined(separator: " ")
     }

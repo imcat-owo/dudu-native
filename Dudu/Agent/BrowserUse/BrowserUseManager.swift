@@ -3021,8 +3021,7 @@ final class BrowserDownloadCenter: ObservableObject {
             + lines.map { "- \($0)" }.joined(separator: "\n")
             + "\nDo NOT re-download these files with curl/wget in shell_execute. "
             + "Completed files are already fully saved at the given path; for in-progress "
-            + "downloads, wait and check again (e.g. via a later browser_use call or "
-            + "shell `ls -l /var/dudu/workspace/`) instead of downloading in parallel."
+            + "downloads, wait and check again via a later browser_use call."
     }
 
     private func queueAgentEvent(sessionId: String, filename: String, line: String) {
