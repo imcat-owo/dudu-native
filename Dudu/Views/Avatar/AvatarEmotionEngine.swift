@@ -125,8 +125,9 @@ final class AvatarEmotionEngine: ObservableObject {
     // MARK: Playback
 
     /// The single player instance. Muted — the avatar never makes noise.
-    private(set) var player: AVPlayer = {
-        let p = AVPlayer()
+    /// AVQueuePlayer (not AVPlayer): AVPlayerLooper requires a queue player.
+    private(set) var player: AVQueuePlayer = {
+        let p = AVQueuePlayer()
         p.isMuted = true
         return p
     }()
