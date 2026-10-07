@@ -16,6 +16,7 @@ enum SettingsRoute: Hashable {
     case backup
     case appLock
     case musicKit
+    case sandbox
     case about
     // D22: Siri & Shortcuts hub (Dudu/Views/Intents/).
     case siriShortcuts
@@ -76,6 +77,12 @@ struct SettingsView: View {
                         title: "Apple Music",
                         route: .musicKit
                     )
+                    // D25: 沙箱（云端 Docker / 本地 iSH 双后端 + 在其他 App 里打开）
+                    SettingsRow(
+                        icon: "server.rack",
+                        title: L10n.string("sandbox.title"),
+                        route: .sandbox
+                    )
                     // D22: Siri & Shortcuts hub — the 8 App Intents, Siri
                     // phrases, Add-to-Siri buttons, scheduled prompts link.
                     SettingsRow(
@@ -135,6 +142,8 @@ struct SettingsView: View {
                     AppLockView()
                 case .musicKit:
                     AppleMusicSettingsView()
+                case .sandbox:
+                    SandboxSettingsView()
                 case .about:
                     AboutView()
                 case .siriShortcuts:
