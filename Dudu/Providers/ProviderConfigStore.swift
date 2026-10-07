@@ -3310,26 +3310,65 @@ enum ProviderKeychainHelper {
     /// (which would also silently drop any provider type added later). These
     /// read/write the exact same Keychain item as the typed
     /// `saveOAuthToken`/`loadOAuthToken` pair.
-    static func saveRawOAuthToken(_ data: Data, instanceId: String) {
+    /// Writes the structured OAuth blob as raw bytes under the same Keychain
+    /// item the typed `saveOAuthToken`/`loadOAuthToken` pair uses, returning
+    /// the Keychain status of the write.
+    ///
+    /// Write order is update-first, add-on-missing: the previous entry is
+    /// never deleted before the new value is committed, so a failed write
+    /// leaves the old token intact instead of blanking it (same pattern as
+    /// `saveOAuthToken`/`saveOAuthString` and `ProviderKeychainHelper.saveAPIKey`).
+    /// The legacy non-synchronizable entry is dropped only after a successful
+    /// write.
+    ///
+    /// - Returns: `errSecSuccess` when the blob is persisted; otherwise the
+    ///   Keychain `OSStatus` of the failed write. On failure the old value is
+    ///   intact and no auth-changed notification fires — callers MUST treat a
+    ///   non-success status as "not saved". [honesty-fix: keychain write
+    ///   failures are surfaced, never stamped]
+    @discardableResult
+    static func saveRawOAuthToken(_ data: Data, instanceId: String, caller: String = #function) -> OSStatus {
         let service = "com.dudu.ios.provider.\(instanceId)"
         let acct = "oauth-token"
-        let deleteQuery: [String: Any] = [
+        let syncQuery: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: service,
             kSecAttrAccount as String: acct,
+            kSecAttrSynchronizable as String: true,
         ]
-        SecItemDelete(deleteQuery as CFDictionary)
-        var syncDelete = deleteQuery
-        syncDelete[kSecAttrSynchronizable as String] = true
-        SecItemDelete(syncDelete as CFDictionary)
-        var addQuery = deleteQuery
-        addQuery[kSecValueData as String] = data
-        addQuery[kSecAttrAccessible as String] = kSecAttrAccessibleAfterFirstUnlock
-        addQuery[kSecAttrSynchronizable as String] = true
-        let status = SecItemAdd(addQuery as CFDictionary, nil)
-        if status != errSecSuccess {
-            AppLogger(category: "Keychain").warning("write rawOAuthToken instanceId=\(instanceId.prefix(8)) status=\(status)")
+        let attrs: [String: Any] = [
+            kSecValueData as String: data,
+            kSecAttrAccessible as String: kSecAttrAccessibleAfterFirstUnlock,
+            kSecAttrSynchronizable as String: true,
+        ]
+        // 1. Update the synchronizable entry in place.
+        var status = SecItemUpdate(syncQuery as CFDictionary, attrs as CFDictionary)
+        if status == errSecItemNotFound {
+            // 2. Nothing there yet — add it.
+            var addQuery = syncQuery
+            addQuery.merge(attrs) { _, new in new }
+            status = SecItemAdd(addQuery as CFDictionary, nil)
+            // Lost a race: the item appeared between update and add
+            // (replication or a concurrent write). Update it instead.
+            if status == errSecDuplicateItem {
+                status = SecItemUpdate(syncQuery as CFDictionary, attrs as CFDictionary)
+            }
         }
+        guard status == errSecSuccess else {
+            // Prior value (if any) is intact — but the new blob was NOT saved,
+            // so do not notify and do not claim success.
+            AppLogger(category: "Keychain").error("write rawOAuthToken FAILED instanceId=\(instanceId.prefix(8)) blobLen=\(data.count) status=\(status) caller=\(caller)")
+            return status
+        }
+        // 3. Write committed — now it's safe to drop the legacy
+        // non-synchronizable entry so reads (which prefer the sync item)
+        // can't be shadowed by it.
+        var legacyDelete = syncQuery
+        legacyDelete[kSecAttrSynchronizable as String] = false
+        SecItemDelete(legacyDelete as CFDictionary)
+        AppLogger(category: "Keychain").info("write rawOAuthToken instanceId=\(instanceId.prefix(8)) blobLen=\(data.count) status=\(status) caller=\(caller)")
+        notifyAuthChanged(instanceId: instanceId)
+        return errSecSuccess
     }
 
     static func loadRawOAuthToken(instanceId: String) -> Data? {
@@ -3347,29 +3386,69 @@ enum ProviderKeychainHelper {
         return result as? Data
     }
 
-    static func saveOAuthToken<T: Codable>(_ token: T, instanceId: String, caller: String = #function) {
+    /// Saves the OAuth token for a provider instance to the iCloud-synchronizable
+    /// Keychain entry, returning the Keychain status of the write.
+    ///
+    /// Write order is update-first, add-on-missing: the previous entry is
+    /// never deleted before the new value is committed, so a failed write
+    /// leaves the old token intact instead of blanking it (same pattern as
+    /// `ProviderKeychainHelper.saveAPIKey`). The legacy non-synchronizable
+    /// entry is dropped only after a successful write.
+    ///
+    /// - Returns: `errSecSuccess` when the token is persisted; otherwise the
+    ///   Keychain `OSStatus` of the failed write. A JSON-encode failure is
+    ///   reported as `errSecParam` (nothing was written). On any failure the
+    ///   old token is intact, no auth-changed notification fires, and no
+    ///   "configured" state is claimed — callers MUST surface the returned
+    ///   status as a visible failure. [honesty-fix: keychain write failures
+    ///   are surfaced, never stamped]
+    @discardableResult
+    static func saveOAuthToken<T: Codable>(_ token: T, instanceId: String, caller: String = #function) -> OSStatus {
         guard let data = try? JSONEncoder().encode(token) else {
-            AppLogger(category: "Keychain").warning("write oauthToken instanceId=\(instanceId.prefix(8)) ENCODE FAILED caller=\(caller)")
-            return
+            AppLogger(category: "Keychain").error("write oauthToken instanceId=\(instanceId.prefix(8)) ENCODE FAILED caller=\(caller)")
+            return errSecParam
         }
         let service = "com.dudu.ios.provider.\(instanceId)"
         let acct = "oauth-token"
-        let deleteQuery: [String: Any] = [
+        let syncQuery: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: service,
             kSecAttrAccount as String: acct,
+            kSecAttrSynchronizable as String: true,
         ]
-        SecItemDelete(deleteQuery as CFDictionary)
-        var syncDelete = deleteQuery
-        syncDelete[kSecAttrSynchronizable as String] = true
-        SecItemDelete(syncDelete as CFDictionary)
-        var addQuery = deleteQuery
-        addQuery[kSecValueData as String] = data
-        addQuery[kSecAttrAccessible as String] = kSecAttrAccessibleAfterFirstUnlock
-        addQuery[kSecAttrSynchronizable as String] = true
-        let addStatus = SecItemAdd(addQuery as CFDictionary, nil)
-        AppLogger(category: "Keychain").info("write oauthToken instanceId=\(instanceId.prefix(8)) blobLen=\(data.count) addStatus=\(addStatus) caller=\(caller)")
+        let attrs: [String: Any] = [
+            kSecValueData as String: data,
+            kSecAttrAccessible as String: kSecAttrAccessibleAfterFirstUnlock,
+            kSecAttrSynchronizable as String: true,
+        ]
+        // 1. Update the synchronizable entry in place.
+        var status = SecItemUpdate(syncQuery as CFDictionary, attrs as CFDictionary)
+        if status == errSecItemNotFound {
+            // 2. Nothing there yet — add it.
+            var addQuery = syncQuery
+            addQuery.merge(attrs) { _, new in new }
+            status = SecItemAdd(addQuery as CFDictionary, nil)
+            // Lost a race: the item appeared between update and add
+            // (replication or a concurrent write). Update it instead.
+            if status == errSecDuplicateItem {
+                status = SecItemUpdate(syncQuery as CFDictionary, attrs as CFDictionary)
+            }
+        }
+        guard status == errSecSuccess else {
+            // Prior value (if any) is intact — but the new token was NOT saved,
+            // so do not notify and do not claim "configured".
+            AppLogger(category: "Keychain").error("write oauthToken FAILED instanceId=\(instanceId.prefix(8)) blobLen=\(data.count) status=\(status) caller=\(caller)")
+            return status
+        }
+        // 3. Write committed — now it's safe to drop the legacy
+        // non-synchronizable entry so reads (which prefer the sync item)
+        // can't be shadowed by it.
+        var legacyDelete = syncQuery
+        legacyDelete[kSecAttrSynchronizable as String] = false
+        SecItemDelete(legacyDelete as CFDictionary)
+        AppLogger(category: "Keychain").info("write oauthToken instanceId=\(instanceId.prefix(8)) blobLen=\(data.count) status=\(status) caller=\(caller)")
         notifyAuthChanged(instanceId: instanceId)
+        return errSecSuccess
     }
 
     static func loadOAuthToken<T: Codable>(instanceId: String, as type: T.Type, caller: String = #function) -> T? {
@@ -3427,24 +3506,64 @@ enum ProviderKeychainHelper {
 
     // MARK: - OAuth Strings (per-instance, e.g. email, project ID)
 
-    static func saveOAuthString(_ value: String, instanceId: String, account: String, caller: String = #function) {
+    /// Saves a per-instance OAuth string (e.g. email, project ID) to the
+    /// iCloud-synchronizable Keychain entry, returning the Keychain status
+    /// of the write.
+    ///
+    /// Write order is update-first, add-on-missing: the previous entry is
+    /// never deleted before the new value is committed, so a failed write
+    /// leaves the old value intact instead of blanking it (same pattern as
+    /// `ProviderKeychainHelper.saveAPIKey`). The legacy non-synchronizable
+    /// entry is dropped only after a successful write.
+    ///
+    /// - Returns: `errSecSuccess` when the value is persisted; otherwise the
+    ///   Keychain `OSStatus` of the failed write. On failure the old value is
+    ///   intact, no auth-changed notification fires, and no "configured"
+    ///   state is claimed — callers MUST surface the returned status as a
+    ///   visible failure. [honesty-fix: keychain write failures are surfaced,
+    ///   never stamped]
+    @discardableResult
+    static func saveOAuthString(_ value: String, instanceId: String, account: String, caller: String = #function) -> OSStatus {
         let service = "com.dudu.ios.provider.\(instanceId)"
-        let deleteQuery: [String: Any] = [
+        let syncQuery: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: service,
             kSecAttrAccount as String: account,
+            kSecAttrSynchronizable as String: true,
         ]
-        SecItemDelete(deleteQuery as CFDictionary)
-        var syncDelete = deleteQuery
-        syncDelete[kSecAttrSynchronizable as String] = true
-        SecItemDelete(syncDelete as CFDictionary)
-        var addQuery = deleteQuery
-        addQuery[kSecValueData as String] = Data(value.utf8)
-        addQuery[kSecAttrAccessible as String] = kSecAttrAccessibleAfterFirstUnlock
-        addQuery[kSecAttrSynchronizable as String] = true
-        let addStatus = SecItemAdd(addQuery as CFDictionary, nil)
-        AppLogger(category: "Keychain").info("write oauthString instanceId=\(instanceId.prefix(8)) acct=\(account) valLen=\(value.count) addStatus=\(addStatus) caller=\(caller)")
+        let attrs: [String: Any] = [
+            kSecValueData as String: Data(value.utf8),
+            kSecAttrAccessible as String: kSecAttrAccessibleAfterFirstUnlock,
+            kSecAttrSynchronizable as String: true,
+        ]
+        // 1. Update the synchronizable entry in place.
+        var status = SecItemUpdate(syncQuery as CFDictionary, attrs as CFDictionary)
+        if status == errSecItemNotFound {
+            // 2. Nothing there yet — add it.
+            var addQuery = syncQuery
+            addQuery.merge(attrs) { _, new in new }
+            status = SecItemAdd(addQuery as CFDictionary, nil)
+            // Lost a race: the item appeared between update and add
+            // (replication or a concurrent write). Update it instead.
+            if status == errSecDuplicateItem {
+                status = SecItemUpdate(syncQuery as CFDictionary, attrs as CFDictionary)
+            }
+        }
+        guard status == errSecSuccess else {
+            // Prior value (if any) is intact — but the new value was NOT saved,
+            // so do not notify and do not claim "configured".
+            AppLogger(category: "Keychain").error("write oauthString FAILED instanceId=\(instanceId.prefix(8)) acct=\(account) valLen=\(value.count) status=\(status) caller=\(caller)")
+            return status
+        }
+        // 3. Write committed — now it's safe to drop the legacy
+        // non-synchronizable entry so reads (which prefer the sync item)
+        // can't be shadowed by it.
+        var legacyDelete = syncQuery
+        legacyDelete[kSecAttrSynchronizable as String] = false
+        SecItemDelete(legacyDelete as CFDictionary)
+        AppLogger(category: "Keychain").info("write oauthString instanceId=\(instanceId.prefix(8)) acct=\(account) valLen=\(value.count) status=\(status) caller=\(caller)")
         notifyAuthChanged(instanceId: instanceId)
+        return errSecSuccess
     }
 
     static func loadOAuthString(instanceId: String, account: String, caller: String = #function) -> String? {

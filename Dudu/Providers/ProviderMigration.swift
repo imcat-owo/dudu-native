@@ -56,7 +56,8 @@ enum ProviderMigration {
                 }
                 if let token = ClaudeOAuthManager.loadLegacyToken() {
                     ProviderKeychainHelper.saveOAuthToken(token, instanceId: instance.id)
-                    // [R3-026] saveOAuthToken is Void and fails silently —
+                    // [R3-026] saveOAuthToken returns OSStatus (honesty-fix: failed
+                    // write keeps the old token and does not notify) —
                     // delete the legacy token only if the copy reads back.
                     if ProviderKeychainHelper.loadOAuthToken(instanceId: instance.id, as: ClaudeTokenStorage.self) != nil {
                         ClaudeOAuthManager.deleteLegacyToken()
