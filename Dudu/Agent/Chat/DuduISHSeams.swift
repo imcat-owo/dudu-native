@@ -7,13 +7,18 @@
 //  coordinator is an actor in Agent/ISH (P8); until P8 lands, these stay nil
 //  and every call site degrades to its documented fallback (see each site).
 //
-//  Signatures mirror the real ones EXACTLY, read from
+//  Signatures mirror the real ones, read from
 //  OpenMinis Agent/ISH/ISHExecutionCoordinator.swift:
 //    - execute:              func execute(sessionId:command:timeout:lineCallback:pidCallback:) async throws -> ISHCommandResult
-//    - ensureMounted:        func ensureMounted(for:)
+//    - ensureMounted:        func ensureMounted(for:)            (SYNC upstream; seam is async so P8 can wrap it)
 //    - debugMountSnapshot:   #if DEBUG func debugMountSnapshot() -> (sessionId:paths:)
-//    - hostURL:               func hostURL(for:sessionId:) -> URL?
+//    - hostURL:               func hostURL(for:sessionId:) -> URL? (SYNC upstream; seam is async so P8 can wrap it)
 //    - stopAllNonisolated:   nonisolated static func stopAllNonisolated(sessionId:) -> Int
+//
+//  SYNC->ASYNC ADAPTATION (documented, intentional): ensureMounted and hostURL
+//  are synchronous in the real coordinator, but the P4 call sites await them
+//  (they were async in the chat-core context). The seam exposes them as async
+//  closures; P8 assigns `{ await-ish wrapper }` around the sync implementation.
 //
 //  DEVIATION (documented, unavoidable): execute's real return type is
 //  ISHCommandResult, a P8 struct that does not exist in this target yet, so the
@@ -21,7 +26,8 @@
 //  (output: String, exitCode: Int) — every field both P4 call sites consume is
 //  preserved (an Int-only seam would have deleted `output`). P8 assigns the
 //  real implementation and maps field-for-field. Parameter list and
-//  async/throws shape match exactly.
+//  async/throws shape match exactly for execute; see SYNC->ASYNC ADAPTATION
+//  above for ensureMounted/hostURL.
 //
 //  P8 assigns the real implementations at startup; until then the call sites
 //  below treat nil as "iSH unavailable". Do NOT re-implement the coordinator

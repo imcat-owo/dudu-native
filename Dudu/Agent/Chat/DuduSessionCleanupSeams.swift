@@ -30,7 +30,7 @@ enum DuduSessionCleanupSeams {
     /// P8: ISHExecutionCoordinator.shared.sessionDidTerminate(sessionId:)
     static var ishSessionDidTerminate: (String) async -> Void = { _ in }
 
-    /// P6: BrowserUseOffloadBridge.releasePool(forSession:)
+    /// P7: BrowserUseOffloadBridge.releasePool(forSession:) — NOT P6 (bridge lives in NativeOffloads).
     static var browserReleasePool: (String) -> Void = { _ in }
 
     /// P6: BrowserTabPool.deletePersistedData(for:)
