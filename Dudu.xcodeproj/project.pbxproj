@@ -387,10 +387,14 @@
 		8F98429970333857FE4CD2E8 /* BackupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00CB3EF2E3464AB2704D220B /* BackupView.swift */; };
 		C0F9259685B5FB5331BD357A /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 9DB572769E86C2548D659A45 /* Localizable.xcstrings */; };
 		615729977F97B0C6D4BF6434 /* DuduL10n.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88046FF162C81BBEA226D29E /* DuduL10n.swift */; };
+		25E85F3413301FED50E5DBB0 /* KnowledgePDFImport.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F2A83B1FF8D182ED87EBD7 /* KnowledgePDFImport.swift */; };
+		515CD77B6FB012CA930D57C4 /* KnowledgeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09191CBE50E5373B4F2A3FB3 /* KnowledgeStore.swift */; };
+		6540FD7FD8F9CCE22025E7EE /* KnowledgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02E7F7A84446E8C33BDC5668 /* KnowledgeView.swift */; };
 /* End PBXBuildFile section */
 		C22E4BE16A67710000C9EBF0 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 30AC3C5C6C418C791E362178 /* libsqlite3.tbd */; };
 		F8F1403829CEFF47083C5520 /* RealTimeCutVADLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = AECFD4BE143BED595F298AF5 /* RealTimeCutVADLibrary */; };
 		BA894477DDF6C14EE49C54DE /* SwiftAnthropic in Frameworks */ = {isa = PBXBuildFile; productRef = 05812F6725F9E44AAB5A4A83 /* SwiftAnthropic */; };
+		F4220CBAED6349998A34AED9 /* SQLiteVec in Frameworks */ = {isa = PBXBuildFile; productRef = 2BC90F86F661471B97A971D5 /* SQLiteVec */; };
 		EC3002C461A82F71F1798455 /* cmark-gfm in Frameworks */ = {isa = PBXBuildFile; productRef = 2040A243D3C0CCFDD82A7DA4 /* cmark-gfm */; };
 		F25C8FD390728E9381D795D7 /* cmark-gfm-extensions in Frameworks */ = {isa = PBXBuildFile; productRef = 49FEF2D9C7E53DE6391328BF /* cmark-gfm-extensions */; };
 		5A9D84CC2DAA442210A98192 /* SwiftMath in Frameworks */ = {isa = PBXBuildFile; productRef = 6F6C14F21A3EA0A253F61DC4 /* SwiftMath */; };
@@ -890,6 +894,9 @@
 		00CB3EF2E3464AB2704D220B /* BackupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupView.swift; sourceTree = "<group>"; };
 		9DB572769E86C2548D659A45 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		88046FF162C81BBEA226D29E /* DuduL10n.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuduL10n.swift; sourceTree = "<group>"; };
+		D7F2A83B1FF8D182ED87EBD7 /* KnowledgePDFImport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgePDFImport.swift; sourceTree = "<group>"; };
+		09191CBE50E5373B4F2A3FB3 /* KnowledgeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeStore.swift; sourceTree = "<group>"; };
+		02E7F7A84446E8C33BDC5668 /* KnowledgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 		30AC3C5C6C418C791E362178 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 
@@ -899,6 +906,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+					F4220CBAED6349998A34AED9,
 					BA894477DDF6C14EE49C54DE,
 				F8F1403829CEFF47083C5520,
 				C22E4BE16A67710000C9EBF0,
@@ -1393,6 +1401,7 @@
 				9E678748052B0C677FDC143C /* BrowserUse */,
 				A26AEA0301367CADEEBD18FE /* Chat */,
 				5189457C6A17630F19C6C976 /* Intents */,
+				A35F935F151D1E470AD55CB6 /* Knowledge */,
 				7A7395E17947EE7A63F3CC58 /* Markdown */,
 				16A9F784A0A9C41B579DC39C /* MessageList */,
 				F7B6CDCCD756384DC1BEFA4A /* Offload */,
@@ -1819,6 +1828,7 @@
 			children = (
 				D10B8E531D0D2511BD797801 /* Appearance */,
 				FC61A6675134359CB1A0BBA1 /* Chat */,
+				18E9DA5BE55C7A48F1D6BFB5 /* Knowledge */,
 				AA856D71B083C7F259E49862 /* MCP */,
 				098E7EAFF306EFFA46763C5C /* Permissions */,
 				5C12BE9B55843E8E76492218 /* Providers */,
@@ -1931,6 +1941,23 @@
 			path = Permissions;
 			sourceTree = "<group>";
 		};
+		A35F935F151D1E470AD55CB6 /* Knowledge */ = {
+			isa = PBXGroup;
+			children = (
+				09191CBE50E5373B4F2A3FB3 /* KnowledgeStore.swift */,
+				D7F2A83B1FF8D182ED87EBD7 /* KnowledgePDFImport.swift */,
+			);
+			path = Knowledge;
+			sourceTree = "<group>";
+		};
+		18E9DA5BE55C7A48F1D6BFB5 /* Knowledge */ = {
+			isa = PBXGroup;
+			children = (
+				02E7F7A84446E8C33BDC5668 /* KnowledgeView.swift */,
+			);
+			path = Knowledge;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1953,6 +1980,7 @@
 			productType = "com.apple.product-type.application";
 			packageProductDependencies = (
 				F24EC660251DF7082EE0B0AC /* BridgeCore */,
+				2BC90F86F661471B97A971D5 /* SQLiteVec */,
 				AECFD4BE143BED595F298AF5 /* RealTimeCutVADLibrary */,
 				05812F6725F9E44AAB5A4A83 /* SwiftAnthropic */,
 			);
@@ -1983,6 +2011,7 @@
 				777F3A508E55B56E9030C792 /* BridgeCore */,
 				304AD72BA3ED141AB4130208 /* XCRemoteSwiftPackageReference "RealTimeCutVADLibrary" */,
 				7863267C1FF16191BA441605 /* XCRemoteSwiftPackageReference "SwiftAnthropic" */,
+				0D8FE5F584524B438502894A /* XCRemoteSwiftPackageReference "SQLiteVec" */,
 				22C2B3B1FD6EC840C0309E78 /* XCRemoteSwiftPackageReference "swift-cmark" */,
 				FF5109C8D5C089481AFB4C9C /* XCRemoteSwiftPackageReference "SwiftMath" */,
 			);
@@ -2090,6 +2119,7 @@
 				241EC1EBB90EBA7813AE57B9 /* ModelEntry.swift in Sources */,
 				249CCFCDA4A9509B6CAADA3E /* ModelsDevAPI.swift in Sources */,
 				25D829F2DC587CDCB8D47832 /* ModelSelectionEntity.swift in Sources */,
+				25E85F3413301FED50E5DBB0 /* KnowledgePDFImport.swift in Sources */,
 				26022CB918AABDE24697FD48 /* ConfigRegistry+Builtins.swift in Sources */,
 				266F27CBD48407036D67D137 /* TTSSettingsView.swift in Sources */,
 				26A9FEB4135417CC5B6B6E6F /* ShareViewController.swift in Sources */,
@@ -2147,6 +2177,7 @@
 				4FF373341209143426232AC7 /* DuduNotifications.swift in Sources */,
 				50CCFE84494B9E678A3B93FC /* BackupKeepAlive.swift in Sources */,
 				50DE4EB06BC58C19806C96EC /* MessageListView.swift in Sources */,
+				515CD77B6FB012CA930D57C4 /* KnowledgeStore.swift in Sources */,
 				516FC3E3C5C14B8EACD80A50 /* BackupHistory.swift in Sources */,
 				51EADD5D0E8B539B21B37B75 /* ConfigOffloadBridge.swift in Sources */,
 				5281A8E8D87D0FF711A7AA3D /* OpenSessionIntent.swift in Sources */,
@@ -2178,6 +2209,7 @@
 				630DE487919D013A8137B3AB /* BrowserUseActions.swift in Sources */,
 				636220D5B76F3A916E13621D /* OAuthRefreshSingleFlight.swift in Sources */,
 				643ACF98144CFE939E187E97 /* CorrectionSignalSource.swift in Sources */,
+				6540FD7FD8F9CCE22025E7EE /* KnowledgeView.swift in Sources */,
 				6664962C6D2022F17DB33101 /* BackupJSONLWriter.swift in Sources */,
 				66FCA5F2BB5BC4C5B9C362D9 /* SafeKVCSetTrue.m in Sources */,
 				67115DD6C1A6916A3660A852 /* SyncedTypes.swift in Sources */,
@@ -2572,6 +2604,14 @@
 				version = 2.2.0;
 			};
 		};
+		0D8FE5F584524B438502894A /* XCRemoteSwiftPackageReference "SQLiteVec" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/jkrukowski/SQLiteVec";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.0.15;
+			};
+		};
 		304AD72BA3ED141AB4130208 /* XCRemoteSwiftPackageReference "RealTimeCutVADLibrary" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/helloooideeeeea/RealTimeCutVADLibrary.git";
@@ -2615,6 +2655,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 7863267C1FF16191BA441605 /* XCRemoteSwiftPackageReference "SwiftAnthropic" */;
 			productName = SwiftAnthropic;
+		};
+		2BC90F86F661471B97A971D5 /* SQLiteVec */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0D8FE5F584524B438502894A /* XCRemoteSwiftPackageReference "SQLiteVec" */;
+			productName = SQLiteVec;
 		};
 
 	};
