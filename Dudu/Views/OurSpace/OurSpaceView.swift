@@ -198,14 +198,14 @@ struct OurSpaceSectionHeader: View {
 struct OurSpaceEmptyState: View {
     let systemImage: String
     let title: String
-    let body: String
+    let message: String
     let actionTitle: String?
     let action: (() -> Void)?
 
-    init(systemImage: String, title: String, body: String, actionTitle: String? = nil, action: (() -> Void)? = nil) {
+    init(systemImage: String, title: String, message: String, actionTitle: String? = nil, action: (() -> Void)? = nil) {
         self.systemImage = systemImage
         self.title = title
-        self.body = body
+        self.message = message
         self.actionTitle = actionTitle
         self.action = action
     }
@@ -223,7 +223,7 @@ struct OurSpaceEmptyState: View {
             Text(title)
                 .font(DuduTheme.titleFont())
                 .foregroundStyle(DuduTheme.duduText)
-            Text(body)
+            Text(message)
                 .font(DuduTheme.bodyFont())
                 .foregroundStyle(DuduTheme.duduTextDim)
                 .multilineTextAlignment(.center)

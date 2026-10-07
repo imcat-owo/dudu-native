@@ -20,7 +20,7 @@ struct DiarySection: View {
                 OurSpaceEmptyState(
                     systemImage: "book",
                     title: "还没有日记",
-                    body: "值得记住的日子，他会写下来。也可以现在写第一篇。",
+                    message: "值得记住的日子，他会写下来。也可以现在写第一篇。",
                     actionTitle: "写日记"
                 ) {
                     showingEditor = true

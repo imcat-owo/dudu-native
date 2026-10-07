@@ -56,7 +56,7 @@ struct GardenSection: View {
                 OurSpaceEmptyState(
                     systemImage: "leaf",
                     title: "花园空空的",
-                    body: "多跟我聊聊，值得记住的我都种下来。",
+                    message: "多跟我聊聊，值得记住的我都种下来。",
                     actionTitle: "种一颗"
                 ) {
                     showingEditor = true
@@ -65,7 +65,7 @@ struct GardenSection: View {
                 OurSpaceEmptyState(
                     systemImage: filter == .ask ? "questionmark.circle" : "leaf",
                     title: "这里还没有",
-                    body: "换个状态看看，或种下新的一颗。"
+                    message: "换个状态看看，或种下新的一颗。"
                 )
             } else {
                 ForEach(visibleSeeds) { seed in

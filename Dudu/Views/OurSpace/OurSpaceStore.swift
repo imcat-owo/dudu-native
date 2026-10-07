@@ -54,6 +54,7 @@ enum MomentKind: String, Codable, CaseIterable {
     }
 
     /// Timeline dot color — DuduTheme only.
+    @MainActor
     var dotColor: Color {
         switch self {
         case .moment: return DuduTheme.pink
@@ -100,6 +101,7 @@ enum MemoryConfidence: String, Codable, CaseIterable {
         }
     }
 
+    @MainActor
     var chipColor: Color {
         switch self {
         case .blooming: return DuduTheme.pink

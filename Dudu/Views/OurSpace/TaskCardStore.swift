@@ -50,6 +50,7 @@ enum TaskCardAccent: String, Codable, CaseIterable {
         }
     }
 
+    @MainActor
     var color: Color {
         switch self {
         case .pink: return DuduTheme.pink
@@ -77,6 +78,7 @@ struct BackgroundTask: Codable, Identifiable, Equatable {
     var updatedAt: Date
     var createdAt: Date
 
+    @MainActor
     var accentColor: Color { accent?.color ?? DuduTheme.pink }
 }
 

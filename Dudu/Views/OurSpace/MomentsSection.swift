@@ -18,7 +18,7 @@ struct MomentsSection: View {
                 OurSpaceEmptyState(
                     systemImage: "clock",
                     title: "还没有时光",
-                    body: "一起经历的时刻，他会记在这里。也可以现在记下第一刻。",
+                    message: "一起经历的时刻，他会记在这里。也可以现在记下第一刻。",
                     actionTitle: "记一刻"
                 ) {
                     showingEditor = true

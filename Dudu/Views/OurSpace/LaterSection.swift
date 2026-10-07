@@ -25,7 +25,7 @@ struct LaterSection: View {
                 OurSpaceEmptyState(
                     systemImage: "tray",
                     title: "没有待办事项",
-                    body: "想跟她说的话，先记在这里，一件一件划掉。",
+                    message: "想跟她说的话，先记在这里，一件一件划掉。",
                     actionTitle: "记一笔"
                 ) {
                     showingEditor = true
