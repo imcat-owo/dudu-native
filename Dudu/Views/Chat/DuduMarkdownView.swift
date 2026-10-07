@@ -62,7 +62,7 @@ private struct DuduMarkdownBlockView: View {
         case .taskList(let isTight, let items):
             DuduListView(isTight: isTight, count: items.count) { index in
                 Image(systemName: items[index].isCompleted ? "checkmark.square.fill" : "square")
-                    .font(.system(size: DuduTheme.bodySize, weight: .regular))
+                    .font(DuduTheme.bodyFont())
                     .foregroundStyle(items[index].isCompleted ? DuduTheme.pink : DuduTheme.duduTextDim)
             } content: { index in
                 blockChildren(items[index].children)
@@ -301,7 +301,7 @@ private struct DuduCodeBlockView: View {
                     }
                 } label: {
                     Image(systemName: copied ? "checkmark" : "doc.on.doc")
-                        .font(.system(size: DuduTheme.captionSize, weight: .medium))
+                        .font(DuduTheme.captionFont(weight: .medium))
                         .foregroundStyle(copied ? DuduTheme.success : DuduTheme.duduTextDim)
                 }
                 .accessibilityLabel("复制代码")

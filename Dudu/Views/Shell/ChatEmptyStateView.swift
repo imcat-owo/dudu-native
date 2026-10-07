@@ -23,7 +23,7 @@ struct ChatEmptyStateView: View {
                     .fill(DuduTheme.duduIconChip)
                     .frame(width: 76, height: 76)
                 Image(systemName: "sparkles")
-                    .font(.system(size: 30, weight: .medium))
+                    .font(.system(size: FontSettings.shared.scaledApp(30), weight: .medium))
                     .foregroundStyle(DuduTheme.pink)
             }
             .padding(.bottom, 4)

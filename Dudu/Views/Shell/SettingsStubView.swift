@@ -15,7 +15,7 @@ struct SettingsStubView: View {
                     .fill(DuduTheme.duduIconChip)
                     .frame(width: 64, height: 64)
                 Image(systemName: "gearshape")
-                    .font(.system(size: 26, weight: .medium))
+                    .font(.system(size: FontSettings.shared.scaledApp(26), weight: .medium))
                     .foregroundStyle(DuduTheme.pink)
             }
 
