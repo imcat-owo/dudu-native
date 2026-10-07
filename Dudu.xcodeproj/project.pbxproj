@@ -94,7 +94,7 @@
 		642CC3E9C562F51B10D2ACB4 /* ThinkingRulesCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThinkingRulesCollection.swift; sourceTree = "<group>"; };
 		710681993B831A50064A5CC1 /* ConfigError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigError.swift; sourceTree = "<group>"; };
 		9E9171EB854B6B3041F3C203 /* ConfigField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigField.swift; sourceTree = "<group>"; };
-		0C89DBBA7845A1A7840430AD /* ConfigRegistry+Builtins.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigRegistry+Builtins.swift; sourceTree = "<group>"; };
+		0C89DBBA7845A1A7840430AD /* ConfigRegistry+Builtins.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConfigRegistry+Builtins.swift"; sourceTree = "<group>"; };
 		FEF249DFD958E14424AC29FC /* ConfigRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigRegistry.swift; sourceTree = "<group>"; };
 		78546F65FB0F16998376B8D6 /* ConfigConfirmSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigConfirmSheet.swift; sourceTree = "<group>"; };
 		BE96DE628A2A60F473DA0A7B /* ConfigConfirmationGate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigConfirmationGate.swift; sourceTree = "<group>"; };

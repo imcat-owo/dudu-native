@@ -218,9 +218,12 @@ def sync_sources():
         fr_id = uuid_for("fileref:" + rel)
         bf_id = uuid_for("buildfile:" + rel)
         ftype = FILE_TYPES[os.path.splitext(fn)[1].lower()]
+        # Quote the path when it contains chars illegal in a bare plist
+        # string (e.g. the '+' in "ConfigRegistry+Builtins.swift").
+        qfn = f'"{fn}"' if re.search(r"[^A-Za-z0-9_.$/:]", fn) else fn
         if not section_has(text, "PBXFileReference", fr_id):
             entry = (f"\t\t{fr_id} /* {fn} */ = {{isa = PBXFileReference; "
-                     f"lastKnownFileType = {ftype}; path = {fn}; "
+                     f"lastKnownFileType = {ftype}; path = {qfn}; "
                      f'sourceTree = "<group>"; }};\n')
             text = append_to_section(text, "PBXFileReference", entry)
         dir_children[dir_rel].append(f"{fr_id} /* {fn} */")
