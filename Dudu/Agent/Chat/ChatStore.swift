@@ -2043,6 +2043,8 @@ actor ChatStore {
     }
 
     func updateSessionTitle(_ id: String, title: String, category: String? = nil) {
+        // Phase D4 — ephemeral (incognito) sessions have no row; never write.
+        guard !Self.isEphemeralSessionId(id) else { return }
         invalidateSessionListCache()
         let sql = "UPDATE sessions SET title = ?, category = COALESCE(?, category), updated_at = ? WHERE id = ?"
         var stmt: OpaquePointer?
@@ -2708,7 +2710,19 @@ actor ChatStore {
 
     // MARK: - Message CRUD
 
+    /// Phase D4 — incognito guard: any session id carrying the ephemeral
+    /// `incognito-` prefix is in-memory only and must NEVER reach SQLite.
+    /// This is defense in depth behind the AIChatViewModel guards — even if
+    /// a future call site forgets its own check, nothing can be written here.
+    static func isEphemeralSessionId(_ id: String) -> Bool {
+        id.hasPrefix("incognito-")
+    }
+
     func appendMessage(_ message: RawMessage) {
+        guard !Self.isEphemeralSessionId(message.sessionId) else {
+            logger.info("[Store] appendMessage DROPPED ephemeral sid=\(message.sessionId.prefix(16))…")
+            return
+        }
         appendMessages([message])
     }
 
@@ -2717,6 +2731,12 @@ actor ChatStore {
     func appendMessages(_ messages: [RawMessage]) {
         invalidateSessionListCache()
         guard !messages.isEmpty else { return }
+        // Phase D4 — drop any ephemeral (incognito) messages before touching SQLite.
+        let messages = messages.filter { !Self.isEphemeralSessionId($0.sessionId) }
+        guard !messages.isEmpty else {
+            logger.info("[Store] appendMessages: all messages ephemeral — nothing written")
+            return
+        }
         // Drop assistant messages that carry no content the model could echo back —
         // a stream that aborts before producing any text or tool_use leaves an
         // assistant row with empty parts. On the next turn DeepSeek/OpenAI-compat
@@ -3183,6 +3203,9 @@ actor ChatStore {
     /// parts_json encoding.
     func updateMessageParts(messageId: String, parts: [ContentPart]) {
         invalidateSessionListCache()
+        // Phase D4 — incognito rows never exist; a message id here is only
+        // ever written for a persisted session, but belt-and-suspenders:
+        // callers must check isIncognito before calling.
         let partsJSON: String
         do {
             let data = try JSONEncoder().encode(parts)

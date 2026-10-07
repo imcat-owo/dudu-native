@@ -365,6 +365,7 @@
 		ABC64DFB635048C0BD78FAE4 /* MCPApprovalCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E49330ED8CE4C24BD056A09 /* MCPApprovalCardView.swift */; };
 		4B6BF44BA2D34E4CA883784D /* MCPDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A94E27241434CE3B75D0044 /* MCPDetailView.swift */; };
 		F63ED642258D4F9CB1D1C27C /* MCPListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7008220B684EA594D1B5AC /* MCPListView.swift */; };
+		B4D330FAE059BF2C52DEE04F /* AIChatViewModel+Incognito.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D11138A5F26C7DA527F6C8 /* AIChatViewModel+Incognito.swift */; };
 /* End PBXBuildFile section */
 		C22E4BE16A67710000C9EBF0 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 30AC3C5C6C418C791E362178 /* libsqlite3.tbd */; };
 		F8F1403829CEFF47083C5520 /* RealTimeCutVADLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = AECFD4BE143BED595F298AF5 /* RealTimeCutVADLibrary */; };
@@ -846,6 +847,7 @@
 		8E49330ED8CE4C24BD056A09 /* MCPApprovalCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCPApprovalCardView.swift; sourceTree = "<group>"; };
 		6A94E27241434CE3B75D0044 /* MCPDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCPDetailView.swift; sourceTree = "<group>"; };
 		2A7008220B684EA594D1B5AC /* MCPListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCPListView.swift; sourceTree = "<group>"; };
+		C0D11138A5F26C7DA527F6C8 /* AIChatViewModel+Incognito.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AIChatViewModel+Incognito.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 		30AC3C5C6C418C791E362178 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 
@@ -1436,6 +1438,7 @@
 				E9AE3A073CEECE603D4935A7 /* AIChatViewModel+AskUser.swift */,
 				EDCB01ED3F9B898B6643DBD1 /* DuduISHSeams.swift */,
 				F1CE402FD81EBD4B129CBF85 /* DuduVoiceBubblePlayer.swift */,
+				C0D11138A5F26C7DA527F6C8 /* AIChatViewModel+Incognito.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -2303,6 +2306,7 @@
 				ABC64DFB635048C0BD78FAE4 /* MCPApprovalCardView.swift in Sources */,
 				4B6BF44BA2D34E4CA883784D /* MCPDetailView.swift in Sources */,
 				F63ED642258D4F9CB1D1C27C /* MCPListView.swift in Sources */,
+				B4D330FAE059BF2C52DEE04F /* AIChatViewModel+Incognito.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

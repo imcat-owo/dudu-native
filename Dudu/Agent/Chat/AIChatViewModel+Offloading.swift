@@ -25,7 +25,8 @@ extension AIChatViewModel {
     private func offloadContextContent(_ content: String, toolId: String, toolName: String, ext: String = "txt") -> String {
         let fm = FileManager.default
         let sid = sessionId ?? "unknown"
-        let persistDir = DuduPaths.duduOffloadsPersistentDir(for: sid)
+        // Phase D4 — 隐身模式走 tmp，退出即删。
+        let persistDir = sessionOffloadsDir(for: sid)
             .appendingPathComponent("tools", isDirectory: true)
         try? fm.createDirectory(at: persistDir, withIntermediateDirectories: true)
 
@@ -43,7 +44,8 @@ extension AIChatViewModel {
     private func offloadContextImage(_ data: Data, toolId: String, mimeType: String) -> String {
         let fm = FileManager.default
         let sid = sessionId ?? "unknown"
-        let persistDir = DuduPaths.duduOffloadsPersistentDir(for: sid)
+        // Phase D4 — 隐身模式走 tmp，退出即删。
+        let persistDir = sessionOffloadsDir(for: sid)
             .appendingPathComponent("tools", isDirectory: true)
         try? fm.createDirectory(at: persistDir, withIntermediateDirectories: true)
 
@@ -571,7 +573,7 @@ extension AIChatViewModel {
 
             // List files in offloads/tools directory (top 20 by recency)
             let sid = sessionId ?? "unknown"
-            let toolsDir = DuduPaths.duduOffloadsPersistentDir(for: sid)
+            let toolsDir = sessionOffloadsDir(for: sid)
                 .appendingPathComponent("tools", isDirectory: true)
             if let files = try? FileManager.default.contentsOfDirectory(
                 at: toolsDir, includingPropertiesForKeys: [.fileSizeKey, .creationDateKey],
@@ -886,7 +888,8 @@ extension AIChatViewModel {
         let sid = sessionId ?? "unknown"
 
         // Write to persistent storage (bind-mounted, so iSH sees it automatically)
-        let persistDir = DuduPaths.duduAttachmentsPersistentDir(for: sid)
+        // Phase D4 — 隐身模式走 tmp，退出即删。
+        let persistDir = sessionAttachmentsDir(for: sid)
         try? fm.createDirectory(at: persistDir, withIntermediateDirectories: true)
 
         let persistPath = persistDir.appendingPathComponent(filename)

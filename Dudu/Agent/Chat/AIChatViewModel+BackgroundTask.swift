@@ -536,7 +536,8 @@ extension AIChatViewModel {
             let timestamp = Int(Date().timeIntervalSince1970)
             let screenshotFilename = "takeover_\(timestamp).jpg"
             let sid = sessionId ?? "unknown"
-            let persistDir = DuduPaths.duduBrowserPersistentDir(for: sid)
+            // Phase D4 — 隐身模式走 tmp，退出即删。
+            let persistDir = sessionBrowserDir(for: sid)
             try? FileManager.default.createDirectory(at: persistDir, withIntermediateDirectories: true)
             let persistPath = persistDir.appendingPathComponent(screenshotFilename)
             try? data.write(to: persistPath)

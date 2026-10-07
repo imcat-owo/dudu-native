@@ -779,6 +779,12 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
     /// was nearly pinned on claude-haiku-4-5 — a model the session never used.
     @Published var selectedModel: LLMModel = .claudeHaiku45
     @Published var isLoadingSession = false
+    /// Phase D4 — incognito chat. When true, the current conversation lives
+    /// in memory ONLY: no ChatStore session row, no message rows, no title
+    /// generation, no per-session binding, no session-scoped disk dirs.
+    /// The engine uses an in-memory `incognito-<uuid>` session id; ChatStore
+    /// drops any write carrying that prefix as a second layer of defense.
+    @Published var isIncognito = false
     /// False until the FIRST loadSession() for this vm completes. Lets the view
     /// distinguish "entering the session, nothing rendered yet" (show the soft
     /// centered loading card) from every later reload — iCloud sync, compaction,
@@ -2456,6 +2462,8 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
             // turns it on, and she can still switch it off per session from
             // the voice-options menu — auto-on only touches the default.
             if voiceUsedInComposition, let sid = sessionId,
+               // Phase D4 — 隐身会话不写任何 per-session 偏好。
+               !isIncognito,
                !AIVoiceMessageComposer.voiceRepliesEnabled(sessionId: sid) {
                 AIVoiceMessageComposer.setVoiceReplies(enabled: true, sessionId: sid)
                 logger.info("[AIVoice] voice-composed send → AI Voice Replies auto-ON for sid=\(sid.prefix(8))")
@@ -2496,6 +2504,12 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
             case .ok:
                 break
             case .needsCompact:
+                // Phase D4 — 隐身模式不支持压缩历史：直接提示，不走压缩流程。
+                if isIncognito {
+                    appendSystemInfo("隐身模式下不支持压缩历史。对话过长时，请开始一段新的隐身聊天。", icon: "arrow.down.right.and.arrow.up.left")
+                    logger.info("[Context] Near capacity in incognito — compact unavailable, send held")
+                    return
+                }
                 if sessionSource == "shortcut" || autoCompactEnabled {
                     // Shortcut sessions can't show UI prompts; auto-compact
                     // opt-in [T-chat-auto-compact-opt-in] rides the same
@@ -2694,7 +2708,8 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
             // Copy attachment files to session uploads dir and build metadata
             let fm = FileManager.default
             let sid = self.sessionId ?? "unknown"
-            let uploadsDir = DuduPaths.duduUploadsDir(for: sid)
+            // Phase D4 — 隐身模式走 tmp 上传目录，退出即删，不进持久化目录。
+            let uploadsDir = await self.sessionUploadsDir(for: sid)
             try? fm.createDirectory(at: uploadsDir, withIntermediateDirectories: true)
 
             let isoFormatter = ISO8601DateFormatter()
@@ -3585,7 +3600,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
 
         // Replace attachments in the last user message of agentHistory if new ones are provided
         if let newAttachments = replacementAttachments, !newAttachments.isEmpty {
-            let uploadsDir = DuduPaths.duduUploadsDir(for: sessionId ?? "draft")
+            let uploadsDir = sessionUploadsDir(for: sessionId ?? "draft")
             let fm = FileManager.default
             try? fm.createDirectory(at: uploadsDir, withIntermediateDirectories: true)
             let nowStr = ISO8601DateFormatter().string(from: Date())
@@ -4233,7 +4248,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
         // Restore attachments: convert AttachmentMeta back to InputAttachment
         // by locating the files in the session uploads directory.
         if !msg.attachments.isEmpty, let sid = sessionId {
-            let uploadsDir = DuduPaths.duduUploadsDir(for: sid)
+            let uploadsDir = sessionUploadsDir(for: sid)
             var restored: [InputAttachment] = []
             for meta in msg.attachments {
                 let fileName = (meta.path as NSString).lastPathComponent
@@ -4419,7 +4434,8 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
             self.scrollToBottomSignal.send()
 
             let sid = self.sessionId ?? "unknown"
-            let uploadsDir = DuduPaths.duduUploadsDir(for: sid)
+            // Phase D4 — 隐身模式走 tmp 上传目录。
+            let uploadsDir = await self.sessionUploadsDir(for: sid)
             let isoFmt = ISO8601DateFormatter()
             isoFmt.formatOptions = [.withInternetDateTime]
             let nowStr = isoFmt.string(from: Date())
@@ -4562,7 +4578,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
 
         // Build combined parts from all queued prompts (text + attachments)
         let qSid = sessionId ?? "unknown"
-        let qUploadsDir = DuduPaths.duduUploadsDir(for: qSid)
+        let qUploadsDir = sessionUploadsDir(for: qSid)
         let qIsoFormatter = ISO8601DateFormatter()
         qIsoFormatter.formatOptions = [.withInternetDateTime]
         let qNowStr = qIsoFormatter.string(from: Date())
@@ -6547,7 +6563,10 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                 // [s2-askuser] 问用户挂起时当轮 assistant 已提前落盘：凭 id 跳过，不写两遍。
                 if let assistantRaw = deferredAssistantRaw, assistantRaw.id != assistantMessagePersistedForSuspension { batch.append(assistantRaw) }
                 batch.append(toolResultRaw)
-                await ChatStore.shared.appendMessages(batch)
+                // Phase D4 — 隐身模式不落盘（ChatStore 侧同样有前缀兜底）。
+                if !isIncognito {
+                    await ChatStore.shared.appendMessages(batch)
+                }
                 // Phase B: write the DB id back into agentHistory entries so compact
                 // can resolve boundaries by id.
                 if toolResultAgentIdx < agentHistory.count {
@@ -6555,7 +6574,10 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                 }
             } else if let assistantRaw = deferredAssistantRaw,
                       assistantRaw.id != assistantMessagePersistedForSuspension {
-                await ChatStore.shared.appendMessage(assistantRaw)
+                // Phase D4 — 隐身模式不落盘（ChatStore 侧同样有前缀兜底）。
+                if !isIncognito {
+                    await ChatStore.shared.appendMessage(assistantRaw)
+                }
                 // (assistantAgentIdx was already populated above via deferredAssistantRaw path)
             }
 
@@ -6568,7 +6590,10 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                let raw = await buildRawMessage(agentHistory[assistantAgentIdx]) {
                 var dbParts = raw.parts
                 dbParts += pendingVoiceBubbles.map { .text($0) }
-                await ChatStore.shared.updateMessageParts(messageId: assistantRaw.id, parts: dbParts)
+                // Phase D4 — 隐身模式不落盘（ChatStore 侧同样有前缀兜底）。
+                if !isIncognito {
+                    await ChatStore.shared.updateMessageParts(messageId: assistantRaw.id, parts: dbParts)
+                }
                 pendingVoiceBubbles.removeAll()
             }
 

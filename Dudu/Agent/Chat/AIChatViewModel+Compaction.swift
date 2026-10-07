@@ -486,6 +486,12 @@ extension AIChatViewModel {
             appendSystemInfo("Cannot compact while processing.", icon: "arrow.down.right.and.arrow.up.left")
             return
         }
+        // Phase D4 — 隐身模式不压缩历史（压缩要写库）：提示用户开新隐身对话。
+        guard !isIncognito else {
+            logger.info("[Compact] skipped in incognito mode")
+            appendSystemInfo("隐身模式下不支持压缩历史。对话过长时，请开始一段新的隐身聊天。", icon: "arrow.down.right.and.arrow.up.left")
+            return
+        }
         guard !isCompacting else {
             logger.info("[Compact] Compaction already in progress")
             return

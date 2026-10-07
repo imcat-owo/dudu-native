@@ -147,6 +147,11 @@ struct SessionDrawerView: View {
             dismiss()
             return
         }
+        // Phase D4 — 从隐身模式切到历史会话：先静默退出隐身（清空内存），
+        // 再加载目标会话。
+        if vm.isIncognito {
+            vm.exitIncognito()
+        }
         vm.sessionId = session.id
         vm.messages.removeAll()
         vm.errorMessage = nil

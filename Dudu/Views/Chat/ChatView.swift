@@ -18,6 +18,8 @@ struct ChatView: View {
     @State private var showDrawer = false
     @State private var showModelPicker = false
     @State private var sessionTitle: String?
+    /// Phase D4 — confirm discarding the in-memory incognito transcript.
+    @State private var showExitIncognitoConfirm = false
 
     /// Empty only when there is genuinely nothing to render — never hide
     /// the list mid-stream.
@@ -26,6 +28,8 @@ struct ChatView: View {
     }
 
     private var navTitle: String {
+        // Phase D4 — 隐身模式下标题固定为"隐身模式"，不显示任何会话标题。
+        if vm.isIncognito { return "隐身模式" }
         if let t = sessionTitle, !t.isEmpty { return t }
         return "新的对话"
     }
@@ -77,16 +81,36 @@ struct ChatView: View {
                     .accessibilityLabel("历史对话")
                 }
                 ToolbarItem(placement: .principal) {
-                    Button {
-                        showDrawer = true
-                    } label: {
-                        Text(navTitle)
-                            .font(DuduTheme.titleFont())
-                            .foregroundStyle(DuduTheme.duduText)
-                            .lineLimit(1)
+                    if vm.isIncognito {
+                        // Phase D4 — 隐身指示器：图标 + "隐身模式"。
+                        HStack(spacing: 4) {
+                            Image(systemName: "eye.slash.fill")
+                                .font(DuduTheme.captionFont())
+                            Text("隐身模式")
+                                .font(DuduTheme.titleFont())
+                        }
+                        .foregroundStyle(DuduTheme.duduText)
+                        .accessibilityLabel("隐身模式：聊天记录不会被保存")
+                    } else {
+                        Button {
+                            showDrawer = true
+                        } label: {
+                            Text(navTitle)
+                                .font(DuduTheme.titleFont())
+                                .foregroundStyle(DuduTheme.duduText)
+                                .lineLimit(1)
+                        }
                     }
                 }
                 ToolbarItemGroup(placement: .topBarTrailing) {
+                    // Phase D4 — 隐身聊天开关。
+                    Button {
+                        toggleIncognito()
+                    } label: {
+                        Image(systemName: vm.isIncognito ? "eye.slash.fill" : "eye.slash")
+                            .foregroundStyle(vm.isIncognito ? DuduTheme.pink : DuduTheme.duduText)
+                    }
+                    .accessibilityLabel(vm.isIncognito ? "退出隐身聊天" : "隐身聊天")
                     Button {
                         showModelPicker = true
                     } label: {
@@ -116,6 +140,14 @@ struct ChatView: View {
             }
             .sheet(isPresented: $showModelPicker) {
                 ModelPickerView()
+            }
+            .alert("退出隐身聊天？", isPresented: $showExitIncognitoConfirm) {
+                Button("取消", role: .cancel) {}
+                Button("退出并清空", role: .destructive) {
+                    vm.exitIncognito(confirmed: true)
+                }
+            } message: {
+                Text("隐身聊天的消息不会被保存，退出后将清空当前对话。")
             }
             .task(id: vm.sessionId) {
                 await refreshSessionTitle()
@@ -162,14 +194,27 @@ struct ChatView: View {
     /// Back to a fresh draft. Does NOT touch the database: the previous
     /// session's rows stay intact (unlike vm.clearChat(), which wipes the
     /// current session's messages — that is for explicit deletion flows).
+    /// Phase D4: in incognito, "new chat" resets the in-memory draft and
+    /// stays in incognito mode.
     private func startNewChat() {
-        vm.sessionId = nil
-        vm.messages.removeAll()
-        vm.errorMessage = nil
-        vm.transientNotice = nil
-        vm.inputText = ""
-        vm.attachments.removeAll()
+        vm.resetViewState()
         sessionTitle = nil
         showDrawer = false
+    }
+
+    /// Phase D4 — 隐身聊天开关。进入直接切；退出时若有消息，先弹窗确认
+    /// （退出即清空内存中的聊天记录）。
+    private func toggleIncognito() {
+        if vm.isIncognito {
+            if vm.messages.isEmpty {
+                vm.exitIncognito()
+            } else {
+                showExitIncognitoConfirm = true
+            }
+        } else {
+            vm.enterIncognito()
+            sessionTitle = nil
+            showDrawer = false
+        }
     }
 }

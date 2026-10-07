@@ -665,7 +665,8 @@ extension AIChatViewModel {
                 let timestamp = Int(Date().timeIntervalSince1970)
                 let screenshotFilename = "screenshot_\(timestamp).jpg"
                 let sid = sessionId ?? "unknown"
-                let persistDir = DuduPaths.duduBrowserPersistentDir(for: sid)
+                // Phase D4 — 隐身模式走 tmp，退出即删。
+                let persistDir = sessionBrowserDir(for: sid)
                 let fm = FileManager.default
                 try? fm.createDirectory(at: persistDir, withIntermediateDirectories: true)
                 let persistPath = persistDir.appendingPathComponent(screenshotFilename)
@@ -682,7 +683,8 @@ extension AIChatViewModel {
             if let fetchData = browserResult.fetchedFileData,
                let fetchName = browserResult.fetchedFileName {
                 let sid = sessionId ?? "unknown"
-                let persistDir = DuduPaths.duduBrowserPersistentDir(for: sid)
+                // Phase D4 — 隐身模式走 tmp，退出即删。
+                let persistDir = sessionBrowserDir(for: sid)
                 try? FileManager.default.createDirectory(at: persistDir, withIntermediateDirectories: true)
                 let persistPath = persistDir.appendingPathComponent(fetchName)
                 try? fetchData.write(to: persistPath)

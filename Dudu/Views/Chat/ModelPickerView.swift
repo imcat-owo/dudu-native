@@ -116,7 +116,9 @@ struct ModelPickerView: View {
 
         // Persisted session: pin a real per-session binding so the choice
         // survives reloads and iCloud sync.
-        if let sid = vm.sessionId {
+        // Phase D4 — 隐身会话只走内存（cachedSessionModelId / selectedModel），
+        // 不写任何持久化绑定。
+        if let sid = vm.sessionId, !vm.isIncognito {
             let binding = SessionModelBinding(
                 sessionId: sid,
                 primarySource: .directEntry(

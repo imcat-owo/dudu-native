@@ -39,6 +39,8 @@ extension AIChatViewModel {
     /// Retries up to 3 times across agent loop iterations if the title is still missing.
     /// Skips if a generation request is already in-flight to avoid wasting tokens.
     func generateSessionTitleIfNeeded(toolEntries: [(name: String, args: [String: Any])] = []) {
+        // Phase D4 — 隐身会话没有数据库行，标题生成（写库 + 调模型）直接跳过。
+        guard !isIncognito else { return }
         guard let sessionId, titleGenAttempts < 3, !isTitleGenerating else { return }
 
         let userMessages = messages.filter { $0.role == .user }

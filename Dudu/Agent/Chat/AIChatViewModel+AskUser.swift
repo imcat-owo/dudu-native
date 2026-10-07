@@ -59,7 +59,8 @@ extension AIChatViewModel {
 
         // —— 挂起等用户点按（底座：先持久化再挂起，App 被杀可恢复；问用户不设超时）——
         // 先落当轮 assistant 消息（含 tool_use），见函数头注释。
-        if let raw = deferredAssistantRaw, raw.id != assistantMessagePersistedForSuspension {
+        // Phase D4 — 隐身模式不落盘：ChatStore 侧同样有前缀兜底。
+        if !isIncognito, let raw = deferredAssistantRaw, raw.id != assistantMessagePersistedForSuspension {
             await ChatStore.shared.appendMessage(raw)
             assistantMessagePersistedForSuspension = raw.id
             // 和 persistAgentMessage 一样 bump 基线，别让 iCloud 同步把自己写的当远端。

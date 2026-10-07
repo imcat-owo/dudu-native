@@ -1065,6 +1065,19 @@ extension AIChatViewModel {
     /// Only ever runs inside `sessionCreationTask`, so it executes at
     /// most once per draft no matter how many callers are waiting.
     private func createSessionForDraft() async -> String {
+        // Phase D4 — incognito: NO ChatStore session row, NO binding, NO
+        // iSH mount, NO sidebar notification. The id is in-memory only;
+        // ChatStore drops any write carrying the prefix as defense in depth.
+        if isIncognito {
+            let sid = Self.incognitoSessionIdPrefix + UUID().uuidString
+            sessionId = sid
+            Self.activeSessionId = sid
+            // Incognito must not learn: memory tools stay off so nothing is
+            // written to GLOBAL.md / daily memory logs either.
+            memoryEnabled = false
+            logger.info("[Incognito] ephemeral session sid=\(sid.prefix(16))… — nothing will be persisted")
+            return sid
+        }
         let model = selectedModel
         // ［persona］新会话打上当前人设。
         let session = await ChatStore.shared.createSession(modelId: model.id, source: sessionSource, personaId: PersonaStore.currentID())
@@ -1932,6 +1945,12 @@ extension AIChatViewModel {
     /// so compact logic can later resolve boundaries by id.
     @discardableResult
     func persistAgentMessage(_ msg: AgentMessage, tokenUsage: TokenUsage? = nil, snapshots: [String: (toolName: String, snapshot: ToolSnapshot)] = [:], thoughtSignatures: [String: String] = [:], reasoningContent: String? = nil, streamInterruptCount: Int = 0, modelEntryId: String? = nil) async -> String? {
+        // Phase D4 — incognito: never touch the database. Hand back an
+        // in-memory id so dbMessageId bookkeeping still works for the live
+        // transcript; no row is ever written.
+        if isIncognito {
+            return UUID().uuidString
+        }
         let sid = self.sessionId ?? "nil"
         logger.info("[Persist] enter sid=\(sid.prefix(8)) role=\(msg.role.rawValue) parts=\(msg.parts.count)")
         guard let raw = await buildRawMessage(msg, tokenUsage: tokenUsage, snapshots: snapshots, thoughtSignatures: thoughtSignatures, reasoningContent: reasoningContent, streamInterruptCount: streamInterruptCount, modelEntryId: modelEntryId) else {
