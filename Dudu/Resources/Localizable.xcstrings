@@ -56958,6 +56958,28 @@
           }
         }
       }
+    },
+    "term.commandPlaceholder": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Type a command"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "输入命令"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "輸入命令"
+          }
+        }
+      }
     }
   },
   "version": "1.0"
