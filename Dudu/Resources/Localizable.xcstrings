@@ -57046,6 +57046,28 @@
           }
         }
       }
+    },
+    "orchestration.noGroups": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No groups yet — add the first one."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "还没有分组，加一个。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "還沒有分組，加一個。"
+          }
+        }
+      }
     }
   },
   "version": "1.0"
