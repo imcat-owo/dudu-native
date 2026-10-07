@@ -68,7 +68,7 @@ class EnergyVad: @unchecked Sendable {
 /// A stricter VAD used while the AI is speaking: requires louder audio
 /// (echo guard — the speaker feeds back into the mic) before it counts.
 final class BargeInVad: EnergyVad {
-    init(config: VadConfig) {
+    override init(config: VadConfig) {
         var c = config
         c.speechThresholdDb += config.bargeInExtraDb
         super.init(config: c)

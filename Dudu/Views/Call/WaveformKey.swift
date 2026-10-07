@@ -93,10 +93,18 @@ struct WaveformKey: View {
 }
 
 /// Liquid Glass key background (iOS 26) with material fallback.
+///
+/// NOTE: CI currently builds with Xcode 16.4 (Swift 6.1), whose SDK has no
+/// `glassEffect`. The Liquid Glass branch is gated on `#if compiler(>=6.2)`
+/// (Xcode 26's Swift, which ships the iOS 26 SDK): it compiles out on the old
+/// toolchain and lights up automatically when CI moves to Xcode 26.
+/// `#available(iOS 26.0, *)` alone cannot do this — availability is runtime,
+/// but the symbol must exist at compile time.
 private struct CallKeyGlass: ViewModifier {
     var isHeld: Bool
 
     func body(content: Content) -> some View {
+        #if compiler(>=6.2)
         if #available(iOS 26.0, *) {
             if isHeld {
                 content.glassEffect(.regular.tint(DuduTheme.pink).interactive(), in: Circle())
@@ -106,6 +114,9 @@ private struct CallKeyGlass: ViewModifier {
         } else {
             content.background(.ultraThinMaterial, in: Circle())
         }
+        #else
+        content.background(.ultraThinMaterial, in: Circle())
+        #endif
     }
 }
 
