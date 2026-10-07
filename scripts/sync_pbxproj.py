@@ -43,21 +43,31 @@ CPPJIEBA_INCLUDE = "$(SRCROOT)/Dudu/Vendor/cppjieba/include"
 
 # Files ported to disk but NOT compiled yet: they reference types owned by
 # later parts. They still get file refs (visible in the navigator).
-#   P3 (Providers) re-enables: ConfigRegistry+Builtins, Collections/{Providers,
-#     Models, Groups, ThinkingRules} + reverts the builtinsRegistrar seam in
-#     Config/ConfigRegistry.swift to the direct Self.registerBuiltins call.
-#   P4 (chat core, SoulStore) re-enables: AppearanceStudio/ThemePack/ThemeLibrary,
-#     ImagePayloadPrep (AgentMessage).
+#   P3 (Providers) re-enabled: Collections/{Providers, Models, Groups,
+#     ThinkingRules} (their Providers types now exist) + reverted the P1
+#     rename-only state of the Providers tree. ConfigRegistry+Builtins stays
+#     excluded: it ALSO needs SoulStore + AIChatViewModel.activeSessionId (P4),
+#     so the builtinsRegistrar seam in Config/ConfigRegistry.swift stays until
+#     P4 removes it and restores the direct Self.registerBuiltins call.
+#   P3 excluded (new): Providers/Voice/CorrectionStrategy.swift — needs
+#     ConversationContext / CorrectionContextBudget from Agent/Speech (P6).
+#     Self-contained: nothing else in Providers references its types.
+#   P3 excluded (new): Providers/Voice/VoiceActivityDetector.swift — needs
+#     BackgroundKeepAliveManager from Agent/Background (P7). No in-Providers
+#     dependents, so exclusion is clean.
+#   P4 (chat core, SoulStore) re-enables: ConfigRegistry+Builtins,
+#     AppearanceStudio/ThemePack/ThemeLibrary, ImagePayloadPrep (AgentMessage).
 #   P4/P7 re-enables: BPETokenizer (AgentContentPart).
 #   P7 (Diagnostics) sets AppLogger.crashLogSink; the background-notify part
 #     sets ConfigConfirmationGate's two hooks.
 #   P8 (iSH) re-enables: NetworkMonitor (ISHKernel).
+#   Views part re-enables: Providers/Voice/VoiceOutputPlayer.swift stays IN the
+#     build via the ShareFeedbackToast reroute (P3); when Views defines
+#     DuduToast (ported from MinisToast), restore the original call site.
 EXCLUDE = {
-    "Dudu/Shared/Config/ConfigRegistry+Builtins.swift",
-    "Dudu/Shared/Config/Collections/ProvidersCollection.swift",
-    "Dudu/Shared/Config/Collections/ModelsCollection.swift",
-    "Dudu/Shared/Config/Collections/GroupsCollection.swift",
-    "Dudu/Shared/Config/Collections/ThinkingRulesCollection.swift",
+    "Dudu/Shared/Config/ConfigRegistry+Builtins.swift",  # needs SoulStore + AIChatViewModel (P4)
+    "Dudu/Providers/Voice/CorrectionStrategy.swift",     # needs Agent/Speech types (P6)
+    "Dudu/Providers/Voice/VoiceActivityDetector.swift",  # needs BackgroundKeepAliveManager (P7); no in-Providers dependents
     "Dudu/Shared/AppearanceStudio.swift",
     "Dudu/Shared/AppearanceThemePack.swift",
     "Dudu/Shared/AppearanceThemeLibrary.swift",

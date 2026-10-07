@@ -22,13 +22,14 @@ final class ConfigRegistry {
     private var collections: [String: ConfigCollection] = [:]
     private var didRegisterBuiltins = false
 
-    /// P1 seam: the builtins live in ConfigRegistry+Builtins.swift, which needs
-    /// Providers (P3) and Agent (P4) types, so that file is ported to disk but
-    /// excluded from the target until P3 lands (see EXCLUDE in
-    /// scripts/sync_pbxproj.py). Until then there is nothing to register and
-    /// the hook stays nil.
+    /// P1 seam (kept through P3): the builtins live in
+    /// ConfigRegistry+Builtins.swift, which needs Providers (P3, now present)
+    /// AND Agent/Session+Chat types (SoulStore, AIChatViewModel — P4), so that
+    /// file stays ported-to-disk but excluded from the target until P4 lands
+    /// (see EXCLUDE in scripts/sync_pbxproj.py). Until then the hook stays nil
+    /// and there is nothing to register.
     ///
-    /// P3: remove ConfigRegistry+Builtins.swift from EXCLUDE, delete
+    /// P4: remove ConfigRegistry+Builtins.swift from EXCLUDE, delete
     /// `builtinsRegistrar` below, and restore the direct call
     /// `Self.registerBuiltins(into: self)`.
     static var builtinsRegistrar: ((ConfigRegistry) -> Void)?

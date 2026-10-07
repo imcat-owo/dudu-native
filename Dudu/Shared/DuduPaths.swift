@@ -21,6 +21,11 @@
 //
 //  Later parts (P4 chat core, P7 capabilities) must use DuduPaths instead of
 //  re-deriving these directories.
+//
+//  SEAM (P3): `duduAttachmentsPersistentDir(for:)` and `duduUploadsDir(for:)`
+//  were moved early for P3 (ported from AIChatViewModel+Misc.swift
+//  `minisAttachmentsPersistentDir`/`minisUploadsDir`); P4 AIChatViewModel must
+//  forward to DuduPaths, not duplicate them.
 
 import Foundation
 
