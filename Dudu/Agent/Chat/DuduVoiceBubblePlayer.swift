@@ -80,4 +80,10 @@ final class DuduVoiceBubblePlayer {
     var currentTime: TimeInterval {
         player?.currentTime ?? 0
     }
+
+    /// Playback rate (1.0 = normal speed).
+    var rate: Float {
+        get { player?.rate ?? 1.0 }
+        set { player?.rate = newValue }
+    }
 }

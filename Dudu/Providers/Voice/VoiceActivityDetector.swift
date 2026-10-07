@@ -301,7 +301,7 @@ final class VoiceActivityDetector: NSObject {
     /// voiceStarted() will append to existing samples rather than resetting).
     private func tearDownEngineOnly() {
         audioEngine.stop()
-        _ = DuduCatchObjCException({ self.audioEngine.inputNode.removeTap(onBus: 0) }
+        _ = DuduCatchObjCException({ self.audioEngine.inputNode.removeTap(onBus: 0) }, nil)
         vad?.delegate = nil
         vad = nil
         // Don't clear rawAudioBuffer here — it may be needed for fallback flush
@@ -475,7 +475,7 @@ final class VoiceActivityDetector: NSObject {
         unregisterSessionObservers()
         interruptedWhileRunning = false
         audioEngine.stop()
-        _ = DuduCatchObjCException({ self.audioEngine.inputNode.removeTap(onBus: 0) }
+        _ = DuduCatchObjCException({ self.audioEngine.inputNode.removeTap(onBus: 0) }, nil)
         vad?.delegate = nil
         vad = nil
         isRunning = false
