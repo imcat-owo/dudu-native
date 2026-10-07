@@ -4,7 +4,7 @@ import SwiftUI
 struct DuduApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            DuduTabView()
         }
     }
 }
