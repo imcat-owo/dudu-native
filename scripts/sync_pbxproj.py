@@ -56,7 +56,9 @@ CPPJIEBA_INCLUDE = "$(SRCROOT)/Dudu/Vendor/cppjieba/include"
 #     BackgroundKeepAliveManager from Agent/Background (P7). No in-Providers
 #     dependents, so exclusion is clean.
 #   P4 (chat core, SoulStore) re-enables: ConfigRegistry+Builtins,
-#     AppearanceStudio/ThemePack/ThemeLibrary, ImagePayloadPrep (AgentMessage).
+#     AppearanceStudio/ThemePack/ThemeLibrary.
+#   P3 re-enabled: ImagePayloadPrep — its AgentMessage dep lives in
+#     Providers/AgentProvider.swift (not P4).
 #   P4/P7 re-enables: BPETokenizer (AgentContentPart).
 #   P7 (Diagnostics) sets AppLogger.crashLogSink; the background-notify part
 #     sets ConfigConfirmationGate's two hooks.
@@ -74,7 +76,6 @@ EXCLUDE = {
     # P1 foundation files whose only missing deps are later-part types and
     # which nothing in P1 references — re-enabled by their owning part:
     "Dudu/Shared/BPETokenizer.swift",      # needs AgentContentPart (P4/P7)
-    "Dudu/Shared/ImagePayloadPrep.swift",   # needs AgentMessage (P4)
     "Dudu/Shared/NetworkMonitor.swift",     # needs ISHKernel (P8)
 }
 

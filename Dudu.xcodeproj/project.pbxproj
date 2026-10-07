@@ -956,6 +956,7 @@
 				40B07B4B4C0C20C074C24095 /* TTSProviderBridge.swift in Sources */,
 				4C29274E763868CC079C7B8A /* AudioSessionCoordinator.swift in Sources */,
 				4D11D4BBAAEA29A339F82AB8 /* LoggingManager.swift in Sources */,
+				4D7D4EFDA4C85A8F05983AE5 /* ImagePayloadPrep.swift in Sources */,
 				4FF373341209143426232AC7 /* DuduNotifications.swift in Sources */,
 				5405C5F18ECF7A543B8D3504 /* DuduUserAgent.swift in Sources */,
 				56439DE64FDF4C491009A136 /* PendingConfigChange.swift in Sources */,

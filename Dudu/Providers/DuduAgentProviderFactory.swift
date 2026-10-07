@@ -18,6 +18,9 @@ import Foundation
 
 private let duduAgentProviderFactoryLog = AppLogger(category: "DuduAgentProviderFactory")
 
+// @MainActor: the original lived on @MainActor AIChatViewModel, and
+// LLMProviderFactory (which this calls) is @MainActor.
+@MainActor
 enum DuduAgentProviderFactory {
 
     /// Construct an AgentProvider from a ModelEntry by looking up its ProviderInstance and credential.
