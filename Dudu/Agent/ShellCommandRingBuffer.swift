@@ -6,6 +6,10 @@ struct ShellCommandEntry {
     let command: String
     let sessionId: String
     var exitCode: Int?
+    /// Human/AI-readable note about how the command ended, when a plain exit
+    /// code would lie — e.g. the "backend not installed" message when the iSH
+    /// sandbox seam is nil, so history shows "unavailable" instead of "empty".
+    var exitNote: String? = nil
     var duration: TimeInterval?
     var exitedAt: Date?
 }
@@ -52,8 +56,8 @@ actor ShellCommandRingBuffer {
         return idx
     }
 
-    func didExit(index: Int, exitCode: Int) {
-        finish(index: index, exitCode: exitCode)
+    func didExit(index: Int, exitCode: Int, exitNote: String? = nil) {
+        finish(index: index, exitCode: exitCode, exitNote: exitNote)
     }
 
     /// [T-ios-shellring-counter-leak] Terminal state for a command that never
@@ -70,7 +74,7 @@ actor ShellCommandRingBuffer {
     /// has already evicted the entry (>10 commands since it started) — the
     /// counter tracks live commands, not retained rows, so an evicted entry must
     /// still be accounted for or the counter leaks.
-    private func finish(index: Int, exitCode: Int?) {
+    private func finish(index: Int, exitCode: Int?, exitNote: String? = nil) {
         // Resolve duplicate-suppression FIRST, then decrement exactly once.
         //
         // The index-window prune this used to rely on was unsound: it dropped
@@ -89,6 +93,7 @@ actor ShellCommandRingBuffer {
         if let pos = entries.firstIndex(where: { $0.index == index }) {
             let now = Date()
             entries[pos].exitCode = exitCode
+            entries[pos].exitNote = exitNote
             entries[pos].exitedAt = now
             entries[pos].duration = now.timeIntervalSince(entries[pos].startedAt)
         }

@@ -57068,6 +57068,28 @@
           }
         }
       }
+    },
+    "Shell execution is unavailable: the iSH sandbox backend is not installed yet. The command was NOT run. Do not retry shell_execute until the backend is available.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shell execution is unavailable: the iSH sandbox backend is not installed yet. The command was NOT run. Do not retry shell_execute until the backend is available."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shell 执行不可用：iSH 沙箱后端尚未安装。该命令未被执行。在后端可用之前，请勿重试 shell_execute。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shell 執行不可用：iSH 沙箱後端尚未安裝。該命令未被執行。在後端可用之前，請勿重試 shell_execute。"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

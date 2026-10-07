@@ -209,6 +209,11 @@ struct ComputerTerminalView: View {
                                 .font(DuduTheme.captionFont())
                                 .foregroundStyle(DuduTheme.duduTextDim)
                         }
+                        if let note = entry.exitNote, !note.isEmpty {
+                            Text(note)
+                                .font(DuduTheme.captionFont())
+                                .foregroundStyle(DuduTheme.duduTextDim)
+                        }
                     }
                     .padding(10)
                     .frame(maxWidth: .infinity, alignment: .leading)

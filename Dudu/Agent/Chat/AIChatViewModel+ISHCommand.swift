@@ -61,9 +61,12 @@ extension AIChatViewModel {
     private func ishExecutor(sessionId sid: String) -> OnDemandBash.Executor {
         OnDemandBash.Executor(run: { command, timeout in
             // P6 ISH seam: P8 assigns the real coordinator-backed implementation.
-            // Nil (pre-P8) behaves like a failed exec: exit code -1.
+            // Nil (pre-P8): backend unavailable → the distinct unavailable
+            // sentinel, so probe callers can tell "no backend" apart from a
+            // real failed exec. (All OnDemandBash consumers only distinguish
+            // 0 from non-zero, so the value change is behaviour-neutral there.)
             let r = try? await DuduISHSeams.execute?(sid, command, timeout, { _ in }, { _ in })
-            return r?.exitCode ?? -1
+            return r?.exitCode ?? Self.ishBackendUnavailableSentinel
         })
     }
 
@@ -73,6 +76,26 @@ extension AIChatViewModel {
     /// runViaBash re-probes `command -v bash` directly before concluding bash
     /// vanished (see below). Never trust this code alone.
     private static let bashMissingSentinel = 119
+
+    /// Sentinel exit code returned when the iSH sandbox backend is not
+    /// installed (`DuduISHSeams.execute` is nil) and a command therefore never
+    /// ran. -999 sits outside every range a real process can produce — normal
+    /// exit statuses are 0-255, signal-terminated processes surface as small
+    /// negative numbers, wait(2)-encoded statuses are large positive numbers —
+    /// so tooling can distinguish "backend missing" from "the command ran and
+    /// failed" without parsing text. Deliberately NOT -1: -1 already means
+    /// ordinary failure elsewhere (e.g. "no session") and reads exactly like a
+    /// failed command, which is what made the old silent-empty path lie.
+    static let ishBackendUnavailableSentinel = -999
+
+    /// AI- and human-readable message for the unavailable-backend path.
+    /// Localized through the same `AppLocalized` mechanism as the other
+    /// agent-facing strings in this extension; the English source doubles as
+    /// the key, with zh-Hans / zh-Hant translations in Localizable.xcstrings.
+    static var ishBackendUnavailableMessage: String {
+        AppLocalized("Shell execution is unavailable: the iSH sandbox backend is not installed yet. The command was NOT run. Do not retry shell_execute until the backend is available.",
+                     comment: "Tool result when the iSH sandbox backend is not installed: tells the AI and the user the command never ran and must not be retried until the backend is available.")
+    }
 
     /// Run `script` under bash by self-writing it in the guest (M3): base64 →
     /// decode to a per-pid temp file → `bash file` → capture rc → delete. No
@@ -155,12 +178,24 @@ extension AIChatViewModel {
         // may never be scheduled, which is the main path we need to cover. An
         // `await` on the error path is structured and always runs. `exitCode`
         // stays nil so the entry records an abort, not a fake exit status.
-        let result: (output: String, exitCode: Int)?
+        // [H-ISH-UNAVAILABLE] Honesty first: a nil seam means the backend is not
+        // installed, so the command NEVER ran. Return an explicit AI- and
+        // human-readable message with the distinct unavailable sentinel
+        // (-999) — never silent empty output with -1, whose shape looked
+        // exactly like a failed command and made the AI blindly retry a
+        // nonexistent environment.
+        guard let execute = DuduISHSeams.execute else {
+            let message = Self.ishBackendUnavailableMessage
+            await ShellCommandRingBuffer.shared.didExit(
+                index: cmdIdx, exitCode: Self.ishBackendUnavailableSentinel, exitNote: message)
+            return CommandResult(output: message, exitCode: Self.ishBackendUnavailableSentinel)
+        }
+
+        // Seam is non-nil: the command really ran. A throw still means the
+        // backend failed mid-exec, recorded as an abort by the catch below.
+        let result: (output: String, exitCode: Int)
         do {
-            // P6 ISH seam: P8 assigns the real coordinator-backed implementation
-            // (field-for-field mapping of ISHCommandResult). Nil pre-P8 → nil
-            // result; the abort path below records it, same as a failed exec.
-            result = try await DuduISHSeams.execute?(
+            result = try await execute(
                 sid,
                 command,
                 effectiveTimeout,
@@ -192,14 +227,14 @@ extension AIChatViewModel {
             throw error
         }
 
-        await ShellCommandRingBuffer.shared.didExit(index: cmdIdx, exitCode: result?.exitCode ?? -1)
+        await ShellCommandRingBuffer.shared.didExit(index: cmdIdx, exitCode: result.exitCode)
 
         // Fold carriage-return sequences: simulate terminal line-overwrite behaviour.
         // Tools like yt-dlp emit "\r[download] X%" to overwrite the current line; without a TTY
         // every update is captured verbatim, ballooning the output with hundreds of redundant lines.
         // We replay each \r as a real terminal would: later text on the same line overwrites earlier text,
         // so only the final state of each line is kept — matching what you would actually see on screen.
-        var output = Self.sanitizeTerminalOutput(result?.output ?? "")
+        var output = Self.sanitizeTerminalOutput(result.output)
 
         // Apply truncation — keep head + tail so the model sees both the beginning and end
         if output.count > Self.kMaxToolResultChars {
@@ -215,7 +250,7 @@ extension AIChatViewModel {
                 + "\nUse file_read tool to read specific sections."
         }
 
-        return CommandResult(output: output, exitCode: result?.exitCode ?? -1)
+        return CommandResult(output: output, exitCode: result.exitCode)
     }
 
     /// Sanitize raw shell output so it matches what a user would actually see on a terminal.
