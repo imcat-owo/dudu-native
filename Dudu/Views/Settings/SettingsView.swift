@@ -9,6 +9,8 @@ enum SettingsRoute: Hashable {
     case fontScale
     case ttsSettings
     case mcpServers
+    case backup
+    case appLock
     case about
 }
 
@@ -56,6 +58,19 @@ struct SettingsView: View {
                         route: .mcpServers
                     )
                 }
+                // D8/D11: 备份与恢复 / 应用锁
+                Section {
+                    SettingsRow(
+                        icon: "externaldrive.fill",
+                        title: "备份与恢复",
+                        route: .backup
+                    )
+                    SettingsRow(
+                        icon: BiometricAuth.biometryIconName,
+                        title: "应用锁",
+                        route: .appLock
+                    )
+                }
                 Section {
                     SettingsRow(
                         icon: "info.circle",
@@ -80,6 +95,10 @@ struct SettingsView: View {
                     TTSSettingsView()
                 case .mcpServers:
                     MCPListView()
+                case .backup:
+                    BackupView()
+                case .appLock:
+                    AppLockView()
                 case .about:
                     AboutView()
                 }

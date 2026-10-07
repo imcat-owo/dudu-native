@@ -41,6 +41,9 @@ struct DuduTabView: View {
             selection = .settings
         }
         .appFontScale()
+        // D11: app-level Face ID lock — overlay + foreground/background
+        // evaluation live in AppLockGate (Views/Settings/AppLockView.swift).
+        .modifier(AppLockGate())
         // Phase D3: tool-approval card floats above everything (overlay, not a
         // sheet) so chat stays interactive while a request is pending.
         // D9: AI authorization prompt rides the same overlay; it only renders
