@@ -913,7 +913,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -eu\nOUT=\"$SRCROOT/Dudu/Generated/ProviderCustomizationGenerated.swift\"\nmkdir -p \"$SRCROOT/Dudu/Generated\"\n# Escape the value for a Swift string literal (backslash, then double-quote).\nVALUE=\"${ANTHROPIC_OAUTH_IDENTIFIER_PROMPT:-}\"\nVALUE=\"${VALUE//\\/\\\\}\"\nVALUE=\"${VALUE//\\"/\\\\"}\"\nTMP=\"$OUT.tmp\"\n{\n  echo '// Generated at build time from ANTHROPIC_OAUTH_IDENTIFIER_PROMPT'\n  echo '// (empty default; CI injects the real value). DO NOT EDIT.'\n  echo 'enum ProviderCustomizationGenerated {'\n  printf '    static let anthropicOAuthIdentifierPrompt = \"%s\"\n' \"$VALUE\"\n  echo '}'\n} > \"$TMP\"\n# Only replace when changed, to avoid needless recompiles.\nif [ ! -f \"$OUT\" ] || ! cmp -s \"$TMP\" \"$OUT\"; then mv \"$TMP\" \"$OUT\"; else rm -f \"$TMP\"; fi";
+			shellScript = "set -eu\nOUT=\"$SRCROOT/Dudu/Generated/ProviderCustomizationGenerated.swift\"\nmkdir -p \"$SRCROOT/Dudu/Generated\"\n# Escape the value for a Swift string literal (backslash, then double-quote).\nVALUE=\"${ANTHROPIC_OAUTH_IDENTIFIER_PROMPT:-}\"\nVALUE=\"${VALUE//\\\\/\\\\\\\\}\"\nVALUE=\"${VALUE//\\\"/\\\\\\\"}\"\nTMP=\"$OUT.tmp\"\n{\n  echo '// Generated at build time from ANTHROPIC_OAUTH_IDENTIFIER_PROMPT'\n  echo '// (empty default; CI injects the real value). DO NOT EDIT.'\n  echo 'enum ProviderCustomizationGenerated {'\n  printf '    static let anthropicOAuthIdentifierPrompt = \"%s\"\\n' \"$VALUE\"\n  echo '}'\n} > \"$TMP\"\n# Only replace when changed, to avoid needless recompiles.\nif [ ! -f \"$OUT\" ] || ! cmp -s \"$TMP\" \"$OUT\"; then mv \"$TMP\" \"$OUT\"; else rm -f \"$TMP\"; fi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1198,6 +1198,8 @@
 		};
 /* End XCLocalSwiftPackageReference section */
 
+
+
 /* Begin XCRemoteSwiftPackageReference section */
 		7863267C1FF16191BA441605 /* XCRemoteSwiftPackageReference "SwiftAnthropic" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -1207,9 +1209,6 @@
 				version = 2.2.0;
 			};
 		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCRemoteSwiftPackageReference section */
 		304AD72BA3ED141AB4130208 /* XCRemoteSwiftPackageReference "RealTimeCutVADLibrary" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/helloooideeeeea/RealTimeCutVADLibrary.git";
