@@ -174,7 +174,15 @@ final class BackupCenterModel: ObservableObject {
     }
 
     func deletePackage(_ pkg: LocalPackage) {
-        try? FileManager.default.removeItem(at: pkg.url)
+        do {
+            try FileManager.default.removeItem(at: pkg.url)
+        } catch {
+            // P3: no more silent failure — the notice banner in
+            // backupActionSection renders notice/noticeIsError already.
+            notice = "删除备份包失败：\(error.localizedDescription)"
+            noticeIsError = true
+            return
+        }
         refreshTick &+= 1
     }
 
@@ -564,10 +572,18 @@ struct BackupView: View {
                     .font(DuduTheme.bodyFont())
                     .foregroundStyle(DuduTheme.pink)
             }
+            // P1 honesty: the rclone Go library is NOT vendored in this
+            // build — every remote RPC returns 503, so remotes can be
+            // configured but can never deliver yet. Say it up front so
+            // nobody fills in secrets expecting it to work. Local and
+            // mounted-folder destinations are unaffected.
+            Text("远端投递需要 rclone 组件，当前版本暂未内置：远端可以先保存好，但备份暂时投递不过去。本机和已挂载的文件夹不受影响，照常可用。")
+                .font(DuduTheme.captionFont())
+                .foregroundStyle(DuduTheme.duduTextDim)
         } header: {
             Text("备份目的地")
         } footer: {
-            Text("本机之外的目的地都是可选项：备份包会逐一投递，某个目的地连不上不会影响其他。移除文件夹目的地不会删除文件夹本身；删除远端会同时删掉保存在钥匙串里的密码。")
+            Text("本机之外的目的地都是可选项：备份包会逐一投递到已启用的目的地，某个目的地连不上不会影响其他（远端投递需要 rclone 组件，当前版本暂未内置，暂时投递不过去）。移除文件夹目的地不会删除文件夹本身；删除远端会同时删掉保存在钥匙串里的密码。")
         }
     }
 
@@ -775,6 +791,15 @@ struct RemoteAddSheet: View {
     var body: some View {
         NavigationStack {
             Form {
+                // P1 honesty: users must not fill in secrets and only learn
+                // from a 503 "rclone library not bundled" error in history
+                // afterwards. State the limitation before any credential
+                // field.
+                Section {
+                    Text("提醒：远端投递需要 rclone 组件，当前版本暂未内置，现在保存的远端暂时投递不过去。填好的账号信息会保存在钥匙串里，等组件就位后直接可用。")
+                        .font(DuduTheme.captionFont())
+                        .foregroundStyle(DuduTheme.duduTextDim)
+                }
                 Section {
                     Picker("类型", selection: $backendType) {
                         ForEach(RcloneBackendCatalog.all) { b in
