@@ -101,8 +101,11 @@ public enum DoodleManager {
             }
             let action = DoodleAction(
                 kind: kind,
-                x: num("x") ?? 0.5,
-                y: num("y") ?? 0.5,
+                // Baseline (doodle.ts) arrow shape is {x1,y1}→{x2,y2}; the tool
+                // doc shows x2/y2 as the tip. Map x2/y2 onto x/y so a model
+                // following the doc gets its tip honored, not dropped to 0.5.
+                x: num("x2") ?? num("x") ?? 0.5,
+                y: num("y2") ?? num("y") ?? 0.5,
                 size: num("size"),
                 x1: num("x1"), y1: num("y1"),
                 text: (d["text"] as? String).map { String($0.prefix(40)) },
