@@ -238,6 +238,49 @@ final class AppearanceStudio: ObservableObject {
         configureUIKitSurfaces()
     }
 
+    // MARK: - Try-on staging (D12: preview without persistence)
+    //
+    // preview_theme stages colors + pack shape IN MEMORY: the UI re-renders
+    // immediately, but nothing hits UserDefaults until commit. Discard
+    // restores the snapshot taken at stage time. Mode / custom-CSS are
+    // applied live during a try-on but recorded in the backup, so discard
+    // restores them too (a crash mid-try-on can leave those two staged —
+    // colors and pack shape never persist until commit).
+
+    /// In-memory snapshot for try-on rollback: pack + color overrides.
+    func tryOnSnapshot() -> (pack: AppearanceThemePack, colors: [String: String]) {
+        (currentThemePack(), customColors)
+    }
+
+    /// Stage color overrides in memory only (no UserDefaults write).
+    /// The preview shows immediately via objectWillChange + UIKit refresh.
+    func tryOnStageColors(light: [String: String], dark: [String: String]) {
+        func paint(_ map: [String: String], variant: AppearanceVariant) {
+            for (raw, hex) in map {
+                guard let role = AppearanceColorRole(rawValue: raw) else { continue }
+                customColors[key(role, scope: .global, variant: variant)] = hex
+            }
+        }
+        paint(light, variant: .light)
+        paint(dark, variant: .dark)
+        Self.colorSnapshot = customColors
+        objectWillChange.send()
+        configureUIKitSurfaces()
+    }
+
+    /// Persist the currently staged colors (try-on commit).
+    func tryOnCommitColors() {
+        persistColors()
+    }
+
+    /// Restore a snapshot (try-on discard / rollback) and persist it.
+    func tryOnRestore(colors: [String: String], pack: AppearanceThemePack) {
+        customColors = colors
+        persistColors()
+        persistPack(pack)
+        configureUIKitSurfaces()
+    }
+
     private func persistColors() {
         if let data = try? JSONEncoder().encode(customColors) {
             UserDefaults.standard.set(data, forKey: Keys.colors)
