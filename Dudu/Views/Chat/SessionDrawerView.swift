@@ -19,6 +19,7 @@ struct SessionDrawerView: View {
     // Phase D4 — confirm before leaving incognito with messages on the line.
     @State private var showExitIncognitoConfirm = false
     @State private var pendingSession: ChatSession?
+    @State private var showNewChatIncognitoConfirm = false
 
     private var pinned: [ChatSession] { sessions.filter { $0.pinnedAt != nil } }
     private var unpinned: [ChatSession] { sessions.filter { $0.pinnedAt == nil } }
@@ -59,7 +60,13 @@ struct SessionDrawerView: View {
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                        onNewChat()
+                        // Phase D4 — new chat from incognito discards the in-memory
+                        // transcript: confirm first when there are messages to lose.
+                        if vm.isIncognito, !vm.messages.isEmpty {
+                            showNewChatIncognitoConfirm = true
+                        } else {
+                            onNewChat()
+                        }
                     } label: {
                         Image(systemName: "square.and.pencil")
                             .foregroundStyle(DuduTheme.duduText)
@@ -76,6 +83,14 @@ struct SessionDrawerView: View {
                     completeSessionSwitch(session, confirmed: true)
                 }
                 pendingSession = nil
+            }
+        } message: {
+            Text("隐身聊天的消息不会被保存，退出后将清空当前对话。")
+        }
+        .alert("退出隐身聊天？", isPresented: $showNewChatIncognitoConfirm) {
+            Button("取消", role: .cancel) { }
+            Button("退出并清空", role: .destructive) {
+                onNewChat()
             }
         } message: {
             Text("隐身聊天的消息不会被保存，退出后将清空当前对话。")
