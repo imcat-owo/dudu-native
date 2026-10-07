@@ -111,6 +111,18 @@ EXCLUDE = {
     "Dudu/NativeOffloads/WeatherOffload.m",
 }
 
+# D15 (2026-10-07): the Share Extension target's Info.plist and .entitlements
+# need file refs + navigator visibility. kind_of() ignores .plist /
+# .entitlements, so without this the children rewrite in sync_sources()
+# strips them from the ShareExtension group on every run (the file ref
+# objects survive as orphans and the build is unaffected — INFOPLIST_FILE
+# and CODE_SIGN_ENTITLEMENTS are path-based — but the navigator loses them).
+# "meta" = file ref + group children only, never a build phase entry.
+META_REF_ONLY = {
+    "Dudu/ShareExtension/Info.plist",
+    "Dudu/ShareExtension/DuduShareExtension.entitlements",
+}
+
 SOURCE_EXTS = {".swift", ".m", ".mm"}
 HEADER_EXTS = {".h", ".hpp"}
 RESOURCE_EXTS = {".tiktoken", ".utf8", ".md", ".xcstrings", ".jpg", ".jpeg", ".png", ".webp"}
@@ -129,6 +141,8 @@ FILE_TYPES = {
     ".jpeg": "image.jpeg",
     ".png": "image.png",
     ".webp": "image.webp",
+    ".plist": "text.plist.xml",
+    ".entitlements": "text.plist.entitlements",
 }
 
 
@@ -233,10 +247,12 @@ def sync_sources():
     for dirpath, _, filenames in os.walk(SRC_DIR):
         for fn in filenames:
             kind = kind_of(fn)
-            if kind is None:
-                continue
             full = os.path.join(dirpath, fn)
             rel = os.path.relpath(full, ROOT)          # Dudu/Shared/Foo.swift
+            if rel in META_REF_ONLY:
+                kind = "meta"
+            if kind is None:
+                continue
             dir_rel = os.path.relpath(dirpath, ROOT)   # Dudu/Shared
             files[rel] = (dir_rel, fn, kind)
 
@@ -291,6 +307,8 @@ def sync_sources():
         dir_children[dir_rel].append(f"{fr_id} /* {fn} */")
         if rel in EXCLUDE:
             continue  # file ref only; owning part re-enables the build entry
+        if kind == "meta":
+            continue  # file ref + navigator only; never compiled or copied
         if kind == "source":
             if not section_has(text, "PBXBuildFile", bf_id):
                 entry = (f"\t\t{bf_id} /* {fn} in Sources */ = {{isa = PBXBuildFile; "
