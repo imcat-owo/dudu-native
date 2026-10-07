@@ -147,7 +147,8 @@ extension ProviderType {
         case .kimiCode: return KimiOAuthManager.shared
         case .openRouter: return OpenRouterOAuthManager.shared
         case .xAI: return XAIOAuthManager.shared
-        case .openAI, .openAIResponses, .unsupported: return nil
+        case .openAI, .openAIResponses: return CodexOAuthManager.shared
+        case .unsupported: return nil
         }
     }
 
@@ -171,6 +172,7 @@ extension AntigravityOAuthManager: ProviderOAuthManager {}
 extension KimiOAuthManager: ProviderOAuthManager {}
 extension OpenRouterOAuthManager: ProviderOAuthManager {}
 extension XAIOAuthManager: ProviderOAuthManager {}
+extension CodexOAuthManager: ProviderOAuthManager {}
 
 // MARK: - Type picker (add provider)
 

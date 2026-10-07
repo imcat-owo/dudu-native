@@ -266,6 +266,7 @@ struct ProviderDetailView: View {
         case .antigravity: try await AntigravityOAuthManager.shared.login(instanceId: instance.id)
         case .openRouter: try await OpenRouterOAuthManager.shared.login(instanceId: instance.id)
         case .xAI: try await XAIOAuthManager.shared.login(instanceId: instance.id)
+        case .openAI, .openAIResponses: try await CodexOAuthManager.shared.login(instanceId: instance.id)
         default: break
         }
     }
