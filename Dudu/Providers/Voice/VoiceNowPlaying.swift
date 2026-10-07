@@ -138,9 +138,7 @@ final class VoiceNowPlaying {
             let r = VoiceOutputPlayer.shared
             let d = r.playbackDuration
             if d > 0 { r.seekCurrentUnit(to: min(1, max(0, time / d))) }
-        } else {
-            GlobalAudioPlayer.shared.seek(to: time)
-        }
+        } // else { GlobalAudioPlayer.shared.seek(to: time) }  // P3-DROP(Views)
         refresh()
     }
 }
@@ -167,15 +165,17 @@ extension VoiceOutputPlayer {
     }
 }
 
-extension GlobalAudioPlayer {
-    /// Friendly title for a bubble/attachment file ("tts-a1b2c3d4" is not).
-    var nowPlayingTitle: String {
-        let name = fileName
-        if name.hasPrefix("tts-") {
-            return AppLocalized("AI voice message", comment: "Now Playing title for AI voice bubbles")
-        }
-        return name.isEmpty
-            ? AppLocalized("Audio", comment: "Now Playing title fallback for audio files")
-            : name
-    }
-}
+// P3-DROP(Views): GlobalAudioPlayer (Views/Chat/Media/AudioPlayback.swift) not yet
+// ported — this extension is deferred until Views lands (it needs GlobalAudioPlayer.fileName).
+// extension GlobalAudioPlayer {
+//     /// Friendly title for a bubble/attachment file ("tts-a1b2c3d4" is not).
+//     var nowPlayingTitle: String {
+//         let name = fileName
+//         if name.hasPrefix("tts-") {
+//             return AppLocalized("AI voice message", comment: "Now Playing title for AI voice bubbles")
+//         }
+//         return name.isEmpty
+//             ? AppLocalized("Audio", comment: "Now Playing title fallback for audio files")
+//             : name
+//     }
+// }
