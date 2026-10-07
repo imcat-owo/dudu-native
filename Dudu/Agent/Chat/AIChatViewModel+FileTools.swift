@@ -46,14 +46,11 @@ extension AIChatViewModel {
     //                            definition, writes land in the user's files.
     // NOT blocked: session-scoped namespaces (workspace, attachments,
     // offloads, browser) — the model's scratch space for THIS conversation.
-    // Temp/scratch writes that get wiped are fine; the incognito contract
-    // targets persistent content. (Residual, documented not fixed: in
-    // incognito those namespaces resolve under
-    // duduPersistentBase/<incognito-id>/, which is not wiped on exit — a
-    // follow-up should redirect file-tool resolution for session
-    // namespaces to the incognito tmp root the way sessionUploadsDir() /
-    // sessionOffloadsDir() / sessionBrowserDir() / sessionAttachmentsDir()
-    // already do.)
+    // In incognito these resolve under the wiped tmp root
+    // (tmp/dudu-incognito-uploads, P1 2026-10-08) the way
+    // sessionUploadsDir() / sessionOffloadsDir() / sessionBrowserDir() /
+    // sessionAttachmentsDir() already do — nothing from incognito lands in
+    // duduPersistentBase, and wipeIncognitoTempFiles() deletes the tree.
     //
     // Checked on the RAW path (Linux form or dudu-clone:// form) BEFORE any
     // resolution, so the guard holds regardless of which branch
@@ -76,13 +73,17 @@ extension AIChatViewModel {
     /// `dudu-clone://<ns>/...` forms so the guard can't be bypassed by
     /// switching URL scheme.
     private static func incognitoBlockedNamespace(for path: String) -> String? {
-        let linuxPath: String
+        let rawLinuxPath: String
         if path.hasPrefix("dudu-clone://") {
             guard let url = URL(string: path), let host = url.host else { return nil }
-            linuxPath = "/var/dudu/\(host)"
+            rawLinuxPath = "/var/dudu/\(host)"
         } else {
-            linuxPath = path
+            // P2: decode + normalize BEFORE prefix-matching so non-canonical
+            // forms (/var/dudu/./memory/x, /var/dudu/skills/../memory/x,
+            // %2e%2e-encoded traversals) can't dodge the guard.
+            rawLinuxPath = path.removingPercentEncoding ?? path
         }
+        let linuxPath = (rawLinuxPath as NSString).standardizingPath
         for (root, label) in incognitoBlockedWriteRoots {
             if linuxPath == root || linuxPath.hasPrefix(root + "/") {
                 return label
@@ -159,9 +160,21 @@ extension AIChatViewModel {
         case "mcp-servers": base = DuduPaths.duduMcpServersPersistentDir
         default:
             guard let sid = sessionId else { return nil }
-            base = DuduPaths.duduPersistentBase
-                .appendingPathComponent(sid, isDirectory: true)
-                .appendingPathComponent(host, isDirectory: true)
+            if isIncognito {
+                // P1 (2026-10-08): in incognito, session namespaces resolve
+                // under the wiped tmp root — the same tree
+                // wipeIncognitoTempFiles() deletes — following the
+                // sessionUploadsDir() pattern. Nothing from incognito may
+                // land in duduPersistentBase.
+                base = FileManager.default.temporaryDirectory
+                    .appendingPathComponent("dudu-incognito-uploads", isDirectory: true)
+                    .appendingPathComponent(sid, isDirectory: true)
+                    .appendingPathComponent(host, isDirectory: true)
+            } else {
+                base = DuduPaths.duduPersistentBase
+                    .appendingPathComponent(sid, isDirectory: true)
+                    .appendingPathComponent(host, isDirectory: true)
+            }
         }
         let subPaths = DuduURLPathDecoding.subPathCandidates(for: url)
         let candidates = subPaths.map { base.appendingPathComponent($0) }
