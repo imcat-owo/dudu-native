@@ -2111,7 +2111,7 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
             + "Always file_read first before editing, so your old_string matches the file exactly.\n"
             + "- file_write and file_edit are atomic, preserve formatting, and make it easy to fix errors or update content later.\n"
             + "- All file tools work ONLY inside the app sandbox: /var/dudu/<namespace>/ paths and dudu-clone:// URLs. "
-            + "Paths outside the sandbox (/root/, /tmp/, /etc/, or any absolute path not under /var/dudu/) do NOT resolve — the tool returns an error. "
+            + "Paths outside the sandbox (/root/, /tmp/, /etc/, or any absolute path not under /var/dudu/) do NOT resolve in this build — the tool returns an error. "
             + "There is no shell, so do not suggest shell equivalents (cat, echo, heredocs, find, python): if a file operation cannot be done with the file tools, say so plainly instead of inventing a command.\n"
             + "- File search: when looking for user files, look under /var/dudu/ (workspace/attachments/shared for the current session, mounts/* for user-provided external folders). "
             + "There is no whole-filesystem search — if the file is not under /var/dudu/, ask the user where it lives.\n\n"
