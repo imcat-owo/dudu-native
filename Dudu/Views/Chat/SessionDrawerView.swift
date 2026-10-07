@@ -1,11 +1,15 @@
 import SwiftUI
 
 /// Phase C2 — session history drawer (presented as a sheet).
+/// Phase D6 — + archive/restore (swipe actions, "已归档" section) and
+/// session search (search field matches titles + message content via
+/// ChatStore.shared.searchSessions).
 ///
 /// Real data from ChatStore.shared.listSessions(): tap switches the session
 /// on the shared view model (sessionId swap + loadSession), swipe actions
-/// pin/unpin and delete. "New chat" returns to a fresh draft — it does not
-/// delete anything.
+/// pin/unpin, archive/restore and delete. Archived sessions are hidden from
+/// the active sections and listed under "已归档". "New chat" returns to a
+/// fresh draft — it does not delete anything.
 struct SessionDrawerView: View {
     @EnvironmentObject private var vm: AIChatViewModel
     @Environment(\.dismiss) private var dismiss
@@ -16,13 +20,24 @@ struct SessionDrawerView: View {
     @State private var sessions: [ChatSession] = []
     @State private var loading = true
 
+    // Phase D6 — session search state.
+    @State private var searchText = ""
+    @State private var searchResults: [ChatStore.SearchResult] = []
+
     // Phase D4 — confirm before leaving incognito with messages on the line.
     @State private var showExitIncognitoConfirm = false
     @State private var pendingSession: ChatSession?
     @State private var showNewChatIncognitoConfirm = false
 
-    private var pinned: [ChatSession] { sessions.filter { $0.pinnedAt != nil } }
-    private var unpinned: [ChatSession] { sessions.filter { $0.pinnedAt == nil } }
+    // Phase D6 — archived sessions are partitioned out of the active list.
+    private var active: [ChatSession] { sessions.filter { $0.archivedAt == nil } }
+    private var archived: [ChatSession] { sessions.filter { $0.archivedAt != nil } }
+    private var pinned: [ChatSession] { active.filter { $0.pinnedAt != nil } }
+    private var unpinned: [ChatSession] { active.filter { $0.pinnedAt == nil } }
+
+    private var isSearching: Bool {
+        !searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
 
     var body: some View {
         NavigationStack {
@@ -30,6 +45,13 @@ struct SessionDrawerView: View {
                 if loading {
                     ProgressView()
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else if isSearching {
+                    // Phase D6 — search results replace the sections while typing.
+                    SessionSearchResultsView(
+                        results: searchResults,
+                        currentSessionId: vm.sessionId,
+                        onSelect: { switchToSession($0) }
+                    )
                 } else if sessions.isEmpty {
                     emptyState
                 } else {
@@ -46,12 +68,23 @@ struct SessionDrawerView: View {
                                 sessionRow(session)
                             }
                         }
+                        // Phase D6 — archived sessions, with restore via swipe.
+                        if !archived.isEmpty {
+                            Section("已归档") {
+                                ForEach(archived) { session in
+                                    sessionRow(session)
+                                }
+                            }
+                        }
                     }
                     .listStyle(.insetGrouped)
                 }
             }
             .navigationTitle("历史对话")
             .navigationBarTitleDisplayMode(.inline)
+            // Phase D6 — session search (titles + message content).
+            .searchable(text: $searchText, prompt: "搜索标题或消息内容")
+            .task(id: searchText) { await runSearch() }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("关闭") { dismiss() }
@@ -132,15 +165,32 @@ struct SessionDrawerView: View {
             } label: {
                 Label("删除", systemImage: "trash")
             }
-            Button {
-                togglePin(session)
-            } label: {
-                Label(
-                    session.pinnedAt == nil ? "置顶" : "取消置顶",
-                    systemImage: session.pinnedAt == nil ? "pin" : "pin.slash"
-                )
+            if session.archivedAt == nil {
+                // Phase D6 — archive an active session.
+                Button {
+                    archiveSession(session)
+                } label: {
+                    Label("归档", systemImage: "archivebox")
+                }
+                .tint(DuduTheme.pink)
+                Button {
+                    togglePin(session)
+                } label: {
+                    Label(
+                        session.pinnedAt == nil ? "置顶" : "取消置顶",
+                        systemImage: session.pinnedAt == nil ? "pin" : "pin.slash"
+                    )
+                }
+                .tint(DuduTheme.pink)
+            } else {
+                // Phase D6 — restore an archived session to the active list.
+                Button {
+                    restoreSession(session)
+                } label: {
+                    Label("恢复", systemImage: "tray.and.arrow.up")
+                }
+                .tint(DuduTheme.pink)
             }
-            .tint(DuduTheme.pink)
         }
     }
 
@@ -210,6 +260,42 @@ struct SessionDrawerView: View {
                 session.pinnedAt == nil ? Date() : nil,
                 forSession: session.id
             )
+            await reload()
+        }
+    }
+
+    // Phase D6 — debounced search against the real engine index (titles +
+    // message text). .task(id:) cancels the previous keystroke's task, so
+    // only the latest query hits the database.
+    private func runSearch() async {
+        let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !query.isEmpty else {
+            searchResults = []
+            return
+        }
+        try? await Task.sleep(nanoseconds: 250_000_000)
+        guard !Task.isCancelled else { return }
+        searchResults = await ChatStore.shared.searchSessions(query: query)
+    }
+
+    /// Phase D6 — archive a session: it leaves the active sections and moves
+    /// to "已归档". Archiving the current session starts a fresh draft (same
+    /// as delete) so the chat never sits on a hidden session.
+    private func archiveSession(_ session: ChatSession) {
+        Task {
+            await ChatStore.shared.setSessionArchivedAt(Date(), forSession: session.id)
+            if session.id == vm.sessionId {
+                onNewChat()
+            } else {
+                await reload()
+            }
+        }
+    }
+
+    /// Phase D6 — restore an archived session to the active list.
+    private func restoreSession(_ session: ChatSession) {
+        Task {
+            await ChatStore.shared.setSessionArchivedAt(nil, forSession: session.id)
             await reload()
         }
     }
