@@ -32,7 +32,7 @@ struct MomentsSection: View {
         }
     }
 
-    private var timeline: some View {
+    @MainActor private var timeline: some View {
         VStack(spacing: 0) {
             ForEach(Array(store.moments.enumerated()), id: \.element.id) { index, m in
                 HStack(alignment: .top, spacing: 10) {

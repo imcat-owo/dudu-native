@@ -15,7 +15,7 @@ struct TaskCardView: View {
     @State private var photoItem: PhotosPickerItem?
     @State private var showingPhotoPicker = false
 
-    private var accent: Color { task.accentColor }
+    @MainActor private var accent: Color { task.accentColor }
     private var pct: Int { Int((task.progress * 100).rounded()) }
 
     var body: some View {

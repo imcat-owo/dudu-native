@@ -252,7 +252,7 @@ private struct SeedEditorSheet: View {
         }
     }
 
-    private func confidenceButton(_ c: MemoryConfidence) -> some View {
+    @MainActor private func confidenceButton(_ c: MemoryConfidence) -> some View {
         let selected = c == confidence
         return Button {
             confidence = c
