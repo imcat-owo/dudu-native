@@ -351,6 +351,7 @@
 		00F558AF19CE8A6FF5AF001B /* ChatInputBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3623FCD02AEC5DD6EA48F1 /* ChatInputBar.swift */; };
 		BA91917F74EF319C2E8F2351 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2081B51CFD9DBA50BF0D4F00 /* ChatView.swift */; };
 		0877B36A44441FC9114D734D /* MessageBlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B29F59070DF420B9D142BC5 /* MessageBlockView.swift */; };
+		5EFEEAFD287B3313F7EAD0A3 /* ThinkingDrawerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6993B0AF0F282E7D6046D493 /* ThinkingDrawerView.swift */; };
 		50DE4EB06BC58C19806C96EC /* MessageListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11E38BB2F202107950A2CBA /* MessageListView.swift */; };
 		CA6C4898E137ACD9A534C196 /* MessageRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5FEF1AA02738BFD9F5BA39 /* MessageRowView.swift */; };
 		7F63F36987FCADF907CF9E03 /* ModelPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A46D393F44AE1B899BFDCB /* ModelPickerView.swift */; };
@@ -831,6 +832,7 @@
 		4B3623FCD02AEC5DD6EA48F1 /* ChatInputBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatInputBar.swift; sourceTree = "<group>"; };
 		2081B51CFD9DBA50BF0D4F00 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		5B29F59070DF420B9D142BC5 /* MessageBlockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBlockView.swift; sourceTree = "<group>"; };
+		6993B0AF0F282E7D6046D493 /* ThinkingDrawerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThinkingDrawerView.swift; sourceTree = "<group>"; };
 		A11E38BB2F202107950A2CBA /* MessageListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageListView.swift; sourceTree = "<group>"; };
 		AD5FEF1AA02738BFD9F5BA39 /* MessageRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageRowView.swift; sourceTree = "<group>"; };
 		E2A46D393F44AE1B899BFDCB /* ModelPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelPickerView.swift; sourceTree = "<group>"; };
@@ -1784,6 +1786,7 @@
 				4B3623FCD02AEC5DD6EA48F1 /* ChatInputBar.swift */,
 				54CAF7D84593B2D1B946693C /* ThinkingIndicatorSlot.swift */,
 				5B29F59070DF420B9D142BC5 /* MessageBlockView.swift */,
+				6993B0AF0F282E7D6046D493 /* ThinkingDrawerView.swift */,
 				7C2DB0C154BD454AFAC4DB7A /* SessionDrawerView.swift */,
 				A11E38BB2F202107950A2CBA /* MessageListView.swift */,
 				AD5FEF1AA02738BFD9F5BA39 /* MessageRowView.swift */,
@@ -1966,6 +1969,7 @@
 				06842974D85CC4EA30889D58 /* AppearanceStudio.swift in Sources */,
 				07D72A674C42EF2B57FAC7FD /* ThinkingRulesCollection.swift in Sources */,
 				0877B36A44441FC9114D734D /* MessageBlockView.swift in Sources */,
+				5EFEEAFD287B3313F7EAD0A3 /* ThinkingDrawerView.swift in Sources */,
 				093F308F93DEF3B6C24C25D6 /* OffloadPermissionManager.swift in Sources */,
 				0959C2CD130DD9FCE05A974A /* ExternalFileImporter.swift in Sources */,
 				0AB0F63F422A693954AB0C96 /* DuduSessionCleanupSeams.swift in Sources */,

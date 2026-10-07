@@ -55,41 +55,46 @@ struct MessageBlockView: View {
 
 // MARK: - Thinking block
 
-/// Collapsible thinking text. While the thinking is still streaming, the
-/// thinking-indicator slot sits in the header (scaled to header size);
-/// once streaming ends it becomes a plain tappable header.
+/// Phase D2 — collapsible thinking header. Tapping the header (or the live
+/// thinking-indicator slot) presents ThinkingDrawerView, the bottom-sheet
+/// drawer with the full thinking text. `block.isThinkingExpanded` /
+/// `thinkingUserToggled` stay engine-owned (the legacy collection-view path
+/// in CollectionViewMessageListV3.swift still reads them); this SwiftUI view
+/// drives the drawer instead.
 struct ThinkingBlockView: View {
     @ObservedObject var block: AssistantBlock
     let isLiveBlock: Bool
 
-    var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Button {
-                block.isThinkingExpanded.toggle()
-                block.thinkingUserToggled = true
-            } label: {
-                HStack(spacing: 6) {
-                    if isLiveBlock {
-                        ThinkingIndicatorSlot(phase: .streaming)
-                            .scaleEffect(0.45)
-                            .frame(width: 20, height: 20)
-                    }
-                    Text("思考过程")
-                        .font(DuduTheme.captionFont(weight: .medium))
-                        .foregroundStyle(DuduTheme.duduTextDim)
-                    Image(systemName: block.isThinkingExpanded ? "chevron.up" : "chevron.down")
-                        .font(DuduTheme.captionFont())
-                        .foregroundStyle(DuduTheme.duduTextDim)
-                }
-            }
-            .buttonStyle(.plain)
+    @State private var showDrawer = false
 
-            if block.isThinkingExpanded, !block.content.isEmpty {
-                Text(block.content)
+    var body: some View {
+        Button {
+            block.thinkingUserToggled = true
+            showDrawer = true
+        } label: {
+            HStack(spacing: 6) {
+                if isLiveBlock {
+                    ThinkingIndicatorSlot(phase: .streaming)
+                        .scaleEffect(0.45)
+                        .frame(width: 20, height: 20)
+                } else {
+                    // Plain tappable affordance once streaming is done.
+                    Circle()
+                        .fill(DuduTheme.kitty)
+                        .frame(width: 10, height: 10)
+                }
+                Text("思考过程")
+                    .font(DuduTheme.captionFont(weight: .medium))
+                    .foregroundStyle(DuduTheme.duduTextDim)
+                Image(systemName: "chevron.right")
                     .font(DuduTheme.captionFont())
                     .foregroundStyle(DuduTheme.duduTextDim)
-                    .textSelection(.enabled)
             }
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("查看完整思考过程")
+        .sheet(isPresented: $showDrawer) {
+            ThinkingDrawerView(block: block, isLive: isLiveBlock)
         }
     }
 }
