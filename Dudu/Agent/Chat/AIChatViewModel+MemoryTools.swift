@@ -86,6 +86,15 @@ extension AIChatViewModel {
 
     /// Execute a memory_write tool call: prepend a timestamped entry to today's daily log.
     func executeMemoryWrite(from json: String) -> FileToolResult {
+        // Incognito contract ("无消息内容落盘"): no message content touches
+        // disk while isIncognito is true. Refuse VISIBLY — the model must see
+        // this message, not a silent success or a silent failure. Same
+        // `isIncognito` mechanism used by the other incognito guards
+        // (AIChatViewModel+Incognito.swift), checked before any directory
+        // creation or file writing.
+        guard !isIncognito else {
+            return FileToolResult(output: "memory_write is disabled in incognito mode — nothing was saved.", success: false)
+        }
         guard memoryEnabled else {
             return FileToolResult(output: "Memory saving is disabled for this session. Use /memory to re-enable.", success: false)
         }
