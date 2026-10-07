@@ -20,6 +20,12 @@ struct DuduTabView: View {
                 }
                 .tag(DuduTab.chat)
 
+            OurSpaceView()
+                .tabItem {
+                    Label(DuduTab.ourSpace.title, systemImage: DuduTab.ourSpace.systemImage)
+                }
+                .tag(DuduTab.ourSpace)
+
             SettingsView()
                 .tabItem {
                     Label(DuduTab.settings.title, systemImage: DuduTab.settings.systemImage)

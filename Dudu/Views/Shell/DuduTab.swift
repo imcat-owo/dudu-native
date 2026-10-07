@@ -8,9 +8,9 @@ import SwiftUI
 ///   case ideas       // 灵感 Ideas
 ///   case goals       // 目标 Goals
 ///   case apps        // 应用 Apps
-///   case ourSpace    // 我们的空间 Our Space
 enum DuduTab: String, CaseIterable, Identifiable {
     case chat
+    case ourSpace
     case settings
 
     var id: String { rawValue }
@@ -18,6 +18,7 @@ enum DuduTab: String, CaseIterable, Identifiable {
     var title: String {
         switch self {
         case .chat: return "聊天"
+        case .ourSpace: return "我们的空间"
         case .settings: return "设置"
         }
     }
@@ -25,6 +26,7 @@ enum DuduTab: String, CaseIterable, Identifiable {
     var systemImage: String {
         switch self {
         case .chat: return "bubble.left.and.bubble.right"
+        case .ourSpace: return "heart"
         case .settings: return "gearshape"
         }
     }
