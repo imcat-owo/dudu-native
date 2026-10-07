@@ -49,6 +49,14 @@ final class SandboxManager: ObservableObject {
         localBackend.objectWillChange
             .sink { [weak self] _ in self?.objectWillChange.send() }
             .store(in: &cancellables)
+        reloadFromDisk()
+    }
+
+    /// Re-read UserDefaults into the @Published vars. Used after a backup
+    /// rollback rewrites the keys behind the store's back while a failed
+    /// import may already have mutated the live vars. Mirrors init's
+    /// post-load wiring; never touches live connections.
+    func reloadFromDisk() {
         load()
         cloudBackend.setServer(activeServer)
     }
@@ -205,6 +213,87 @@ final class SandboxManager: ObservableObject {
         if let data = try? JSONEncoder().encode(store) {
             UserDefaults.standard.set(data, forKey: Self.serversKey)
         }
+    }
+
+    // MARK: - Backup
+
+    /// Every key this store owns — for backup export + restore rollback.
+    ///
+    /// Secrets are NEVER here: they live in the Keychain (SandboxKeychain)
+    /// and the backup never touches the Keychain, so a restored server
+    /// record reconnects only after she re-enters its secret — the same
+    /// honesty rule as API keys in the backup footer.
+    nonisolated static var backupAllKeys: [String] {
+        [activeBackendKey, serversKey]
+    }
+
+    /// Snapshot as key → plist-encoded value (opaque, like
+    /// OurSpaceStore.backupRecords). The servers blob is JSON Data, the
+    /// active backend id a String. Note the active SERVER id rides inside
+    /// the servers JSON (ServerStore), not as its own key.
+    nonisolated static func backupRecords() -> [(key: String, data: Data, count: Int)] {
+        let defaults = UserDefaults.standard
+        return backupAllKeys.compactMap { key in
+            guard let value = defaults.object(forKey: key),
+                  let data = try? PropertyListSerialization.data(
+                      fromPropertyList: value, format: .binary, options: 0)
+            else { return nil }
+            return (key, data, 1)
+        }
+    }
+
+    /// Merge one backup's records into the live store. Local-wins: servers
+    /// union by id (a local record keeps its fields — the backup's copy may
+    /// predate a host/port edit), backup-only servers are appended; the
+    /// active backend id is taken from the backup only when this device
+    /// never chose one. @Published vars are assigned directly — no
+    /// disconnect/reconnect side effects — then the cloud backend is
+    /// re-pointed at the (possibly new) active server, like init does after
+    /// load(). Returns (imported, skipped).
+    @discardableResult
+    func restoreBackupRecords(
+        _ records: [(key: String, data: Data, count: Int)]
+    ) -> (imported: Int, skipped: Int) {
+        var imported = 0
+        var skipped = 0
+        let defaults = UserDefaults.standard
+        for (key, data, _) in records {
+            guard Self.backupAllKeys.contains(key),
+                  let value = try? PropertyListSerialization.propertyList(
+                      from: data, options: [], format: nil)
+            else { skipped += 1; continue }
+            switch key {
+            case Self.serversKey:
+                guard let d = value as? Data,
+                      let incoming = try? JSONDecoder().decode(
+                          ServerStore.self, from: d) else { skipped += 1; continue }
+                var added = 0
+                for s in incoming.servers where s.isValid {
+                    guard !servers.contains(where: { $0.id == s.id }) else { continue }
+                    servers.append(s)
+                    added += 1
+                }
+                if activeServerId == nil, let id = incoming.activeServerId,
+                   servers.contains(where: { $0.id == id }) {
+                    activeServerId = id
+                }
+                guard added > 0 else { skipped += 1; continue }
+                persistServers()
+                cloudBackend.setServer(activeServer)
+                imported += 1
+            case Self.activeBackendKey:
+                guard defaults.object(forKey: key) == nil,
+                      let raw = value as? String,
+                      let id = SandboxBackendId(rawValue: raw)
+                else { skipped += 1; continue }
+                activeBackendId = id
+                defaults.set(raw, forKey: key)
+                imported += 1
+            default:
+                skipped += 1
+            }
+        }
+        return (imported, skipped)
     }
 }
 

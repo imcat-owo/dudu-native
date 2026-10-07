@@ -88,11 +88,26 @@ final class IntimacyManager: ObservableObject {
     @Published private(set) var skippedIDs: [String] = []
 
     private init() {
+        reloadFromDisk()
+    }
+
+    /// Re-read all three keys from UserDefaults into the @Published vars.
+    /// Used after a backup rollback, which rewrites UserDefaults behind the
+    /// store's back while a failed import may already have mutated the live
+    /// vars. Absent keys reset to their defaults (nil date, enabled toggle,
+    /// empty ledger) — init's old inline code couldn't do that, which is why
+    /// this is a method now. didSet write-backs of unchanged values are
+    /// harmless.
+    func reloadFromDisk() {
         if let ms = UserDefaults.standard.object(forKey: Self.dateKey) as? Double {
             togetherSince = Date(timeIntervalSince1970: ms / 1000)
+        } else {
+            togetherSince = nil
         }
         if UserDefaults.standard.object(forKey: Self.enabledKey) != nil {
             celebrationsEnabled = UserDefaults.standard.string(forKey: Self.enabledKey) != "0"
+        } else {
+            celebrationsEnabled = true
         }
         let ledger = Self.readLedger()
         celebratedIDs = ledger.celebrated
@@ -199,6 +214,84 @@ final class IntimacyManager: ObservableObject {
         if let data = try? JSONEncoder().encode(l) {
             UserDefaults.standard.set(data, forKey: Self.ledgerKey)
         }
+    }
+
+    // MARK: - Backup
+
+    /// Every key this store owns — for backup export + restore rollback.
+    ///
+    /// [P2-2] 纪念日 state rides the `our_space` category, not its own: the
+    /// anniversary is one of the 我们的空间 zones conceptually, and three
+    /// tiny UserDefaults keys don't justify a new wire-format category.
+    nonisolated static var backupAllKeys: [String] {
+        [dateKey, enabledKey, ledgerKey]
+    }
+
+    /// Snapshot as key → plist-encoded value (opaque, like
+    /// OurSpaceStore.backupRecords). Mixed types: the together-since date
+    /// is a Double (ms), the celebrations toggle a String ("1"/"0"), the
+    /// ledger JSON Data.
+    nonisolated static func backupRecords() -> [(key: String, data: Data, count: Int)] {
+        let defaults = UserDefaults.standard
+        return backupAllKeys.compactMap { key in
+            guard let value = defaults.object(forKey: key),
+                  let data = try? PropertyListSerialization.data(
+                      fromPropertyList: value, format: .binary, options: 0)
+            else { return nil }
+            return (key, data, 1)
+        }
+    }
+
+    /// Merge one backup's records into the live store. Local-wins per key —
+    /// a restore must never move her anniversary date or re-enable a toggle
+    /// she turned off. The milestone ledger is the exception: it is an
+    /// append-only log, so celebrated/skipped ids union — neither side loses
+    /// a milestone. @Published vars are assigned (their didSet persists), so
+    /// the UI reflects the restore with no reload. Returns
+    /// (imported, skipped).
+    @discardableResult
+    func restoreBackupRecords(
+        _ records: [(key: String, data: Data, count: Int)]
+    ) -> (imported: Int, skipped: Int) {
+        var imported = 0
+        var skipped = 0
+        let defaults = UserDefaults.standard
+        for (key, data, _) in records {
+            guard Self.backupAllKeys.contains(key),
+                  let value = try? PropertyListSerialization.propertyList(
+                      from: data, options: [], format: nil)
+            else { skipped += 1; continue }
+            switch key {
+            case Self.dateKey:
+                guard defaults.object(forKey: key) == nil,
+                      let ms = value as? Double else { skipped += 1; continue }
+                togetherSince = Date(timeIntervalSince1970: ms / 1000)
+                imported += 1
+            case Self.enabledKey:
+                guard defaults.object(forKey: key) == nil,
+                      let s = value as? String else { skipped += 1; continue }
+                celebrationsEnabled = s != "0"
+                imported += 1
+            case Self.ledgerKey:
+                guard let d = value as? Data,
+                      let incoming = try? JSONDecoder().decode(
+                          IntimacyLedger.self, from: d) else { skipped += 1; continue }
+                let newCelebrated = incoming.celebrated.filter { !celebratedIDs.contains($0) }
+                let newSkipped = incoming.skipped.filter {
+                    !skippedIDs.contains($0) && !celebratedIDs.contains($0)
+                }
+                guard !newCelebrated.isEmpty || !newSkipped.isEmpty else {
+                    skipped += 1; continue
+                }
+                celebratedIDs += newCelebrated
+                skippedIDs += newSkipped
+                persistLedger()
+                imported += 1
+            default:
+                skipped += 1
+            }
+        }
+        return (imported, skipped)
     }
 
     // MARK: - Prompt injection (nonisolated, read-only)

@@ -220,4 +220,54 @@ public actor PhotoShareManager {
         let on = isEnabled() ? "开" : "关"
         return "主动发照片：\(on) · 今天已分享 \(sharesToday(now: now))/\(c.dailyCap) 次 · 每天 \(c.slotCount) 个安静时刻 · 管线：\(Self.imagePipeline == nil ? "还没接好" : "已连接")"
     }
+
+    // MARK: - Backup
+
+    /// Every key this store owns — for backup export + restore rollback.
+    /// Literals mirror the private key lets above; kept as literals so the
+    /// list is nonisolated-readable by the backup engine.
+    nonisolated static var backupAllKeys: [String] {
+        ["dudu.photoshare.v1.enabled", "dudu.photoshare.v1.config",
+         "dudu.photoshare.v1.log", "dudu.photoshare.v1.count",
+         "dudu.photoshare.v1.countDate"]
+    }
+
+    /// Snapshot as key → plist-encoded value (opaque, like
+    /// OurSpaceStore.backupRecords). Values are mixed types — Bool/Int/
+    /// Double scalars plus JSON Data for config/log — so they ride
+    /// plist-encoded rather than as raw Data. This store keeps no
+    /// in-memory cache (every reader goes straight to UserDefaults), so a
+    /// restore needs no reload afterwards.
+    nonisolated static func backupRecords() -> [(key: String, data: Data, count: Int)] {
+        let defaults = UserDefaults.standard
+        return backupAllKeys.compactMap { key in
+            guard let value = defaults.object(forKey: key),
+                  let data = try? PropertyListSerialization.data(
+                      fromPropertyList: value, format: .binary, options: 0)
+            else { return nil }
+            return (key, data, 1)
+        }
+    }
+
+    /// Merge one backup's records into the live store. Local-wins per key:
+    /// a key already present locally keeps the local value — a restore must
+    /// never roll the toggle, the config or the share log back to an older
+    /// snapshot. Returns (imported, skipped).
+    nonisolated static func restoreBackupRecords(
+        _ records: [(key: String, data: Data, count: Int)]
+    ) -> (imported: Int, skipped: Int) {
+        let defaults = UserDefaults.standard
+        var imported = 0
+        var skipped = 0
+        for (key, data, _) in records {
+            guard backupAllKeys.contains(key),
+                  defaults.object(forKey: key) == nil,
+                  let value = try? PropertyListSerialization.propertyList(
+                      from: data, options: [], format: nil)
+            else { skipped += 1; continue }
+            defaults.set(value, forKey: key)
+            imported += 1
+        }
+        return (imported, skipped)
+    }
 }
