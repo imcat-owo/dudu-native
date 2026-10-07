@@ -11,6 +11,7 @@ import Foundation
 import CloudKit
 import CryptoKit
 import os.log
+import Security
 
 private let logger = AppLogger(category: "CloudSync")
 
@@ -1852,15 +1853,20 @@ final class CloudSyncEngine: ObservableObject {
             }
 
             if shouldWrite {
-                ProviderKeychainHelper.saveAPIKey(key, instanceId: instanceId)
-                // saveAPIKey stamps local savedAt to Date() via UserDefaults. But since
-                // this write was a sync-in, the correct stamp is the REMOTE timestamp
-                // (so subsequent merges on this device compare against the winning value
-                // and we don't ping-pong).
-                if let remoteTs = remoteUpdatedAt {
-                    ProviderKeychainHelper.stampAPIKeySavedAt(remoteTs, instanceId: instanceId)
+                let writeStatus = ProviderKeychainHelper.saveAPIKey(key, instanceId: instanceId)
+                if writeStatus == errSecSuccess {
+                    // saveAPIKey stamps local savedAt to Date() via UserDefaults. But since
+                    // this write was a sync-in, the correct stamp is the REMOTE timestamp
+                    // (so subsequent merges on this device compare against the winning value
+                    // and we don't ping-pong).
+                    if let remoteTs = remoteUpdatedAt {
+                        ProviderKeychainHelper.stampAPIKeySavedAt(remoteTs, instanceId: instanceId)
+                    }
+                    logger.info("[iCloud] Imported API key for instance \(instanceId.prefix(8)) — \(reason)")
+                } else {
+                    // Honest: the key was NOT saved — do not stamp, do not claim import.
+                    logger.error("[iCloud] API key import FAILED for instance \(instanceId.prefix(8)) — keychain status \(writeStatus); local value left intact")
                 }
-                logger.info("[iCloud] Imported API key for instance \(instanceId.prefix(8)) — \(reason)")
             } else {
                 logger.info("[iCloud] Skipped API key for instance \(instanceId.prefix(8)) — \(reason)")
             }

@@ -1,4 +1,5 @@
 import SwiftUI
+import Security
 
 // MARK: - ApiKeyFieldView · API Key 输入
 //
@@ -11,6 +12,7 @@ struct ApiKeyFieldView: View {
     let instanceId: String
     @State private var draft = ""
     @State private var savedMessage: String?
+    @State private var saveFailed = false
 
     private var savedAt: Date {
         ProviderKeychainHelper.apiKeySavedAt(instanceId: instanceId)
@@ -34,9 +36,17 @@ struct ApiKeyFieldView: View {
                 Button("保存") {
                     let key = draft.trimmingCharacters(in: .whitespacesAndNewlines)
                     guard !key.isEmpty else { return }
-                    ProviderKeychainHelper.saveAPIKey(key, instanceId: instanceId)
-                    draft = ""
-                    savedMessage = "已保存到钥匙串"
+                    let status = ProviderKeychainHelper.saveAPIKey(key, instanceId: instanceId)
+                    if status == errSecSuccess {
+                        draft = ""
+                        saveFailed = false
+                        savedMessage = "已保存到钥匙串"
+                    } else {
+                        // Honest: the key was NOT saved — say so, with the
+                        // Keychain status, instead of claiming success.
+                        saveFailed = true
+                        savedMessage = "钥匙串保存失败（错误 \(status)），Key 没有保存，请重试"
+                    }
                 }
                 .font(DuduTheme.bodyFont(weight: .medium))
                 .disabled(draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
@@ -65,7 +75,7 @@ struct ApiKeyFieldView: View {
             if let savedMessage {
                 Text(savedMessage)
                     .font(DuduTheme.captionFont())
-                    .foregroundStyle(DuduTheme.success)
+                    .foregroundStyle(saveFailed ? DuduTheme.destructive : DuduTheme.success)
             }
             Text("Key 只存钥匙串，永不显示回传")
                 .font(DuduTheme.captionFont())

@@ -3175,29 +3175,65 @@ enum ProviderKeychainHelper {
         UserDefaults.standard.set(date, forKey: apiKeySavedAtUDKey(instanceId: instanceId))
     }
 
-    static func saveAPIKey(_ key: String, instanceId: String, caller: String = #function) {
+    /// Saves the API key for a provider instance to the iCloud-synchronizable
+    /// Keychain entry, returning the Keychain status of the write.
+    ///
+    /// Write order is update-first, add-on-missing: the previous entry is
+    /// never deleted before the new value is committed, so a failed write
+    /// leaves the old key intact instead of blanking it (same pattern as
+    /// `EnvVarStore.saveValue`). The legacy non-synchronizable entry is
+    /// dropped only after a successful write.
+    ///
+    /// - Returns: `errSecSuccess` when the key is persisted; otherwise the
+    ///   Keychain `OSStatus` of the failed write. On failure the local
+    ///   "saved at" stamp is NOT written and no "configured" state is
+    ///   claimed — callers MUST surface the returned status as a visible
+    ///   failure. [honesty-fix: keychain write failures are surfaced, never stamped]
+    @discardableResult
+    static func saveAPIKey(_ key: String, instanceId: String, caller: String = #function) -> OSStatus {
         let service = "com.dudu.ios.provider.\(instanceId)"
-        // Delete both legacy (non-sync) and synchronizable entries
-        let deleteQuery: [String: Any] = [
+        let syncQuery: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: service,
             kSecAttrAccount as String: account,
+            kSecAttrSynchronizable as String: true,
         ]
-        SecItemDelete(deleteQuery as CFDictionary)
-        var syncDelete = deleteQuery
-        syncDelete[kSecAttrSynchronizable as String] = true
-        SecItemDelete(syncDelete as CFDictionary)
-        // Save with iCloud Keychain sync enabled
-        var addQuery = deleteQuery
-        addQuery[kSecValueData as String] = Data(key.utf8)
-        addQuery[kSecAttrAccessible as String] = kSecAttrAccessibleAfterFirstUnlock
-        addQuery[kSecAttrSynchronizable as String] = true
-        let addStatus = SecItemAdd(addQuery as CFDictionary, nil)
+        let attrs: [String: Any] = [
+            kSecValueData as String: Data(key.utf8),
+            kSecAttrAccessible as String: kSecAttrAccessibleAfterFirstUnlock,
+            kSecAttrSynchronizable as String: true,
+        ]
+        // 1. Update the synchronizable entry in place.
+        var status = SecItemUpdate(syncQuery as CFDictionary, attrs as CFDictionary)
+        if status == errSecItemNotFound {
+            // 2. Nothing there yet — add it.
+            var addQuery = syncQuery
+            addQuery.merge(attrs) { _, new in new }
+            status = SecItemAdd(addQuery as CFDictionary, nil)
+            // Lost a race: the item appeared between update and add
+            // (replication or a concurrent write). Update it instead.
+            if status == errSecDuplicateItem {
+                status = SecItemUpdate(syncQuery as CFDictionary, attrs as CFDictionary)
+            }
+        }
+        guard status == errSecSuccess else {
+            // Prior value (if any) is intact — but the new key was NOT saved,
+            // so do not stamp and do not claim "configured".
+            AppLogger(category: "Keychain").error("write apiKey FAILED instanceId=\(instanceId.prefix(8)) keyLen=\(key.count) status=\(status) caller=\(caller)")
+            return status
+        }
+        // 3. Write committed — now it's safe to drop the legacy
+        // non-synchronizable entry so reads (which prefer the sync item)
+        // can't be shadowed by it.
+        var legacyDelete = syncQuery
+        legacyDelete[kSecAttrSynchronizable as String] = false
+        SecItemDelete(legacyDelete as CFDictionary)
         // Stamp the local save time for iCloud LWW conflict resolution.
         stampAPIKeySavedAt(Date(), instanceId: instanceId)
-        AppLogger(category: "Keychain").info("write apiKey instanceId=\(instanceId.prefix(8)) keyLen=\(key.count) addStatus=\(addStatus) caller=\(caller)")
+        AppLogger(category: "Keychain").info("write apiKey instanceId=\(instanceId.prefix(8)) keyLen=\(key.count) status=\(status) caller=\(caller)")
         // Refresh credential-derived UI (provider list "configured" dot, etc).
         notifyAuthChanged(instanceId: instanceId)
+        return errSecSuccess
     }
 
     static func loadAPIKey(instanceId: String, caller: String = #function) -> String? {
