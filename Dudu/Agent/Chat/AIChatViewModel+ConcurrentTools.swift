@@ -974,6 +974,18 @@ extension AIChatViewModel {
                 }
                 break
             }
+            // Phase D4 — incognito privacy: AIVoiceMessageComposer.compose writes
+            // audio to the PERSISTENT attachments dir. Never synthesize in
+            // incognito — silence is better than a leak. The model gets an
+            // honest explanation so it can reply in text instead.
+            if isIncognito {
+                toolOutput = "Error: Voice messages are unavailable in incognito mode — synthesized audio would have to be written to disk. Please reply with text instead."
+                toolSuccess = false
+                if msgIdx < messages.count, blockIdx < messages[msgIdx].blocks.count {
+                    messages[msgIdx].blocks[blockIdx].content = toolOutput
+                }
+                break
+            }
             // [voice-bubble-tool 2026-10-02] voice/group 点名（TTS 施工员转交）：
             // 空字符串当没传；点名走严格语义（找不到/都挂了就报错，不悄悄换声音）。
             let voiceParam: String? = {

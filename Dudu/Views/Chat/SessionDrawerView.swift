@@ -16,6 +16,10 @@ struct SessionDrawerView: View {
     @State private var sessions: [ChatSession] = []
     @State private var loading = true
 
+    // Phase D4 — confirm before leaving incognito with messages on the line.
+    @State private var showExitIncognitoConfirm = false
+    @State private var pendingSession: ChatSession?
+
     private var pinned: [ChatSession] { sessions.filter { $0.pinnedAt != nil } }
     private var unpinned: [ChatSession] { sessions.filter { $0.pinnedAt == nil } }
 
@@ -64,6 +68,17 @@ struct SessionDrawerView: View {
                 }
             }
             .task { await reload() }
+        }
+        .alert("退出隐身聊天？", isPresented: $showExitIncognitoConfirm) {
+            Button("取消", role: .cancel) { pendingSession = nil }
+            Button("退出并清空", role: .destructive) {
+                if let session = pendingSession {
+                    completeSessionSwitch(session, confirmed: true)
+                }
+                pendingSession = nil
+            }
+        } message: {
+            Text("隐身聊天的消息不会被保存，退出后将清空当前对话。")
         }
         .presentationDetents([.medium, .large])
     }
@@ -147,10 +162,23 @@ struct SessionDrawerView: View {
             dismiss()
             return
         }
-        // Phase D4 — 从隐身模式切到历史会话：先静默退出隐身（清空内存），
-        // 再加载目标会话。
+        // Phase D4 — exiting incognito discards the in-memory transcript:
+        // confirm first when there are messages to lose (same wording as
+        // ChatView's incognito toggle confirmation).
+        if vm.isIncognito, !vm.messages.isEmpty {
+            pendingSession = session
+            showExitIncognitoConfirm = true
+            return
+        }
+        completeSessionSwitch(session, confirmed: false)
+    }
+
+    private func completeSessionSwitch(_ session: ChatSession, confirmed: Bool) {
+        // Phase D4 — 从隐身模式切到历史会话：先退出隐身（清空内存），
+        // 再加载目标会话。confirmed 为 true 时说明用户已经在弹窗里接受了
+        // 丢失当前隐身对话。
         if vm.isIncognito {
-            vm.exitIncognito()
+            vm.exitIncognito(confirmed: confirmed)
         }
         vm.sessionId = session.id
         vm.messages.removeAll()

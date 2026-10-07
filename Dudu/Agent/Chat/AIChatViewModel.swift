@@ -6263,6 +6263,10 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                 if let sid = sessionId,
                    AIVoiceMessageComposer.voiceRepliesEnabled(sessionId: sid),
                    !assistantText.isEmpty,
+                   // Phase D4 — incognito privacy: compose() writes audio to
+                   // the persistent attachments dir; never auto-synthesize
+                   // in incognito.
+                   !isIncognito,
                    // [voice-bubble-tool 2026-10-02] 本轮已用 send_voice 发过语音：
                    // 跳过自动气泡，避免一轮两个气泡两种声音。
                    !voiceBubbleSentThisTurn {

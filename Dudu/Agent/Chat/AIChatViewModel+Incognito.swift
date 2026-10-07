@@ -10,8 +10,9 @@
 //  cannot persist content. Attachment uploads go to a tmp dir that is wiped
 //  on exit; nothing lands in the persistent per-session directories.
 //
-//  Exiting incognito discards everything in memory. The caller (ChatView)
-//  confirms with the user first when there are messages to lose.
+//  Exiting incognito discards everything in memory. The callers (ChatView's
+//  toggle and SessionDrawerView's session switch) confirm with the user
+//  first when there are messages to lose.
 import Foundation
 import UIKit
 

@@ -3202,10 +3202,11 @@ actor ChatStore {
     /// boundary; it does not rewrite a kept row). Mirrors appendMessage's
     /// parts_json encoding.
     func updateMessageParts(messageId: String, parts: [ContentPart]) {
+        // Phase D4 — incognito guard (same prefix pattern as updateSessionTitle):
+        // ephemeral ids can never reference a real row. Belt-and-suspenders —
+        // callers must still check isIncognito before calling.
+        guard !Self.isEphemeralSessionId(messageId) else { return }
         invalidateSessionListCache()
-        // Phase D4 — incognito rows never exist; a message id here is only
-        // ever written for a persisted session, but belt-and-suspenders:
-        // callers must check isIncognito before calling.
         let partsJSON: String
         do {
             let data = try JSONEncoder().encode(parts)
