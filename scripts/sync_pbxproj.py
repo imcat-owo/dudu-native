@@ -9,6 +9,7 @@ What gets synced:
   - .swift/.m/.mm            -> target Sources build phase
   - .h/.hpp                  -> file refs only (project navigator)
   - .tiktoken/.utf8/.md      -> target Resources build phase
+  - .mp4/.mov/.webp/.jpg…   -> target Resources build phase (bundled media)
   - EXCLUDE                  -> files ported to disk but not yet buildable
                                (missing cross-part types); they get file refs
                                but no build phase entry. Remove entries as
@@ -125,7 +126,7 @@ META_REF_ONLY = {
 
 SOURCE_EXTS = {".swift", ".m", ".mm"}
 HEADER_EXTS = {".h", ".hpp"}
-RESOURCE_EXTS = {".tiktoken", ".utf8", ".md", ".xcstrings", ".jpg", ".jpeg", ".png", ".webp"}
+RESOURCE_EXTS = {".tiktoken", ".utf8", ".md", ".xcstrings", ".jpg", ".jpeg", ".png", ".webp", ".mp4", ".mov"}
 
 FILE_TYPES = {
     ".swift": "sourcecode.swift",
@@ -141,6 +142,8 @@ FILE_TYPES = {
     ".jpeg": "image.jpeg",
     ".png": "image.png",
     ".webp": "image.webp",
+    ".mp4": "video.mp4",
+    ".mov": "video.quicktime",
     ".plist": "text.plist.xml",
     ".entitlements": "text.plist.entitlements",
 }

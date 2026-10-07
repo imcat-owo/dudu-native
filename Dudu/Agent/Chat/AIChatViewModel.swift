@@ -589,6 +589,8 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
         didSet {
             _deinitSnapshot = "isProcessing=\(isProcessing) session=\(sessionId ?? "nil") draft=\(draftId ?? "nil")"
             if isProcessing && !oldValue {
+                // [D18-avatar] Agent loop starting — avatar runs the task loop.
+                AvatarEmotionEngine.shared.setEmotion(.taskRunning, source: .chatEngine)
                 // Agent loop starting — defer iCloud sync sends until completion
                 Task { await ChatStore.shared.setSyncSendDeferred(true) }
                 // [T-ios-defer-icloud-sync-after-stop] A new turn supersedes any
@@ -608,6 +610,15 @@ final class AIChatViewModel: ObservableObject, SpeechControlling {
                 // elsewhere — and correlate with the content being rendered.
                 StreamingHangLogger.shared.acquire(reason: "isProcessing=true session=\(sessionId ?? "nil")")
             } else if !isProcessing && oldValue {
+                // [D18-avatar] Agent loop finished — avatar settles back to
+                // idle (her-mood overlay applies if she set one). A failed
+                // turn shows the unhappy loop instead of plain waiting.
+                if let err = messages.last(where: { $0.role == .assistant })?.error,
+                   !err.isEmpty {
+                    AvatarEmotionEngine.shared.setEmotion(.taskUnhappy, source: .chatEngine)
+                } else {
+                    AvatarEmotionEngine.shared.setEmotion(.petWaiting, source: .chatEngine)
+                }
                 // [T-ios-defer-icloud-sync-after-stop] Agent loop finished. Do
                 // NOT flush the deferred iCloud push or replay a pull reload now
                 // — that immediate sync is what overwrote the just-finished

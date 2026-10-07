@@ -248,14 +248,19 @@ struct MessageRowView: View {
         Group {
             if isUser, SoulIconImage.isDataURI(appearance.userAvatar) {
                 SoulIconView(icon: appearance.userAvatar, size: 28)
-            } else {
+            } else if isUser {
                 ZStack {
                     Circle()
                         .fill(DuduTheme.duduIconChip)
-                    Image(systemName: isUser ? "person.fill" : "sparkles")
+                    Image(systemName: "person.fill")
                         .font(DuduTheme.captionFont(weight: .medium))
                         .foregroundStyle(DuduTheme.pink)
                 }
+            } else {
+                // [D18-avatar] AI avatar: animated emotion state machine.
+                // Falls back to the static avatar (then the old sparkles
+                // chip) when a state's clip is missing — never blank.
+                AvatarView(size: 28)
             }
         }
         .frame(width: 28, height: 28)

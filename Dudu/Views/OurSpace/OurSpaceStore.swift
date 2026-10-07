@@ -239,6 +239,10 @@ final class OurSpaceStore: ObservableObject {
         guard !m.isEmpty else { return }
         herMood = HerMood(mood: m, note: note.trimmingCharacters(in: .whitespacesAndNewlines), updatedAt: Date())
         save(herMood, key: Key.herMood)
+        // [D18-avatar] her-mood hook: the avatar reflects her mood when idle.
+        if let herMood {
+            AvatarEmotionEngine.shared.noteHerMood(herMood)
+        }
     }
 
     // MARK: Diary

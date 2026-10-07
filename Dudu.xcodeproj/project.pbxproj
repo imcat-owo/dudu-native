@@ -416,6 +416,22 @@
 		D15000000000000000000012 /* PendingShare.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6FB2B9880D465A4D9C9C50 /* PendingShare.swift */; };
 		D15000000000000000000013 /* SharedContainerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D0DEA050C51B3327669E81 /* SharedContainerStore.swift */; };
 		D15000000000000000000014 /* DuduShareExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = D15000000000000000000001 /* DuduShareExtension.appex */; };
+		3312C9FFFF36A247A8C313D1 /* cheek_pull_loop.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 6FCB996087A11DFE5AE11DC5 /* cheek_pull_loop.mp4 */; };
+		4666100CCF767A5F9E4BF7C4 /* dj_loop.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F5306ED8B52115697C861E71 /* dj_loop.mp4 */; };
+		AE0E2A48F14A45DFAAF78A43 /* head_pat.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 5C8C201A7C0A4E0885541450 /* head_pat.mp4 */; };
+		C3D2FBED856A286C3E4DF886 /* headphone_loop.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C9C73A95BEF60F0C86DF8263 /* headphone_loop.mp4 */; };
+		6F29A9D755C9E9DED8246CE6 /* reach_out_loop.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = EF4554A79E6F0B2AF5CE8A11 /* reach_out_loop.mp4 */; };
+		53EDF4105A89B334A835A492 /* reading_loop.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = CD66C896F45F3CA07D6D3336 /* reading_loop.mp4 */; };
+		1B62DEDE3516FE79257C05D5 /* run_loop_final_20261004.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 755BDA70B0E5D34650277473 /* run_loop_final_20261004.mp4 */; };
+		3E957F67DCF71F00CAF5312B /* sit_down.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = B89A9DBDD366A75AC026F43C /* sit_down.mp4 */; };
+		8C485BE4316A5E29D20FF60C /* sit_idle_loop.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 017FDB2F505B116BE90DD0FA /* sit_idle_loop.mp4 */; };
+		02EE4AF340D5DA71AC865E1D /* sora-avatar.webp in Resources */ = {isa = PBXBuildFile; fileRef = 8BFE63933BCF920B39F26491 /* sora-avatar.webp */; };
+		8606CE52607565A6EBD21F81 /* stand_up.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 02C0DAC9430DD7AEDA9CFC76 /* stand_up.mp4 */; };
+		48476A56606C687257BBF543 /* unhappy_loop.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 7750A97A005A5177B651F4C3 /* unhappy_loop.mp4 */; };
+		1BABA509F2712BA3D1DF6582 /* victory_loop.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 46A69A47A980FE21A5761FD9 /* victory_loop.mp4 */; };
+		10526035FEEDE2DFACCE84F1 /* waiting_loop.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 294F32E28E63F6F91832C9E5 /* waiting_loop.mp4 */; };
+		88BC441CF505086A8B38169A /* AvatarEmotionEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBC980C31D14CE8D224EC60 /* AvatarEmotionEngine.swift */; };
+		060DEDFA005DC9D02CD6729D /* AvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A620D2178CF0173961FE68 /* AvatarView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -969,6 +985,22 @@
 		D15000000000000000000001 /* DuduShareExtension.appex */ = {isa = PBXFileReference; explicitFileType = wrapper.app-extension; includeInIndex = 0; path = DuduShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A79D5EEB993CECA2575F3F3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E650663D01EB2FC63A59F38E /* DuduShareExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DuduShareExtension.entitlements; sourceTree = "<group>"; };
+		6FCB996087A11DFE5AE11DC5 /* cheek_pull_loop.mp4 */ = {isa = PBXFileReference; lastKnownFileType = video.mp4; path = cheek_pull_loop.mp4; sourceTree = "<group>"; };
+		F5306ED8B52115697C861E71 /* dj_loop.mp4 */ = {isa = PBXFileReference; lastKnownFileType = video.mp4; path = dj_loop.mp4; sourceTree = "<group>"; };
+		5C8C201A7C0A4E0885541450 /* head_pat.mp4 */ = {isa = PBXFileReference; lastKnownFileType = video.mp4; path = head_pat.mp4; sourceTree = "<group>"; };
+		C9C73A95BEF60F0C86DF8263 /* headphone_loop.mp4 */ = {isa = PBXFileReference; lastKnownFileType = video.mp4; path = headphone_loop.mp4; sourceTree = "<group>"; };
+		EF4554A79E6F0B2AF5CE8A11 /* reach_out_loop.mp4 */ = {isa = PBXFileReference; lastKnownFileType = video.mp4; path = reach_out_loop.mp4; sourceTree = "<group>"; };
+		CD66C896F45F3CA07D6D3336 /* reading_loop.mp4 */ = {isa = PBXFileReference; lastKnownFileType = video.mp4; path = reading_loop.mp4; sourceTree = "<group>"; };
+		755BDA70B0E5D34650277473 /* run_loop_final_20261004.mp4 */ = {isa = PBXFileReference; lastKnownFileType = video.mp4; path = run_loop_final_20261004.mp4; sourceTree = "<group>"; };
+		B89A9DBDD366A75AC026F43C /* sit_down.mp4 */ = {isa = PBXFileReference; lastKnownFileType = video.mp4; path = sit_down.mp4; sourceTree = "<group>"; };
+		017FDB2F505B116BE90DD0FA /* sit_idle_loop.mp4 */ = {isa = PBXFileReference; lastKnownFileType = video.mp4; path = sit_idle_loop.mp4; sourceTree = "<group>"; };
+		8BFE63933BCF920B39F26491 /* sora-avatar.webp */ = {isa = PBXFileReference; lastKnownFileType = image.webp; path = "sora-avatar.webp"; sourceTree = "<group>"; };
+		02C0DAC9430DD7AEDA9CFC76 /* stand_up.mp4 */ = {isa = PBXFileReference; lastKnownFileType = video.mp4; path = stand_up.mp4; sourceTree = "<group>"; };
+		7750A97A005A5177B651F4C3 /* unhappy_loop.mp4 */ = {isa = PBXFileReference; lastKnownFileType = video.mp4; path = unhappy_loop.mp4; sourceTree = "<group>"; };
+		46A69A47A980FE21A5761FD9 /* victory_loop.mp4 */ = {isa = PBXFileReference; lastKnownFileType = video.mp4; path = victory_loop.mp4; sourceTree = "<group>"; };
+		294F32E28E63F6F91832C9E5 /* waiting_loop.mp4 */ = {isa = PBXFileReference; lastKnownFileType = video.mp4; path = waiting_loop.mp4; sourceTree = "<group>"; };
+		0EBC980C31D14CE8D224EC60 /* AvatarEmotionEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarEmotionEngine.swift; sourceTree = "<group>"; };
+		F7A620D2178CF0173961FE68 /* AvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 		30AC3C5C6C418C791E362178 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 
@@ -1031,6 +1063,7 @@
 		B74038F54FE45F5C50CC10B2 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				CBF3E1D87F6B527D09571E63 /* AvatarClips */,
 				AFB4BDD262E7DC7638164E6C /* Stickers */,
 				5CFFD5760C8BD1E13C987132 /* hmm_model.utf8 */,
 				6516A7032270F3A4B0D92A89 /* user-manual.md */,
@@ -1902,6 +1935,7 @@
 			isa = PBXGroup;
 			children = (
 				D10B8E531D0D2511BD797801 /* Appearance */,
+				337ECA3C31F601E393A7A740 /* Avatar */,
 				FC61A6675134359CB1A0BBA1 /* Chat */,
 				18E9DA5BE55C7A48F1D6BFB5 /* Knowledge */,
 				AA856D71B083C7F259E49862 /* MCP */,
@@ -2077,6 +2111,36 @@
 			path = OurSpace;
 			sourceTree = "<group>";
 		};
+		CBF3E1D87F6B527D09571E63 /* AvatarClips */ = {
+			isa = PBXGroup;
+			children = (
+				017FDB2F505B116BE90DD0FA /* sit_idle_loop.mp4 */,
+				02C0DAC9430DD7AEDA9CFC76 /* stand_up.mp4 */,
+				294F32E28E63F6F91832C9E5 /* waiting_loop.mp4 */,
+				46A69A47A980FE21A5761FD9 /* victory_loop.mp4 */,
+				5C8C201A7C0A4E0885541450 /* head_pat.mp4 */,
+				6FCB996087A11DFE5AE11DC5 /* cheek_pull_loop.mp4 */,
+				755BDA70B0E5D34650277473 /* run_loop_final_20261004.mp4 */,
+				7750A97A005A5177B651F4C3 /* unhappy_loop.mp4 */,
+				8BFE63933BCF920B39F26491 /* sora-avatar.webp */,
+				B89A9DBDD366A75AC026F43C /* sit_down.mp4 */,
+				C9C73A95BEF60F0C86DF8263 /* headphone_loop.mp4 */,
+				CD66C896F45F3CA07D6D3336 /* reading_loop.mp4 */,
+				EF4554A79E6F0B2AF5CE8A11 /* reach_out_loop.mp4 */,
+				F5306ED8B52115697C861E71 /* dj_loop.mp4 */,
+			);
+			path = AvatarClips;
+			sourceTree = "<group>";
+		};
+		337ECA3C31F601E393A7A740 /* Avatar */ = {
+			isa = PBXGroup;
+			children = (
+				0EBC980C31D14CE8D224EC60 /* AvatarEmotionEngine.swift */,
+				F7A620D2178CF0173961FE68 /* AvatarView.swift */,
+			);
+			path = Avatar;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -2169,17 +2233,31 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				02EE4AF340D5DA71AC865E1D /* sora-avatar.webp in Resources */,
 				0BCC4E92899C4BD304CA06FC /* jieba.dict.utf8 in Resources */,
 				100000000000000000000011 /* Assets.xcassets in Resources */,
+				10526035FEEDE2DFACCE84F1 /* waiting_loop.mp4 in Resources */,
 				184A806C99115C030920537E /* devil-01.jpg in Resources */,
+				1B62DEDE3516FE79257C05D5 /* run_loop_final_20261004.mp4 in Resources */,
+				1BABA509F2712BA3D1DF6582 /* victory_loop.mp4 in Resources */,
 				2D12567BCA5606311AE6CE86 /* devil-04.jpg in Resources */,
+				3312C9FFFF36A247A8C313D1 /* cheek_pull_loop.mp4 in Resources */,
+				3E957F67DCF71F00CAF5312B /* sit_down.mp4 in Resources */,
+				4666100CCF767A5F9E4BF7C4 /* dj_loop.mp4 in Resources */,
+				48476A56606C687257BBF543 /* unhappy_loop.mp4 in Resources */,
+				53EDF4105A89B334A835A492 /* reading_loop.mp4 in Resources */,
+				6F29A9D755C9E9DED8246CE6 /* reach_out_loop.mp4 in Resources */,
 				7F94852FE0E2491DE9F34B42 /* devil-02.jpg in Resources */,
+				8606CE52607565A6EBD21F81 /* stand_up.mp4 in Resources */,
+				8C485BE4316A5E29D20FF60C /* sit_idle_loop.mp4 in Resources */,
 				92DDC6EA135F9F9DA95B6FB8 /* devil-08.jpg in Resources */,
 				A970CC52B82FC2642EAA79CE /* devil-05.jpg in Resources */,
+				AE0E2A48F14A45DFAAF78A43 /* head_pat.mp4 in Resources */,
 				BD37939C56BFF9F8173706D7 /* hmm_model.utf8 in Resources */,
 				BF8EEA74CF884D1AF96AB5E1 /* devil-06.jpg in Resources */,
 				C09741FEC8BADA625982E462 /* devil-10.jpg in Resources */,
 				C0F9259685B5FB5331BD357A /* Localizable.xcstrings in Resources */,
+				C3D2FBED856A286C3E4DF886 /* headphone_loop.mp4 in Resources */,
 				C81C4201C5BF244192216D8E /* user-manual.md in Resources */,
 				D02DC5EA366008601CE34138 /* devil-09.jpg in Resources */,
 				E911BF5355E2235E28AD9158 /* devil-07.jpg in Resources */,
@@ -2225,6 +2303,7 @@
 				03DD616DCD08FD35FAC588E0 /* ChatURLBrokerage.swift in Sources */,
 				04C5732B164DB3E717C53EA9 /* AIChatViewModel+ToolPreflight.swift in Sources */,
 				05AAEDF89BE114347E59613A /* AIAuthorizationCoordinator.swift in Sources */,
+				060DEDFA005DC9D02CD6729D /* AvatarView.swift in Sources */,
 				061634BB8C6B545949ACBFD2 /* AppearanceThemePack.swift in Sources */,
 				062182EF40D53B47DC86B8A7 /* ListSessionsIntent.swift in Sources */,
 				06842974D85CC4EA30889D58 /* AppearanceStudio.swift in Sources */,
@@ -2421,6 +2500,7 @@
 				882BC888E4FAECF8A3D1C5A6 /* ProviderMigration.swift in Sources */,
 				8831124F019B4500F8B8AD2F /* ThemeOffloadBridge.swift in Sources */,
 				88340EBC9E15EBB2832C7EB9 /* UserMessageEntity.swift in Sources */,
+				88BC441CF505086A8B38169A /* AvatarEmotionEngine.swift in Sources */,
 				891C010E6BBF45E90B3A31FD /* SendPromptIntent.swift in Sources */,
 				89A60E9133604A31DD694CD2 /* ShareViewModel.swift in Sources */,
 				8A2FE41F6E019F0203958DF6 /* AIChatViewModel.swift in Sources */,
