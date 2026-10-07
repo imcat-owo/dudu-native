@@ -392,7 +392,7 @@ extension AIChatViewModel {
             baseHex: base,
             hueCount: themeInt(args, "hueCount", 3),
             emotion: Double(themeInt(args, "emotion", 0)),
-            meaning: Double(themeInt(args, "meaning", 0))
+            meaning: Double(themeInt(args, "meaning", 0)))
         let studio = AppearanceStudio.shared
         ThemeTryOn.shared.recordPreChange()
         for key in targetKeys {

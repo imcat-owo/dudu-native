@@ -209,6 +209,8 @@ enum ThemeRecolor {
 
     /// Build a preview pack from a derivation, keeping the current pack's
     /// shape (radii / bubble styles / images stay untouched).
+    /// @MainActor: reads the live pack via AppearanceStudio (MainActor).
+    @MainActor
     static func previewPack(from palettes: (light: [String: String], dark: [String: String]),
                             label: String) -> AppearanceThemePack {
         var pack = AppearanceStudio.shared.currentThemePack()

@@ -327,7 +327,7 @@ struct ThemePackShareView: View {
         filter.message = data
         filter.correctionLevel = "M"
         guard let output = filter.outputImage else { return nil }
-        let scaled = output.transformed(by: CGAffineTransform(scaleX: 6, yBy: 6))
+        let scaled = output.transformed(by: CGAffineTransform(scaleX: 6, y: 6))
         let context = CIContext()
         guard let cg = context.createCGImage(scaled, from: scaled.extent) else { return nil }
         return UIImage(cgImage: cg)

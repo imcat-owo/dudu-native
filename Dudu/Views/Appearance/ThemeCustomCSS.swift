@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 
 // MARK: - ThemeCustomCSS · 受限主题 CSS
 //
@@ -213,14 +214,14 @@ final class ThemeCustomCSS {
         }
     }
 
-    static func isHexColor(_ raw: String) -> Bool {
+    nonisolated static func isHexColor(_ raw: String) -> Bool {
         let t = raw.trimmingCharacters(in: .whitespaces)
         let hex = t.hasPrefix("#") ? String(t.dropFirst()) : t
         guard hex.count == 6 || hex.count == 8 else { return false }
         return hex.allSatisfy { $0.isHexDigit }
     }
 
-    static func normalizeHex(_ raw: String) -> String {
+    nonisolated static func normalizeHex(_ raw: String) -> String {
         let t = raw.trimmingCharacters(in: .whitespaces)
         let hex = (t.hasPrefix("#") ? String(t.dropFirst()) : t).uppercased()
         return String(hex.prefix(6))
