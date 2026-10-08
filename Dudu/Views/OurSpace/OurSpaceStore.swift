@@ -13,6 +13,7 @@ import SwiftUI
 //   OurSpaceStore.shared.addMemorySeed(...)         — chat extraction plants seeds
 //   OurSpaceStore.shared.addLater(...)              — "tell her later" queue
 //   OurSpaceStore.shared.addMoment(...)             — timeline moments
+//   OurSpaceStore.shared.addMomentComment(...)      — comment a moment ("她" = her, "他" = AI)
 // Everything publishes through @Published so the UI refreshes live.
 
 // MARK: - Models
@@ -72,12 +73,55 @@ enum MomentKind: String, Codable, CaseIterable {
     }
 }
 
+/// One comment on a moment. Author is "她" (her) or "他" (him, the AI).
+struct MomentComment: Codable, Identifiable, Equatable {
+    var id: String
+    var author: String
+    var text: String
+    var createdAt: Date
+}
+
 struct Moment: Codable, Identifiable, Equatable {
     var id: String
     var timestamp: Date
     var title: String
     var detail: String
     var kind: MomentKind
+    /// Her like state — the heart button toggles this.
+    var likedByHer: Bool
+    /// Total likes (hers + his).
+    var likeCount: Int
+    /// Comment thread, oldest first.
+    var comments: [MomentComment]
+
+    private enum CodingKeys: String, CodingKey {
+        case id, timestamp, title, detail, kind, likedByHer, likeCount, comments
+    }
+
+    init(id: String, timestamp: Date, title: String, detail: String, kind: MomentKind,
+         likedByHer: Bool = false, likeCount: Int = 0, comments: [MomentComment] = []) {
+        self.id = id
+        self.timestamp = timestamp
+        self.title = title
+        self.detail = detail
+        self.kind = kind
+        self.likedByHer = likedByHer
+        self.likeCount = likeCount
+        self.comments = comments
+    }
+
+    /// Tolerates moments saved before like/comment existed (v1 data).
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        id = try c.decode(String.self, forKey: .id)
+        timestamp = try c.decode(Date.self, forKey: .timestamp)
+        title = try c.decode(String.self, forKey: .title)
+        detail = try c.decode(String.self, forKey: .detail)
+        kind = try c.decode(MomentKind.self, forKey: .kind)
+        likedByHer = try c.decodeIfPresent(Bool.self, forKey: .likedByHer) ?? false
+        likeCount = try c.decodeIfPresent(Int.self, forKey: .likeCount) ?? 0
+        comments = try c.decodeIfPresent([MomentComment].self, forKey: .comments) ?? []
+    }
 }
 
 enum MemoryConfidence: String, Codable, CaseIterable {
@@ -300,6 +344,41 @@ final class OurSpaceStore: ObservableObject {
 
     func deleteMoment(id: String) {
         moments.removeAll { $0.id == id }
+        save(moments, key: Key.moments)
+    }
+
+    /// Current snapshot of one moment (structs are values; views re-read on change).
+    func moment(id: String) -> Moment? {
+        moments.first(where: { $0.id == id })
+    }
+
+    /// WeChat/Instagram-style heart toggle. Her like adds one, unliking removes one.
+    func toggleMomentLike(id: String) {
+        guard let i = moments.firstIndex(where: { $0.id == id }) else { return }
+        if moments[i].likedByHer {
+            moments[i].likedByHer = false
+            moments[i].likeCount = max(0, moments[i].likeCount - 1)
+        } else {
+            moments[i].likedByHer = true
+            moments[i].likeCount += 1
+        }
+        save(moments, key: Key.moments)
+    }
+
+    /// Add a comment to a moment. Author "她" is her; the AI posts as "他" (AI hook).
+    @discardableResult
+    func addMomentComment(momentID: String, text: String, author: String = "她") -> MomentComment? {
+        let t = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !t.isEmpty, let i = moments.firstIndex(where: { $0.id == momentID }) else { return nil }
+        let comment = MomentComment(id: UUID().uuidString, author: author, text: t, createdAt: Date())
+        moments[i].comments.append(comment)
+        save(moments, key: Key.moments)
+        return comment
+    }
+
+    func deleteMomentComment(momentID: String, commentID: String) {
+        guard let i = moments.firstIndex(where: { $0.id == momentID }) else { return }
+        moments[i].comments.removeAll { $0.id == commentID }
         save(moments, key: Key.moments)
     }
 
