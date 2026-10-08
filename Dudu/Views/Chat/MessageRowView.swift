@@ -336,7 +336,7 @@ struct MessageRowView: View {
     private func avatar(isUser: Bool) -> some View {
         Group {
             if isUser, SoulIconImage.isDataURI(appearance.userAvatar) {
-                SoulIconView(icon: appearance.userAvatar, size: 28)
+                SoulIconView(icon: appearance.userAvatar, size: 34)
             } else if isUser {
                 ZStack {
                     Circle()
@@ -349,11 +349,13 @@ struct MessageRowView: View {
                 // [D18-avatar] AI avatar: animated emotion state machine.
                 // Falls back to the static avatar (then the old sparkles
                 // chip) when a state's clip is missing — never blank.
-                AvatarView(size: 28)
+                AvatarView(size: 34)
             }
         }
-        .frame(width: 28, height: 28)
+        .frame(width: 34, height: 34)
         .clipShape(Circle())
+        // html-2 定稿: 34px avatar with 2px white ring.
+        .overlay(Circle().stroke(Color.white, lineWidth: 2))
     }
 
     // MARK: - Long-press menu
