@@ -220,6 +220,7 @@
 		0D290709292683F1CE5948F4 /* ClipboardDeviceTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29CE580758E8860E66B56FD4 /* ClipboardDeviceTool.swift */; };
 		E41B9AB164B1A512D4A5E63E /* DeviceTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DE3E9E9B65C6B5B4E4B75B5 /* DeviceTools.swift */; };
 		D79A3CAFF1302E0F61BEB2C3 /* BridgeExternalMCPService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D558FF0F24F2B17291DFB3A3 /* BridgeExternalMCPService.swift */; };
+		D385D904278D386C808D132D /* MCPToolTester.swift in Sources */ = {isa = PBXBuildFile; fileRef = A72E05D29DDE6BB265C3155F /* MCPToolTester.swift */; };
 		D5CCEF4B6575E36BD6F08298 /* LocationDeviceTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0359F724A4EABE8A4FF2DC07 /* LocationDeviceTool.swift */; };
 		DAB039AC54C20586C63B168C /* MCPAggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E258CB268D7C0BE6E4496D3 /* MCPAggregator.swift */; };
 		3C13D645F8410ECE6C229F41 /* MCPManagementTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE375843E9875A78913E3741 /* MCPManagementTools.swift */; };
@@ -733,6 +734,7 @@
 		29CE580758E8860E66B56FD4 /* ClipboardDeviceTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardDeviceTool.swift; sourceTree = "<group>"; };
 		1DE3E9E9B65C6B5B4E4B75B5 /* DeviceTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTools.swift; sourceTree = "<group>"; };
 		D558FF0F24F2B17291DFB3A3 /* BridgeExternalMCPService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BridgeExternalMCPService.swift; sourceTree = "<group>"; };
+		A72E05D29DDE6BB265C3155F /* MCPToolTester.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCPToolTester.swift; sourceTree = "<group>"; };
 		0359F724A4EABE8A4FF2DC07 /* LocationDeviceTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationDeviceTool.swift; sourceTree = "<group>"; };
 		8E258CB268D7C0BE6E4496D3 /* MCPAggregator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCPAggregator.swift; sourceTree = "<group>"; };
 		DE375843E9875A78913E3741 /* MCPManagementTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCPManagementTools.swift; sourceTree = "<group>"; };
@@ -1687,6 +1689,7 @@
 			isa = PBXGroup;
 			children = (
 				D558FF0F24F2B17291DFB3A3 /* BridgeExternalMCPService.swift */,
+				A72E05D29DDE6BB265C3155F /* MCPToolTester.swift */,
 			);
 			path = ExternalMCP;
 			sourceTree = "<group>";
@@ -2961,6 +2964,7 @@
 				D6EC296962DAFD85920625F5 /* AppearanceThemeLibrary.swift in Sources */,
 				D7415DA85BBAA8D5C0DDFCB6 /* OpenRouterOAuthManager.swift in Sources */,
 				D79A3CAFF1302E0F61BEB2C3 /* BridgeExternalMCPService.swift in Sources */,
+				D385D904278D386C808D132D /* MCPToolTester.swift in Sources */,
 				D88D77BC5F7C3886A27DB31C /* ComputerTerminalView.swift in Sources */,
 				D8AB9C6299EA8D6BF8C580B0 /* DuduTheme.swift in Sources */,
 				D9F1395EBE84FC9A03AC0EA5 /* FontUploadView.swift in Sources */,
