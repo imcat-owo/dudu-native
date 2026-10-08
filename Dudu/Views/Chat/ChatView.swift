@@ -65,6 +65,13 @@ struct ChatView: View {
                 }
 
                 ChatInputBar()
+                    // Peeking easter egg: the cat peeks over the input bar's
+                    // top edge every 8-14s while the chat tab is active and
+                    // no bubble cat is showing (PeekCatHost owns the timer).
+                    .overlay(alignment: .topLeading) {
+                        PeekCatHost(isChatActive: selection == .chat)
+                            .offset(x: 14, y: -46)
+                    }
             }
             .background(DuduTheme.duduBackground)
             .navigationTitle(navTitle)

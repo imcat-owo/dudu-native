@@ -25,6 +25,27 @@ struct MessageRowView: View {
     /// Retry/delete/read-aloud are hidden for the message currently being generated.
     private var isActionable: Bool { !isLive }
 
+    /// Finished-animation bookkeeping: the stretch-squash plays once when
+    /// the turn ends, but only if the cat was actually visible during it.
+    @State private var catWasVisible = false
+    @State private var finishedNonce = 0
+
+    /// Engine-driven phase (thinking/tool); nil when the cat must hide.
+    private var enginePhase: ThinkingIndicatorSlot.Phase? {
+        ThinkingIndicatorSlot.phase(for: message)
+    }
+
+    /// Display phase: the finished one-shot takes over briefly after the
+    /// turn ends, then the cat hides.
+    private var displayPhase: ThinkingIndicatorSlot.Phase? {
+        finishedNonce > 0 ? .finished : enginePhase
+    }
+
+    /// The message's thinking block, for the cat's tap-to-open drawer.
+    private var thinkingBlock: AssistantBlock? {
+        message.blocks.first { $0.kind == .thinking }
+    }
+
     /// Speaker button state: true from the local tap until playback actually
     /// stops (either the local stop tap or the engine settling isReadingAloud).
     @State private var readingAloud = false
@@ -119,8 +140,8 @@ struct MessageRowView: View {
                 if groups.isEmpty {
                     // Opening wait: no blocks yet — just the thinking slot,
                     // never an empty bubble.
-                    if let phase = ThinkingIndicatorSlot.phase(for: message) {
-                        ThinkingIndicatorSlot(phase: phase)
+                    if let phase = displayPhase {
+                        ThinkingIndicatorSlot(phase: phase, thinkingBlock: thinkingBlock, isLiveBlock: isLive)
                     }
                 } else {
                     VStack(alignment: .leading, spacing: 10) {
@@ -140,8 +161,8 @@ struct MessageRowView: View {
                     .overlay(alignment: .topLeading) {
                         // The slot straddles the bubble's top edge (contract:
                         // 44pt box, parent offsets by -22pt).
-                        if let phase = ThinkingIndicatorSlot.phase(for: message) {
-                            ThinkingIndicatorSlot(phase: phase)
+                        if let phase = displayPhase {
+                            ThinkingIndicatorSlot(phase: phase, thinkingBlock: thinkingBlock, isLiveBlock: isLive)
                                 .offset(x: -12, y: -22)
                         }
                     }
@@ -156,6 +177,30 @@ struct MessageRowView: View {
             Spacer(minLength: 44)
         }
         .contextMenu { messageMenu }
+        .onAppear {
+            // A row created mid-turn (e.g. list rebuild) still counts as
+            // having shown the cat for the finished one-shot.
+            if enginePhase != nil { catWasVisible = true }
+        }
+        .onChange(of: enginePhase != nil) { _, visible in
+            if visible { catWasVisible = true }
+        }
+        .onChange(of: isLive) { _, live in
+            if live {
+                // New turn: reset the finished one-shot bookkeeping.
+                catWasVisible = false
+                finishedNonce = 0
+            } else if catWasVisible {
+                // The turn just ended after showing the cat: play the
+                // finished stretch-squash once, then hide (1.9s program).
+                catWasVisible = false
+                finishedNonce += 1
+                let n = finishedNonce
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.95) {
+                    if finishedNonce == n { finishedNonce = 0 }
+                }
+            }
+        }
     }
 
     private func assistantErrorRow(_ error: String) -> some View {
