@@ -126,6 +126,12 @@ struct SettingsView: View {
                 ),
             ],
             [
+                // Wave 4 P2: 帮助中心
+                SettingItem(
+                    icon: "lifepreserver.fill",
+                    title: "帮助",
+                    route: .help
+                ),
                 SettingItem(
                     icon: "info.circle",
                     title: "关于",
@@ -213,6 +219,8 @@ struct SettingsView: View {
                     AboutView()
                 case .siriShortcuts:
                     SiriShortcutsHubView()
+                case .help:
+                    HelpView()
                 }
             }
             .onReceive(DeepLinkCoordinator.shared.$pendingSettingsTarget) { target in
