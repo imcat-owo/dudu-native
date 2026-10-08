@@ -88,7 +88,7 @@ struct ThinkingBlockView: View {
                         .fill(DuduTheme.kitty)
                         .frame(width: 10, height: 10)
                 }
-                Text("思考过程")
+                Text(L10n.string("apigroup.thinkingMode"))
                     .font(DuduTheme.captionFont(weight: .medium))
                     .foregroundStyle(DuduTheme.duduTextDim)
                 DuduIcon(systemName: "chevron.right")

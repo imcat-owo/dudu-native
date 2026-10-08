@@ -123,7 +123,7 @@ struct MessageRowView: View {
                 // "排队中" tag so she sees it was never lost. The tag clears
                 // when the post-turn drain picks the prompt up.
                 if message.isQueued {
-                    Text("排队中")
+                    Text(L10n.string("agent.status.queued"))
                         .font(DuduTheme.captionFont())
                         .foregroundStyle(DuduTheme.duduTextDim)
                         .padding(.horizontal, 8)
@@ -313,7 +313,7 @@ struct MessageRowView: View {
     private var compactDividerRow: some View {
         HStack(spacing: 8) {
             DuduTheme.duduDivider.frame(height: 1)
-            Text("上下文已压缩")
+            Text(L10n.string("chat.message.contextCompressed"))
                 .font(DuduTheme.captionFont())
                 .foregroundStyle(DuduTheme.duduTextDim)
             DuduTheme.duduDivider.frame(height: 1)

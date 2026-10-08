@@ -30,7 +30,7 @@ struct ArtifactCardView: View {
                         .font(DuduTheme.bodyFont(weight: .semibold))
                         .foregroundStyle(DuduTheme.duduText)
                         .lineLimit(1)
-                    Text("\(artifact.kind.label) · 点击预览")
+                    Text(L10n.format("chat.artifact.preview", artifact.kind.label))
                         .font(DuduTheme.captionFont())
                         .foregroundStyle(DuduTheme.duduTextDim)
                 }
@@ -131,7 +131,7 @@ struct ArtifactPreviewView: View {
             DuduIcon(systemName: artifact.kind.systemIcon)
                 .font(.system(size: 28, weight: .regular))
                 .foregroundStyle(DuduTheme.pink)
-            Text("这里还没有内容")
+            Text(L10n.string("chat.artifact.empty"))
                 .font(DuduTheme.bodyFont())
                 .foregroundStyle(DuduTheme.duduTextDim)
         }

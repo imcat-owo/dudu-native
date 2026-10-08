@@ -23,10 +23,10 @@ struct ModelPickerView: View {
                         DuduIcon(systemName: "cpu")
                             .font(DuduTheme.titleFont())
                             .foregroundStyle(DuduTheme.duduTextDim)
-                        Text("还没有可用的模型服务")
+                        Text(L10n.string("chat.model.none"))
                             .font(DuduTheme.bodyFont())
                             .foregroundStyle(DuduTheme.duduTextDim)
-                        Text("先去设置里添加一个模型服务，回来就能选模型。")
+                        Text(L10n.string("chat.model.noneHint"))
                             .font(DuduTheme.captionFont())
                             .foregroundStyle(DuduTheme.duduTextDim)
                     }

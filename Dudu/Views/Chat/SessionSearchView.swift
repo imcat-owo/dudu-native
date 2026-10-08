@@ -21,7 +21,7 @@ struct SessionSearchResultsView: View {
                 DuduIcon(systemName: "magnifyingglass")
                     .font(DuduTheme.titleFont())
                     .foregroundStyle(DuduTheme.duduTextDim)
-                Text("没有找到匹配的对话")
+                Text(L10n.string("chat.search.noMatch"))
                     .font(DuduTheme.bodyFont())
                     .foregroundStyle(DuduTheme.duduTextDim)
             }
@@ -48,7 +48,7 @@ struct SessionSearchResultsView: View {
                             .foregroundStyle(DuduTheme.duduText)
                             .lineLimit(1)
                         if result.session.archivedAt != nil {
-                            Text("已归档")
+                            Text(L10n.string("threads.archived"))
                                 .font(DuduTheme.captionFont())
                                 .foregroundStyle(DuduTheme.duduText)
                                 .padding(.horizontal, 6)
@@ -65,7 +65,7 @@ struct SessionSearchResultsView: View {
                             .foregroundStyle(DuduTheme.duduTextDim)
                             .lineLimit(2)
                     } else if result.titleMatched {
-                        Text("标题匹配")
+                        Text(L10n.string("chat.search.titleMatch"))
                             .font(DuduTheme.captionFont())
                             .foregroundStyle(DuduTheme.duduTextDim)
                             .lineLimit(1)

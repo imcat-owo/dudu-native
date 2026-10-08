@@ -100,15 +100,15 @@ struct ThinkingDrawerView: View {
                     .fill(DuduTheme.kitty)
                     .frame(width: 12, height: 12)
             }
-            Text("思考过程")
+            Text(L10n.string("apigroup.thinkingMode"))
                 .font(DuduTheme.titleFont())
                 .foregroundStyle(DuduTheme.duduText)
-            Text("\(block.content.count) 字")
+            Text(L10n.format("chat.thinking.chars", block.content.count))
                 .font(DuduTheme.captionFont())
                 .foregroundStyle(DuduTheme.duduTextDim)
             Spacer()
             if isLive {
-                Text("跟随")
+                Text(L10n.string("chat.thinking.follow"))
                     .font(DuduTheme.captionFont())
                     .foregroundStyle(DuduTheme.duduTextDim)
                 Toggle("", isOn: $followLive)
@@ -139,9 +139,9 @@ struct ThinkingDrawerView: View {
                 ThinkingIndicatorSlot(phase: .waiting)
                     .scaleEffect(0.5)
                     .frame(width: 24, height: 24)
-                Text("正在思考…")
+                Text(L10n.string("chat.thinking.loading"))
             } else {
-                Text("暂无思考内容")
+                Text(L10n.string("chat.thinking.empty"))
             }
         }
         .font(DuduTheme.captionFont())
@@ -216,10 +216,10 @@ struct ThinkingDrawerView: View {
                 }
             } label: {
                 HStack(spacing: 8) {
-                    Text("第 \(index + 1) 段")
+                    Text(L10n.format("chat.thinking.section", index + 1))
                         .font(DuduTheme.captionFont(weight: .medium))
                         .foregroundStyle(DuduTheme.duduText)
-                    Text("\(text.count) 字")
+                    Text(L10n.format("chat.thinking.chars", text.count))
                         .font(DuduTheme.captionFont())
                         .foregroundStyle(DuduTheme.duduTextDim)
                     Spacer()

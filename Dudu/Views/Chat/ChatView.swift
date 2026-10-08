@@ -100,7 +100,7 @@ struct ChatView: View {
                         HStack(spacing: 4) {
                             DuduIcon(systemName: "eye.slash.fill")
                                 .font(DuduTheme.captionFont())
-                            Text("隐身模式")
+                            Text(L10n.string("chat.incognito.title"))
                                 .font(DuduTheme.titleFont())
                         }
                         .foregroundStyle(DuduTheme.duduText)
@@ -174,7 +174,7 @@ struct ChatView: View {
                     vm.exitIncognito(confirmed: true)
                 }
             } message: {
-                Text("隐身聊天的消息不会被保存，退出后将清空当前对话。")
+                Text(L10n.string("chat.incognito.discardNotice"))
             }
             .task(id: vm.sessionId) {
                 await refreshSessionTitle()

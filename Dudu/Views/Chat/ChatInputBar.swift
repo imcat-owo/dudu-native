@@ -52,7 +52,7 @@ struct ChatInputBar: View {
             // [C2-followup-queue] Queue status above the input: how many
             // follow-ups are queued, or what a Stop just cleared.
             if vm.queuedFollowUpCount > 0 {
-                Text("\(vm.queuedFollowUpCount) 条排队中")
+                Text(L10n.format("chat.queued.followups", vm.queuedFollowUpCount))
                     .font(DuduTheme.captionFont())
                     .foregroundStyle(DuduTheme.duduTextDim)
                     .accessibilityLabel("\(vm.queuedFollowUpCount) 条消息排队中")
@@ -304,7 +304,7 @@ struct ChatInputBar: View {
 
             Spacer()
 
-            Text("再点一下停止")
+            Text(L10n.string("chat.inputBar.tapAgainToStop"))
                 .font(DuduTheme.captionFont())
                 .foregroundStyle(DuduTheme.duduTextDim)
         }
@@ -345,7 +345,7 @@ struct ChatInputBar: View {
                     VStack(spacing: 2) {
                         DuduIcon(systemName: "exclamationmark.triangle")
                             .font(DuduTheme.captionFont())
-                        Text("加载失败")
+                        Text(L10n.string("chat.inputBar.loadFailed"))
                             .font(DuduTheme.captionFont())
                     }
                     .foregroundStyle(DuduTheme.duduTextDim)

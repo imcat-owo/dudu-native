@@ -129,7 +129,7 @@ struct SessionDrawerView: View {
                 pendingSession = nil
             }
         } message: {
-            Text("隐身聊天的消息不会被保存，退出后将清空当前对话。")
+            Text(L10n.string("chat.incognito.discardNotice"))
         }
         .alert("退出隐身聊天？", isPresented: $showNewChatIncognitoConfirm) {
             Button("取消", role: .cancel) { }
@@ -137,7 +137,7 @@ struct SessionDrawerView: View {
                 onNewChat()
             }
         } message: {
-            Text("隐身聊天的消息不会被保存，退出后将清空当前对话。")
+            Text(L10n.string("chat.incognito.discardNotice"))
         }
         // Wave 3 P1 — rename: TextField alert, persists via ChatStore.
         .alert("重命名对话", isPresented: $showRenameAlert) {
@@ -150,7 +150,7 @@ struct SessionDrawerView: View {
                 renameTarget = nil
             }
         } message: {
-            Text("输入新的对话标题")
+            Text(L10n.string("chat.session.renamePrompt"))
         }
         .presentationDetents([.medium, .large])
     }
@@ -236,7 +236,7 @@ struct SessionDrawerView: View {
             DuduIcon(systemName: "bubble.left.and.bubble.right")
                 .font(DuduTheme.titleFont())
                 .foregroundStyle(DuduTheme.duduTextDim)
-            Text("还没有历史对话")
+            Text(L10n.string("chat.session.noHistory"))
                 .font(DuduTheme.bodyFont())
                 .foregroundStyle(DuduTheme.duduTextDim)
         }

@@ -26,7 +26,7 @@ struct ChatEmptyStateView: View {
             }
             .padding(.bottom, 4)
 
-            Text("开始聊天")
+            Text(L10n.string("chat.empty.title"))
                 .font(DuduTheme.titleFont())
                 .foregroundStyle(DuduTheme.duduText)
 
@@ -42,7 +42,7 @@ struct ChatEmptyStateView: View {
                 Button {
                     selection = .more
                 } label: {
-                    Text("前往设置")
+                    Text(L10n.string("chat.empty.goSettings"))
                         .font(DuduTheme.bodyFont(weight: .semibold))
                         .foregroundStyle(DuduTheme.duduText)
                         .padding(.horizontal, 28)
