@@ -255,7 +255,11 @@ struct FilesBrowserView: View {
                 pendingDelete = nil
             }
         } message: {
-            Text(AppLocalized("library.deleteConfirmMessage"))
+            if let item = pendingDelete {
+                Text(item.name + "\n" + AppLocalized("library.deleteConfirmMessage"))
+            } else {
+                Text(AppLocalized("library.deleteConfirmMessage"))
+            }
         }
         .sheet(item: $previewItem) { item in
             FilePreviewSheet(item: item)
@@ -462,10 +466,17 @@ struct FilePreviewSheet: View {
     private func load() {
         guard !item.isDirectory else { return }
         if item.isPreviewableImage {
-            if let img = UIImage(contentsOfFile: item.url.path) {
-                loadedImage = img
-            } else {
-                loadFailed = true
+            // Decode off-main; large images can jank the sheet.
+            let url = item.url
+            Task.detached(priority: .userInitiated) {
+                let img = UIImage(contentsOfFile: url.path)
+                await MainActor.run {
+                    if let img {
+                        loadedImage = img
+                    } else {
+                        loadFailed = true
+                    }
+                }
             }
         } else if item.isPreviewableText, item.size <= 200 * 1024 {
             // Read off-main; text decode can take a beat on large files.
