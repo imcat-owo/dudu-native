@@ -687,7 +687,7 @@ final class MCPStore: ObservableObject {
         }.prefix(Self.maxMetadataCount)
         let maxNoteLength = 200   // same cap as SkillStore.skillPromptFragment
 
-        var lines = "Available MCP Servers (use dudu-mcp-cli to discover and call):\n"
+        var lines = "Available MCP Servers (managed via the add_mcp / list_mcp / remove_mcp / toggle_mcp tools):\n"
         for s in selected {
             var note = s.note ?? ""
             if note.count > maxNoteLength {
@@ -699,11 +699,11 @@ final class MCPStore: ObservableObject {
                 lines += "- \(s.id): \(note)\n"
             }
         }
-        lines += "\nTo use: run `dudu-mcp-cli tools <server>` to see available tools,\n"
-        lines += "then `dudu-mcp-cli call <server> <tool> [args]` to invoke."
+        lines += "\nTo manage: use the add_mcp / list_mcp / remove_mcp / toggle_mcp tools.\n"
+        lines += "Note: calling tools ON these servers is not available to you in this build — do not claim you can invoke them."
         // Agent-facing guidance on the runtime env placeholder; English-only,
         // not localized (this is prompt text, never shown in the UI).
-        lines += "\nWhen adding or modifying an MCP server config (via dudu-mcp-cli add / the UI), use $$VARNAME in env/headers/url values as a placeholder resolved at runtime from the system/App environment variables — do not hardcode secrets; reference an existing App environment variable as $$NAME."
+        lines += "\nWhen adding or modifying an MCP server config (via the UI or add_mcp), use $$VARNAME in env/headers/url values as a placeholder resolved at runtime from the system/App environment variables — do not hardcode secrets; reference an existing App environment variable as $$NAME."
         return lines
     }
 
