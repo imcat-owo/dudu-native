@@ -128,8 +128,11 @@ struct BlackCatView: View {
         ZStack {
             ellipseShadow
             catCanvas
-                .shadow(color: Self.dropShadow, radius: 7, x: 0, y: 5)
                 .modifier(PoseEffect(pose: bodyPose))
+                // Drop shadow on the container OUTSIDE the pose transform:
+                // during the finished 340-degree roll the shadow stays
+                // grounded instead of orbiting with the cat.
+                .shadow(color: Self.dropShadow, radius: 7, x: 0, y: 5)
                 .scaleEffect(pressed ? 0.94 : 1, anchor: .center)
                 .offset(y: pressed ? 1 : 0)
                 .animation(.easeOut(duration: 0.15), value: pressed)
@@ -198,6 +201,9 @@ struct BlackCatView: View {
 
     private func runBodyProgram() async {
         if tapNonce > 0 { await playTapBody() }
+        // .finished is a one-shot: a tap during it plays the wiggle above
+        // but must NEVER restart the 1.9s sequence.
+        if mode == .finished, tapNonce > 0 { return }
         switch mode {
         case .thinking: await thinkBob()
         case .tool: await toolBob()
@@ -403,6 +409,7 @@ struct PeekCatHost: View {
     @State private var tapNonce = 0
     @State private var pressed = false
     @State private var countdown = Double.random(in: 8 ... 14)
+    @State private var drawerBlock: AssistantBlock?
 
     private let tick = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
@@ -411,6 +418,17 @@ struct PeekCatHost: View {
             if peeking {
                 Button {
                     tapNonce += 1
+                    // Peek tap: the wiggle plays (tapNonce); 620ms later
+                    // the drawer opens for the session's most recent
+                    // thinking block. No thinking block anywhere means the
+                    // tap is just the wiggle.
+                    let block = vm.messages.reversed().compactMap { message in
+                        message.blocks.first { $0.kind == .thinking }
+                    }.first
+                    guard let block else { return }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.62) {
+                        drawerBlock = block
+                    }
                 } label: {
                     BlackCatView(mode: .peeking, tapNonce: tapNonce, pressed: pressed)
                 }
@@ -420,6 +438,12 @@ struct PeekCatHost: View {
         }
         .frame(width: 60, height: 46)
         .clipped()
+        // The sheet lives on the host (not inside `if peeking`) so it
+        // survives the peek window closing underneath it. Peek only shows
+        // while the engine is idle, so the block is never live.
+        .sheet(item: $drawerBlock) { block in
+            ThinkingDrawerView(block: block, isLive: false)
+        }
         .onReceive(tick) { _ in
             countdown -= 1
             guard countdown <= 0 else { return }
