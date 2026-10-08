@@ -493,6 +493,7 @@
 		4DFA5767B87A318AB6143CF5 /* ProviderShareCodec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E12BE1F78FB5E80F4042265 /* ProviderShareCodec.swift */; };
 		AADDE2A35C5FEAF1199EC8A7 /* QRCodeImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB6E0781B60454ED1F804DF /* QRCodeImage.swift */; };
 		45987FCE3D37EB6FB8315492 /* ManualProviderSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00A75E47A52BD9919F7FEDD /* ManualProviderSetupView.swift */; };
+		ED2BD9F7F320FDFEAE7E3037 /* BlackCatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC2977FF88B72468FEF58986 /* BlackCatView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1123,6 +1124,7 @@
 		8E12BE1F78FB5E80F4042265 /* ProviderShareCodec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderShareCodec.swift; sourceTree = "<group>"; };
 		6AB6E0781B60454ED1F804DF /* QRCodeImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeImage.swift; sourceTree = "<group>"; };
 		A00A75E47A52BD9919F7FEDD /* ManualProviderSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualProviderSetupView.swift; sourceTree = "<group>"; };
+		EC2977FF88B72468FEF58986 /* BlackCatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlackCatView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 		30AC3C5C6C418C791E362178 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 
@@ -2098,6 +2100,7 @@
 				AD5FEF1AA02738BFD9F5BA39 /* MessageRowView.swift */,
 				D888578F6FFFAB12908535B8 /* SessionSearchView.swift */,
 				E2A46D393F44AE1B899BFDCB /* ModelPickerView.swift */,
+				EC2977FF88B72468FEF58986 /* BlackCatView.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -2974,6 +2977,7 @@
 				EBC51136FC60FF5A246C3BBF /* VoiceCorrectionDB.swift in Sources */,
 				EBD60F4B64B875B4180648E0 /* WebAppShortcut.swift in Sources */,
 				ECA4A123D95F076693FF0804 /* ProviderInstance.swift in Sources */,
+				ED2BD9F7F320FDFEAE7E3037 /* BlackCatView.swift in Sources */,
 				ED789F45FE7AC2B700D9CB0E /* CloudSyncEngine.swift in Sources */,
 				EE42C3A2EF174A47EC706CB1 /* AttributeQueryRecorder.m in Sources */,
 				EEACA4FAE211E1FAC17F7567 /* LLMError.swift in Sources */,

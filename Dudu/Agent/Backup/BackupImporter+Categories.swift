@@ -93,7 +93,10 @@ extension BackupImporter {
         case .providers: liveDirs = []
         // Environment variables merge into the live store rather than
         // replacing a file, so there is nothing to snapshot.
-        case .chats, .skills, .voiceCorrections, .environmentVariables, .music:
+        // [P2-3] Sandbox is UserDefaults-backed (its keys are snapshotted
+        // via udKeys below); it has no directory-backed live data.
+        case .chats, .skills, .voiceCorrections, .environmentVariables, .music,
+             .sandbox:
             liveDirs = []
         }
 
@@ -259,11 +262,13 @@ extension BackupImporter {
             let rolledBackPersonas = snapshot.files.contains {
                 $0.live.lastPathComponent == "personas.json"
             }
-            // [P3-3] Awaited, same as the UserDefaults half above.
-            await MainActor.run {
-                await ProviderConfigStore.shared.reloadFromDisk()
-                if rolledBackPersonas { PersonaStore.shared.reloadFromDisk() }
-            }
+            // [P3-3] Awaited, same as the UserDefaults half above. Both
+            // stores are @MainActor; ProviderConfigStore.reloadFromDisk is
+            // async, so these awaits hop to the main actor and complete
+            // before the import loop continues. (MainActor.run cannot take
+            // an async closure, so it isn't used here.)
+            await ProviderConfigStore.shared.reloadFromDisk()
+            if rolledBackPersonas { await PersonaStore.shared.reloadFromDisk() }
         }
         logger.info("[Restore] rolled back \(snapshot.category.rawValue) (\(snapshot.directories.count) dir(s))")
     }
@@ -1275,10 +1280,11 @@ extension BackupImporter {
         // [T-backup-ourspace] Task-card background photos.
         case .ourSpace: return TaskCardStore.cardsDirectory
         case .providers, .mcpServers, .voiceCorrections, .environmentVariables,
-             .music:
-            // These write single known files, not index-driven trees; give them
-            // the app-group root so the check is still meaningful if one ever
-            // starts using restoreFileTree.
+             .music, .sandbox:
+            // These write single known files (or, for sandbox, only
+            // UserDefaults records — it never uses restoreFileTree), not
+            // index-driven trees; give them the app-group root so the check
+            // is still meaningful if one ever starts using restoreFileTree.
             return DuduPaths.duduAppGroupRoot
         }
     }
