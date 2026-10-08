@@ -492,6 +492,7 @@
 		C5E1426922FEEA542825EEB2 /* ProviderQRShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF471B5AFDCB487AA2A5E000 /* ProviderQRShareView.swift */; };
 		4DFA5767B87A318AB6143CF5 /* ProviderShareCodec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E12BE1F78FB5E80F4042265 /* ProviderShareCodec.swift */; };
 		AADDE2A35C5FEAF1199EC8A7 /* QRCodeImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB6E0781B60454ED1F804DF /* QRCodeImage.swift */; };
+		45987FCE3D37EB6FB8315492 /* ManualProviderSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00A75E47A52BD9919F7FEDD /* ManualProviderSetupView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1121,6 +1122,7 @@
 		AF471B5AFDCB487AA2A5E000 /* ProviderQRShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderQRShareView.swift; sourceTree = "<group>"; };
 		8E12BE1F78FB5E80F4042265 /* ProviderShareCodec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderShareCodec.swift; sourceTree = "<group>"; };
 		6AB6E0781B60454ED1F804DF /* QRCodeImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeImage.swift; sourceTree = "<group>"; };
+		A00A75E47A52BD9919F7FEDD /* ManualProviderSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualProviderSetupView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 		30AC3C5C6C418C791E362178 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 
@@ -2136,6 +2138,7 @@
 			isa = PBXGroup;
 			children = (
 				126EBFD62176AD35C616C407 /* ApiKeyFieldView.swift */,
+				A00A75E47A52BD9919F7FEDD /* ManualProviderSetupView.swift */,
 				A8A263C3932C0151A6A4E70A /* ProviderListView.swift */,
 				EC655EAE3AF5A70BFEFA2C8D /* ProviderDetailView.swift */,
 			);
@@ -2690,6 +2693,7 @@
 				433C50B687A3B8DB822FD5C5 /* SpeechRecognitionManager.swift in Sources */,
 				43D70D06FD32CDF437D9ED8A /* ShortcutRunTracker.swift in Sources */,
 				44E296BD15CEC7188DB317C2 /* SandboxRelayTransport.swift in Sources */,
+				45987FCE3D37EB6FB8315492 /* ManualProviderSetupView.swift in Sources */,
 				4A055772F58E693828870A29 /* ProviderDetailView.swift in Sources */,
 				4A89BEE423134041280D8EC1 /* PersonaDialsStore.swift in Sources */,
 				4B3C7B1EF8BCDFF2C01E8C8D /* BackupFormat.swift in Sources */,

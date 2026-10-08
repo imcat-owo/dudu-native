@@ -232,6 +232,10 @@ struct ProviderDetailView: View {
             Section("API Key") {
                 ApiKeyFieldView(instanceId: instance.id)
             }
+            // 手动填写的服务也要可测：填 key → 测试连接 → 拉取模型列表。
+            Section(AppLocalized("manualsetup.test")) {
+                ManualTestConnectionView(instanceId: instance.id)
+            }
         case .oauth:
             Section("OAuth 登录") {
                 oauthBody(instance)

@@ -204,40 +204,41 @@ private struct ProviderTypePickerView: View {
     @EnvironmentObject private var store: ProviderConfigStore
     @EnvironmentObject private var nav: SettingsNavigator
     @Environment(\.dismiss) private var dismiss
+    @State private var manualSetup: ManualSetupRequest?
+    @State private var methodChoiceType: ProviderType?
 
     var body: some View {
         NavigationStack {
-            List(ProviderType.creatable, id: \.self) { type in
-                Button {
-                    let credential: ProviderCredential = type.oauthManager == nil ? .apiKey : .oauth
-                    let instance = ProviderInstance(
-                        label: type.displayName,
-                        providerType: type,
-                        credentialType: credential
-                    )
-                    store.addInstance(instance)
-                    dismiss()
-                    // Jump straight into the new instance's detail page.
-                    DispatchQueue.main.async {
-                        nav.path.append(SettingsRoute.providerDetail(instance.id))
+            List {
+                // 手动填写 —— 自己填 Base URL + API Key + 模型，不走 OAuth。
+                Section(AppLocalized("manualsetup.customSection")) {
+                    Button {
+                        manualSetup = ManualSetupRequest(presetType: nil)
+                    } label: {
+                        pickerRow(
+                            icon: "square.and.pencil",
+                            title: AppLocalized("manualsetup.customRow"),
+                            subtitle: AppLocalized("manualsetup.customRowSubtitle")
+                        )
                     }
-                } label: {
-                    HStack(spacing: 12) {
-                        Image(systemName: type.iconName)
-                            .font(.system(size: 17))
-                            .foregroundStyle(DuduTheme.pink)
-                            .frame(width: 32, height: 32)
-                            .background(DuduTheme.pinkSoft)
-                            .clipShape(RoundedRectangle(cornerRadius: DuduTheme.radiusChip))
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(type.displayName)
-                                .font(DuduTheme.bodyFont(weight: .medium))
-                                .foregroundStyle(DuduTheme.duduText)
-                            Text(type.oauthManager == nil ? "API Key" : "OAuth 登录")
-                                .font(DuduTheme.captionFont())
-                                .foregroundStyle(DuduTheme.duduTextDim)
+                }
+
+                Section(AppLocalized("manualsetup.presetSection")) {
+                    ForEach(ProviderType.creatable, id: \.self) { type in
+                        Button {
+                            if type.supportsManualEntry, type.oauthManager != nil {
+                                // OAuth 强制型的手动替代：让用户二选一。
+                                methodChoiceType = type
+                            } else {
+                                createOAuthInstance(of: type)
+                            }
+                        } label: {
+                            pickerRow(
+                                icon: type.iconName,
+                                title: type.displayName,
+                                subtitle: pickerSubtitle(for: type)
+                            )
                         }
-                        Spacer()
                     }
                 }
             }
@@ -249,6 +250,73 @@ private struct ProviderTypePickerView: View {
                     Button("取消") { dismiss() }
                 }
             }
+            .sheet(item: $manualSetup) { request in
+                ManualProviderSetupView(request: request) { instanceId in
+                    // Close the picker too, then land on the new instance's detail page.
+                    dismiss()
+                    DispatchQueue.main.async {
+                        nav.path.append(SettingsRoute.providerDetail(instanceId))
+                    }
+                }
+            }
+            .confirmationDialog(
+                AppLocalized("manualsetup.chooseMethod"),
+                isPresented: Binding(
+                    get: { methodChoiceType != nil },
+                    set: { if !$0 { methodChoiceType = nil } }
+                ),
+                presenting: methodChoiceType
+            ) { type in
+                Button(AppLocalized("manualsetup.viaOAuth")) {
+                    createOAuthInstance(of: type)
+                }
+                Button(AppLocalized("manualsetup.viaManual")) {
+                    manualSetup = ManualSetupRequest(presetType: type)
+                }
+                Button("取消", role: .cancel) {}
+            }
+        }
+    }
+
+    private func pickerRow(icon: String, title: String, subtitle: String) -> some View {
+        HStack(spacing: 12) {
+            Image(systemName: icon)
+                .font(.system(size: 17))
+                .foregroundStyle(DuduTheme.pink)
+                .frame(width: 32, height: 32)
+                .background(DuduTheme.pinkSoft)
+                .clipShape(RoundedRectangle(cornerRadius: DuduTheme.radiusChip))
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(DuduTheme.bodyFont(weight: .medium))
+                    .foregroundStyle(DuduTheme.duduText)
+                Text(subtitle)
+                    .font(DuduTheme.captionFont())
+                    .foregroundStyle(DuduTheme.duduTextDim)
+            }
+            Spacer()
+        }
+    }
+
+    private func pickerSubtitle(for type: ProviderType) -> String {
+        if type.supportsManualEntry, type.oauthManager != nil {
+            return AppLocalized("manualsetup.typeSubtitleBoth")
+        }
+        return type.oauthManager == nil ? "API Key" : "OAuth 登录"
+    }
+
+    private func createOAuthInstance(of type: ProviderType) {
+        let credential: ProviderCredential = type.oauthManager == nil ? .apiKey : .oauth
+        let instance = ProviderInstance(
+            label: type.displayName,
+            providerType: type,
+            credentialType: credential
+        )
+        store.addInstance(instance)
+        dismiss()
+        // Jump straight into the new instance's detail page.
+        DispatchQueue.main.async {
+            nav.path.append(SettingsRoute.providerDetail(instance.id))
         }
     }
 }
