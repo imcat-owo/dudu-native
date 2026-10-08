@@ -522,6 +522,10 @@ extension AppearanceStudio {
         try? FileManager.default.removeItem(at: thinkingCardURL())
         try? FileManager.default.removeItem(at: inputBarImageURL())
         wipeCategoryImageFiles()
+        // [Wave4-P3] Reset must also drop wallpapers: leaving the files
+        // behind kept the old wallpaper rendering after a reset, and the
+        // warm wallpaperCache kept serving the stale image.
+        wipeAllWallpapers()
         themePackLock.lock()
         cachedThemePack = .default
         themePackLoaded = true

@@ -412,6 +412,21 @@ final class AppearanceStudio: ObservableObject {
         wallpaperRevision += 1
     }
 
+    /// [Wave4-P3] Drop every wallpaper file (all scopes), clear the
+    /// cleared-inheritance flags and the in-memory cache, and bump the
+    /// revision so every AppearanceBackdrop re-renders immediately.
+    /// Used by resetThemePack: without this, a reset left the old files
+    /// on disk and the old image kept rendering after the reset.
+    func wipeAllWallpapers() {
+        for scope in AppearanceScope.allCases {
+            try? FileManager.default.removeItem(at: wallpaperURL(scope))
+        }
+        wallpaperClearedFallback.removeAll()
+        persistWallpaperCleared()
+        wallpaperCache.removeAll()
+        wallpaperRevision += 1
+    }
+
     /// [batch7 用户-P2-11] 恢复对齐：清除标记为准。恢复是 merge 语义（包里
     /// 没提的文件原位保留），但清除标记恢复回来后、标记对应的本机壁纸文件
     /// 若还在，"清除"就被悄悄撤销、标记变死标记。所以：包里没带某 scope
@@ -444,12 +459,21 @@ final class AppearanceStudio: ObservableObject {
     }
 
     private static func backgroundJPEG(_ image: UIImage, dark: Bool = false) -> Data? {
-        guard let cg = image.cgImage else { return nil }
+        // [Wave4-P3] Size from image.size (orientation-adjusted) * scale,
+        // not from image.cgImage. cgImage dims ignore EXIF orientation, so a
+        // portrait photo (raw pixels landscape, orientation .right) used to
+        // be drawn squished into a landscape canvas. Dropping the cgImage
+        // guard also fixes CIImage-backed images: they have no cgImage, so
+        // setWallpaper used to silently no-op and the wallpaper never
+        // appeared at all. UIGraphicsImageRenderer + draw(in:) handles both
+        // backings and applies the orientation transform.
+        let pxWidth = image.size.width * image.scale
+        let pxHeight = image.size.height * image.scale
+        guard pxWidth > 0, pxHeight > 0 else { return nil }
         let maxEdge: CGFloat = 2200
-        let source = CGSize(width: cg.width, height: cg.height)
-        let scale = min(1, maxEdge / max(source.width, source.height))
-        let size = CGSize(width: max(1, source.width * scale),
-                          height: max(1, source.height * scale))
+        let scale = min(1, maxEdge / max(pxWidth, pxHeight))
+        let size = CGSize(width: max(1, floor(pxWidth * scale)),
+                          height: max(1, floor(pxHeight * scale)))
         let format = UIGraphicsImageRendererFormat()
         format.opaque = true
         format.scale = 1
