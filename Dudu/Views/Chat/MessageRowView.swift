@@ -159,13 +159,21 @@ struct MessageRowView: View {
                         in: RoundedRectangle(cornerRadius: DuduTheme.radiusCard, style: .continuous)
                     )
                     .overlay(alignment: .topLeading) {
-                        // The slot straddles the bubble's top edge (contract:
-                        // 44pt box, parent offsets by -22pt).
+                        // Approved design spec: the 44pt slot's left edge
+                        // sits 8pt inside the bubble's left edge; its bottom
+                        // (paws) sits 4pt below the bubble's top edge.
                         if let phase = displayPhase {
                             ThinkingIndicatorSlot(phase: phase, thinkingBlock: thinkingBlock, isLiveBlock: isLive)
-                                .offset(x: -12, y: -22)
+                                .offset(x: 8, y: -40)
                         }
                     }
+                    // 29pt top margin reserved while the cat shows: the
+                    // overlay takes no layout space and the slot extends
+                    // 40pt above the bubble, so without this it would
+                    // collide with the previous row (rows are 6pt apart).
+                    // Applied after .overlay so the slot's alignment frame
+                    // stays the bubble's own top edge.
+                    .padding(.top, displayPhase != nil ? 29 : 0)
                 }
                 if let error = message.error, !error.isEmpty {
                     assistantErrorRow(error)

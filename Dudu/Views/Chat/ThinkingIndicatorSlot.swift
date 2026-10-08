@@ -5,9 +5,13 @@ import SwiftUI
 // The thinking-indicator SLOT: exact layout + animation-state contract,
 // now hosting the real black-cat artwork (BlackCatView, Wave 2 Item 1).
 //
-// Layout contract (plan §7) — UNCHANGED:
-//   - 44pt square silhouette box; sits on the bubble's top edge (the parent
-//     MessageRowView offsets it by -22pt so it straddles the edge).
+// Layout contract (approved design spec — replaces the old plan-§7 straddle):
+//   - 44pt square silhouette box; the parent MessageRowView offsets it by
+//     (+8, -40), so the box's left edge sits 8pt inside the bubble's left
+//     edge and its bottom (paws) sits 4pt below the bubble's top edge.
+//   - The parent also reserves 29pt of top margin while the cat shows,
+//     because the overlay takes no layout space and the box extends 40pt
+//     above the bubble (message rows are only 6pt apart).
 //   - The cat draws at 46x46pt; the whole cat is a Button with a 52x48pt
 //     hit area, centered in the 44pt box (the overflow is intentional and
 //     never clipped).
