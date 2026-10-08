@@ -56,6 +56,15 @@ struct SandboxSettingsView: View {
     @State private var containers: [SandboxEnvironment] = []
     @State private var containersBusy = false
     @State private var webURL: IdentifiableURL? = nil
+    @State private var localBusy = false
+    /// Message shown under the local backend's Retry button after an
+    /// attempted restart — the plain-language reason when the native iSH
+    /// module is not bundled yet (honest unavailable state), or the real
+    /// error when P8's backend reports something else.
+    @State private var localRetryMessage: String? = nil
+    /// Whether localRetryMessage is a real error (red) vs the known
+    /// "native module not bundled yet" note (dim).
+    @State private var localRetryIsError = false
 
     private var cloudState: SandboxConnectionState { manager.cloudBackend.state }
 
@@ -384,18 +393,62 @@ struct SandboxSettingsView: View {
                 }
             }
             .padding(.vertical, 4)
-            Button {
-                manager.resetBackend(.local)
-            } label: {
-                Label(L10n.string("common.retry"), systemImage: "arrow.clockwise")
-                    .font(DuduTheme.bodyFont())
+            if let localRetryMessage {
+                Text(localRetryMessage)
+                    .font(DuduTheme.captionFont())
+                    .foregroundStyle(
+                        localRetryIsError ? DuduTheme.duduDestructive : DuduTheme.duduTextDim
+                    )
             }
+            Button {
+                retryLocalBackend()
+            } label: {
+                HStack {
+                    if localBusy { ProgressView() }
+                    Label(L10n.string("common.retry"), systemImage: "arrow.clockwise")
+                        .font(DuduTheme.bodyFont())
+                }
+            }
+            .disabled(localBusy)
         } header: {
             DuduSectionTitle(L10n.string("sandbox.backend.local"))
         }
     }
 
     // MARK: - Cross-app (req 3)
+
+    /// Actually retry the local (iSH) sandbox startup sequence. The old
+    /// button only called resetBackend(.local), which re-asserted the
+    /// existing .unavailable state — a dead button with no feedback.
+    /// This re-invokes the real startup entry point (connect()). While P8
+    /// has not landed, connect() honestly refuses with
+    /// sandbox.local.nativeRequired and that plain-language reason is shown
+    /// instead of failing silently. If P8's backend ever succeeds, the
+    /// message clears and the status dot updates via the manager.
+    private func retryLocalBackend() {
+        localRetryMessage = nil
+        localRetryIsError = false
+        localBusy = true
+        Task {
+            do {
+                try await manager.localBackend.connect()
+                // Success (P8 future): state flips on the backend; the view
+                // re-renders through the manager's @Published forwarding.
+            } catch {
+                let isUnavailable = (error as? SandboxLocalError) == .unavailable
+                let raw: String
+                if let le = error as? LocalizedError, let d = le.errorDescription {
+                    raw = d
+                } else {
+                    raw = error.localizedDescription
+                }
+                localRetryMessage = localizeKeyOrRaw(raw)
+                localRetryIsError = !isUnavailable
+            }
+            localBusy = false
+            refresh()
+        }
+    }
 
     private var crossAppSection: some View {
         Section {
@@ -418,6 +471,8 @@ struct SandboxSettingsView: View {
     private func clearError() {
         errorText = nil
         relayMissing = false
+        localRetryMessage = nil
+        localRetryIsError = false
     }
 
     /// Translate bare i18n keys (e.g. sandbox.cloud.noConfig). Relay errors
