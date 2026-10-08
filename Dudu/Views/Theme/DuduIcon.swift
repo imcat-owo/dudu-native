@@ -26,7 +26,8 @@ struct DuduIcon: View {
 
     init(systemName: String) {
         self.systemName = systemName
-        self.useFill = UIImage(systemName: systemName + ".fill") != nil
+        // Names already ending in ".fill" use the fill glyph directly.
+        self.useFill = systemName.hasSuffix(".fill") || UIImage(systemName: systemName + ".fill") != nil
     }
 
     var body: some View {
