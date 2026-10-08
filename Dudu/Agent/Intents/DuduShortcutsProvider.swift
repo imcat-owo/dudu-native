@@ -11,14 +11,13 @@ import AppIntents
 
 /// Registers app shortcuts so they appear in Shortcuts with zero user setup.
 ///
-/// Phrase localization: the English phrases below are the KEYS. Localized
-/// Siri trigger phrases (zh-Hans/zh-Hant, e.g. "问问Dudu") live in
-/// `src/ios/<locale>.lproj/AppShortcuts.strings` — the table name
-/// AppShortcuts is what the AppIntents runtime looks up. Legacy .strings
-/// (not .xcstrings) because the deployment target is iOS 16 and Xcode
-/// rejects AppShortcuts.xcstrings below iOS 17. Add new phrases here AND
-/// to every AppShortcuts.strings; keys must match exactly with
-/// `\(.applicationName)` spelled `${applicationName}` in the tables.
+/// Phrase localization: Chinese Siri trigger phrases are registered DIRECTLY
+/// in the `phrases:` arrays below (plain strings, no `\(.applicationName)`
+/// token — she says "小梦"/"嘟嘟" by name). Siri matches the phrases in the
+/// device's current language, so Chinese Siri on a Chinese-locale device
+/// picks these up with zero extra .strings tables. English phrases are kept
+/// as-is; DuduShortcutsCatalog.siriPhrases must stay verbatim-identical to
+/// the resolved list here (see that file's SYNC RULE).
 @available(iOS 17.0, *)
 struct DuduShortcutsProvider: AppShortcutsProvider {
     static var appShortcuts: [AppShortcut] {
@@ -34,6 +33,9 @@ struct DuduShortcutsProvider: AppShortcutsProvider {
                 "Ask \(.applicationName) a question",
                 "Talk to \(.applicationName)",
                 "New \(.applicationName) chat",
+                "和小梦聊天",
+                "问问小梦",
+                "打开嘟嘟",
             ],
             shortTitle: "Ask 我的小家",
             systemImageName: "sparkles"
@@ -43,6 +45,8 @@ struct DuduShortcutsProvider: AppShortcutsProvider {
             phrases: [
                 "Run a \(.applicationName) quick task",
                 "Use \(.applicationName) quick task",
+                "小梦帮我查一下",
+                "嘟嘟快捷任务",
             ],
             shortTitle: "Quick Task",
             systemImageName: "bolt.fill"
@@ -53,6 +57,8 @@ struct DuduShortcutsProvider: AppShortcutsProvider {
                 "Send a prompt to \(.applicationName)",
                 "Ask \(.applicationName) something",
                 "Start a \(.applicationName) task",
+                "给小梦发个任务",
+                "让嘟嘟在后台干活",
             ],
             shortTitle: "Send Prompt",
             systemImageName: "message.fill"
@@ -62,6 +68,8 @@ struct DuduShortcutsProvider: AppShortcutsProvider {
             phrases: [
                 "Get \(.applicationName) session status",
                 "Check \(.applicationName) task",
+                "小梦干到哪了",
+                "看看小梦在忙什么",
             ],
             shortTitle: "Session Status",
             systemImageName: "info.circle.fill"
@@ -71,6 +79,8 @@ struct DuduShortcutsProvider: AppShortcutsProvider {
             phrases: [
                 "List \(.applicationName) sessions",
                 "Show \(.applicationName) chats",
+                "看看和小梦的聊天记录",
+                "嘟嘟的聊天列表",
             ],
             shortTitle: "List Sessions",
             systemImageName: "list.bullet"
@@ -80,6 +90,8 @@ struct DuduShortcutsProvider: AppShortcutsProvider {
             phrases: [
                 "Follow up a \(.applicationName) session",
                 "Continue a \(.applicationName) session",
+                "继续跟小梦聊",
+                "接着上次跟小梦说",
             ],
             shortTitle: "Follow Up",
             systemImageName: "arrowshape.turn.up.left.fill"
@@ -92,6 +104,8 @@ struct DuduShortcutsProvider: AppShortcutsProvider {
             intent: OpenSessionIntent(),
             phrases: [
                 "Open a \(.applicationName) session",
+                "打开跟小梦的聊天",
+                "打开嘟嘟会话",
             ],
             shortTitle: "Open Session",
             systemImageName: "arrow.up.right.square"

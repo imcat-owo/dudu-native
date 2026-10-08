@@ -50,7 +50,7 @@ enum DuduShortcutsCatalog {
             descriptionKey: "Talk to Dudu out loud — she opens the chat, sends your words, and answers right in front of you.",
             systemImage: "sparkles",
             opensApp: true,
-            siriPhrases: ["Ask 嘟嘟", "Ask 嘟嘟 a question", "Talk to 嘟嘟", "New 嘟嘟 chat"]
+            siriPhrases: ["Ask 嘟嘟", "Ask 嘟嘟 a question", "Talk to 嘟嘟", "New 嘟嘟 chat", "和小梦聊天", "问问小梦", "打开嘟嘟"]
         ),
         DuduShortcutDescriptor(
             id: "quicktask",
@@ -58,7 +58,7 @@ enum DuduShortcutsCatalog {
             descriptionKey: "Little everyday jobs — sleep check, weather, morning briefing. Pick one and Dudu handles it.",
             systemImage: "bolt.fill",
             opensApp: false,
-            siriPhrases: ["Run a 嘟嘟 quick task", "Use 嘟嘟 quick task"]
+            siriPhrases: ["Run a 嘟嘟 quick task", "Use 嘟嘟 quick task", "小梦帮我查一下", "嘟嘟快捷任务"]
         ),
         DuduShortcutDescriptor(
             id: "sendprompt",
@@ -66,7 +66,7 @@ enum DuduShortcutsCatalog {
             descriptionKey: "Slip Dudu a task in the background — she keeps working while you do other things.",
             systemImage: "paperplane.fill",
             opensApp: false,
-            siriPhrases: ["Send a prompt to 嘟嘟", "Ask 嘟嘟 something", "Start a 嘟嘟 task"]
+            siriPhrases: ["Send a prompt to 嘟嘟", "Ask 嘟嘟 something", "Start a 嘟嘟 task", "给小梦发个任务", "让嘟嘟在后台干活"]
         ),
         DuduShortcutDescriptor(
             id: "sessionstatus",
@@ -74,7 +74,7 @@ enum DuduShortcutsCatalog {
             descriptionKey: "Peek at a running task — see what Dudu is up to and what she just said.",
             systemImage: "info.circle.fill",
             opensApp: false,
-            siriPhrases: ["Get 嘟嘟 session status", "Check 嘟嘟 task"]
+            siriPhrases: ["Get 嘟嘟 session status", "Check 嘟嘟 task", "小梦干到哪了", "看看小梦在忙什么"]
         ),
         DuduShortcutDescriptor(
             id: "listsessions",
@@ -82,7 +82,7 @@ enum DuduShortcutsCatalog {
             descriptionKey: "All your chats with Dudu, in one tidy list.",
             systemImage: "list.bullet",
             opensApp: false,
-            siriPhrases: ["List 嘟嘟 sessions", "Show 嘟嘟 chats"]
+            siriPhrases: ["List 嘟嘟 sessions", "Show 嘟嘟 chats", "看看和小梦的聊天记录", "嘟嘟的聊天列表"]
         ),
         DuduShortcutDescriptor(
             id: "followup",
@@ -90,7 +90,7 @@ enum DuduShortcutsCatalog {
             descriptionKey: "Wake an old conversation with one more question — Dudu picks up right where you left off.",
             systemImage: "arrowshape.turn.up.left.fill",
             opensApp: false,
-            siriPhrases: ["Follow up a 嘟嘟 session", "Continue a 嘟嘟 session"]
+            siriPhrases: ["Follow up a 嘟嘟 session", "Continue a 嘟嘟 session", "继续跟小梦聊", "接着上次跟小梦说"]
         ),
         DuduShortcutDescriptor(
             id: "opensession",
@@ -98,7 +98,7 @@ enum DuduShortcutsCatalog {
             descriptionKey: "Jump straight into a chat — no scrolling through the list.",
             systemImage: "arrow.up.right.square",
             opensApp: true,
-            siriPhrases: ["Open a 嘟嘟 session"]
+            siriPhrases: ["Open a 嘟嘟 session", "打开跟小梦的聊天", "打开嘟嘟会话"]
         ),
         DuduShortcutDescriptor(
             id: "retryrun",
