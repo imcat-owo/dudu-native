@@ -119,7 +119,7 @@ struct ThinkingDrawerView: View {
             Button {
                 dismiss()
             } label: {
-                Image(systemName: "xmark")
+                DuduIcon(systemName: "xmark")
                     .font(DuduTheme.captionFont(weight: .semibold))
                     .foregroundStyle(DuduTheme.duduTextDim)
                     .frame(width: 28, height: 28)
@@ -223,7 +223,7 @@ struct ThinkingDrawerView: View {
                         .font(DuduTheme.captionFont())
                         .foregroundStyle(DuduTheme.duduTextDim)
                     Spacer()
-                    Image(systemName: expandedSections.contains(index) ? "chevron.up" : "chevron.down")
+                    DuduIcon(systemName: expandedSections.contains(index) ? "chevron.up" : "chevron.down")
                         .font(DuduTheme.captionFont())
                         .foregroundStyle(DuduTheme.duduTextDim)
                 }

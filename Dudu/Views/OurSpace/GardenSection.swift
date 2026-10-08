@@ -117,7 +117,7 @@ struct GardenSection: View {
     private func seedCard(_ seed: MemorySeed) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 6) {
-                Image(systemName: seed.confidence.systemImage)
+                DuduIcon(systemName: seed.confidence.systemImage)
                     .font(.system(size: 11, weight: .semibold))
                     .foregroundStyle(DuduTheme.duduText)
                 OurSpaceChip(text: seed.confidence.label, color: seed.confidence.chipColor)
@@ -142,7 +142,7 @@ struct GardenSection: View {
                         store.confirmSeed(id: seed.id)
                     } label: {
                         HStack(spacing: 4) {
-                            Image(systemName: "checkmark")
+                            DuduIcon(systemName: "checkmark")
                                 .font(.system(size: 11, weight: .semibold))
                             Text("记对了")
                                 .font(DuduTheme.captionFont(weight: .semibold))
@@ -157,7 +157,7 @@ struct GardenSection: View {
                         answeringSeed = seed
                     } label: {
                         HStack(spacing: 4) {
-                            Image(systemName: "bubble.left")
+                            DuduIcon(systemName: "bubble.left")
                                 .font(.system(size: 11, weight: .semibold))
                             Text("我来回答")
                                 .font(DuduTheme.captionFont(weight: .semibold))
@@ -174,7 +174,7 @@ struct GardenSection: View {
                 Button(role: .destructive) {
                     store.deleteSeed(id: seed.id)
                 } label: {
-                    Image(systemName: "trash")
+                    DuduIcon(systemName: "trash")
                         .font(.system(size: 12))
                         .foregroundStyle(DuduTheme.duduTextDim)
                         .frame(width: 30, height: 30)
@@ -258,7 +258,7 @@ private struct SeedEditorSheet: View {
             confidence = c
         } label: {
             VStack(spacing: 4) {
-                Image(systemName: c.systemImage)
+                DuduIcon(systemName: c.systemImage)
                     .font(.system(size: 14, weight: selected ? .semibold : .regular))
                 Text(c.label)
                     .font(DuduTheme.captionFont(weight: selected ? .semibold : .regular))

@@ -24,7 +24,7 @@ struct FontUploadView: View {
         List {
             Section {
                 HStack(spacing: 12) {
-                    Image(systemName: "textformat")
+                    DuduIcon(systemName: "textformat")
                         .font(.system(size: 15, weight: .medium))
                         .foregroundStyle(DuduTheme.pink)
                         .frame(width: 32, height: 32)

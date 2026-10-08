@@ -98,7 +98,7 @@ struct AppleMusicSettingsView: View {
                 Button {
                     showToken.toggle()
                 } label: {
-                    Image(systemName: showToken ? "eye.slash" : "eye")
+                    DuduIcon(systemName: showToken ? "eye.slash" : "eye")
                         .font(.system(size: 13))
                         .foregroundStyle(DuduTheme.duduTextDim)
                 }

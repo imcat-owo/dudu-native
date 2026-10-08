@@ -115,7 +115,7 @@ private struct MomentEditorSheet: View {
                             kind = k
                         } label: {
                             HStack(spacing: 5) {
-                                Image(systemName: k.systemImage)
+                                DuduIcon(systemName: k.systemImage)
                                     .font(.system(size: 11))
                                 Text(k.label)
                                     .font(DuduTheme.captionFont(weight: selected ? .semibold : .regular))

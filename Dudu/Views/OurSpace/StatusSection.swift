@@ -24,7 +24,7 @@ struct StatusSection: View {
     private var aiStatusCard: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 6) {
-                Image(systemName: "waveform")
+                DuduIcon(systemName: "waveform")
                     .font(.system(size: 12, weight: .semibold))
                     .foregroundStyle(DuduTheme.pink)
                 Text("我在做什么")
@@ -59,7 +59,7 @@ struct StatusSection: View {
     private var herMoodCard: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 6) {
-                Image(systemName: "face.smiling")
+                DuduIcon(systemName: "face.smiling")
                     .font(.system(size: 12, weight: .semibold))
                     .foregroundStyle(DuduTheme.pink)
                 Text("她的心情")

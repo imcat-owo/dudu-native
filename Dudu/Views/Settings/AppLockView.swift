@@ -41,7 +41,7 @@ struct AppLockView: View {
                     set: { setEnabled($0) }
                 )) {
                     HStack(spacing: 12) {
-                        Image(systemName: BiometricAuth.biometryIconName)
+                        DuduIcon(systemName: BiometricAuth.biometryIconName)
                             .font(.system(size: 15))
                             .foregroundStyle(DuduTheme.pink)
                             .frame(width: 30, height: 30)
@@ -75,7 +75,7 @@ struct AppLockView: View {
                     // Honest fallback: never pretend the lock is protecting
                     // anything when there is nothing to verify against.
                     HStack(spacing: 8) {
-                        Image(systemName: "exclamationmark.circle.fill")
+                        DuduIcon(systemName: "exclamationmark.circle.fill")
                             .foregroundStyle(DuduTheme.pink)
                         Text("这台设备当前无法使用生物识别或锁屏密码（可能尚未录入/设置），应用锁暂不能启用。")
                             .font(DuduTheme.captionFont())
@@ -181,7 +181,7 @@ struct AppLockOverlayView: View {
                 .ignoresSafeArea()
             VStack(spacing: 14) {
                 Spacer()
-                Image(systemName: BiometricAuth.biometryIconName)
+                DuduIcon(systemName: BiometricAuth.biometryIconName)
                     .font(.system(size: 52, weight: .regular))
                     .foregroundStyle(DuduTheme.pink)
                     .frame(width: 96, height: 96)

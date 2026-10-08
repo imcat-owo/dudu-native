@@ -28,7 +28,7 @@ struct TTSSettingsView: View {
                             .font(DuduTheme.bodyFont())
                             .foregroundStyle(DuduTheme.duduText)
                     } icon: {
-                        Image(systemName: "speaker.wave.2.fill")
+                        DuduIcon(systemName: "speaker.wave.2.fill")
                             .foregroundStyle(DuduTheme.pink)
                     }
                 }
@@ -80,7 +80,7 @@ struct TTSSettingsView: View {
                                 TTSServiceStore.shared.setSelectedServiceId(service.id)
                                 reload()
                             } label: {
-                                Image(systemName: selectedId == service.id
+                                DuduIcon(systemName: selectedId == service.id
                                       ? "checkmark.circle.fill" : "circle")
                                     .foregroundStyle(selectedId == service.id
                                                      ? DuduTheme.pink : DuduTheme.duduTextDim)
@@ -109,7 +109,7 @@ struct TTSSettingsView: View {
                     showingAdd = true
                 } label: {
                     HStack {
-                        Image(systemName: "plus.circle.fill")
+                        DuduIcon(systemName: "plus.circle.fill")
                             .foregroundStyle(DuduTheme.pink)
                         Text("添加语音服务")
                             .font(DuduTheme.bodyFont())

@@ -114,7 +114,7 @@ struct ProviderQRShareView: View {
                     }
                 } label: {
                     HStack {
-                        Image(systemName: copied ? "checkmark" : "doc.on.doc")
+                        DuduIcon(systemName: copied ? "checkmark" : "doc.on.doc")
                             .foregroundStyle(DuduTheme.pink)
                         Text(copied
                              ? AppLocalized("shareimport.copied")
@@ -129,7 +129,7 @@ struct ProviderQRShareView: View {
                     showSystemShare = true
                 } label: {
                     HStack {
-                        Image(systemName: "square.and.arrow.up")
+                        DuduIcon(systemName: "square.and.arrow.up")
                             .foregroundStyle(DuduTheme.pink)
                         Text(AppLocalized("common.share"))
                             .font(DuduTheme.bodyFont(weight: .medium))
@@ -151,7 +151,7 @@ struct ProviderQRShareView: View {
 
     private func providerRow(_ instance: ProviderInstance) -> some View {
         HStack(spacing: 12) {
-            Image(systemName: instance.providerType.iconName)
+            DuduIcon(systemName: instance.providerType.iconName)
                 .font(.system(size: 15))
                 .foregroundStyle(DuduTheme.pink)
                 .frame(width: 30, height: 30)

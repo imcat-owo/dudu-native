@@ -125,7 +125,7 @@ struct TaskCardView: View {
                         HStack {
                             Text(a.label)
                             if task.accent == a {
-                                Image(systemName: "checkmark")
+                                DuduIcon(systemName: "checkmark")
                             }
                         }
                     }
@@ -153,7 +153,7 @@ struct TaskCardView: View {
                 Label("删除任务", systemImage: "trash")
             }
         } label: {
-            Image(systemName: "ellipsis")
+            DuduIcon(systemName: "ellipsis")
                 .font(.system(size: 13, weight: .semibold))
                 .foregroundStyle(DuduTheme.duduTextDim)
                 .frame(width: 28, height: 28)

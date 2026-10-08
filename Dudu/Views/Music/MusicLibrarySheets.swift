@@ -49,7 +49,7 @@ struct MusicTrackRow: View {
             Button {
                 Task { try? await dj.playTrack(track) }
             } label: {
-                Image(systemName: "play.fill")
+                DuduIcon(systemName: "play.fill")
                     .font(.system(size: 12))
                     .foregroundStyle(DuduTheme.duduText)
                     .frame(width: 32, height: 32)
@@ -97,7 +97,7 @@ struct MusicPlaylistsSheet: View {
                     Button {
                         showingNew = true
                     } label: {
-                        Image(systemName: "plus")
+                        DuduIcon(systemName: "plus")
                             .font(.system(size: 14, weight: .semibold))
                     }
                 }
@@ -140,13 +140,13 @@ struct MusicPlaylistsSheet: View {
                                 _ = store.deletePlaylist(pl.id)
                             }
                         } label: {
-                            Image(systemName: "ellipsis")
+                            DuduIcon(systemName: "ellipsis")
                                 .font(.system(size: 13))
                                 .foregroundStyle(DuduTheme.duduTextDim)
                                 .frame(width: 32, height: 32)
                         }
                     }
-                    Image(systemName: "chevron.down")
+                    DuduIcon(systemName: "chevron.down")
                         .font(.system(size: 12, weight: .semibold))
                         .foregroundStyle(DuduTheme.duduTextDim)
                         .rotationEffect(.degrees(expanded == pl.id ? 180 : 0))
@@ -166,7 +166,7 @@ struct MusicPlaylistsSheet: View {
                             Button {
                                 _ = store.removeFromPlaylist(pl.id, trackId: t.id)
                             } label: {
-                                Image(systemName: "minus.circle")
+                                DuduIcon(systemName: "minus.circle")
                                     .font(.system(size: 14))
                                     .foregroundStyle(DuduTheme.duduTextDim)
                             }
@@ -231,7 +231,7 @@ struct MusicLibrarySheet: View {
                                             _ = store.deleteTrack(t.id)
                                         }
                                     } label: {
-                                        Image(systemName: "ellipsis")
+                                        DuduIcon(systemName: "ellipsis")
                                             .font(.system(size: 13))
                                             .foregroundStyle(DuduTheme.duduTextDim)
                                             .frame(width: 32, height: 32)
@@ -260,7 +260,7 @@ struct MusicLibrarySheet: View {
                     Button {
                         showingAdd = true
                     } label: {
-                        Image(systemName: "plus")
+                        DuduIcon(systemName: "plus")
                             .font(.system(size: 14, weight: .semibold))
                     }
                 }
@@ -302,7 +302,7 @@ struct MusicQueueSheet: View {
                                         Button {
                                             _ = store.removeFromQueue(t.id)
                                         } label: {
-                                            Image(systemName: "xmark.circle")
+                                            DuduIcon(systemName: "xmark.circle")
                                                 .font(.system(size: 14))
                                                 .foregroundStyle(DuduTheme.duduTextDim)
                                         }

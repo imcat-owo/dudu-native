@@ -72,7 +72,7 @@ struct DiarySection: View {
                 entryToDelete = entry
                 showingDeleteConfirm = true
             } label: {
-                Image(systemName: "trash")
+                DuduIcon(systemName: "trash")
                     .font(.system(size: 12))
                     .foregroundStyle(DuduTheme.duduTextDim)
                     .frame(width: 28, height: 28)
@@ -118,7 +118,7 @@ private struct DiaryDetailView: View {
                 Button {
                     showingDeleteConfirm = true
                 } label: {
-                    Image(systemName: "trash")
+                    DuduIcon(systemName: "trash")
                         .foregroundStyle(DuduTheme.duduDestructive)
                 }
             }

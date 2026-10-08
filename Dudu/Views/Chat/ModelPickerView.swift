@@ -20,7 +20,7 @@ struct ModelPickerView: View {
             Group {
                 if enabledInstances.isEmpty {
                     VStack(spacing: 12) {
-                        Image(systemName: "cpu")
+                        DuduIcon(systemName: "cpu")
                             .font(DuduTheme.titleFont())
                             .foregroundStyle(DuduTheme.duduTextDim)
                         Text("还没有可用的模型服务")
@@ -83,7 +83,7 @@ struct ModelPickerView: View {
                 }
                 Spacer()
                 if isSelected(entry) {
-                    Image(systemName: "checkmark")
+                    DuduIcon(systemName: "checkmark")
                         .font(DuduTheme.bodyFont(weight: .semibold))
                         .foregroundStyle(DuduTheme.pink)
                 }

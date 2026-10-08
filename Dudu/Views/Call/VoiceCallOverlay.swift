@@ -155,7 +155,7 @@ private struct MissedBanner: View {
     var body: some View {
         Button(action: onDismiss) {
             HStack(spacing: 8) {
-                Image(systemName: "phone.down.fill")
+                DuduIcon(systemName: "phone.down.fill")
                     .font(DuduTheme.captionFont())
                     .foregroundStyle(DuduTheme.duduDestructive)
                 VStack(alignment: .leading, spacing: 2) {

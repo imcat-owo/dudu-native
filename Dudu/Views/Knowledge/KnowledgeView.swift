@@ -173,7 +173,7 @@ struct KnowledgeView: View {
                 Button {
                     model.showPicker = true
                 } label: {
-                    Image(systemName: "plus")
+                    DuduIcon(systemName: "plus")
                         .foregroundStyle(DuduTheme.pink)
                 }
                 .accessibilityLabel("导入文档")
@@ -295,7 +295,7 @@ struct KnowledgeView: View {
                             Button {
                                 model.delete(doc)
                             } label: {
-                                Image(systemName: "trash")
+                                DuduIcon(systemName: "trash")
                                     .foregroundStyle(DuduTheme.duduDestructive)
                             }
                             .accessibilityLabel("删除《\(doc.name)》")

@@ -59,7 +59,7 @@ struct ComputerTerminalView: View {
                     Circle()
                         .fill(DuduTheme.duduIconChip)
                         .frame(width: 40, height: 40)
-                    Image(systemName: "terminal")
+                    DuduIcon(systemName: "terminal")
                         .font(.system(size: FontSettings.shared.scaledApp(18), weight: .medium))
                         .foregroundStyle(DuduTheme.pink)
                 }
@@ -127,7 +127,7 @@ struct ComputerTerminalView: View {
 
     private func errorCard(_ message: String) -> some View {
         HStack(alignment: .top, spacing: 10) {
-            Image(systemName: "exclamationmark.triangle")
+            DuduIcon(systemName: "exclamationmark.triangle")
                 .foregroundStyle(DuduTheme.duduDestructive)
             Text(message)
                 .font(DuduTheme.bodyFont())
@@ -136,7 +136,7 @@ struct ComputerTerminalView: View {
             Button {
                 viewModel.clearError()
             } label: {
-                Image(systemName: "xmark")
+                DuduIcon(systemName: "xmark")
                     .foregroundStyle(DuduTheme.duduTextDim)
             }
         }
@@ -152,7 +152,7 @@ struct ComputerTerminalView: View {
             if viewModel.records.isEmpty {
                 if viewModel.status == .running {
                     VStack(spacing: 8) {
-                        Image(systemName: "terminal")
+                        DuduIcon(systemName: "terminal")
                             .font(.system(size: FontSettings.shared.scaledApp(28)))
                             .foregroundStyle(DuduTheme.duduTextDim)
                         Text(L10n.string("term.readyTitle"))
@@ -251,7 +251,7 @@ struct ComputerTerminalView: View {
                 Button {
                     viewModel.run()
                 } label: {
-                    Image(systemName: "paperplane.fill")
+                    DuduIcon(systemName: "paperplane.fill")
                         .font(.system(size: FontSettings.shared.scaledApp(16), weight: .medium))
                         .foregroundStyle(DuduTheme.cream)
                         .frame(width: 40, height: 40)

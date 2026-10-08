@@ -173,7 +173,7 @@ private struct SettingsRow: View {
     var body: some View {
         NavigationLink(value: route) {
             HStack(spacing: 12) {
-                Image(systemName: icon)
+                DuduIcon(systemName: icon)
                     .font(.system(size: 15))
                     .foregroundStyle(DuduTheme.pink)
                     .frame(width: 30, height: 30)
@@ -206,7 +206,7 @@ private struct FontScaleView: View {
                                 .foregroundStyle(DuduTheme.duduText)
                             Spacer()
                             if fonts.appBaseScale == level {
-                                Image(systemName: "checkmark.circle.fill")
+                                DuduIcon(systemName: "checkmark.circle.fill")
                                     .foregroundStyle(DuduTheme.pink)
                             }
                         }

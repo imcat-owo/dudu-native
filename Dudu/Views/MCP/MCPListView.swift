@@ -16,7 +16,7 @@ struct MCPListView: View {
             if store.servers.isEmpty {
                 Section {
                     VStack(spacing: 12) {
-                        Image(systemName: "server.rack")
+                        DuduIcon(systemName: "server.rack")
                             .font(.system(size: 36))
                             .foregroundStyle(DuduTheme.duduTextDim)
                         Text("还没有 MCP 服务器")
@@ -61,7 +61,7 @@ struct MCPListView: View {
                 Button {
                     showingAdd = true
                 } label: {
-                    Image(systemName: "plus")
+                    DuduIcon(systemName: "plus")
                 }
             }
         }

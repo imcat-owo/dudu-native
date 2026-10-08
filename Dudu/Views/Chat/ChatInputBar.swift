@@ -69,7 +69,7 @@ struct ChatInputBar: View {
             // recording panel stay above it, outside the glass.
             HStack(alignment: .bottom, spacing: 8) {
                 PhotosPicker(selection: $selectedPhoto, matching: .images) {
-                    Image(systemName: "photo")
+                    DuduIcon(systemName: "photo")
                         .font(DuduTheme.bodyFont())
                         .foregroundStyle(DuduTheme.duduTextDim)
                         .frame(width: 32, height: 32)
@@ -83,7 +83,7 @@ struct ChatInputBar: View {
                 Button {
                     showStickerPicker = true
                 } label: {
-                    Image(systemName: "face.smiling")
+                    DuduIcon(systemName: "face.smiling")
                         .font(DuduTheme.bodyFont())
                         .foregroundStyle(DuduTheme.duduTextDim)
                         .frame(width: 32, height: 32)
@@ -95,7 +95,7 @@ struct ChatInputBar: View {
                 Button {
                     toggleRecording()
                 } label: {
-                    Image(systemName: stt.state == .recording ? "mic.fill" : "mic")
+                    DuduIcon(systemName: stt.state == .recording ? "mic.fill" : "mic")
                         .font(DuduTheme.bodyFont())
                         .foregroundStyle(stt.state == .recording ? DuduTheme.pink : DuduTheme.duduTextDim)
                         .frame(width: 32, height: 32)
@@ -117,7 +117,7 @@ struct ChatInputBar: View {
                     Button {
                         vm.cancel()
                     } label: {
-                        Image(systemName: "stop.fill")
+                        DuduIcon(systemName: "stop.fill")
                             .font(DuduTheme.bodyFont(weight: .semibold))
                             .foregroundStyle(DuduTheme.duduText)
                             .frame(width: 32, height: 32)
@@ -128,7 +128,7 @@ struct ChatInputBar: View {
                     Button {
                         vm.send()
                     } label: {
-                        Image(systemName: "arrow.up")
+                        DuduIcon(systemName: "arrow.up")
                             .font(DuduTheme.bodyFont(weight: .semibold))
                             .foregroundStyle(DuduTheme.duduText)
                             .frame(width: 32, height: 32)
@@ -141,7 +141,7 @@ struct ChatInputBar: View {
                     Button {
                         vm.send()
                     } label: {
-                        Image(systemName: "arrow.up")
+                        DuduIcon(systemName: "arrow.up")
                             .font(DuduTheme.bodyFont(weight: .semibold))
                             .foregroundStyle(DuduTheme.duduText)
                             .frame(width: 32, height: 32)
@@ -293,7 +293,7 @@ struct ChatInputBar: View {
                         .frame(width: 56, height: 56)
                 case .failed:
                     VStack(spacing: 2) {
-                        Image(systemName: "exclamationmark.triangle")
+                        DuduIcon(systemName: "exclamationmark.triangle")
                             .font(DuduTheme.captionFont())
                         Text("加载失败")
                             .font(DuduTheme.captionFont())
@@ -308,7 +308,7 @@ struct ChatInputBar: View {
                             .frame(width: 56, height: 56)
                             .clipped()
                     } else {
-                        Image(systemName: "doc")
+                        DuduIcon(systemName: "doc")
                             .font(DuduTheme.bodyFont())
                             .foregroundStyle(DuduTheme.duduTextDim)
                             .frame(width: 56, height: 56)
@@ -324,7 +324,7 @@ struct ChatInputBar: View {
             Button {
                 vm.removeAttachment(attachment)
             } label: {
-                Image(systemName: "xmark.circle.fill")
+                DuduIcon(systemName: "xmark.circle.fill")
                     .font(DuduTheme.captionFont())
                     .foregroundStyle(DuduTheme.duduTextDim)
                     .background(DuduTheme.duduCard, in: Circle())

@@ -21,7 +21,7 @@ struct ArtifactCardView: View {
                     RoundedRectangle(cornerRadius: DuduTheme.radiusChip, style: .continuous)
                         .fill(DuduTheme.duduIconChip)
                         .frame(width: 36, height: 36)
-                    Image(systemName: artifact.kind.systemIcon)
+                    DuduIcon(systemName: artifact.kind.systemIcon)
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(DuduTheme.pink)
                 }
@@ -35,7 +35,7 @@ struct ArtifactCardView: View {
                         .foregroundStyle(DuduTheme.duduTextDim)
                 }
                 Spacer(minLength: 8)
-                Image(systemName: "chevron.right")
+                DuduIcon(systemName: "chevron.right")
                     .font(DuduTheme.captionFont(weight: .semibold))
                     .foregroundStyle(DuduTheme.duduTextDim)
             }
@@ -114,7 +114,7 @@ struct ArtifactPreviewView: View {
                     Button {
                         copyContent()
                     } label: {
-                        Image(systemName: copied ? "checkmark" : "doc.on.doc")
+                        DuduIcon(systemName: copied ? "checkmark" : "doc.on.doc")
                     }
                     .accessibilityLabel("复制内容")
                     .disabled(isContentEmpty)
@@ -128,7 +128,7 @@ struct ArtifactPreviewView: View {
 
     private var emptyState: some View {
         VStack(spacing: 10) {
-            Image(systemName: artifact.kind.systemIcon)
+            DuduIcon(systemName: artifact.kind.systemIcon)
                 .font(.system(size: 28, weight: .regular))
                 .foregroundStyle(DuduTheme.pink)
             Text("这里还没有内容")

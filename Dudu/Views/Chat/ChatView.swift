@@ -89,7 +89,7 @@ struct ChatView: View {
                     Button {
                         showDrawer = true
                     } label: {
-                        Image(systemName: "line.3.horizontal")
+                        DuduIcon(systemName: "line.3.horizontal")
                             .foregroundStyle(DuduTheme.duduText)
                     }
                     .accessibilityLabel("历史对话")
@@ -98,7 +98,7 @@ struct ChatView: View {
                     if vm.isIncognito {
                         // Phase D4 — 隐身指示器：图标 + "隐身模式"。
                         HStack(spacing: 4) {
-                            Image(systemName: "eye.slash.fill")
+                            DuduIcon(systemName: "eye.slash.fill")
                                 .font(DuduTheme.captionFont())
                             Text("隐身模式")
                                 .font(DuduTheme.titleFont())
@@ -121,7 +121,7 @@ struct ChatView: View {
                     Button {
                         toggleIncognito()
                     } label: {
-                        Image(systemName: vm.isIncognito ? "eye.slash.fill" : "eye.slash")
+                        DuduIcon(systemName: vm.isIncognito ? "eye.slash.fill" : "eye.slash")
                             .foregroundStyle(vm.isIncognito ? DuduTheme.pink : DuduTheme.duduText)
                     }
                     .accessibilityLabel(vm.isIncognito ? "退出隐身聊天" : "隐身聊天")
@@ -134,7 +134,7 @@ struct ChatView: View {
                                 chatSessionId: vm.sessionId)
                         }
                     } label: {
-                        Image(systemName: "phone")
+                        DuduIcon(systemName: "phone")
                             .foregroundStyle(DuduTheme.duduText)
                     }
                     .accessibilityLabel("语音通话")
@@ -146,7 +146,7 @@ struct ChatView: View {
                                 .font(DuduTheme.captionFont())
                                 .foregroundStyle(DuduTheme.duduTextDim)
                                 .lineLimit(1)
-                            Image(systemName: "chevron.down")
+                            DuduIcon(systemName: "chevron.down")
                                 .font(DuduTheme.captionFont())
                                 .foregroundStyle(DuduTheme.duduTextDim)
                         }
@@ -156,7 +156,7 @@ struct ChatView: View {
                     Button {
                         startNewChat()
                     } label: {
-                        Image(systemName: "square.and.pencil")
+                        DuduIcon(systemName: "square.and.pencil")
                             .foregroundStyle(DuduTheme.duduText)
                     }
                     .accessibilityLabel("新的对话")
@@ -186,7 +186,7 @@ struct ChatView: View {
 
     private func errorBanner(_ error: String) -> some View {
         HStack(spacing: 8) {
-            Image(systemName: "exclamationmark.triangle")
+            DuduIcon(systemName: "exclamationmark.triangle")
                 .font(DuduTheme.captionFont())
                 .foregroundStyle(DuduTheme.duduTextDim)
             Text(error)
@@ -197,7 +197,7 @@ struct ChatView: View {
             Button {
                 vm.errorMessage = nil
             } label: {
-                Image(systemName: "xmark")
+                DuduIcon(systemName: "xmark")
                     .font(DuduTheme.captionFont())
                     .foregroundStyle(DuduTheme.duduTextDim)
             }

@@ -102,7 +102,7 @@ struct MCPApprovalCardView: View {
         let isMCP = mcpTarget(of: payload) != nil
         return VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 10) {
-                Image(systemName: "shield.fill")
+                DuduIcon(systemName: "shield.fill")
                     .foregroundStyle(DuduTheme.pink)
                     .font(.system(size: 18))
                 Text(payload.title)

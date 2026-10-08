@@ -131,7 +131,7 @@ struct ProviderQRScanView: View {
         switch outcome {
         case .invalid:
             VStack(spacing: 10) {
-                Image(systemName: "qrcode.viewfinder")
+                DuduIcon(systemName: "qrcode.viewfinder")
                     .font(.system(size: 28))
                     .foregroundStyle(DuduTheme.duduTextDim)
                 Text(AppLocalized("apigroup.share.invalid"))
@@ -146,7 +146,7 @@ struct ProviderQRScanView: View {
             .padding(.vertical, 12)
         case .imported(let result):
             VStack(spacing: 10) {
-                Image(systemName: "checkmark.circle.fill")
+                DuduIcon(systemName: "checkmark.circle.fill")
                     .font(.system(size: 28))
                     .foregroundStyle(DuduTheme.success)
                 Text(String(format: AppLocalized("extras.scan.providerImported"), result.name))

@@ -135,7 +135,7 @@ struct VoiceCallScreen: View {
                 Button {
                     onClose()
                 } label: {
-                    Image(systemName: "phone.down.fill")
+                    DuduIcon(systemName: "phone.down.fill")
                         .font(DuduTheme.bodyFont())
                         .foregroundStyle(DuduTheme.duduCard)
                         .frame(width: 48, height: 48)
@@ -230,7 +230,7 @@ struct VoiceCallScreen: View {
         action: @escaping () -> Void
     ) -> some View {
         Button(action: action) {
-            Image(systemName: systemName)
+            DuduIcon(systemName: systemName)
                 .font(DuduTheme.bodyFont())
                 .foregroundStyle(active ? DuduTheme.duduCard : DuduTheme.duduText)
                 .frame(width: 48, height: 48)
@@ -246,7 +246,7 @@ struct VoiceCallScreen: View {
         Button {
             onClose()
         } label: {
-            Image(systemName: "phone.down.fill")
+            DuduIcon(systemName: "phone.down.fill")
                 .font(DuduTheme.bodyFont())
                 .foregroundStyle(DuduTheme.duduCard)
                 .frame(width: size, height: size)

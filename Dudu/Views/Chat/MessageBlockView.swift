@@ -91,7 +91,7 @@ struct ThinkingBlockView: View {
                 Text("思考过程")
                     .font(DuduTheme.captionFont(weight: .medium))
                     .foregroundStyle(DuduTheme.duduTextDim)
-                Image(systemName: "chevron.right")
+                DuduIcon(systemName: "chevron.right")
                     .font(DuduTheme.captionFont())
                     .foregroundStyle(DuduTheme.duduTextDim)
             }
@@ -144,7 +144,7 @@ struct ToolCardView: View {
             } label: {
                 HStack(spacing: 8) {
                     statusDot
-                    Image(systemName: toolIcon(blocks[0].kind))
+                    DuduIcon(systemName: toolIcon(blocks[0].kind))
                         .font(DuduTheme.captionFont())
                         .foregroundStyle(DuduTheme.duduTextDim)
                     Text(title)
@@ -155,7 +155,7 @@ struct ToolCardView: View {
                     Text(statusText)
                         .font(DuduTheme.captionFont())
                         .foregroundStyle(DuduTheme.duduTextDim)
-                    Image(systemName: expanded ? "chevron.up" : "chevron.down")
+                    DuduIcon(systemName: expanded ? "chevron.up" : "chevron.down")
                         .font(DuduTheme.captionFont())
                         .foregroundStyle(DuduTheme.duduTextDim)
                 }

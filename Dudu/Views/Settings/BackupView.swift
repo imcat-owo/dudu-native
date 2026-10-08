@@ -427,7 +427,7 @@ struct BackupView: View {
                     model.startBackup()
                 } label: {
                     HStack(spacing: 12) {
-                        Image(systemName: "externaldrive.fill.badge.plus")
+                        DuduIcon(systemName: "externaldrive.fill.badge.plus")
                             .font(.system(size: 20))
                             .foregroundStyle(DuduTheme.pink)
                             .frame(width: 36, height: 36)
@@ -451,7 +451,7 @@ struct BackupView: View {
             }
             if let notice = model.notice {
                 HStack(spacing: 8) {
-                    Image(systemName: model.noticeIsError
+                    DuduIcon(systemName: model.noticeIsError
                           ? "exclamationmark.circle.fill" : "checkmark.circle.fill")
                         .foregroundStyle(DuduTheme.pink)
                     Text(notice)
@@ -474,7 +474,7 @@ struct BackupView: View {
             // Local: always on — the engine writes the canonical copy here
             // before any destination delivery runs.
             HStack(spacing: 12) {
-                Image(systemName: "internaldrive.fill")
+                DuduIcon(systemName: "internaldrive.fill")
                     .font(.system(size: 15))
                     .foregroundStyle(DuduTheme.pink)
                     .frame(width: 30, height: 30)
@@ -489,7 +489,7 @@ struct BackupView: View {
                         .foregroundStyle(DuduTheme.duduTextDim)
                 }
                 Spacer()
-                Image(systemName: "checkmark.circle.fill")
+                DuduIcon(systemName: "checkmark.circle.fill")
                     .foregroundStyle(DuduTheme.pink)
             }
             .frame(minHeight: 44)
@@ -498,7 +498,7 @@ struct BackupView: View {
             let _ = model.refreshTick // re-read the engine stores on change
             ForEach(BackupDestinations.eligibleFolders) { folder in
                 HStack(spacing: 12) {
-                    Image(systemName: "folder.fill")
+                    DuduIcon(systemName: "folder.fill")
                         .font(.system(size: 15))
                         .foregroundStyle(DuduTheme.pink)
                         .frame(width: 30, height: 30)
@@ -538,7 +538,7 @@ struct BackupView: View {
             // Rclone remotes (S3 / WebDAV / SMB / SFTP / FTP).
             ForEach(RcloneRemoteStore.remotes) { remote in
                 HStack(spacing: 12) {
-                    Image(systemName: RcloneBackendCatalog.all
+                    DuduIcon(systemName: RcloneBackendCatalog.all
                         .first(where: { $0.type == remote.backend })?.icon ?? "network")
                         .font(.system(size: 15))
                         .foregroundStyle(DuduTheme.pink)
@@ -617,7 +617,7 @@ struct BackupView: View {
                     model.restorePicked(pkg.url)
                 } label: {
                     HStack(spacing: 12) {
-                        Image(systemName: "archivebox.fill")
+                        DuduIcon(systemName: "archivebox.fill")
                             .font(.system(size: 15))
                             .foregroundStyle(DuduTheme.pink)
                             .frame(width: 30, height: 30)
@@ -633,7 +633,7 @@ struct BackupView: View {
                                 .foregroundStyle(DuduTheme.duduTextDim)
                         }
                         Spacer()
-                        Image(systemName: "chevron.right")
+                        DuduIcon(systemName: "chevron.right")
                             .font(.system(size: 12, weight: .semibold))
                             .foregroundStyle(DuduTheme.duduTextDim)
                     }
@@ -664,7 +664,7 @@ struct BackupView: View {
                 model.showPackagePicker = true
             } label: {
                 HStack(spacing: 12) {
-                    Image(systemName: "square.and.arrow.down.fill")
+                    DuduIcon(systemName: "square.and.arrow.down.fill")
                         .font(.system(size: 15))
                         .foregroundStyle(DuduTheme.pink)
                         .frame(width: 30, height: 30)
@@ -703,7 +703,7 @@ struct BackupView: View {
                     BackupRecordDetailView(record: record)
                 } label: {
                     HStack(spacing: 12) {
-                        Image(systemName: historyIcon(for: record.status))
+                        DuduIcon(systemName: historyIcon(for: record.status))
                             .font(.system(size: 15))
                             .foregroundStyle(historyTint(for: record.status))
                             .frame(width: 30, height: 30)
@@ -1122,7 +1122,7 @@ struct RestoreSheet: View {
 
     private func failedView(message: String) -> some View {
         VStack(spacing: 16) {
-            Image(systemName: "exclamationmark.circle.fill")
+            DuduIcon(systemName: "exclamationmark.circle.fill")
                 .font(.system(size: 44))
                 .foregroundStyle(DuduTheme.pink)
             Text("恢复失败")
@@ -1192,7 +1192,7 @@ struct BackupRecordDetailView: View {
                 Section {
                     ForEach(record.destinations) { d in
                         HStack(spacing: 10) {
-                            Image(systemName: d.succeeded
+                            DuduIcon(systemName: d.succeeded
                                   ? "checkmark.circle.fill" : "xmark.circle.fill")
                                 .foregroundStyle(d.succeeded
                                                  ? DuduTheme.pink : DuduTheme.pink)

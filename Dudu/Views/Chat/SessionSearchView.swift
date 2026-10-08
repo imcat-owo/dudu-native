@@ -18,7 +18,7 @@ struct SessionSearchResultsView: View {
     var body: some View {
         if results.isEmpty {
             VStack(spacing: 12) {
-                Image(systemName: "magnifyingglass")
+                DuduIcon(systemName: "magnifyingglass")
                     .font(DuduTheme.titleFont())
                     .foregroundStyle(DuduTheme.duduTextDim)
                 Text("没有找到匹配的对话")
@@ -73,7 +73,7 @@ struct SessionSearchResultsView: View {
                 }
                 Spacer()
                 if result.session.id == currentSessionId {
-                    Image(systemName: "checkmark")
+                    DuduIcon(systemName: "checkmark")
                         .font(DuduTheme.captionFont(weight: .semibold))
                         .foregroundStyle(DuduTheme.pink)
                 }

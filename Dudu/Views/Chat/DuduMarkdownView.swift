@@ -61,7 +61,7 @@ private struct DuduMarkdownBlockView: View {
             }
         case .taskList(let isTight, let items):
             DuduListView(isTight: isTight, count: items.count) { index in
-                Image(systemName: items[index].isCompleted ? "checkmark.square.fill" : "square")
+                DuduIcon(systemName: items[index].isCompleted ? "checkmark.square.fill" : "square")
                     .font(DuduTheme.bodyFont())
                     .foregroundStyle(items[index].isCompleted ? DuduTheme.pink : DuduTheme.duduTextDim)
             } content: { index in
@@ -300,7 +300,7 @@ private struct DuduCodeBlockView: View {
                         copied = false
                     }
                 } label: {
-                    Image(systemName: copied ? "checkmark" : "doc.on.doc")
+                    DuduIcon(systemName: copied ? "checkmark" : "doc.on.doc")
                         .font(DuduTheme.captionFont(weight: .medium))
                         .foregroundStyle(copied ? DuduTheme.success : DuduTheme.duduTextDim)
                 }

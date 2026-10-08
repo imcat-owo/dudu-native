@@ -108,7 +108,7 @@ struct MCPDetailView: View {
                 Button {
                     Task { await loadTools() }
                 } label: {
-                    Image(systemName: "arrow.clockwise")
+                    DuduIcon(systemName: "arrow.clockwise")
                 }
                 .disabled(isLoadingTools)
             }

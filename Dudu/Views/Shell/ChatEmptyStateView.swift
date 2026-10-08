@@ -20,7 +20,7 @@ struct ChatEmptyStateView: View {
                 Circle()
                     .fill(DuduTheme.duduIconChip)
                     .frame(width: 76, height: 76)
-                Image(systemName: "sparkles")
+                DuduIcon(systemName: "sparkles")
                     .font(.system(size: FontSettings.shared.scaledApp(30), weight: .medium))
                     .foregroundStyle(DuduTheme.pink)
             }

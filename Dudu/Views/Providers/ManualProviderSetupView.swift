@@ -369,7 +369,7 @@ struct ManualProviderSetupView: View {
             }
         case .success(let models):
             HStack(spacing: 6) {
-                Image(systemName: "checkmark.circle.fill")
+                DuduIcon(systemName: "checkmark.circle.fill")
                     .foregroundStyle(DuduTheme.success)
                 Text(String(format: AppLocalized("manualsetup.testSuccessCount"), models.count))
                     .font(DuduTheme.captionFont())
@@ -377,7 +377,7 @@ struct ManualProviderSetupView: View {
             }
         case .emptySuccess:
             HStack(spacing: 6) {
-                Image(systemName: "checkmark.circle.fill")
+                DuduIcon(systemName: "checkmark.circle.fill")
                     .foregroundStyle(DuduTheme.success)
                 Text(AppLocalized("manualsetup.testEmpty"))
                     .font(DuduTheme.captionFont())
@@ -385,7 +385,7 @@ struct ManualProviderSetupView: View {
             }
         case .failure(let message):
             HStack(spacing: 6) {
-                Image(systemName: "xmark.circle.fill")
+                DuduIcon(systemName: "xmark.circle.fill")
                     .foregroundStyle(DuduTheme.destructive)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(AppLocalized("manualsetup.testFailed"))
@@ -462,7 +462,7 @@ struct ManualProviderSetupView: View {
                     Button {
                         pendingManualModels.removeAll { $0 == modelId }
                     } label: {
-                        Image(systemName: "trash")
+                        DuduIcon(systemName: "trash")
                             .foregroundStyle(DuduTheme.destructive)
                     }
                 }
@@ -606,7 +606,7 @@ struct ManualTestConnectionView: View {
                     .foregroundStyle(DuduTheme.duduTextDim)
             case .success(let models):
                 HStack(spacing: 6) {
-                    Image(systemName: "checkmark.circle.fill")
+                    DuduIcon(systemName: "checkmark.circle.fill")
                         .foregroundStyle(DuduTheme.success)
                     Text(String(format: AppLocalized("manualsetup.testSuccessCount"), models.count))
                         .font(DuduTheme.captionFont())
@@ -614,7 +614,7 @@ struct ManualTestConnectionView: View {
                 }
             case .emptySuccess:
                 HStack(spacing: 6) {
-                    Image(systemName: "checkmark.circle.fill")
+                    DuduIcon(systemName: "checkmark.circle.fill")
                         .foregroundStyle(DuduTheme.success)
                     Text(AppLocalized("manualsetup.testEmpty"))
                         .font(DuduTheme.captionFont())
@@ -622,7 +622,7 @@ struct ManualTestConnectionView: View {
                 }
             case .fetched(let count):
                 HStack(spacing: 6) {
-                    Image(systemName: "checkmark.circle.fill")
+                    DuduIcon(systemName: "checkmark.circle.fill")
                         .foregroundStyle(DuduTheme.success)
                     Text(String(format: AppLocalized("manualsetup.fetchSuccessCount"), count))
                         .font(DuduTheme.captionFont())
@@ -630,7 +630,7 @@ struct ManualTestConnectionView: View {
                 }
             case .emptyKept:
                 HStack(spacing: 6) {
-                    Image(systemName: "exclamationmark.circle.fill")
+                    DuduIcon(systemName: "exclamationmark.circle.fill")
                         .foregroundStyle(DuduTheme.pink)
                     Text(AppLocalized("manualsetup.fetchEmptyKept"))
                         .font(DuduTheme.captionFont())

@@ -303,7 +303,7 @@ struct SandboxSettingsView: View {
                     Button {
                         toggleContainer(env)
                     } label: {
-                        Image(systemName: env.isRunning ? "stop.fill" : "play.fill")
+                        DuduIcon(systemName: env.isRunning ? "stop.fill" : "play.fill")
                             .foregroundStyle(env.isRunning ? DuduTheme.duduTextDim : DuduTheme.pink)
                     }
                     .disabled(busy)
@@ -319,7 +319,7 @@ struct SandboxSettingsView: View {
                 Button {
                     Task { await loadContainers() }
                 } label: {
-                    Image(systemName: "arrow.clockwise")
+                    DuduIcon(systemName: "arrow.clockwise")
                         .foregroundStyle(DuduTheme.duduTextDim)
                 }
                 .disabled(containersBusy)
@@ -361,7 +361,7 @@ struct SandboxSettingsView: View {
     private var localSection: some View {
         Section {
             HStack(spacing: 12) {
-                Image(systemName: "cpu")
+                DuduIcon(systemName: "cpu")
                     .foregroundStyle(DuduTheme.duduTextDim)
                     .frame(width: 30, height: 30)
                     .background(DuduTheme.duduIconChip)
@@ -456,7 +456,7 @@ private struct BackendCardRow: View {
     var body: some View {
         Button(action: onSelect) {
             HStack(spacing: 12) {
-                Image(systemName: id == .cloud ? "cloud" : "cpu")
+                DuduIcon(systemName: id == .cloud ? "cloud" : "cpu")
                     .foregroundStyle(active ? DuduTheme.pink : DuduTheme.duduTextDim)
                     .frame(width: 30, height: 30)
                     .background(DuduTheme.duduIconChip)
@@ -482,7 +482,7 @@ private struct BackendCardRow: View {
                 }
                 Spacer()
                 if active {
-                    Image(systemName: "checkmark.circle.fill")
+                    DuduIcon(systemName: "checkmark.circle.fill")
                         .foregroundStyle(DuduTheme.pink)
                 }
             }
@@ -532,7 +532,7 @@ private struct ServerRow: View {
                     }
                     Spacer()
                     if active {
-                        Image(systemName: "checkmark.circle.fill")
+                        DuduIcon(systemName: "checkmark.circle.fill")
                             .foregroundStyle(DuduTheme.pink)
                     }
                 }
@@ -541,13 +541,13 @@ private struct ServerRow: View {
             .buttonStyle(.plain)
             .disabled(busy)
             Button(action: onEdit) {
-                Image(systemName: "pencil")
+                DuduIcon(systemName: "pencil")
                     .foregroundStyle(DuduTheme.duduTextDim)
             }
             .disabled(busy)
             .accessibilityLabel(L10n.string("sandbox.editServer"))
             Button(action: onDelete) {
-                Image(systemName: "trash")
+                DuduIcon(systemName: "trash")
                     .foregroundStyle(DuduTheme.duduTextDim)
             }
             .disabled(busy)
@@ -937,7 +937,7 @@ private struct CrossAppRow: View {
                 }
             } label: {
                 HStack(spacing: 12) {
-                    Image(systemName: entry.mode == .webview ? "safari" : "arrow.up.right.square")
+                    DuduIcon(systemName: entry.mode == .webview ? "safari" : "arrow.up.right.square")
                         .foregroundStyle(DuduTheme.pink)
                         .frame(width: 30, height: 30)
                         .background(DuduTheme.duduIconChip)
@@ -956,12 +956,12 @@ private struct CrossAppRow: View {
                     if opening {
                         ProgressView()
                     } else if entry.needsParams {
-                        Image(systemName: "chevron.right")
+                        DuduIcon(systemName: "chevron.right")
                             .font(.system(size: 13))
                             .foregroundStyle(DuduTheme.duduTextDim)
                             .rotationEffect(.degrees(expanded ? 90 : 0))
                     } else {
-                        Image(systemName: "arrow.up.right")
+                        DuduIcon(systemName: "arrow.up.right")
                             .font(.system(size: 13))
                             .foregroundStyle(DuduTheme.duduTextDim)
                     }

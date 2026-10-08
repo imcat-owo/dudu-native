@@ -20,7 +20,7 @@ struct ProviderListView: View {
                     nav.path.append(SettingsRoute.qrScan)
                 } label: {
                     HStack(spacing: 12) {
-                        Image(systemName: "qrcode.viewfinder")
+                        DuduIcon(systemName: "qrcode.viewfinder")
                             .font(.system(size: 15))
                             .foregroundStyle(DuduTheme.pink)
                             .frame(width: 30, height: 30)
@@ -30,7 +30,7 @@ struct ProviderListView: View {
                             .font(DuduTheme.bodyFont(weight: .medium))
                             .foregroundStyle(DuduTheme.duduText)
                         Spacer()
-                        Image(systemName: "chevron.right")
+                        DuduIcon(systemName: "chevron.right")
                             .font(.system(size: 12, weight: .medium))
                             .foregroundStyle(DuduTheme.duduTextDim)
                     }
@@ -57,7 +57,7 @@ struct ProviderListView: View {
                 Button {
                     showingTypePicker = true
                 } label: {
-                    Image(systemName: "plus")
+                    DuduIcon(systemName: "plus")
                 }
             }
         }
@@ -96,7 +96,7 @@ private struct ProviderRowView: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            Image(systemName: instance.providerType.iconName)
+            DuduIcon(systemName: instance.providerType.iconName)
                 .font(.system(size: 17))
                 .foregroundStyle(DuduTheme.pink)
                 .frame(width: 32, height: 32)
@@ -284,7 +284,7 @@ private struct ProviderTypePickerView: View {
 
     private func pickerRow(icon: String, title: String, subtitle: String) -> some View {
         HStack(spacing: 12) {
-            Image(systemName: icon)
+            DuduIcon(systemName: icon)
                 .font(.system(size: 17))
                 .foregroundStyle(DuduTheme.pink)
                 .frame(width: 32, height: 32)

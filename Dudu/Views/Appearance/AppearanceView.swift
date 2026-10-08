@@ -81,7 +81,7 @@ struct AppearanceView: View {
     /// matching the 定妆 row style (small, compact, no subtitles).
     private func appearanceLinkRow(icon: String, title: String) -> some View {
         HStack(spacing: 12) {
-            Image(systemName: icon)
+            DuduIcon(systemName: icon)
                 .font(.system(size: 13, weight: .medium))
                 .foregroundStyle(DuduTheme.pink)
                 .frame(width: 28, height: 28)
@@ -104,7 +104,7 @@ struct AppearanceView: View {
                     .foregroundStyle(DuduTheme.duduText)
                 Spacer()
                 if isActive(preset) {
-                    Image(systemName: "checkmark.circle.fill")
+                    DuduIcon(systemName: "checkmark.circle.fill")
                         .foregroundStyle(DuduTheme.pink)
                 }
             }
@@ -130,7 +130,7 @@ struct AppearanceView: View {
                 Button {
                     studio.clearOverride(role, scope: .global, variant: variant)
                 } label: {
-                    Image(systemName: "arrow.counterclockwise")
+                    DuduIcon(systemName: "arrow.counterclockwise")
                         .font(.system(size: 13))
                         .foregroundStyle(DuduTheme.duduTextDim)
                 }

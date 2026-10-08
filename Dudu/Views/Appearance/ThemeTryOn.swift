@@ -203,7 +203,7 @@ struct ThemeTryOnBanner: View {
     var body: some View {
         if tryOn.isStaged {
             HStack(spacing: 10) {
-                Image(systemName: "paintbrush.fill")
+                DuduIcon(systemName: "paintbrush.fill")
                     .font(.system(size: 13, weight: .medium))
                     .foregroundStyle(DuduTheme.pink)
                     .frame(width: 28, height: 28)

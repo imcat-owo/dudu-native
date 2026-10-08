@@ -86,7 +86,7 @@ struct OurSpaceView: View {
                         Circle()
                             .fill(DuduTheme.duduIconChip)
                             .frame(width: 40, height: 40)
-                        Image(systemName: "music.note")
+                        DuduIcon(systemName: "music.note")
                             .font(.system(size: 16, weight: .medium))
                             .foregroundStyle(DuduTheme.pink)
                     }
@@ -107,7 +107,7 @@ struct OurSpaceView: View {
                         }
                     }
                     Spacer()
-                    Image(systemName: "chevron.right")
+                    DuduIcon(systemName: "chevron.right")
                         .font(.system(size: 12, weight: .semibold))
                         .foregroundStyle(DuduTheme.duduTextDim)
                 }
@@ -118,7 +118,7 @@ struct OurSpaceView: View {
             Button {
                 Task { await dj.togglePlayPause() }
             } label: {
-                Image(systemName: dj.status.playing ? "pause.fill" : "play.fill")
+                DuduIcon(systemName: dj.status.playing ? "pause.fill" : "play.fill")
                     .font(.system(size: 14))
                     .foregroundStyle(DuduTheme.duduText)
                     .frame(width: 40, height: 40)
@@ -152,7 +152,7 @@ struct OurSpaceView: View {
                     showingNewTask = true
                 } label: {
                     HStack(spacing: 4) {
-                        Image(systemName: "plus")
+                        DuduIcon(systemName: "plus")
                             .font(.system(size: 11, weight: .semibold))
                         Text("新建")
                             .font(DuduTheme.captionFont(weight: .semibold))
@@ -230,7 +230,7 @@ struct OurSpaceSegmentedControl: View {
                     }
                 } label: {
                     VStack(spacing: 3) {
-                        Image(systemName: s.systemImage)
+                        DuduIcon(systemName: s.systemImage)
                             .font(.system(size: 13, weight: selected ? .semibold : .regular))
                         Text(s.title)
                             .font(DuduTheme.captionFont(weight: selected ? .semibold : .regular))
@@ -274,7 +274,7 @@ struct OurSpaceSectionHeader: View {
             if let actionTitle, let action {
                 Button(action: action) {
                     HStack(spacing: 4) {
-                        Image(systemName: "plus")
+                        DuduIcon(systemName: "plus")
                             .font(.system(size: 11, weight: .semibold))
                         Text(actionTitle)
                             .font(DuduTheme.captionFont(weight: .semibold))
@@ -311,7 +311,7 @@ struct OurSpaceEmptyState: View {
                 Circle()
                     .fill(DuduTheme.duduIconChip)
                     .frame(width: 56, height: 56)
-                Image(systemName: systemImage)
+                DuduIcon(systemName: systemImage)
                     .font(.system(size: 22, weight: .medium))
                     .foregroundStyle(DuduTheme.pink)
             }

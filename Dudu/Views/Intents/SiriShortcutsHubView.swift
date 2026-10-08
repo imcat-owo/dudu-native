@@ -95,7 +95,7 @@ struct SiriShortcutsHubView: View {
                     ScheduledPromptsView()
                 } label: {
                     HStack(spacing: 12) {
-                        Image(systemName: "alarm.fill")
+                        DuduIcon(systemName: "alarm.fill")
                             .font(.system(size: 15))
                             .foregroundStyle(DuduTheme.pink)
                             .frame(width: 30, height: 30)
@@ -124,7 +124,7 @@ struct SiriShortcutsHubView: View {
     // MARK: - Rows
 
     private func iconChip(_ systemImage: String) -> some View {
-        Image(systemName: systemImage)
+        DuduIcon(systemName: systemImage)
             .font(.system(size: 15))
             .foregroundStyle(DuduTheme.pink)
             .frame(width: 30, height: 30)

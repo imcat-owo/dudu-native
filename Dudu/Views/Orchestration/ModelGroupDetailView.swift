@@ -306,7 +306,7 @@ private struct ModelGroupMemberPickerView: View {
                                     .foregroundStyle(DuduTheme.duduTextDim)
                             }
                             Spacer()
-                            Image(systemName: "plus.circle")
+                            DuduIcon(systemName: "plus.circle")
                                 .foregroundStyle(DuduTheme.pink)
                         }
                     }

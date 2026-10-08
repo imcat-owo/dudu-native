@@ -14,7 +14,7 @@ struct SettingsStubView: View {
                 RoundedRectangle(cornerRadius: DuduTheme.radiusChip, style: .continuous)
                     .fill(DuduTheme.duduIconChip)
                     .frame(width: 64, height: 64)
-                Image(systemName: "gearshape")
+                DuduIcon(systemName: "gearshape")
                     .font(.system(size: FontSettings.shared.scaledApp(26), weight: .medium))
                     .foregroundStyle(DuduTheme.pink)
             }

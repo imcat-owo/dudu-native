@@ -107,7 +107,7 @@ struct SessionDrawerView: View {
                             onNewChat()
                         }
                     } label: {
-                        Image(systemName: "square.and.pencil")
+                        DuduIcon(systemName: "square.and.pencil")
                             .foregroundStyle(DuduTheme.duduText)
                     }
                     .accessibilityLabel("新的对话")
@@ -158,7 +158,7 @@ struct SessionDrawerView: View {
                 }
                 Spacer()
                 if session.id == vm.sessionId {
-                    Image(systemName: "checkmark")
+                    DuduIcon(systemName: "checkmark")
                         .font(DuduTheme.captionFont(weight: .semibold))
                         .foregroundStyle(DuduTheme.pink)
                 }
@@ -207,7 +207,7 @@ struct SessionDrawerView: View {
 
     private var emptyState: some View {
         VStack(spacing: 12) {
-            Image(systemName: "bubble.left.and.bubble.right")
+            DuduIcon(systemName: "bubble.left.and.bubble.right")
                 .font(DuduTheme.titleFont())
                 .foregroundStyle(DuduTheme.duduTextDim)
             Text("还没有历史对话")

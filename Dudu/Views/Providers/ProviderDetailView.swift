@@ -66,7 +66,7 @@ struct ProviderDetailView: View {
                     nav.path.append(SettingsRoute.providerShare(instance.id))
                 } label: {
                     HStack(spacing: 12) {
-                        Image(systemName: "qrcode")
+                        DuduIcon(systemName: "qrcode")
                             .font(.system(size: 15))
                             .foregroundStyle(DuduTheme.pink)
                             .frame(width: 30, height: 30)
@@ -76,7 +76,7 @@ struct ProviderDetailView: View {
                             .font(DuduTheme.bodyFont(weight: .medium))
                             .foregroundStyle(DuduTheme.duduText)
                         Spacer()
-                        Image(systemName: "chevron.right")
+                        DuduIcon(systemName: "chevron.right")
                             .font(.system(size: 12, weight: .medium))
                             .foregroundStyle(DuduTheme.duduTextDim)
                     }
@@ -259,7 +259,7 @@ struct ProviderDetailView: View {
             let authed = manager.isAuthenticated(instanceId: instance.id)
             if authed {
                 HStack {
-                    Image(systemName: "checkmark.circle.fill")
+                    DuduIcon(systemName: "checkmark.circle.fill")
                         .foregroundStyle(DuduTheme.success)
                     VStack(alignment: .leading, spacing: 2) {
                         Text("已登录")
@@ -414,7 +414,7 @@ private struct KimiDeviceFlowView: View {
                     Button {
                         UIPasteboard.general.string = presentation.userCode
                     } label: {
-                        Image(systemName: "doc.on.doc")
+                        DuduIcon(systemName: "doc.on.doc")
                     }
                 }
                 ProgressView()

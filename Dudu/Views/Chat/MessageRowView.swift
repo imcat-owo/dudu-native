@@ -152,7 +152,7 @@ struct MessageRowView: View {
                         .clipShape(RoundedRectangle(cornerRadius: DuduTheme.radiusChip, style: .continuous))
                 } else {
                     HStack(spacing: 4) {
-                        Image(systemName: "doc")
+                        DuduIcon(systemName: "doc")
                             .font(DuduTheme.captionFont())
                         Text(attachment.fileName)
                             .font(DuduTheme.captionFont())
@@ -249,7 +249,7 @@ struct MessageRowView: View {
 
     private func assistantErrorRow(_ error: String) -> some View {
         HStack(spacing: 6) {
-            Image(systemName: "exclamationmark.circle")
+            DuduIcon(systemName: "exclamationmark.circle")
                 .font(DuduTheme.captionFont())
             Text(error)
                 .font(DuduTheme.captionFont())
@@ -277,7 +277,7 @@ struct MessageRowView: View {
                 toggleReadAloud()
             } label: {
                 HStack(spacing: 4) {
-                    Image(systemName: isThisReading ? "stop.fill" : "speaker.wave.2.fill")
+                    DuduIcon(systemName: isThisReading ? "stop.fill" : "speaker.wave.2.fill")
                         .font(DuduTheme.captionFont())
                     Text(isThisReading ? "停止" : "朗读")
                         .font(DuduTheme.captionFont())
@@ -341,7 +341,7 @@ struct MessageRowView: View {
                 ZStack {
                     Circle()
                         .fill(DuduTheme.duduIconChip)
-                    Image(systemName: "person.fill")
+                    DuduIcon(systemName: "person.fill")
                         .font(DuduTheme.captionFont(weight: .medium))
                         .foregroundStyle(DuduTheme.pink)
                 }

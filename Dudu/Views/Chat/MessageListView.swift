@@ -61,7 +61,7 @@ struct MessageListView: View {
                         }
                     } label: {
                         HStack(spacing: 4) {
-                            Image(systemName: "arrow.down")
+                            DuduIcon(systemName: "arrow.down")
                             Text("最新消息")
                         }
                         .font(DuduTheme.captionFont(weight: .medium))

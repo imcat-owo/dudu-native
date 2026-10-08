@@ -65,7 +65,7 @@ struct ApiKeyFieldView: View {
 
             if savedAt != .distantPast {
                 HStack(spacing: 6) {
-                    Image(systemName: "checkmark.circle.fill")
+                    DuduIcon(systemName: "checkmark.circle.fill")
                         .foregroundStyle(DuduTheme.success)
                     Text("已保存 · \(savedAt, format: .dateTime.month().day().hour().minute())")
                         .font(DuduTheme.captionFont())

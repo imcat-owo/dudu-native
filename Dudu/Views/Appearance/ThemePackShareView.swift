@@ -156,7 +156,7 @@ struct ThemePackShareView: View {
     private func shareButton(_ title: String, systemImage: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             VStack(spacing: 6) {
-                Image(systemName: systemImage)
+                DuduIcon(systemName: systemImage)
                     .font(.system(size: 15, weight: .medium))
                     .foregroundStyle(DuduTheme.pink)
                     .frame(width: 40, height: 40)
@@ -237,7 +237,7 @@ struct ThemePackShareView: View {
                 showSaveAlert = true
             } label: {
                 HStack {
-                    Image(systemName: "bookmark.fill")
+                    DuduIcon(systemName: "bookmark.fill")
                         .font(.system(size: 13, weight: .medium))
                         .foregroundStyle(DuduTheme.pink)
                         .frame(width: 28, height: 28)
@@ -247,7 +247,7 @@ struct ThemePackShareView: View {
                         .font(DuduTheme.bodyFont(weight: .medium))
                         .foregroundStyle(DuduTheme.duduText)
                     Spacer()
-                    Image(systemName: "plus")
+                    DuduIcon(systemName: "plus")
                         .font(.system(size: 12, weight: .medium))
                         .foregroundStyle(DuduTheme.duduTextDim)
                 }
@@ -277,7 +277,7 @@ struct ThemePackShareView: View {
                         renameTarget = item
                         renameText = item.name
                     } label: {
-                        Image(systemName: "pencil")
+                        DuduIcon(systemName: "pencil")
                             .font(.system(size: 12))
                             .foregroundStyle(DuduTheme.duduTextDim)
                     }
@@ -285,7 +285,7 @@ struct ThemePackShareView: View {
                     Button {
                         deleteTarget = item
                     } label: {
-                        Image(systemName: "trash")
+                        DuduIcon(systemName: "trash")
                             .font(.system(size: 12))
                             .foregroundStyle(DuduTheme.duduDestructive)
                     }

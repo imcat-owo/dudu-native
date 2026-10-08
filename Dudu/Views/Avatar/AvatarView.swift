@@ -38,7 +38,7 @@ struct AvatarView: View {
                             .resizable()
                             .scaledToFill()
                     } else {
-                        Image(systemName: "sparkles")
+                        DuduIcon(systemName: "sparkles")
                             .font(DuduTheme.captionFont(weight: .medium))
                             .foregroundStyle(DuduTheme.pink)
                     }

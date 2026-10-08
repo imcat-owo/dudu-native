@@ -58,7 +58,7 @@ struct WaveformKey: View {
                 .frame(width: 64, height: 64)
                 .modifier(CallKeyGlass(isHeld: isHeld))
             if muted {
-                Image(systemName: "mic.slash")
+                DuduIcon(systemName: "mic.slash")
                     .font(DuduTheme.bodyFont())
                     .foregroundStyle(DuduTheme.duduTextDim)
             } else {
