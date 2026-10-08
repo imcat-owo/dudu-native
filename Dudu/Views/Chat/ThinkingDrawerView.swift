@@ -270,8 +270,9 @@ struct ThinkingDrawerView: View {
 // Screen anchoring: the presentation sites are small hosts deep in the chat
 // (a 44pt slot, a header button, the peek-cat host). A GeometryReader reads
 // the host's global frame and positions a screen-sized container so the
-// drawer lands on the real screen bottom. The anchor is captured once on
-// appear so message-list scrolling can't move the drawer mid-presentation.
+// drawer lands on the real screen bottom. The anchor recomputes live on
+// every layout pass so message-list scrolling can't move the drawer
+// mid-presentation.
 
 struct ThinkingDrawerOverlay: View {
     let block: AssistantBlock
@@ -288,7 +289,6 @@ struct ThinkingDrawerOverlay: View {
 
     @State private var shown = false
     @State private var dragY: CGFloat = 0
-    @State private var anchor: CGPoint?
     @State private var dismissing = false
 
     private var spring: Animation {
@@ -336,9 +336,6 @@ struct ThinkingDrawerOverlay: View {
             .frame(width: screen.width, height: screen.height, alignment: .bottom)
             .position(anchorPoint(host: host, screen: screen))
             .onAppear {
-                // Capture the anchor once: later layout passes (e.g. the
-                // message list scrolling underneath) must not move the drawer.
-                anchor = CGPoint(x: screen.midX - host.minX, y: screen.midY - host.minY)
                 withAnimation(spring) { shown = true }
             }
         }
@@ -357,8 +354,8 @@ struct ThinkingDrawerOverlay: View {
 
     private func anchorPoint(host: CGRect, screen: CGRect) -> CGPoint {
         // Overlay-local origin is the host frame's top-left; the screen-sized
-        // container must be centered on the real screen center.
-        if let anchor { return anchor }
+        // container must be centered on the real screen center. Recomputed
+        // live so scrolling the host list keeps the drawer screen-anchored.
         return CGPoint(x: screen.midX - host.minX, y: screen.midY - host.minY)
     }
 
