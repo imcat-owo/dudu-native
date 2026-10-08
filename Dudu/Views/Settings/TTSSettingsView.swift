@@ -61,9 +61,11 @@ struct TTSSettingsView: View {
                     VoiceOutputPlayer.shared.setRate(value)
                 }
             } header: {
-                Text("朗读")
+                DuduSectionTitle("朗读")
             } footer: {
-                Text("关闭自动朗读后，仍可随时点消息下面的“朗读”单独读一条。")
+                DuduSectionFooter {
+                    Text("关闭自动朗读后，仍可随时点消息下面的“朗读”单独读一条。")
+                }
             }
 
             Section {
@@ -115,12 +117,14 @@ struct TTSSettingsView: View {
                     }
                 }
             } header: {
-                Text("语音服务")
+                DuduSectionTitle("语音服务")
             } footer: {
-                Text("朗读按顺序尝试：选定的语音服务 → 当前聊天模型的语音分组 → 系统语音（需在上方开启）。只配置了服务但没密钥时，该服务会被跳过。")
+                DuduSectionFooter {
+                    Text("朗读按顺序尝试：选定的语音服务 → 当前聊天模型的语音分组 → 系统语音（需在上方开启）。只配置了服务但没密钥时，该服务会被跳过。")
+                }
             }
         }
-        .listStyle(.insetGrouped)
+        .duduCardList()
         .navigationTitle("语音")
         .onAppear { reload() }
         .sheet(isPresented: $showingAdd) {
@@ -205,9 +209,11 @@ private struct TTSServiceEditor: View {
                 fieldRow("模型", text: $model, placeholder: kind.defaultModel)
                 fieldRow("音色", text: $voice, placeholder: kind.defaultVoice)
             } header: {
-                Text("服务")
+                DuduSectionTitle("服务")
             } footer: {
-                Text("选服务商会自动填默认 URL / 模型 / 音色，也可以自己改。")
+                DuduSectionFooter {
+                    Text("选服务商会自动填默认 URL / 模型 / 音色，也可以自己改。")
+                }
             }
 
             Section {
@@ -215,9 +221,11 @@ private struct TTSServiceEditor: View {
                     .font(DuduTheme.bodyFont())
                     .foregroundStyle(DuduTheme.duduText)
             } header: {
-                Text("密钥")
+                DuduSectionTitle("密钥")
             } footer: {
-                Text("密钥只存进系统钥匙串，不进备份也不进仓库。")
+                DuduSectionFooter {
+                    Text("密钥只存进系统钥匙串，不进备份也不进仓库。")
+                }
             }
 
             if existing != nil {
@@ -232,7 +240,7 @@ private struct TTSServiceEditor: View {
                 }
             }
         }
-        .listStyle(.insetGrouped)
+        .duduCardList()
         .navigationTitle(existing == nil ? "添加语音服务" : "编辑语音服务")
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {

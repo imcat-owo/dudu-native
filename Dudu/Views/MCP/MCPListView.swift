@@ -46,13 +46,15 @@ struct MCPListView: View {
                         }
                     }
                 } header: {
-                    Text("服务器")
+                    DuduSectionTitle("服务器")
                 } footer: {
-                    Text("关闭的服务器不会被 AI 使用。工具调用默认需要批准。")
+                    DuduSectionFooter {
+                        Text("关闭的服务器不会被 AI 使用。工具调用默认需要批准。")
+                    }
                 }
             }
         }
-        .listStyle(.insetGrouped)
+        .duduCardList()
         .navigationTitle("MCP 服务器")
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
@@ -183,15 +185,18 @@ private struct MCPAddServerSheet: View {
                             .autocorrectionDisabled()
                     }
                 } footer: {
-                    if let errorMessage {
-                        Text(errorMessage)
-                    } else {
-                        Text(transport == .http
-                            ? "填 MCP 服务的 HTTP 地址。"
-                            : "填本地启动命令和参数，多个参数用空格隔开。")
+                    DuduSectionFooter {
+                        if let errorMessage {
+                            Text(errorMessage)
+                        } else {
+                            Text(transport == .http
+                                ? "填 MCP 服务的 HTTP 地址。"
+                                : "填本地启动命令和参数，多个参数用空格隔开。")
+                        }
                     }
                 }
             }
+            .duduCardForm()
             .navigationTitle("添加服务器")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

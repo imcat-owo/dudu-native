@@ -79,7 +79,7 @@ struct SiriShortcutsHubView: View {
                     phraseRow(descriptor)
                 }
             } header: {
-                Text(AppLocalized("Siri phrases"))
+                DuduSectionTitle(AppLocalized("Siri phrases"))
             }
 
             Section {
@@ -87,7 +87,7 @@ struct SiriShortcutsHubView: View {
                     actionRow(descriptor)
                 }
             } header: {
-                Text(AppLocalized("All actions"))
+                DuduSectionTitle(AppLocalized("All actions"))
             }
 
             Section {
@@ -113,13 +113,13 @@ struct SiriShortcutsHubView: View {
                     .padding(.vertical, 4)
                 }
             } header: {
-                Text(AppLocalized("On a schedule"))
+                DuduSectionTitle(AppLocalized("On a schedule"))
             }
         }
-        .listStyle(.insetGrouped)
         .navigationTitle(AppLocalized("Siri & Shortcuts"))
         .navigationBarTitleDisplayMode(.inline)
         .settingsPage()
+        .duduCardList()
     }
 
     // MARK: - Rows

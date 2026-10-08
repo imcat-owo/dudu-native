@@ -50,10 +50,12 @@ struct ProviderDetailView: View {
                 enabledRow(instance)
             }
 
-            Section("连接") {
+            Section {
                 baseURLRow(instance)
                 v1SuffixRow(instance)
                 imageModeRow(instance)
+            } header: {
+                DuduSectionTitle("连接")
             }
 
             credentialSection(instance)
@@ -82,7 +84,7 @@ struct ProviderDetailView: View {
                 }
             }
 
-            Section("模型") {
+            Section {
                 let entries = store.entries(for: instance.id)
                 if entries.isEmpty {
                     Text("暂无模型")
@@ -113,6 +115,8 @@ struct ProviderDetailView: View {
                     Label("添加模型", systemImage: "plus")
                         .font(DuduTheme.bodyFont())
                 }
+            } header: {
+                DuduSectionTitle("模型")
             }
 
             Section {
@@ -125,7 +129,7 @@ struct ProviderDetailView: View {
                 }
             }
         }
-        .listStyle(.insetGrouped)
+        .duduCardList()
         .confirmationDialog("删除此服务？", isPresented: $showingDeleteConfirm) {
             Button("删除", role: .destructive) {
                 store.removeInstance(instance.id)
@@ -229,16 +233,22 @@ struct ProviderDetailView: View {
     private func credentialSection(_ instance: ProviderInstance) -> some View {
         switch instance.credentialType {
         case .apiKey:
-            Section("API Key") {
+            Section {
                 ApiKeyFieldView(instanceId: instance.id)
+            } header: {
+                DuduSectionTitle("API Key")
             }
             // 手动填写的服务也要可测：填 key → 测试连接 → 拉取模型列表。
-            Section(AppLocalized("manualsetup.test")) {
+            Section {
                 ManualTestConnectionView(instanceId: instance.id)
+            } header: {
+                DuduSectionTitle(AppLocalized("manualsetup.test"))
             }
         case .oauth:
-            Section("OAuth 登录") {
+            Section {
                 oauthBody(instance)
+            } header: {
+                DuduSectionTitle("OAuth 登录")
             }
         }
     }
@@ -444,6 +454,7 @@ private struct AddModelView: View {
                     TextField("显示名称（可选）", text: $displayName)
                 }
             }
+            .duduCardForm()
             .navigationTitle("添加模型")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

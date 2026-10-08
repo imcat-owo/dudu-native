@@ -26,7 +26,7 @@ struct ModelGroupListView: View {
             defaultsSection
             groupsSection
         }
-        .listStyle(.insetGrouped)
+        .duduCardList()
         .navigationTitle(AppLocalized("orchestration.title"))
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
@@ -85,9 +85,11 @@ struct ModelGroupListView: View {
                 )
             )
         } header: {
-            Text(AppLocalized("orchestration.defaults"))
+            DuduSectionTitle(AppLocalized("orchestration.defaults"))
         } footer: {
-            Text(AppLocalized("orchestration.subtitle"))
+            DuduSectionFooter {
+                Text(AppLocalized("orchestration.subtitle"))
+            }
         }
     }
 
@@ -128,7 +130,7 @@ struct ModelGroupListView: View {
                 store.reorderGroups(order)
             }
         } header: {
-            Text(AppLocalized("orchestration.groups"))
+            DuduSectionTitle(AppLocalized("orchestration.groups"))
         }
     }
 }

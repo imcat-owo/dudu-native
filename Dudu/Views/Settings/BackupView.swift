@@ -366,7 +366,7 @@ struct BackupView: View {
             restoreSection
             historySection
         }
-        .listStyle(.insetGrouped)
+        .duduCardList()
         .navigationTitle("备份与恢复")
         .onAppear {
             // Runs left `.running` by a killed process must not spin forever.
@@ -461,7 +461,9 @@ struct BackupView: View {
             }
         } footer: {
             // The honesty rule, stated plainly on the page — not in fine print.
-            Text("密钥不进备份：API 密钥与各类密码只保存在本机的安全区里，从不写入备份文件。从备份恢复后，需要重新填写密钥。")
+            DuduSectionFooter {
+                Text("密钥不进备份：API 密钥与各类密码只保存在本机的安全区里，从不写入备份文件。从备份恢复后，需要重新填写密钥。")
+            }
         }
     }
 
@@ -587,9 +589,11 @@ struct BackupView: View {
                 .font(DuduTheme.captionFont())
                 .foregroundStyle(DuduTheme.duduTextDim)
         } header: {
-            Text("备份目的地")
+            DuduSectionTitle("备份目的地")
         } footer: {
-            Text("本机之外的目的地都是可选项：备份包会逐一投递到已启用的目的地，某个目的地连不上不会影响其他（远端投递需要 rclone 组件，当前版本暂未内置，暂时投递不过去）。移除文件夹目的地不会删除文件夹本身；删除远端会同时删掉保存在钥匙串里的密码。")
+            DuduSectionFooter {
+                Text("本机之外的目的地都是可选项：备份包会逐一投递到已启用的目的地，某个目的地连不上不会影响其他（远端投递需要 rclone 组件，当前版本暂未内置，暂时投递不过去）。移除文件夹目的地不会删除文件夹本身；删除远端会同时删掉保存在钥匙串里的密码。")
+            }
         }
     }
 
@@ -644,9 +648,11 @@ struct BackupView: View {
                 }
             }
         } header: {
-            Text("本机备份包")
+            DuduSectionTitle("本机备份包")
         } footer: {
-            Text("点一个备份包可以直接恢复。备份包是普通的 .dudubak 文件，也可以在「文件」App 里找到、拷走。")
+            DuduSectionFooter {
+                Text("点一个备份包可以直接恢复。备份包是普通的 .dudubak 文件，也可以在「文件」App 里找到、拷走。")
+            }
         }
     }
 
@@ -677,7 +683,9 @@ struct BackupView: View {
                 .frame(minHeight: 52)
             }
         } footer: {
-            Text("恢复采用合并语义：备份里有的数据写回来，本机独有的数据保留。密钥不在备份里，恢复后需要重新填写。")
+            DuduSectionFooter {
+                Text("恢复采用合并语义：备份里有的数据写回来，本机独有的数据保留。密钥不在备份里，恢复后需要重新填写。")
+            }
         }
     }
 
@@ -723,7 +731,7 @@ struct BackupView: View {
                 }
             }
         } header: {
-            Text("历史记录")
+            DuduSectionTitle("历史记录")
         }
     }
 
@@ -816,15 +824,17 @@ struct RemoteAddSheet: View {
                         .font(DuduTheme.captionFont())
                         .foregroundStyle(DuduTheme.duduTextDim)
                 }
-                Section("名称与目录") {
+                Section {
                     TextField("名称（字母、数字、-、_）", text: $name)
                         .font(DuduTheme.bodyFont())
                         .autocapitalization(.none)
                     TextField("备份目录（可选，如 backups）", text: $path)
                         .font(DuduTheme.bodyFont())
                         .autocapitalization(.none)
+                } header: {
+                    DuduSectionTitle("名称与目录")
                 }
-                Section("连接信息") {
+                Section {
                     ForEach(backend.fields) { field in
                         VStack(alignment: .leading, spacing: 4) {
                             fieldInput(field)
@@ -835,6 +845,8 @@ struct RemoteAddSheet: View {
                             }
                         }
                     }
+                } header: {
+                    DuduSectionTitle("连接信息")
                 }
                 if let error {
                     Section {
@@ -848,9 +860,12 @@ struct RemoteAddSheet: View {
                         .font(DuduTheme.bodyFont(weight: .semibold))
                         .foregroundStyle(DuduTheme.pink)
                 } footer: {
-                    Text("密码只进系统钥匙串，不进备份、不进配置文件。")
+                    DuduSectionFooter {
+                        Text("密码只进系统钥匙串，不进备份、不进配置文件。")
+                    }
                 }
             }
+            .duduCardForm()
             .navigationTitle("添加远端")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -969,13 +984,15 @@ struct RestoreSheet: View {
 
     private func confirmView(manifest: BackupManifest, url: URL) -> some View {
         List {
-            Section("备份包") {
+            Section {
                 row("文件名", url.lastPathComponent)
                 row("来源设备", manifest.deviceName)
                 row("备份时间", BackupView.dateText(manifest.createdAt))
                 row("加密", manifest.encryption == nil ? "未加密" : "已加密")
+            } header: {
+                DuduSectionTitle("备份包")
             }
-            Section("包含内容") {
+            Section {
                 ForEach(manifest.categories.keys.sorted(), id: \.self) { key in
                     let stat = manifest.categories[key]
                     HStack {
@@ -988,15 +1005,19 @@ struct RestoreSheet: View {
                             .foregroundStyle(DuduTheme.duduTextDim)
                     }
                 }
+            } header: {
+                DuduSectionTitle("包含内容")
             }
             if manifest.encryption != nil {
                 Section {
                     SecureField("备份包密码", text: $passphrase)
                         .font(DuduTheme.bodyFont())
                 } header: {
-                    Text("密码")
+                    DuduSectionTitle("密码")
                 } footer: {
-                    Text("这个备份包是加密的，需要当时设置的密码才能恢复。")
+                    DuduSectionFooter {
+                        Text("这个备份包是加密的，需要当时设置的密码才能恢复。")
+                    }
                 }
             }
             Section {
@@ -1006,9 +1027,12 @@ struct RestoreSheet: View {
                 .font(DuduTheme.bodyFont(weight: .semibold))
                 .foregroundStyle(DuduTheme.pink)
             } footer: {
-                Text("恢复采用合并语义：备份里有的数据写回来，本机独有的数据保留。密钥不在备份里，恢复后需要重新填写。")
+                DuduSectionFooter {
+                    Text("恢复采用合并语义：备份里有的数据写回来，本机独有的数据保留。密钥不在备份里，恢复后需要重新填写。")
+                }
             }
         }
+        .duduCardList()
     }
 
     private func restoringView(lines: [String]) -> some View {
@@ -1037,7 +1061,7 @@ struct RestoreSheet: View {
 
     private func doneView(report: BackupImporter.Report) -> some View {
         List {
-            Section("恢复完成") {
+            Section {
                 row("来源设备", report.sourcePlatform ?? "—")
                 row("导入", "\(report.totalImported) 项")
                 row("更新", "\(report.totalUpdated) 项")
@@ -1045,9 +1069,11 @@ struct RestoreSheet: View {
                 if report.wasEncrypted {
                     row("加密包", "已用密码解密")
                 }
+            } header: {
+                DuduSectionTitle("恢复完成")
             }
             if !report.categories.isEmpty {
-                Section("各分类") {
+                Section {
                     ForEach(report.categories, id: \.category) { c in
                         HStack {
                             Text(backupCategoryLabel(c.category))
@@ -1059,24 +1085,30 @@ struct RestoreSheet: View {
                                 .foregroundStyle(DuduTheme.duduTextDim)
                         }
                     }
+                } header: {
+                    DuduSectionTitle("各分类")
                 }
             }
             if !report.warnings.isEmpty {
-                Section("提醒") {
+                Section {
                     ForEach(Array(report.warnings.enumerated()), id: \.offset) { _, w in
                         Text(w)
                             .font(DuduTheme.captionFont())
                             .foregroundStyle(DuduTheme.duduTextDim)
                     }
+                } header: {
+                    DuduSectionTitle("提醒")
                 }
             }
             if !report.integrityFailed.isEmpty {
-                Section("完整性问题") {
+                Section {
                     ForEach(Array(report.integrityFailed.enumerated()), id: \.offset) { _, p in
                         Text(p)
                             .font(DuduTheme.captionFont())
                             .foregroundStyle(DuduTheme.pink)
                     }
+                } header: {
+                    DuduSectionTitle("完整性问题")
                 }
             }
             Section {
@@ -1085,6 +1117,7 @@ struct RestoreSheet: View {
                     .foregroundStyle(DuduTheme.pink)
             }
         }
+        .duduCardList()
     }
 
     private func failedView(message: String) -> some View {
@@ -1130,7 +1163,7 @@ struct BackupRecordDetailView: View {
 
     var body: some View {
         List {
-            Section("概况") {
+            Section {
                 detailRow("开始", BackupView.dateText(record.startedAt))
                 if let finished = record.finishedAt {
                     detailRow("结束", BackupView.dateText(finished))
@@ -1152,9 +1185,11 @@ struct BackupRecordDetailView: View {
                         .font(DuduTheme.captionFont())
                         .foregroundStyle(DuduTheme.pink)
                 }
+            } header: {
+                DuduSectionTitle("概况")
             }
             if !record.destinations.isEmpty {
-                Section("投递结果") {
+                Section {
                     ForEach(record.destinations) { d in
                         HStack(spacing: 10) {
                             Image(systemName: d.succeeded
@@ -1174,10 +1209,12 @@ struct BackupRecordDetailView: View {
                             Spacer()
                         }
                     }
+                } header: {
+                    DuduSectionTitle("投递结果")
                 }
             }
             if record.skippedFiles > 0 {
-                Section("未备份的文件（\(record.skippedFiles) 个）") {
+                Section {
                     ForEach(record.skippedEntries) { e in
                         HStack {
                             Text(e.fileName)
@@ -1196,20 +1233,24 @@ struct BackupRecordDetailView: View {
                             .font(DuduTheme.captionFont())
                             .foregroundStyle(DuduTheme.duduTextDim)
                     }
+                } header: {
+                    DuduSectionTitle("未备份的文件（\(record.skippedFiles) 个）")
                 }
             }
             if !record.log.isEmpty {
-                Section("日志") {
+                Section {
                     ForEach(record.log) { entry in
                         Text(entry.message)
                             .font(DuduTheme.captionFont())
                             .foregroundStyle(entry.isProblem
                                              ? DuduTheme.pink : DuduTheme.duduTextDim)
                     }
+                } header: {
+                    DuduSectionTitle("日志")
                 }
             }
         }
-        .listStyle(.insetGrouped)
+        .duduCardList()
         .navigationTitle("备份详情")
         .navigationBarTitleDisplayMode(.inline)
     }

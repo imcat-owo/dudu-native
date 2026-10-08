@@ -54,7 +54,7 @@ struct ProviderQRScanView: View {
                     }
                 }
             }
-            .listStyle(.insetGrouped)
+            .duduCardList()
             .navigationTitle(AppLocalized("apigroup.share.scan"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

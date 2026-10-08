@@ -71,7 +71,7 @@ struct SandboxSettingsView: View {
             }
             crossAppSection
         }
-        .listStyle(.insetGrouped)
+        .duduCardList()
         .navigationTitle(L10n.string("sandbox.title"))
         .sheet(item: $editing) { server in
             ServerEditSheet(server: server, manager: manager) { refresh() }
@@ -123,11 +123,12 @@ struct SandboxSettingsView: View {
                 }
             }
         } header: {
-            Text(L10n.string("sandbox.switchBackend"))
+            DuduSectionTitle(L10n.string("sandbox.switchBackend"))
         } footer: {
             // Current mode is always visible, in words.
-            Text(currentModeLine)
-                .font(DuduTheme.captionFont())
+            DuduSectionFooter {
+                Text(currentModeLine)
+            }
         }
     }
 
@@ -171,10 +172,11 @@ struct SandboxSettingsView: View {
             }
             .disabled(busy)
         } header: {
-            Text(L10n.string("sandbox.servers"))
+            DuduSectionTitle(L10n.string("sandbox.servers"))
         } footer: {
-            Text(L10n.string("sandbox.relayNote"))
-                .font(DuduTheme.captionFont())
+            DuduSectionFooter {
+                Text(L10n.string("sandbox.relayNote"))
+            }
         }
     }
 
@@ -310,6 +312,9 @@ struct SandboxSettingsView: View {
         } header: {
             HStack {
                 Text(L10n.string("sandbox.containers"))
+                    .font(DuduTheme.captionFont(weight: .semibold))
+                    .foregroundStyle(DuduTheme.duduTextDim)
+                    .textCase(nil)
                 Spacer()
                 Button {
                     Task { await loadContainers() }
@@ -319,6 +324,8 @@ struct SandboxSettingsView: View {
                 }
                 .disabled(containersBusy)
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(DuduTheme.duduBackground)
         }
     }
 
@@ -384,7 +391,7 @@ struct SandboxSettingsView: View {
                     .font(DuduTheme.bodyFont())
             }
         } header: {
-            Text(L10n.string("sandbox.backend.local"))
+            DuduSectionTitle(L10n.string("sandbox.backend.local"))
         }
     }
 
@@ -398,10 +405,11 @@ struct SandboxSettingsView: View {
                 }
             }
         } header: {
-            Text(L10n.string("crossapp.title"))
+            DuduSectionTitle(L10n.string("crossapp.title"))
         } footer: {
-            Text(L10n.string("crossapp.note"))
-                .font(DuduTheme.captionFont())
+            DuduSectionFooter {
+                Text(L10n.string("crossapp.note"))
+            }
         }
     }
 
@@ -663,10 +671,12 @@ private struct ServerEditSheet: View {
                     }
                     .disabled(busy || testing)
                 } footer: {
-                    Text(L10n.string("sandbox.testConnectionNote"))
-                        .font(DuduTheme.captionFont())
+                    DuduSectionFooter {
+                        Text(L10n.string("sandbox.testConnectionNote"))
+                    }
                 }
             }
+            .duduCardForm()
             .navigationTitle(
                 server == nil ? L10n.string("sandbox.addServer") : L10n.string("sandbox.editServer")
             )

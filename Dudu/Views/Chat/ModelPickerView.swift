@@ -38,15 +38,17 @@ struct ModelPickerView: View {
                         ForEach(enabledInstances) { instance in
                             let entries = store.visibleEntries(for: instance.id)
                             if !entries.isEmpty {
-                                Section(header: Text(instance.label).font(DuduTheme.captionFont())) {
+                                Section {
                                     ForEach(entries) { entry in
                                         modelRow(entry, instance: instance)
                                     }
+                                } header: {
+                                    DuduSectionTitle(instance.label)
                                 }
                             }
                         }
                     }
-                    .listStyle(.insetGrouped)
+                    .duduCardList()
                 }
             }
             .navigationTitle("选择模型")

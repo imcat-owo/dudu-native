@@ -120,7 +120,7 @@ struct ModelGroupDetailView: View {
                     .font(DuduTheme.bodyFont())
                 }
             } header: {
-                Text(AppLocalized("orchestration.strategy"))
+                DuduSectionTitle(AppLocalized("orchestration.strategy"))
             }
 
             Section {
@@ -149,13 +149,15 @@ struct ModelGroupDetailView: View {
                         .font(DuduTheme.bodyFont())
                 }
             } header: {
-                Text(AppLocalized("orchestration.members"))
+                DuduSectionTitle(AppLocalized("orchestration.members"))
             } footer: {
                 // Honest: catalog metadata, not a live probe.
-                Text(AppLocalized("orchestration.capabilityNote"))
+                DuduSectionFooter {
+                    Text(AppLocalized("orchestration.capabilityNote"))
+                }
             }
         }
-        .listStyle(.insetGrouped)
+        .duduCardList()
     }
 
     // MARK: Member row
@@ -310,7 +312,7 @@ private struct ModelGroupMemberPickerView: View {
                     }
                 }
             }
-            .listStyle(.insetGrouped)
+            .duduCardList()
             .navigationTitle(AppLocalized("orchestration.pickMember"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

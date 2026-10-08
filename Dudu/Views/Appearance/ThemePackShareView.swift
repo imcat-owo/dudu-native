@@ -42,7 +42,7 @@ struct ThemePackShareView: View {
             importSection
             savedSection
         }
-        .listStyle(.insetGrouped)
+        .duduCardList()
         .navigationTitle("主题包")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
@@ -145,9 +145,11 @@ struct ThemePackShareView: View {
                     .foregroundStyle(DuduTheme.duduTextDim)
             }
         } header: {
-            Text("导出")
+            DuduSectionTitle("导出")
         } footer: {
-            Text("导出的 JSON 可直接分享给别人，对方在导入区粘贴即可试穿。未知字段会被忽略（向前兼容）。")
+            DuduSectionFooter {
+                Text("导出的 JSON 可直接分享给别人，对方在导入区粘贴即可试穿。未知字段会被忽略（向前兼容）。")
+            }
         }
     }
 
@@ -218,9 +220,11 @@ struct ThemePackShareView: View {
             .buttonStyle(.plain)
             .padding(.vertical, 4)
         } header: {
-            Text("导入")
+            DuduSectionTitle("导入")
         } footer: {
-            Text("导入先试穿：验证通过后主题立即预览，不满意在横幅里点放弃，什么都不会留下。")
+            DuduSectionFooter {
+                Text("导入先试穿：验证通过后主题立即预览，不满意在横幅里点放弃，什么都不会留下。")
+            }
         }
     }
 
@@ -289,7 +293,7 @@ struct ThemePackShareView: View {
                 }
             }
         } header: {
-            Text("已保存")
+            DuduSectionTitle("已保存")
         }
     }
 

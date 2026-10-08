@@ -74,9 +74,11 @@ struct ProviderQRShareView: View {
                         .foregroundStyle(DuduTheme.duduTextDim)
                 }
             } header: {
-                Text(AppLocalized("apigroup.share.title"))
+                DuduSectionTitle(AppLocalized("apigroup.share.title"))
             } footer: {
-                Text(AppLocalized("apigroup.share.desc"))
+                DuduSectionFooter {
+                    Text(AppLocalized("apigroup.share.desc"))
+                }
             }
 
             Section {
@@ -137,7 +139,7 @@ struct ProviderQRShareView: View {
                 .disabled(shareText.isEmpty)
             }
         }
-        .listStyle(.insetGrouped)
+        .duduCardList()
         .navigationTitle(AppLocalized("apigroup.share.qr"))
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showSystemShare) {

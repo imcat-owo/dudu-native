@@ -50,7 +50,7 @@ struct ProviderListView: View {
                 }
             }
         }
-        .listStyle(.insetGrouped)
+        .duduCardList()
         .navigationTitle("模型服务")
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
@@ -211,7 +211,7 @@ private struct ProviderTypePickerView: View {
         NavigationStack {
             List {
                 // 手动填写 —— 自己填 Base URL + API Key + 模型，不走 OAuth。
-                Section(AppLocalized("manualsetup.customSection")) {
+                Section {
                     Button {
                         manualSetup = ManualSetupRequest(presetType: nil)
                     } label: {
@@ -221,9 +221,11 @@ private struct ProviderTypePickerView: View {
                             subtitle: AppLocalized("manualsetup.customRowSubtitle")
                         )
                     }
+                } header: {
+                    DuduSectionTitle(AppLocalized("manualsetup.customSection"))
                 }
 
-                Section(AppLocalized("manualsetup.presetSection")) {
+                Section {
                     ForEach(ProviderType.creatable, id: \.self) { type in
                         Button {
                             if type.supportsManualEntry, type.oauthManager != nil {
@@ -240,9 +242,11 @@ private struct ProviderTypePickerView: View {
                             )
                         }
                     }
+                } header: {
+                    DuduSectionTitle(AppLocalized("manualsetup.presetSection"))
                 }
             }
-            .listStyle(.insetGrouped)
+            .duduCardList()
             .navigationTitle("添加服务")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

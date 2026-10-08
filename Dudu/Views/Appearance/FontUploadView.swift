@@ -74,12 +74,14 @@ struct FontUploadView: View {
                         .foregroundStyle(noticeIsError ? DuduTheme.duduDestructive : DuduTheme.duduTextDim)
                 }
             } header: {
-                Text("上传字体")
+                DuduSectionTitle("上传字体")
             } footer: {
-                Text("支持 .ttf / .otf / .ttc。上传后 App 内文字都换成这个字体（代码仍用系统等宽字体）。字号大小去「设置 → 字号」调，那里管缩放、这里管字体。")
+                DuduSectionFooter {
+                    Text("支持 .ttf / .otf / .ttc。上传后 App 内文字都换成这个字体（代码仍用系统等宽字体）。字号大小去「设置 → 字号」调，那里管缩放、这里管字体。")
+                }
             }
 
-            Section("预览") {
+            Section {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("嘟嘟把 App 打扮成你的样子")
                         .font(previewFont(size: 15, weight: .semibold))
@@ -90,9 +92,11 @@ struct FontUploadView: View {
                         .foregroundStyle(DuduTheme.duduTextDim)
                 }
                 .padding(.vertical, 6)
+            } header: {
+                DuduSectionTitle("预览")
             }
         }
-        .listStyle(.insetGrouped)
+        .duduCardList()
         .navigationTitle("字体")
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showPicker) {

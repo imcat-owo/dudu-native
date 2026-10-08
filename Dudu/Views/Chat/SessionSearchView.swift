@@ -32,7 +32,7 @@ struct SessionSearchResultsView: View {
                     resultRow(result)
                 }
             }
-            .listStyle(.insetGrouped)
+            .duduCardList()
         }
     }
 

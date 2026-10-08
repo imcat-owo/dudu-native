@@ -88,11 +88,13 @@ struct AppLockView: View {
                         .foregroundStyle(DuduTheme.pink)
                 }
             } footer: {
-                Text("生物识别只在系统安全区内比对，嘟嘟只收到成功或失败的结果——你的面容与指纹从不离开本机。")
+                DuduSectionFooter {
+                    Text("生物识别只在系统安全区内比对，嘟嘟只收到成功或失败的结果——你的面容与指纹从不离开本机。")
+                }
             }
 
             if store.appLockEnabled {
-                Section("再次锁定") {
+                Section {
                     Picker("闲置后锁定", selection: Binding(
                         get: { store.appLockIdleSeconds },
                         set: { store.appLockIdleSeconds = $0 }
@@ -101,6 +103,8 @@ struct AppLockView: View {
                             Text(choice.label).tag(choice.seconds)
                         }
                     }
+                } header: {
+                    DuduSectionTitle("再次锁定")
                 }
 
                 Section {
@@ -112,11 +116,13 @@ struct AppLockView: View {
                     .font(DuduTheme.bodyFont())
                     .foregroundStyle(DuduTheme.pink)
                 } footer: {
-                    Text("点按后嘟嘟立即锁定，需要重新验证才能进入。")
+                    DuduSectionFooter {
+                        Text("点按后嘟嘟立即锁定，需要重新验证才能进入。")
+                    }
                 }
             }
         }
-        .listStyle(.insetGrouped)
+        .duduCardList()
         .navigationTitle("应用锁")
     }
 

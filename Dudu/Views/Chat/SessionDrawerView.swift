@@ -57,27 +57,33 @@ struct SessionDrawerView: View {
                 } else {
                     List {
                         if !pinned.isEmpty {
-                            Section("已置顶") {
+                            Section {
                                 ForEach(pinned) { session in
                                     sessionRow(session)
                                 }
+                            } header: {
+                                DuduSectionTitle("已置顶")
                             }
                         }
-                        Section("历史对话") {
+                        Section {
                             ForEach(unpinned) { session in
                                 sessionRow(session)
                             }
+                        } header: {
+                            DuduSectionTitle("历史对话")
                         }
                         // Phase D6 — archived sessions, with restore via swipe.
                         if !archived.isEmpty {
-                            Section("已归档") {
+                            Section {
                                 ForEach(archived) { session in
                                     sessionRow(session)
                                 }
+                            } header: {
+                                DuduSectionTitle("已归档")
                             }
                         }
                     }
-                    .listStyle(.insetGrouped)
+                    .duduCardList()
                 }
             }
             .navigationTitle("历史对话")

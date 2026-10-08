@@ -47,7 +47,7 @@ struct MCPDetailView: View {
                         .foregroundStyle(DuduTheme.duduTextDim)
                 }
             } header: {
-                Text("服务器信息")
+                DuduSectionTitle("服务器信息")
             }
 
             Section {
@@ -81,9 +81,11 @@ struct MCPDetailView: View {
                     }
                 }
             } header: {
-                Text("工具（逐个管理）")
+                DuduSectionTitle("工具（逐个管理）")
             } footer: {
-                Text("「调用前需批准」打开时，AI 每次用这个工具都会先弹窗问你；关掉后可直接调用，不再弹窗。")
+                DuduSectionFooter {
+                    Text("「调用前需批准」打开时，AI 每次用这个工具都会先弹窗问你；关掉后可直接调用，不再弹窗。")
+                }
             }
 
             if server != nil {
@@ -98,7 +100,7 @@ struct MCPDetailView: View {
                 }
             }
         }
-        .listStyle(.insetGrouped)
+        .duduCardList()
         .navigationTitle(serverId)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
