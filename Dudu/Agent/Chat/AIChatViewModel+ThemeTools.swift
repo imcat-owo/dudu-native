@@ -18,6 +18,17 @@ import UIKit
 // ThemeTryOn (in-memory try-on staging), or ThemeCustomCSS. No stubs:
 // a tool that cannot do its job returns an honest error.
 //
+// HONESTY (Wave 1): all 16 tools write to System A (AppearanceStudio's
+// semantic roles + wallpaper + assistant avatar + mode). The main UI
+// (58 view files) reads System B (DuduTheme fixed tokens) and ignores
+// System A. Only two writes are actually visible app-wide: set_theme's
+// mode switch (appearanceMode is read live by DuduTheme.adaptive) and
+// set_ai_avatar (PersonAvatarView in the message list refreshes on
+// .soulMdChanged). The try-on banner is a real global overlay; the staged
+// colors behind it are NOT visible on the main UI. Every other success
+// receipt must say the change is persisted to the engine but invisible in
+// the main UI until Wave 3 unifies the systems.
+//
 // Registration: makeAgentTools() appends themeToolDefinitions().
 // Dispatch: the tool-execution switch calls handleThemeTool(name:args:).
 
@@ -30,7 +41,7 @@ extension AIChatViewModel {
         return [
             AgentToolDefinition(
                 name: "set_wallpaper",
-                description: "Set the app wallpaper to an image. uri: a dudu-clone:// URL or /var/dudu/ Linux path (from a photo she shared in chat, or an image you generated). Empty string removes the wallpaper. Applies immediately to the whole app.",
+                description: "Set the app wallpaper to an image. uri: a dudu-clone:// URL or /var/dudu/ Linux path (from a photo she shared in chat, or an image you generated). Empty string removes the wallpaper. The wallpaper is saved to the theme engine and shows on appearance/settings pages, but the main chat UI does not mount a wallpaper background — do not tell her the main screen changed.",
                 parameters: [
                     "tool_title": AgentToolParam(type: .string, description: "A concise 5-10 word summary of what this tool call does, shown to the user."),
                     "uri": AgentToolParam(type: .string, description: "Image URI (dudu-clone://… or /var/dudu/… path). Empty string removes the wallpaper."),
@@ -60,7 +71,7 @@ extension AIChatViewModel {
             ),
             AgentToolDefinition(
                 name: "get_theme",
-                description: "Read the current theme as JSON. Call this BEFORE changing anything so you know what the theme looks like now. section: 'all' or one surface id (\(surfaceList)).",
+                description: "Read the current theme as JSON. Call this BEFORE changing anything so you know what the theme looks like now. This returns the theme ENGINE's stored state (System A); the main UI currently renders DuduTheme's fixed palette, not these values. section: 'all' or one surface id (\(surfaceList)).",
                 parameters: [
                     "tool_title": AgentToolParam(type: .string, description: "A concise 5-10 word summary of what this tool call does, shown to the user."),
                     "section": AgentToolParam(type: .string, description: "'all' or one surface id. Defaults to 'all'."),
@@ -70,7 +81,7 @@ extension AIChatViewModel {
             ),
             AgentToolDefinition(
                 name: "apply_theme_coordinates",
-                description: "Recolor the theme from a FEELING: the engine derives a whole coherent light+dark palette from it. hue: a feeling word (粉嫩, 樱花粉, 薄荷, 晚霞, 天空蓝, 薰衣草, mint, sakura, ocean…) or a #rrggbb hex — unknown words are rejected, never guessed. hueCount 1-5: color complexity, 1 = monochrome anchor. emotion -5..5: vivid/warm (+) vs calm/muted (-). meaning -5..5: deep/tactile (+) vs airy (-). targets: 'all' or comma-separated surface ids (\(surfaceList)) — only those surfaces are recolored. Applies immediately and persists. For a no-commit preview, use preview_theme first, then confirm_theme.",
+                description: "Recolor the theme from a FEELING: the engine derives a whole coherent light+dark palette from it. hue: a feeling word (粉嫩, 樱花粉, 薄荷, 晚霞, 天空蓝, 薰衣草, mint, sakura, ocean…) or a #rrggbb hex — unknown words are rejected, never guessed. hueCount 1-5: color complexity, 1 = monochrome anchor. emotion -5..5: vivid/warm (+) vs calm/muted (-). meaning -5..5: deep/tactile (+) vs airy (-). targets: 'all' or comma-separated surface ids (\(surfaceList)) — only those surfaces are recolored. Writes to the theme engine and persists, but the main UI currently renders DuduTheme's fixed palette and will NOT show the change — do not claim she can see it. For a no-commit preview, use preview_theme first, then confirm_theme.",
                 parameters: [
                     "tool_title": AgentToolParam(type: .string, description: "A concise 5-10 word summary of what this tool call does, shown to the user."),
                     "hue": AgentToolParam(type: .string, description: "Feeling word or #rrggbb hex. Required."),
@@ -85,7 +96,7 @@ extension AIChatViewModel {
             ),
             AgentToolDefinition(
                 name: "apply_surface_tokens",
-                description: "Fine-tune ONE theme surface (single-region precision). target: a surface id (\(surfaceList)). tokens: a JSON object with any of bg, fg, accent, border (#rrggbb) and radius (number, px). Token mapping: bg paints the surface's background role; fg only works on 'text' (primary text); accent only on 'accent'; border only on 'card'; radius only on userBubble/aiBubble/input. Only the given tokens change; everything else stays. Applies to the currently active light/dark variant, immediately, and persists.",
+                description: "Fine-tune ONE theme surface (single-region precision). target: a surface id (\(surfaceList)). tokens: a JSON object with any of bg, fg, accent, border (#rrggbb) and radius (number, px). Token mapping: bg paints the surface's background role; fg only works on 'text' (primary text); accent only on 'accent'; border only on 'card'; radius only on userBubble/aiBubble/input. Only the given tokens change; everything else stays. Writes to the theme engine for the currently active light/dark variant and persists, but the main UI currently renders DuduTheme's fixed palette and will NOT show the change — do not claim she can see it.",
                 parameters: [
                     "tool_title": AgentToolParam(type: .string, description: "A concise 5-10 word summary of what this tool call does, shown to the user."),
                     "target": AgentToolParam(type: .string, description: "Surface id. Required."),
@@ -96,7 +107,7 @@ extension AIChatViewModel {
             ),
             AgentToolDefinition(
                 name: "apply_preset",
-                description: "Apply a built-in theme preset by id. Never invent an id — unknown ids are rejected. Valid: warmPaper, cleanAir, nightCocoa. Applies immediately and persists.",
+                description: "Apply a built-in theme preset by id. Never invent an id — unknown ids are rejected. Valid: warmPaper, cleanAir, nightCocoa. Writes to the theme engine and persists, but the main UI currently renders DuduTheme's fixed palette and will NOT show the change — do not claim she can see it.",
                 parameters: [
                     "tool_title": AgentToolParam(type: .string, description: "A concise 5-10 word summary of what this tool call does, shown to the user."),
                     "id": AgentToolParam(type: .string, description: "Preset id. Required."),
@@ -106,7 +117,7 @@ extension AIChatViewModel {
             ),
             AgentToolDefinition(
                 name: "preview_theme",
-                description: "Try-on: stage a theme change as a PREVIEW without saving it. She sees it immediately with a try-on banner (with Save/Discard buttons); nothing is persisted until confirm_theme. seed: a #rrggbb hex, or a JSON object {\"primary\":\"#…\",\"secondary\":\"#…\",\"tertiary\":\"#…\"} — a coherent palette is derived from it. mode: light | dark | system to preview. css: restricted theme-CSS to preview (same language as the theme_css tools). This is the preferred flow — preview first, save second, zero silent changes.",
+                description: "Try-on: stage a theme change as a PREVIEW without saving it. The try-on banner (with Save/Discard buttons) appears at the bottom of the screen — that banner is real and visible. The staged COLORS themselves are not visible on the main UI (it renders DuduTheme's fixed palette); only a mode change (light | dark | system) takes visible effect. seed: a #rrggbb hex, or a JSON object {\"primary\":\"#…\",\"secondary\":\"#…\",\"tertiary\":\"#…\"} — a coherent palette is derived from it. mode: light | dark | system to preview. css: restricted theme-CSS to preview (same language as the theme_css tools). This is the preferred flow — preview first, save second, zero silent changes. Do not claim she can see the previewed colors on the main screen.",
                 parameters: [
                     "tool_title": AgentToolParam(type: .string, description: "A concise 5-10 word summary of what this tool call does, shown to the user."),
                     "seed": AgentToolParam(type: .string, description: "#rrggbb hex or JSON {\"primary\":\"#…\",\"secondary\":\"#…\",\"tertiary\":\"#…\"}."),
@@ -290,13 +301,13 @@ extension AIChatViewModel {
         let uri = themeStr(args, "uri")
         if uri.isEmpty {
             studio.removeWallpaper(.global)
-            return ("壁纸已清除。", true)
+            return ("壁纸已清除（主题引擎里的壁纸记录已删）。外观设置页能看到变化；主界面目前不挂壁纸背景，所以主界面本来也没显示过它。", true)
         }
         guard let image = await themeResolveImage(uri) else {
             return ("Error: 找不到这张图片（\(uri)）。请确认图片已发送到聊天中，或换一张。", false)
         }
         studio.setWallpaper(image, for: .global)
-        return ("壁纸已更新。", true)
+        return ("壁纸已存入主题引擎。外观设置页可以看到；但主界面目前不挂壁纸背景，所以主界面上还看不见。两个系统统一后会自动生效。", true)
     }
 
     private func themeSetTheme(_ args: [String: Any]) -> (String, Bool) {
@@ -413,7 +424,7 @@ extension AIChatViewModel {
         let where_ = themeStr(args, "targets").isEmpty
             || themeStr(args, "targets").lowercased() == "all"
             ? "整个主题" : "surface：\(themeStr(args, "targets"))"
-        return ("已按「\(hue)」重新配色（\(where_)），浅色/深色两套都已更新。", true)
+        return ("已按「\(hue)」重新配色（\(where_)），浅色/深色两套都已存入主题引擎。但主界面还在读旧版配色系统，这个改动现在还看不见；系统统一后会自动生效。", true)
     }
 
     private func themeApplySurfaceTokens(_ args: [String: Any]) -> (String, Bool) {
@@ -497,7 +508,7 @@ extension AIChatViewModel {
         if packChanged { studio.persistPack(pack) }
         themeSyncPackMaps()
         let variantName = variant == .dark ? "深色" : "浅色"
-        return ("surface「\(target)」已更新（\(variantName)模式，\(ops.count) 个 token）。", true)
+        return ("surface「\(target)」的 \(ops.count) 个 token 已存入主题引擎（\(variantName)模式）。但主界面还在读旧版配色系统，这个改动现在还看不见；系统统一后会自动生效。", true)
     }
 
     private func themeApplyPreset(_ args: [String: Any]) -> (String, Bool) {
@@ -508,7 +519,7 @@ extension AIChatViewModel {
         ThemeTryOn.shared.recordPreChange()
         AppearanceStudio.shared.applyPreset(preset)
         themeSyncPackMaps()
-        return ("预设「\(preset.title)」已应用。", true)
+        return ("预设「\(preset.title)」已存入主题引擎。但主界面还在读旧版配色系统，这个改动现在还看不见；系统统一后会自动生效。", true)
     }
 
     private func themePreview(_ args: [String: Any]) -> (String, Bool) {
@@ -550,7 +561,7 @@ extension AIChatViewModel {
             let msg = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
             return ("Error: 试穿失败：\(msg)", false)
         }
-        return ("试穿已开始，她现在能看到效果（屏幕下方有试穿横幅）。调用 confirm_theme 保存，rollback_theme 放弃。", true)
+        return ("试穿已开始：屏幕下方的试穿横幅已出现，可以保存或放弃。不过预览的配色本身在主界面上现在还看不见（已经存进了主题引擎，系统统一后会自动生效）。如果预览里包含了模式切换（浅色/深色），那部分是立刻可见的。调用 confirm_theme 保存，rollback_theme 放弃。", true)
     }
 
     /// seed: #rrggbb or JSON {"primary":..,"secondary":..,"tertiary":..}.
@@ -568,14 +579,14 @@ extension AIChatViewModel {
 
     private func themeConfirm() -> (String, Bool) {
         if ThemeTryOn.shared.commit() {
-            return ("试穿已保存，主题已更新。", true)
+            return ("试穿已保存到主题引擎，试穿横幅已关闭。但配色在主界面上现在还看不见，系统统一后会自动生效。（模式切换不受影响，已实时生效。）", true)
         }
         return ("Error: 没有正在试穿的主题。先调用 preview_theme 开始试穿。", false)
     }
 
     private func themeRollback() -> (String, Bool) {
         if let msg = ThemeTryOn.shared.rollback() {
-            return (msg, true)
+            return ("\(msg)配色恢复已存入主题引擎；但主界面本来就不读这套配色，所以界面上没有变化。（模式切换部分如果有，已实时恢复。）", true)
         }
         return ("Error: 没有可回退的主题（没有试穿中的预览，也没有 AI 改过的主题记录）。", false)
     }
@@ -592,7 +603,7 @@ extension AIChatViewModel {
         do {
             try ThemeCustomCSS.shared.apply(css)
             themeSyncPackMaps()
-            return ("主题 CSS 已整体替换。", true)
+            return ("主题 CSS 已整体替换并存入主题引擎。但主界面还在读旧版配色系统，这个改动现在还看不见；系统统一后会自动生效。", true)
         } catch {
             let msg = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
             return ("Error: CSS 被拒绝：\(msg)", false)
@@ -608,7 +619,7 @@ extension AIChatViewModel {
         do {
             try ThemeCustomCSS.shared.apply(combined)
             themeSyncPackMaps()
-            return ("主题 CSS 已追加。", true)
+            return ("主题 CSS 已追加并存入主题引擎。但主界面还在读旧版配色系统，这个改动现在还看不见；系统统一后会自动生效。", true)
         } catch {
             let msg = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
             return ("Error: CSS 被拒绝：\(msg)", false)
@@ -627,7 +638,7 @@ extension AIChatViewModel {
         do {
             try ThemeCustomCSS.shared.apply(existing.replacingOccurrences(of: oldText, with: newText))
             themeSyncPackMaps()
-            return ("主题 CSS 已修改。", true)
+            return ("主题 CSS 已修改并存入主题引擎。但主界面还在读旧版配色系统，这个改动现在还看不见；系统统一后会自动生效。", true)
         } catch {
             let msg = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
             return ("Error: CSS 被拒绝：\(msg)", false)
@@ -654,7 +665,7 @@ extension AIChatViewModel {
         do {
             try ThemeCustomCSS.shared.apply(combined)
             themeSyncPackMaps()
-            return ("主题 CSS 已插入。", true)
+            return ("主题 CSS 已插入并存入主题引擎。但主界面还在读旧版配色系统，这个改动现在还看不见；系统统一后会自动生效。", true)
         } catch {
             let msg = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
             return ("Error: CSS 被拒绝：\(msg)", false)
@@ -668,7 +679,7 @@ extension AIChatViewModel {
         ThemeTryOn.shared.recordPreChange()
         ThemeCustomCSS.shared.clear()
         themeSyncPackMaps()
-        return ("自定义主题 CSS 已删除，恢复到之前的颜色。", true)
+        return ("自定义主题 CSS 已删除，主题引擎里的颜色已恢复。但主界面读的是旧版配色系统，不受影响。", true)
     }
 }
 
