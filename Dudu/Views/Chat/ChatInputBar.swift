@@ -1,6 +1,7 @@
 import PhotosUI
 import SwiftUI
 import UIKit
+import UniformTypeIdentifiers
 
 /// Phase C2 — the message composer.
 ///
@@ -19,6 +20,10 @@ import UIKit
 /// - The input is NEVER locked while processing: she can send follow-ups
 ///   anytime (the engine queues them; a badge shows how many are queued).
 /// - Photo attach button → PhotosPicker → vm.addImageAttachment (real).
+/// - File attach button (paperclip) → UIDocumentPickerViewController →
+///   vm.addFileAttachment (real); document chips show the filename and can
+///   be removed; on send the file reaches the AI via the existing
+///   processAttachments() <user-attached-files> block.
 /// - Sticker button → StickerPickerView sheet → tap inserts the sticker into
 ///   the draft as an image attachment via vm.addImageAttachment (real,
 ///   bundled mascot art); she still presses send herself.
@@ -30,6 +35,7 @@ struct ChatInputBar: View {
 
     @State private var selectedPhoto: PhotosPickerItem?
     @State private var showStickerPicker = false
+    @State private var showFilePicker = false
     @State private var recordStart: Date? = nil
 
     private var canSend: Bool {
@@ -102,6 +108,21 @@ struct ChatInputBar: View {
                 }
                 .accessibilityLabel(stt.state == .recording ? "停止录音" : "语音输入")
 
+                // [Wave3-P1-file-picker] File attach: opens the iOS document
+                // picker; picked files land in vm.attachments as document
+                // chips (filename shown, removable) via the existing
+                // addFileAttachment pipeline — Kelivo/Claude Code/OpenMinis
+                // parity.
+                Button {
+                    showFilePicker = true
+                } label: {
+                    DuduIcon(systemName: "paperclip")
+                        .font(DuduTheme.bodyFont())
+                        .foregroundStyle(DuduTheme.duduTextDim)
+                        .frame(width: 32, height: 32)
+                }
+                .accessibilityLabel("添加文件")
+
                 TextField("输入消息", text: $vm.inputText, axis: .vertical)
                     .font(DuduTheme.inputFont())
                     .foregroundStyle(DuduTheme.duduText)
@@ -164,6 +185,17 @@ struct ChatInputBar: View {
         .sheet(isPresented: $showStickerPicker) {
             StickerPickerView()
         }
+        // [Wave3-P1-file-picker] Document picker sheet. The picked URLs go
+        // straight into vm.addFileAttachment (Caches staging + kind
+        // classification); document chips appear in the attachment strip
+        // above, and processAttachments() includes them on send.
+        .sheet(isPresented: $showFilePicker) {
+            ChatDocumentPicker { urls in
+                for url in urls {
+                    vm.addFileAttachment(from: url)
+                }
+            }
+        }
         .onChange(of: selectedPhoto) { _, item in
             guard let item else { return }
             selectedPhoto = nil
@@ -175,6 +207,24 @@ struct ChatInputBar: View {
                 }
             }
         }
+    }
+
+    // MARK: - File picker (Wave 3 P1)
+
+    /// Filename chip for a document attachment: doc glyph + name, Q萌 solid
+    /// style, DuduTheme colors only.
+    private func documentChip(_ fileName: String) -> some View {
+        HStack(spacing: 6) {
+            DuduIcon(systemName: "doc")
+                .font(DuduTheme.bodyFont())
+            Text(fileName)
+                .font(DuduTheme.captionFont())
+                .lineLimit(1)
+                .truncationMode(.middle)
+        }
+        .foregroundStyle(DuduTheme.duduTextDim)
+        .padding(.horizontal, 10)
+        .frame(maxWidth: 220, maxHeight: 56, alignment: .leading)
     }
 
     // MARK: - STT recording (Phase D1)
@@ -301,7 +351,12 @@ struct ChatInputBar: View {
                     .foregroundStyle(DuduTheme.duduTextDim)
                     .frame(width: 56, height: 56)
                 case .ready:
-                    if let uiImage = UIImage(contentsOfFile: attachment.cacheURL.path) {
+                    // [Wave3-P1-file-picker] Document chips show the filename
+                    // so the user can tell attached files apart; the same
+                    // remove button handles dismissal.
+                    if attachment.kind == .document {
+                        documentChip(attachment.fileName)
+                    } else if let uiImage = UIImage(contentsOfFile: attachment.cacheURL.path) {
                         Image(uiImage: uiImage)
                             .resizable()
                             .scaledToFill()
@@ -331,6 +386,38 @@ struct ChatInputBar: View {
             }
             .offset(x: 6, y: -6)
             .accessibilityLabel("移除附件")
+        }
+    }
+}
+
+// MARK: - File picker (Wave 3 P1)
+
+/// UIDocumentPickerViewController wrapper for attaching arbitrary files to
+/// the chat draft. `forOpeningContentTypes: [.data]` covers every file type;
+/// multiple selection is on. `addFileAttachment(from:)` sniffs images/videos
+/// (extension / UTType / magic bytes) so media picked from Files still gets
+/// the visual chip; everything else becomes a document chip with the filename.
+private struct ChatDocumentPicker: UIViewControllerRepresentable {
+    var onPick: ([URL]) -> Void
+
+    func makeUIViewController(context: Context) -> UIDocumentPickerViewController {
+        let picker = UIDocumentPickerViewController(forOpeningContentTypes: [.data], asCopy: true)
+        picker.allowsMultipleSelection = true
+        picker.delegate = context.coordinator
+        return picker
+    }
+
+    func updateUIViewController(_ uiViewController: UIDocumentPickerViewController, context: Context) {}
+
+    func makeCoordinator() -> Coordinator { Coordinator(onPick: onPick) }
+
+    final class Coordinator: NSObject, UIDocumentPickerDelegate {
+        private let onPick: ([URL]) -> Void
+        init(onPick: @escaping ([URL]) -> Void) { self.onPick = onPick }
+
+        func documentPicker(_ controller: UIDocumentPickerViewController,
+                            didPickDocumentsAt urls: [URL]) {
+            onPick(urls)
         }
     }
 }
