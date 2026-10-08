@@ -1,38 +1,48 @@
 import SwiftUI
 import UIKit
 
-// MARK: - DuduTheme · fixed design tokens
+// MARK: - DuduTheme · design tokens
 //
 // The single theme access point for all Dudu UI. Values below are extracted
-// VERBATIM from ~/workspace/openmuse/design-tokens.css (嘟嘟 UI 定妆, 2026-10-06).
+// from ~/workspace/openmuse/design-tokens.css (嘟嘟 UI 定妆, 2026-10-06).
 //
-// Two layers:
-//   1. Fixed tokens (this file): brand pinks, kitty, radii, spacing, base type
-//      sizes. Never user-overridable. Light/dark variants follow the CSS
-//      [data-theme="dark"] first-draft values.
-//   2. Dynamic roles: the existing DuduTheme.color(_:scope:) (defined in
-//      Dudu/Shared/AppearanceStudio.swift) resolves through AppearanceStudio,
-//      so user customization keeps working. Views must NEVER call
-//      AppearanceStudio.color directly — always go through DuduTheme.
+// [Wave 3 P1] One unified system: every semantic color token reads its
+// AppearanceStudio role live (see the token docs below). The 外观 page,
+// try-on staging, theme-pack import and the AI theme tools all write into
+// AppearanceStudio.shared — and DuduTabView (the app root) already owns it
+// as @StateObject, so any write re-renders the whole tree and these tokens
+// resolve to the new colors with zero per-view changes. Views must NEVER
+// call AppearanceStudio.color directly — always go through DuduTheme.
+//
+// Layers:
+//   1. Live semantic tokens (this file): background/card/text/accent/… —
+//      user-customizable through the 外观 page or the AI theme tools.
+//      With no overrides they resolve to the 定妆 values, pinned in
+//      AppearancePaletteBook (Dudu/Shared/AppearanceStudio.swift).
+//   2. Fixed brand anchors: brandBrown / cream / kitty / kittyInk /
+//      capsuleShadow. Identity, never user-overridable.
 //
 // Rules for builders:
 //   - No hardcoded colors anywhere. Every color comes from DuduTheme.
 //   - Type always via the font helpers below (they route through
 //     FontSettings.shared scaling). No literal point sizes in views.
 //   - Dark mode follows the iOS system setting (plus the studio's
-//     appearanceMode override). The adaptive() helper below resolves both.
+//     appearanceMode override); AppearanceStudio resolves the variant.
 
 extension DuduTheme {
-    // MARK: Brand four · 品牌四色 (fixed, both schemes)
+    // MARK: Brand anchors · 品牌锚点 (fixed, both schemes)
+    //
+    // Deliberately NOT themeable: the black-cat silhouette, the cream page
+    // base and the brand brown are identity, not theme. Everything else in
+    // this file routes through AppearanceStudio so the 外观 page, try-on
+    // and the AI theme tools visibly recolor the app.
 
-    /// #8B736C — primary text. Never pure black.
+    /// #8B736C — brand brown. Never pure black. Fixed identity anchor
+    /// (not the themeable primary-text role; see duduText).
     static var brandBrown: Color { Color(hex: "8B736C") }
-    /// #FFE7E8 — icon chip background, accents on white.
-    static var pinkSoft: Color { Color(hex: "FFE7E8") }
-    /// #FBF8EA — page background (light).
+    /// #FBF8EA — page background (light). Fixed brand anchor; the live
+    /// page background is duduBackground (themeable).
     static var cream: Color { Color(hex: "FBF8EA") }
-    /// #ECC7D6 — accent, solid icon glyphs.
-    static var pink: Color { Color(hex: "ECC7D6") }
     /// #2A2A2E — black-cat silhouette (fixed, both modes).
     static var kitty: Color { Color(hex: "2A2A2E") }
     /// rgba(86,60,62,0.10) — soft drop shadow under floating glass
@@ -43,23 +53,38 @@ extension DuduTheme {
     /// studio's appearanceMode override) via adaptive(), never hardcoded.
     static var kittyInk: Color { adaptive(light: "171518", dark: "09090b") }
 
-    // MARK: Semantic tokens · 语义色 (light/dark variants)
+    // MARK: Semantic tokens · 语义色 (live)
+    //
+    // [Wave 3 P1] Each token reads its AppearanceStudio role at access time.
+    // Writes from the 外观 page, try-on staging, theme-pack import and the
+    // AI theme tools land in AppearanceStudio.shared; DuduTabView owns it as
+    // @StateObject, so the tree re-renders and these resolve to the new
+    // colors. No-override defaults are the 定妆 values (see
+    // AppearancePaletteBook): light cream #FBF8EA / pink #ECC7D6 /
+    // brown-black #8B736C, dark per the first-draft values noted below.
 
-    /// Page background. Light #FBF8EA · dark #1C1917 (first draft).
-    static var duduBackground: Color { adaptive(light: "FBF8EA", dark: "1C1917") }
-    /// Card surface. Light #FFFFFF · dark #2A2523 (first draft).
-    static var duduCard: Color { adaptive(light: "FFFFFF", dark: "2A2523") }
-    /// Primary text. Light #8B736C · dark #E8D9D2 (first draft).
-    static var duduText: Color { adaptive(light: "8B736C", dark: "E8D9D2") }
-    /// Dim/secondary text. Light #A89890 · dark #8A7A74 (derived, pending her review).
-    static var duduTextDim: Color { adaptive(light: "A89890", dark: "8A7A74") }
-    /// Icon chip background. Light #FFE7E8 · dark #4A3A36 (first draft).
-    static var duduIconChip: Color { adaptive(light: "FFE7E8", dark: "4A3A36") }
-    /// Dividers. Light #F1E7E2 · dark #38302C (derived, pending her review).
-    static var duduDivider: Color { adaptive(light: "F1E7E2", dark: "38302C") }
+    /// Page background. → canvas role. Default light #FBF8EA · dark #1C1917.
+    static var duduBackground: Color { color(.canvas) }
+    /// Card surface. → surface role. Default light #FFFFFF · dark #2A2523.
+    static var duduCard: Color { color(.surface) }
+    /// Primary text. → primaryText role. Default light #8B736C · dark #E8D9D2.
+    static var duduText: Color { color(.primaryText) }
+    /// Dim/secondary text. → secondaryText role. Default light #A89890 · dark #8A7A74.
+    static var duduTextDim: Color { color(.secondaryText) }
+    /// Icon chip background. → mutedSurface role. Default light #FFE7E8 · dark #4A3A36.
+    static var duduIconChip: Color { color(.mutedSurface) }
+    /// Soft tinted chip/highlight background — same mutedSurface role as
+    /// duduIconChip, kept as a separate name because call sites use it for
+    /// highlight washes rather than icon chips.
+    static var pinkSoft: Color { color(.mutedSurface) }
+    /// Dividers. → border role. Default light #F1E7E2 · dark #38302C.
+    static var duduDivider: Color { color(.border) }
+    /// Accent: selected states, completed checks, solid icon glyphs.
+    /// → accent role. Default #ECC7D6 (both schemes).
+    static var pink: Color { color(.accent) }
 
     /// Destructive red. Theme role (user-customizable via the 外观 page),
-    /// not a fixed token — defaults light #BC6262 / dark #DA8181.
+    /// not a fixed token — defaults light #C75D5D / dark #E18484.
     static var duduDestructive: Color {
         AppearanceStudio.shared.color(.destructive, scope: .global)
     }

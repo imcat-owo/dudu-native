@@ -608,20 +608,28 @@ struct AppearancePalette {
 }
 
 private enum AppearancePaletteBook {
+    // [Wave 3 P1] The built-in palette IS the 定妆 palette: with no user
+    // overrides, DuduTheme's live tokens (duduBackground/duduCard/duduText/
+    // duduTextDim/duduIconChip/pinkSoft/duduDivider/pink) resolve through
+    // these roles to exactly what the app showed before unification —
+    // light cream #FBF8EA / pink #ECC7D6 / brown-black #8B736C, dark per
+    // DuduTheme's first-draft values. Roles the old fixed tokens never
+    // covered (bubbles, input, raised…) keep their previous built-ins so
+    // chat-era surfaces don't shift.
     static let light: [AppearanceColorRole: String] = [
-        .canvas: "FFF8F4", .surface: "FFFDFC", .raised: "FFFFFF",
-        .mutedSurface: "F8ECE8", .primaryText: "3E312B", .secondaryText: "8D786F",
-        .accent: "D4778B", .userBubble: "F6DDE3", .assistantBubble: "FFFDFC",
-        .input: "FFFBF8", .border: "EADAD3",
+        .canvas: "FBF8EA", .surface: "FFFFFF", .raised: "FFFFFF",
+        .mutedSurface: "FFE7E8", .primaryText: "8B736C", .secondaryText: "A89890",
+        .accent: "ECC7D6", .userBubble: "F6DDE3", .assistantBubble: "FFFDFC",
+        .input: "FFFBF8", .border: "F1E7E2",
         .searchField: "FFFDFC", .toolCard: "F8ECE8",
         .success: "6E987A",
         .warning: "C9956A", .destructive: "C75D5D"
     ]
     static let dark: [AppearanceColorRole: String] = [
-        .canvas: "1B1716", .surface: "25201E", .raised: "302925",
-        .mutedSurface: "332824", .primaryText: "F5ECE7", .secondaryText: "BCAAA1",
-        .accent: "E09AAA", .userBubble: "573C43", .assistantBubble: "25201E",
-        .input: "2B2522", .border: "493C37",
+        .canvas: "1C1917", .surface: "2A2523", .raised: "302925",
+        .mutedSurface: "4A3A36", .primaryText: "E8D9D2", .secondaryText: "8A7A74",
+        .accent: "ECC7D6", .userBubble: "573C43", .assistantBubble: "25201E",
+        .input: "2B2522", .border: "38302C",
         .searchField: "25201E", .toolCard: "332824",
         .success: "8EB69A",
         .warning: "D4B07A", .destructive: "E18484"

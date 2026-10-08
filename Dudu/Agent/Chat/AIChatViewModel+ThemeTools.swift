@@ -307,7 +307,7 @@ extension AIChatViewModel {
             return ("Error: 找不到这张图片（\(uri)）。请确认图片已发送到聊天中，或换一张。", false)
         }
         studio.setWallpaper(image, for: .global)
-        return ("壁纸已存入主题引擎。目前只有浏览器页、定时提醒页、Siri 页这几个页面会显示壁纸，主聊天界面和外观页都还看不见。两个系统统一后会自动生效。", true)
+        return ("壁纸已存入主题引擎。目前只有浏览器页、定时提醒页、Siri 页这几个页面会显示壁纸，主聊天界面和外观页暂时还看不见。", true)
     }
 
     private func themeSetTheme(_ args: [String: Any]) -> (String, Bool) {
@@ -424,7 +424,7 @@ extension AIChatViewModel {
         let where_ = themeStr(args, "targets").isEmpty
             || themeStr(args, "targets").lowercased() == "all"
             ? "整个主题" : "surface：\(themeStr(args, "targets"))"
-        return ("已按「\(hue)」重新配色（\(where_)），浅色/深色两套都已存入主题引擎。但主界面还在读旧版配色系统，这个改动现在还看不见；系统统一后会自动生效。", true)
+        return ("已按「\(hue)」重新配色（\(where_)），浅色/深色两套都已存入主题引擎，主界面已实时更新。", true)
     }
 
     private func themeApplySurfaceTokens(_ args: [String: Any]) -> (String, Bool) {
@@ -508,7 +508,7 @@ extension AIChatViewModel {
         if packChanged { studio.persistPack(pack) }
         themeSyncPackMaps()
         let variantName = variant == .dark ? "深色" : "浅色"
-        return ("surface「\(target)」的 \(ops.count) 个 token 已存入主题引擎（\(variantName)模式）。但主界面还在读旧版配色系统，这个改动现在还看不见；系统统一后会自动生效。", true)
+        return ("surface「\(target)」的 \(ops.count) 个 token 已存入主题引擎（\(variantName)模式），主界面已实时更新。", true)
     }
 
     private func themeApplyPreset(_ args: [String: Any]) -> (String, Bool) {
@@ -519,7 +519,7 @@ extension AIChatViewModel {
         ThemeTryOn.shared.recordPreChange()
         AppearanceStudio.shared.applyPreset(preset)
         themeSyncPackMaps()
-        return ("预设「\(preset.title)」已存入主题引擎。但主界面还在读旧版配色系统，这个改动现在还看不见；系统统一后会自动生效。", true)
+        return ("预设「\(preset.title)」已应用，主界面已实时更新。", true)
     }
 
     private func themePreview(_ args: [String: Any]) -> (String, Bool) {
@@ -561,7 +561,7 @@ extension AIChatViewModel {
             let msg = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
             return ("Error: 试穿失败：\(msg)", false)
         }
-        return ("试穿已开始：屏幕下方的试穿横幅已出现，可以保存或放弃。不过预览的配色本身在主界面上现在还看不见（已经存进了主题引擎，系统统一后会自动生效）。如果预览里包含了模式切换（浅色/深色），那部分是立刻可见的。调用 confirm_theme 保存，rollback_theme 放弃。", true)
+        return ("试穿已开始：屏幕下方的试穿横幅已出现，可以保存或放弃。预览配色已实时显示在主界面上。如果预览里包含了模式切换（浅色/深色），那部分也是立刻可见的。调用 confirm_theme 保存，rollback_theme 放弃。", true)
     }
 
     /// seed: #rrggbb or JSON {"primary":..,"secondary":..,"tertiary":..}.
@@ -579,14 +579,14 @@ extension AIChatViewModel {
 
     private func themeConfirm() -> (String, Bool) {
         if ThemeTryOn.shared.commit() {
-            return ("试穿已保存到主题引擎，试穿横幅已关闭。但配色在主界面上现在还看不见，系统统一后会自动生效。（模式切换不受影响，已实时生效。）", true)
+            return ("试穿已保存，试穿横幅已关闭，配色已在主界面上生效。", true)
         }
         return ("Error: 没有正在试穿的主题。先调用 preview_theme 开始试穿。", false)
     }
 
     private func themeRollback() -> (String, Bool) {
         if let msg = ThemeTryOn.shared.rollback() {
-            return ("\(msg)配色恢复已存入主题引擎；但主界面本来就不读这套配色，所以界面上没有变化。（模式切换部分如果有，已实时恢复。）", true)
+            return ("\(msg)配色已恢复，主界面已实时更新。（模式切换部分如果有，已实时恢复。）", true)
         }
         return ("Error: 没有可回退的主题（没有试穿中的预览，也没有 AI 改过的主题记录）。", false)
     }
@@ -603,7 +603,7 @@ extension AIChatViewModel {
         do {
             try ThemeCustomCSS.shared.apply(css)
             themeSyncPackMaps()
-            return ("主题 CSS 已整体替换并存入主题引擎。但主界面还在读旧版配色系统，这个改动现在还看不见；系统统一后会自动生效。", true)
+            return ("主题 CSS 已整体替换并存入主题引擎。（自定义 CSS 目前还没有渲染它的界面，这部分之后再接。）", true)
         } catch {
             let msg = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
             return ("Error: CSS 被拒绝：\(msg)", false)
@@ -619,7 +619,7 @@ extension AIChatViewModel {
         do {
             try ThemeCustomCSS.shared.apply(combined)
             themeSyncPackMaps()
-            return ("主题 CSS 已追加并存入主题引擎。但主界面还在读旧版配色系统，这个改动现在还看不见；系统统一后会自动生效。", true)
+            return ("主题 CSS 已追加并存入主题引擎。（自定义 CSS 目前还没有渲染它的界面，这部分之后再接。）", true)
         } catch {
             let msg = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
             return ("Error: CSS 被拒绝：\(msg)", false)
@@ -638,7 +638,7 @@ extension AIChatViewModel {
         do {
             try ThemeCustomCSS.shared.apply(existing.replacingOccurrences(of: oldText, with: newText))
             themeSyncPackMaps()
-            return ("主题 CSS 已修改并存入主题引擎。但主界面还在读旧版配色系统，这个改动现在还看不见；系统统一后会自动生效。", true)
+            return ("主题 CSS 已修改并存入主题引擎。（自定义 CSS 目前还没有渲染它的界面，这部分之后再接。）", true)
         } catch {
             let msg = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
             return ("Error: CSS 被拒绝：\(msg)", false)
@@ -665,7 +665,7 @@ extension AIChatViewModel {
         do {
             try ThemeCustomCSS.shared.apply(combined)
             themeSyncPackMaps()
-            return ("主题 CSS 已插入并存入主题引擎。但主界面还在读旧版配色系统，这个改动现在还看不见；系统统一后会自动生效。", true)
+            return ("主题 CSS 已插入并存入主题引擎。（自定义 CSS 目前还没有渲染它的界面，这部分之后再接。）", true)
         } catch {
             let msg = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
             return ("Error: CSS 被拒绝：\(msg)", false)
@@ -679,7 +679,7 @@ extension AIChatViewModel {
         ThemeTryOn.shared.recordPreChange()
         ThemeCustomCSS.shared.clear()
         themeSyncPackMaps()
-        return ("自定义主题 CSS 已删除，主题引擎里的颜色已恢复。但主界面读的是旧版配色系统，不受影响。", true)
+        return ("自定义主题 CSS 已删除。（自定义 CSS 目前还没有渲染它的界面，删除只影响存档。）", true)
     }
 }
 
