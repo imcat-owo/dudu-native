@@ -71,7 +71,7 @@ struct ChatView: View {
             // automatically (the keyboard region is part of the safe area).
             .safeAreaInset(edge: .bottom) {
                 ChatInputBar()
-                    // Peeking easter egg: the cat peeks over the capsule's
+                    // Peeking easter egg: the cat peeks over the input stack's
                     // top edge every 8-14s while the chat tab is active and
                     // no bubble cat is showing (PeekCatHost owns the timer).
                     .overlay(alignment: .topLeading) {
