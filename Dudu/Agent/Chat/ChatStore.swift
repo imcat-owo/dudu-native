@@ -5668,12 +5668,21 @@ extension ChatStore {
     /// independent of `initialBacklogMarked`.
     nonisolated(unsafe) private static var historicalScanInFlight = false
     private func kickHistoricalBacklogScan(force: Bool) {
+        // ChatStore is an actor: this method is actor-isolated, so the
+        // check-then-set below is atomic via actor serialization. No two
+        // callers can both observe false.
         if !force && Self.historicalScanInFlight { return }
         Self.historicalScanInFlight = true
         Task { [weak self] in
             await self?.runHistoricalBacklogScan()
-            await MainActor.run { Self.historicalScanInFlight = false }
+            // Reset on the actor (not in the Task closure) to keep all
+            // accesses to the flag within actor isolation.
+            await self?.clearHistoricalScanInFlight()
         }
+    }
+
+    private func clearHistoricalScanInFlight() {
+        Self.historicalScanInFlight = false
     }
 
     private func runHistoricalBacklogScan() async {

@@ -98,7 +98,21 @@ final class AppearanceStudio: ObservableObject {
     /// page values inherit from global before falling back to built-in.
     @Published private var customColors: [String: String]
     /// Snapshot for UIKit / off-main reads. Written on persist.
-    nonisolated(unsafe) static var colorSnapshot: [String: String] = [:]
+    /// Protected by snapshotLock — writes happen on MainActor, reads from nonisolated contexts.
+    nonisolated(unsafe) private static var _colorSnapshot: [String: String] = [:]
+    nonisolated private static let snapshotLock = NSLock()
+    nonisolated static var colorSnapshot: [String: String] {
+        get {
+            snapshotLock.lock()
+            defer { snapshotLock.unlock() }
+            return _colorSnapshot
+        }
+        set {
+            snapshotLock.lock()
+            defer { snapshotLock.unlock() }
+            _colorSnapshot = newValue
+        }
+    }
     @Published private(set) var wallpaperRevision = 0
     @Published private(set) var iconRevision = 0
     @Published private(set) var userAvatar: String
