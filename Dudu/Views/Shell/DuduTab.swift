@@ -7,10 +7,8 @@ import SwiftUI
 /// `settings` tab is now `more` and keeps the "settings" raw value, so any
 /// stored deep link that selects "settings" still lands on the same tab.
 /// New case `library` ("library") hosts the knowledge base.
-///
-/// Labels are localized via AppLocalized; the new xcstrings keys
-/// (tab.ourSpace / tab.chat / tab.library / tab.more) must be added to
-/// Localizable.xcstrings by the localization coordinator.
+/// Labels are localized via AppLocalized (tab.ourSpace / tab.chat /
+/// tab.library / tab.more, in Localizable.xcstrings).
 enum DuduTab: String, CaseIterable, Identifiable {
     case ourSpace
     case chat
