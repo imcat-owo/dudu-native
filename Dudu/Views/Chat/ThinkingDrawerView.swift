@@ -283,7 +283,7 @@ struct ThinkingDrawerOverlay: View {
     /// Drawer height = 60% of screen (html-2 定稿 tuned value).
     private static let heightFraction: CGFloat = 0.6
     /// Top corner radius (html-2 定稿).
-    private static let cornerRadius: CGFloat = 22
+    private static let cornerRadius: CGFloat = DuduTheme.radiusCard // 22pt per html-2
     /// Dragging the card this far down (or flinging it) dismisses.
     private static let dismissThreshold: CGFloat = 120
 

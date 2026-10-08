@@ -154,7 +154,7 @@ struct ChatInputBar: View {
             }
             .padding(.horizontal, 10)
             .padding(.vertical, 6)
-            .floatingBarGlass(cornerRadius: 22)
+            .floatingBarGlass(cornerRadius: DuduTheme.radiusCard)
             .shadow(color: DuduTheme.capsuleShadow, radius: 35, x: 0, y: 12)
         }
         .padding(.horizontal, 12)

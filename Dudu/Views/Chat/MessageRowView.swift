@@ -5,7 +5,6 @@ import UIKit
 
 /// Asymmetric chat-bubble corners per html-2 定稿: three corners 17pt, one
 /// 6pt "tail" corner nearest the speaker's avatar — the handmade feel.
-/// Literals used here; Wave 2 item 10 will systematize the radius tokens.
 struct BubbleShape: Shape {
     /// Which side the tail sits on.
     enum TailSide {
@@ -16,7 +15,7 @@ struct BubbleShape: Shape {
     }
 
     let tailSide: TailSide
-    private static let round: CGFloat = 17
+    private static let round: CGFloat = DuduTheme.radiusChip // 17pt per html-2
     private static let tail: CGFloat = 6
 
     private var cornerRadii: RectangleCornerRadii {

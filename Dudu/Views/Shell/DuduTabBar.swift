@@ -149,7 +149,7 @@ struct DuduTabBar: View {
         .padding(.horizontal, 8)
         .frame(height: 59)
         .frame(maxWidth: .infinity)
-        .floatingBarGlass(cornerRadius: 22)
+        .floatingBarGlass(cornerRadius: DuduTheme.radiusCard)
     }
 
     @ViewBuilder

@@ -4,12 +4,12 @@ import SwiftUI
 //
 // 奶油色底 + 白色圆角卡片: every settings-style List/Form in the app gets
 // the same treatment — cream page background, each row as its own white
-// 22pt card, caption-style section headers in normal case (never the
+// 17pt card, caption-style section headers in normal case (never the
 // default uppercase gray), no default separators.
 //
 // Two flavors:
 //   - duduCardList(): for List. Uses .plain + per-row inset card
-//     backgrounds so every row is a separate 22pt white card with gaps,
+//     backgrounds so every row is a separate 17pt white card with gaps,
 //     matching html-2's row-list pattern. Keeps swipeActions / onDelete /
 //     onMove / EditButton / searchable working (all List-native).
 //   - duduCardForm(): for Form (data-entry sheets). Form keeps its grouped
@@ -18,9 +18,9 @@ import SwiftUI
 // All colors via DuduTheme, all type via DuduTheme font helpers — no
 // literals, no emoji.
 
-/// Card radius for list rows. Matches the html-2 定稿 large-card radius
-/// (tab bar / composer) per the Wave 2 Item 10 22/17 decision.
-private let duduListCardRadius: CGFloat = 22
+/// Card radius for list rows. Per html-2 定稿: rows use 17pt (radiusChip);
+/// 22pt is for large cards (tab bar / composer) only.
+private let duduListCardRadius: CGFloat = DuduTheme.radiusChip
 
 struct DuduCardListModifier: ViewModifier {
     func body(content: Content) -> some View {
@@ -57,7 +57,7 @@ struct DuduCardFormModifier: ViewModifier {
 }
 
 extension View {
-    /// html-2 定稿 list: cream page + white 22pt row cards.
+    /// html-2 定稿 list: cream page + white 17pt row cards.
     func duduCardList() -> some View {
         modifier(DuduCardListModifier())
     }

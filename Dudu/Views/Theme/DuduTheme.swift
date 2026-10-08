@@ -78,9 +78,11 @@ extension DuduTheme {
     }
 
     // MARK: Radii · 圆角
+    // Per html-2 定稿 (Wave 2 Item 10): 22pt large cards, 17pt rows/chips.
+    // design-tokens.css still says 16/12 (stale, predates the black-cat rounds).
 
-    static let radiusCard: CGFloat = 16
-    static let radiusChip: CGFloat = 12
+    static let radiusCard: CGFloat = 22
+    static let radiusChip: CGFloat = 17
     static let radiusPill: CGFloat = 999
 
     // MARK: Spacing · 留白
