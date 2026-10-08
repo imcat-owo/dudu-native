@@ -3,6 +3,12 @@ import SwiftUI
 /// Root view of the app (Phase C shell). Owns the engine singletons as
 /// @StateObject, injects them into the environment, and routes the
 /// Phase-C deep-link destinations from DeepLinkCoordinator.
+///
+/// Wave 2 Item 2: the iOS system TabView is replaced by a custom floating
+/// glass tab bar (DuduTabBar, html-2 定稿) — 59pt high, 22pt corner
+/// radius, 12pt side margins, 10pt above the safe area. Tab content
+/// crossfades with a subtle spring; per-tab state (scroll position, chat
+/// input) is preserved because all four tabs stay alive.
 struct DuduTabView: View {
     @State private var selection: DuduTab = .chat
 
@@ -13,38 +19,32 @@ struct DuduTabView: View {
     @ObservedObject private var deepLinks = DeepLinkCoordinator.shared
 
     var body: some View {
-        TabView(selection: $selection) {
-            ChatView(selection: $selection)
-                .tabItem {
-                    Label(DuduTab.chat.title, systemImage: DuduTab.chat.systemImage)
-                }
-                .tag(DuduTab.chat)
-
-            OurSpaceView()
-                .tabItem {
-                    Label(DuduTab.ourSpace.title, systemImage: DuduTab.ourSpace.systemImage)
-                }
-                .tag(DuduTab.ourSpace)
-
-            SettingsView()
-                .tabItem {
-                    Label(DuduTab.settings.title, systemImage: DuduTab.settings.systemImage)
-                }
-                .tag(DuduTab.settings)
+        ZStack {
+            tabLayer(.ourSpace) { OurSpaceView() }
+            tabLayer(.chat) { ChatView(selection: $selection) }
+            tabLayer(.library) { LibraryView() }
+            tabLayer(.more) { SettingsView() }
         }
-        .tint(DuduTheme.pink)
-        // Liquid Glass: iOS system material only. No custom blur overlays.
-        .toolbarBackground(.visible, for: .tabBar)
+        .animation(.spring(response: 0.35, dampingFraction: 0.85), value: selection)
+        // The floating bar lives in the bottom safe-area inset so content
+        // scrolls clear of it and it always sits 10pt above the home
+        // indicator, with 12pt side margins.
+        .safeAreaInset(edge: .bottom) {
+            DuduTabBar(selection: $selection)
+                .padding(.horizontal, 12)
+                .padding(.bottom, 10)
+        }
         .environmentObject(chatViewModel)
         .environmentObject(providerStore)
         .environmentObject(appearance)
         .onReceive(deepLinks.$pendingSettingsTarget) { target in
             guard target != nil else { return }
             // Phase C destinations (providers / providerDetail / appearance)
-            // land on the Settings tab. The step-6 Settings builder consumes
-            // pendingSettingsTarget for the actual push; the value stays
-            // published for it.
-            selection = .settings
+            // land on the More tab (raw value "settings" is preserved, so
+            // existing deep links keep working). The step-6 Settings builder
+            // consumes pendingSettingsTarget for the actual push; the value
+            // stays published for it.
+            selection = .more
         }
         .appFontScale()
         // D11: app-level Face ID lock — overlay + foreground/background
@@ -57,17 +57,30 @@ struct DuduTabView: View {
         // D12: ThemeTryOnBanner rides here too — try-on previews staged by
         // the AI (preview_theme) or theme-pack import must be visible from
         // chat, with Save/Discard always one tap away.
+        // The banners are lifted 77pt (59pt bar + 10pt margin + 8pt gap) so
+        // they float above the tab bar instead of hiding behind it.
         .overlay(alignment: .bottom) {
             VStack(spacing: 8) {
                 ThemeTryOnBanner()
                 AIAuthorizationPromptView()
                 MCPApprovalCardView()
             }
+            .padding(.bottom, 77)
         }
         // [D21] Voice call: ringing banner (top) + full-screen call screen.
         // Rides above every tab, like the approval cards above.
         .overlay(alignment: .top) {
             VoiceCallOverlay()
         }
+    }
+
+    /// One tab layer: only the selected tab is visible and hittable; the
+    /// others stay alive underneath so their state is preserved.
+    private func tabLayer(_ tab: DuduTab, @ViewBuilder content: () -> some View) -> some View {
+        content()
+            .opacity(selection == tab ? 1 : 0)
+            .allowsHitTesting(selection == tab)
+            .accessibilityHidden(selection != tab)
+            .zIndex(selection == tab ? 1 : 0)
     }
 }

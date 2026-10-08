@@ -40,7 +40,7 @@ struct ChatEmptyStateView: View {
 
             if !hasEnabledProvider {
                 Button {
-                    selection = .settings
+                    selection = .more
                 } label: {
                     Text("前往设置")
                         .font(DuduTheme.bodyFont(weight: .semibold))
