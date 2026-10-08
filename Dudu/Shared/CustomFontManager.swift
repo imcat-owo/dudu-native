@@ -108,13 +108,16 @@ final class CustomFontManager: ObservableObject {
         ud.set(dest.lastPathComponent, forKey: Keys.file)
         ud.set(display, forKey: Keys.displayName)
         ud.set(psName, forKey: Keys.postScript)
+        let changed = postScriptName != psName
         displayName = display
         postScriptName = psName
+        if changed { Self.notifyFamilyChanged() }
         return display
     }
 
     /// Drop the custom font and go back to the system font.
     func clear() {
+        let hadCustom = postScriptName != nil
         if let file = UserDefaults.standard.string(forKey: Keys.file) {
             let url = fontsDirectory().appendingPathComponent(file)
             CTFontManagerUnregisterFontsForURL(url as CFURL, .process, nil)
@@ -126,6 +129,22 @@ final class CustomFontManager: ObservableObject {
         ud.removeObject(forKey: Keys.postScript)
         displayName = nil
         postScriptName = nil
+        if hadCustom { Self.notifyFamilyChanged() }
+    }
+
+    // MARK: - Change broadcast
+
+    /// Tell every rendered surface to rebuild with the new family — no restart.
+    /// - `.customFontFamilyChanged`: the dedicated signal for the family.
+    /// - `.fontSettingsMessageBaseChanged`: the message pipeline's existing
+    ///   cache-invalidation channel (AIChatViewModel + CollectionViewMessageListV3
+    ///   already listen); family, like scale, invalidates rendered text and
+    ///   measured heights.
+    private static func notifyFamilyChanged() {
+        NotificationCenter.default.post(name: .customFontFamilyChanged, object: nil)
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .fontSettingsMessageBaseChanged, object: nil)
+        }
     }
 
     // MARK: - Private

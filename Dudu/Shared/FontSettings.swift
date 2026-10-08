@@ -4,6 +4,9 @@ import SwiftUI
 
 extension Notification.Name {
     static let fontSettingsMessageBaseChanged = Notification.Name("fontSettingsMessageBaseChanged")
+    /// Posted when the active font FAMILY changes (custom font uploaded or
+    /// cleared) so every rendered surface can rebuild without a restart.
+    static let customFontFamilyChanged = Notification.Name("customFontFamilyChanged")
 }
 
 /// Font scale level — six discrete steps from small to extra large.
@@ -190,6 +193,8 @@ final class FontSettings: ObservableObject {
     // MARK: - Notification
 
     /// Posted when `messageBaseScale` changes so view models can invalidate rendered caches.
+    /// Also posted when the custom font FAMILY changes (upload/clear) — family,
+    /// like scale, invalidates rendered text (CustomFontManager posts it).
     static let messageBaseChangedNotification = Notification.Name.fontSettingsMessageBaseChanged
 
     // MARK: - Keys
@@ -203,10 +208,14 @@ final class FontSettings: ObservableObject {
 
 // MARK: - View extension for app-wide font scaling
 
-/// Applies app-base font scaling via `dynamicTypeSize`.
+/// Applies app-base font scaling via `dynamicTypeSize`, and refreshes the whole
+/// subtree when the custom font FAMILY changes — without an app restart.
 /// Use on sheet content and any view that doesn't inherit the root environment.
 private struct AppFontScaleModifier: ViewModifier {
     @ObservedObject private var fontSettings = FontSettings.shared
+    // Observing CustomFontManager forces a subtree re-render on family
+    // change, so every DuduTheme.*Font() call re-resolves the family.
+    @ObservedObject private var customFonts = CustomFontManager.shared
 
     func body(content: Content) -> some View {
         content.dynamicTypeSize(fontSettings.appBaseScale.dynamicTypeSize)
