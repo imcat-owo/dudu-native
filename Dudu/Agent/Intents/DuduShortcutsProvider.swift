@@ -12,9 +12,11 @@ import AppIntents
 /// Registers app shortcuts so they appear in Shortcuts with zero user setup.
 ///
 /// Phrase localization: Chinese Siri trigger phrases are registered DIRECTLY
-/// in the `phrases:` arrays below (plain strings, no `\(.applicationName)`
-/// token — she says "小梦"/"嘟嘟" by name). Siri matches the phrases in the
-/// device's current language, so Chinese Siri on a Chinese-locale device
+/// in the `phrases:` arrays below. Apple requires every App Shortcut utterance
+/// to contain `\(.applicationName)` (it resolves to CFBundleDisplayName,
+/// "嘟嘟"), so each Chinese phrase embeds the token where it reads naturally
+/// (e.g. "问问\(.applicationName)" -> "问问嘟嘟"). Siri matches the phrases in
+/// the device's current language, so Chinese Siri on a Chinese-locale device
 /// picks these up with zero extra .strings tables. English phrases are kept
 /// as-is; DuduShortcutsCatalog.siriPhrases must stay verbatim-identical to
 /// the resolved list here (see that file's SYNC RULE).
@@ -33,9 +35,9 @@ struct DuduShortcutsProvider: AppShortcutsProvider {
                 "Ask \(.applicationName) a question",
                 "Talk to \(.applicationName)",
                 "New \(.applicationName) chat",
-                "和小梦聊天",
-                "问问小梦",
-                "打开嘟嘟",
+                "和\(.applicationName)聊天",
+                "问问\(.applicationName)",
+                "打开\(.applicationName)",
             ],
             shortTitle: "Ask 我的小家",
             systemImageName: "sparkles"
@@ -45,8 +47,8 @@ struct DuduShortcutsProvider: AppShortcutsProvider {
             phrases: [
                 "Run a \(.applicationName) quick task",
                 "Use \(.applicationName) quick task",
-                "小梦帮我查一下",
-                "嘟嘟快捷任务",
+                "\(.applicationName)帮我查一下",
+                "\(.applicationName)快捷任务",
             ],
             shortTitle: "Quick Task",
             systemImageName: "bolt.fill"
@@ -57,8 +59,8 @@ struct DuduShortcutsProvider: AppShortcutsProvider {
                 "Send a prompt to \(.applicationName)",
                 "Ask \(.applicationName) something",
                 "Start a \(.applicationName) task",
-                "给小梦发个任务",
-                "让嘟嘟在后台干活",
+                "给\(.applicationName)发个任务",
+                "让\(.applicationName)在后台干活",
             ],
             shortTitle: "Send Prompt",
             systemImageName: "message.fill"
@@ -68,8 +70,8 @@ struct DuduShortcutsProvider: AppShortcutsProvider {
             phrases: [
                 "Get \(.applicationName) session status",
                 "Check \(.applicationName) task",
-                "小梦干到哪了",
-                "看看小梦在忙什么",
+                "\(.applicationName)干到哪了",
+                "看看\(.applicationName)在忙什么",
             ],
             shortTitle: "Session Status",
             systemImageName: "info.circle.fill"
@@ -79,8 +81,8 @@ struct DuduShortcutsProvider: AppShortcutsProvider {
             phrases: [
                 "List \(.applicationName) sessions",
                 "Show \(.applicationName) chats",
-                "看看和小梦的聊天记录",
-                "嘟嘟的聊天列表",
+                "看看和\(.applicationName)的聊天记录",
+                "\(.applicationName)的聊天列表",
             ],
             shortTitle: "List Sessions",
             systemImageName: "list.bullet"
@@ -90,8 +92,8 @@ struct DuduShortcutsProvider: AppShortcutsProvider {
             phrases: [
                 "Follow up a \(.applicationName) session",
                 "Continue a \(.applicationName) session",
-                "继续跟小梦聊",
-                "接着上次跟小梦说",
+                "继续跟\(.applicationName)聊",
+                "接着上次跟\(.applicationName)说",
             ],
             shortTitle: "Follow Up",
             systemImageName: "arrowshape.turn.up.left.fill"
@@ -104,8 +106,8 @@ struct DuduShortcutsProvider: AppShortcutsProvider {
             intent: OpenSessionIntent(),
             phrases: [
                 "Open a \(.applicationName) session",
-                "打开跟小梦的聊天",
-                "打开嘟嘟会话",
+                "打开跟\(.applicationName)的聊天",
+                "打开\(.applicationName)会话",
             ],
             shortTitle: "Open Session",
             systemImageName: "arrow.up.right.square"
