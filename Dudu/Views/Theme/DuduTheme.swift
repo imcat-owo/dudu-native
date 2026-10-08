@@ -35,6 +35,9 @@ extension DuduTheme {
     static var pink: Color { Color(hex: "ECC7D6") }
     /// #2A2A2E — black-cat silhouette (fixed, both modes).
     static var kitty: Color { Color(hex: "2A2A2E") }
+    /// rgba(86,60,62,0.10) — soft drop shadow under floating glass
+    /// capsules (html-2 定稿: 0 12px 35px). Fixed, both schemes.
+    static var capsuleShadow: Color { Color(hex: "563C3E").opacity(0.10) }
     /// #171518 (light) / #09090b (dark) — black-cat ink for BlackCatView's
     /// solid fills. Dynamic: follows the iOS system appearance (plus the
     /// studio's appearanceMode override) via adaptive(), never hardcoded.

@@ -63,15 +63,22 @@ struct ChatView: View {
                 } else {
                     MessageListView()
                 }
-
+            }
+            // Wave 2 Item 5 — floating glass capsule input (html-2 定稿).
+            // The capsule rides in the bottom safe-area inset, above the
+            // floating tab bar's 69pt inset (59pt bar + 10pt margin) with an
+            // 8pt gap = 77pt clearance, and the keyboard pushes it up
+            // automatically (the keyboard region is part of the safe area).
+            .safeAreaInset(edge: .bottom) {
                 ChatInputBar()
-                    // Peeking easter egg: the cat peeks over the input bar's
+                    // Peeking easter egg: the cat peeks over the capsule's
                     // top edge every 8-14s while the chat tab is active and
                     // no bubble cat is showing (PeekCatHost owns the timer).
                     .overlay(alignment: .topLeading) {
                         PeekCatHost(isChatActive: selection == .chat)
                             .offset(x: 14, y: -46)
                     }
+                    .padding(.bottom, 8)
             }
             .background(DuduTheme.duduBackground)
             .navigationTitle(navTitle)

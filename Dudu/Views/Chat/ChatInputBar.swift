@@ -4,6 +4,14 @@ import UIKit
 
 /// Phase C2 — the message composer.
 ///
+/// Wave 2 Item 5 (html-2 定稿): the composer is a FLOATING GLASS CAPSULE —
+/// 22pt corner radius, iOS native Liquid Glass
+/// (`.glassEffect`, `.ultraThinMaterial` fallback on older toolchains),
+/// soft shadow (DuduTheme.capsuleShadow), 12pt side margins. It rides in
+/// ChatView's bottom safe-area inset: 8pt above the floating tab bar
+/// (59pt bar + 10pt margin), i.e. 77pt clearance, and the keyboard pushes
+/// it up automatically via the safe-area inset.
+///
 /// - Multiline TextField bound to vm.inputText (grows to 5 lines).
 /// - Pink send button, disabled while the draft is empty; while the AI is
 ///   busy it stays live next to a stop button (vm.cancel()) — send queues a
@@ -55,6 +63,10 @@ struct ChatInputBar: View {
                 recordingPanel
             }
 
+            // Wave 2 Item 5 — floating glass capsule (html-2 定稿): the
+            // composer row is the capsule. Native Liquid Glass, 22pt
+            // radius, soft shadow. The attachment strip, queue badge and
+            // recording panel stay above it, outside the glass.
             HStack(alignment: .bottom, spacing: 8) {
                 PhotosPicker(selection: $selectedPhoto, matching: .images) {
                     Image(systemName: "photo")
@@ -142,15 +154,10 @@ struct ChatInputBar: View {
             }
             .padding(.horizontal, 10)
             .padding(.vertical, 6)
-            .background(
-                DuduTheme.duduCard,
-                in: RoundedRectangle(cornerRadius: 22, style: .continuous)
-            )
+            .floatingBarGlass(cornerRadius: 22)
+            .shadow(color: DuduTheme.capsuleShadow, radius: 35, x: 0, y: 12)
         }
-        .padding(.horizontal, DuduTheme.pagePadding)
-        .padding(.vertical, 10)
-        // iOS system material only — no custom blur overlays.
-        .background(.ultraThinMaterial)
+        .padding(.horizontal, 12)
         // [D17-stickers] Sticker picker sheet. StickerPickerView reads
         // vm (AIChatViewModel) from the environment, inherited through the
         // sheet like the rest of this view hierarchy.

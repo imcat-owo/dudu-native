@@ -113,7 +113,9 @@ struct TabBarIcon: View {
 
 // MARK: - Floating glass tab bar
 
-private extension View {
+// Shared with the chat input capsule (ChatInputBar): internal so both the
+// tab bar and the input use the same Liquid Glass helper.
+extension View {
     /// iOS native Liquid Glass on toolchains that have the iOS 26 SDK,
     /// `.ultraThinMaterial` fallback on older ones (CI runs Xcode 16.4 —
     /// the `glassEffect` symbol does not exist there, so a plain
