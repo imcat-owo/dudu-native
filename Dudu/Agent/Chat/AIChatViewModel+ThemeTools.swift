@@ -41,7 +41,7 @@ extension AIChatViewModel {
         return [
             AgentToolDefinition(
                 name: "set_wallpaper",
-                description: "Set the app wallpaper to an image. uri: a dudu-clone:// URL or /var/dudu/ Linux path (from a photo she shared in chat, or an image you generated). Empty string removes the wallpaper. The wallpaper is saved to the theme engine and shows on appearance/settings pages, but the main chat UI does not mount a wallpaper background — do not tell her the main screen changed.",
+                description: "Set the app wallpaper to an image. uri: a dudu-clone:// URL or /var/dudu/ Linux path (from a photo she shared in chat, or an image you generated). Empty string removes the wallpaper. The wallpaper is saved to the theme engine. It currently renders only on the browser sheet, the scheduled-prompts page and the Siri shortcuts hub — NOT on the main chat UI and NOT on the Appearance page. Do not tell her the main screen changed; two systems are pending unification.",
                 parameters: [
                     "tool_title": AgentToolParam(type: .string, description: "A concise 5-10 word summary of what this tool call does, shown to the user."),
                     "uri": AgentToolParam(type: .string, description: "Image URI (dudu-clone://… or /var/dudu/… path). Empty string removes the wallpaper."),
@@ -301,13 +301,13 @@ extension AIChatViewModel {
         let uri = themeStr(args, "uri")
         if uri.isEmpty {
             studio.removeWallpaper(.global)
-            return ("壁纸已清除（主题引擎里的壁纸记录已删）。外观设置页能看到变化；主界面目前不挂壁纸背景，所以主界面本来也没显示过它。", true)
+            return ("壁纸已清除（主题引擎里的壁纸记录已删）。之前只有浏览器页、定时提醒页、Siri 页这几个页面会显示它，主聊天界面和外观页本来也没显示过。", true)
         }
         guard let image = await themeResolveImage(uri) else {
             return ("Error: 找不到这张图片（\(uri)）。请确认图片已发送到聊天中，或换一张。", false)
         }
         studio.setWallpaper(image, for: .global)
-        return ("壁纸已存入主题引擎。外观设置页可以看到；但主界面目前不挂壁纸背景，所以主界面上还看不见。两个系统统一后会自动生效。", true)
+        return ("壁纸已存入主题引擎。目前只有浏览器页、定时提醒页、Siri 页这几个页面会显示壁纸，主聊天界面和外观页都还看不见。两个系统统一后会自动生效。", true)
     }
 
     private func themeSetTheme(_ args: [String: Any]) -> (String, Bool) {
