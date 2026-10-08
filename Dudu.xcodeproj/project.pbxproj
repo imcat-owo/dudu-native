@@ -127,6 +127,7 @@
 		EA12FFE29C4D1BB30AA21FBD /* TTSGroupStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1BBEA612701CCF9C19D609B /* TTSGroupStore.swift */; };
 		60FB4E304E801C8C9AA86E5F /* TTSPaper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD399D142740061DC13A518 /* TTSPaper.swift */; };
 		40B07B4B4C0C20C074C24095 /* TTSProviderBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC79049A665D89AB265369C4 /* TTSProviderBridge.swift */; };
+		69EE969BD489E2CB7F59116B /* TTSBuiltInPresets.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA9D0BAE0EECEA4732AD0CCC /* TTSBuiltInPresets.swift */; };
 		722851F737BEFA977D3547BF /* TTSServiceModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BA56A6CA4CD33CB6D43F4F8 /* TTSServiceModels.swift */; };
 		31CCB5418C039123A1DA6093 /* VoiceActivityDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7BA032ABB2093816F226A2 /* VoiceActivityDetector.swift */; };
 		B3E2ECFC581E50F1B6363D02 /* VoiceBubblePlaybackState.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF47F9BD322F015A188AD77C /* VoiceBubblePlaybackState.swift */; };
@@ -707,6 +708,7 @@
 		A1BBEA612701CCF9C19D609B /* TTSGroupStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTSGroupStore.swift; sourceTree = "<group>"; };
 		BFD399D142740061DC13A518 /* TTSPaper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTSPaper.swift; sourceTree = "<group>"; };
 		EC79049A665D89AB265369C4 /* TTSProviderBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTSProviderBridge.swift; sourceTree = "<group>"; };
+	AA9D0BAE0EECEA4732AD0CCC /* TTSBuiltInPresets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTSBuiltInPresets.swift; sourceTree = "<group>"; };
 		3BA56A6CA4CD33CB6D43F4F8 /* TTSServiceModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTSServiceModels.swift; sourceTree = "<group>"; };
 		2D7BA032ABB2093816F226A2 /* VoiceActivityDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceActivityDetector.swift; sourceTree = "<group>"; };
 		CF47F9BD322F015A188AD77C /* VoiceBubblePlaybackState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceBubblePlaybackState.swift; sourceTree = "<group>"; };
@@ -1595,6 +1597,7 @@
 				CAD9052E48CB96CE9404DF2E /* CorrectionStrategy.swift */,
 				CF47F9BD322F015A188AD77C /* VoiceBubblePlaybackState.swift */,
 				EC79049A665D89AB265369C4 /* TTSProviderBridge.swift */,
+				AA9D0BAE0EECEA4732AD0CCC /* TTSBuiltInPresets.swift */,
 				F1451FF35AC059841C4B717E /* VoiceInputModels.swift */,
 				FCD6204A3E203AFA2D5A174A /* VoiceTextSanitizer.swift */,
 			);
@@ -2708,6 +2711,7 @@
 				3FE125E5C8A13E0C2F714E56 /* VoiceCallOverlay.swift in Sources */,
 				4099B39B909547A253201F6B /* TaskCardView.swift in Sources */,
 				40B07B4B4C0C20C074C24095 /* TTSProviderBridge.swift in Sources */,
+				69EE969BD489E2CB7F59116B /* TTSBuiltInPresets.swift in Sources */,
 				40FF72E3543F5E090B771167 /* AIChatViewModel+AskUser.swift in Sources */,
 				420B0E9D881E42261F39B383 /* FileMentionIndex.swift in Sources */,
 				42FFA6AB344184EE7F8E4139 /* PhotosDeviceTool.swift in Sources */,

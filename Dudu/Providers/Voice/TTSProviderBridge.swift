@@ -170,12 +170,16 @@ enum TTSProviderBridge {
 final class TTSPreviewPlayer: NSObject, AVAudioPlayerDelegate {
     static let shared = TTSPreviewPlayer()
     private var player: AVAudioPlayer?
+    /// Called when the current preview finishes naturally. Set by play(_:onFinished:).
+    private var onFinished: (@MainActor () -> Void)?
 
     private override init() { super.init() }
 
-    func play(_ data: Data) throws {
+    func play(_ data: Data, onFinished: (@MainActor () -> Void)? = nil) throws {
+        stop()  // a new preview replaces the old one — never two at once
         let p = try AVAudioPlayer(data: data)
         p.delegate = self
+        self.onFinished = onFinished
         AudioSessionCoordinator.shared.begin(.replyTTS)
         p.prepareToPlay()
         player = p
@@ -183,22 +187,49 @@ final class TTSPreviewPlayer: NSObject, AVAudioPlayerDelegate {
             // Play returned false — release the intent immediately, there is
             // no didFinish delegate callback coming.
             player = nil
+            self.onFinished = nil
             AudioSessionCoordinator.shared.end(.replyTTS)
             throw VoiceProviderError.noAudioData
         }
     }
 
+    /// Stop the current preview (no-op when nothing is playing) and settle
+    /// the finish callback so UI state can't stick on "playing".
+    func stop() {
+        guard player != nil else { return }
+        player?.stop()
+        player = nil
+        AudioSessionCoordinator.shared.end(.replyTTS)
+        let f = onFinished
+        onFinished = nil
+        f?()
+    }
+
+    private func finishCurrent(_ player: AVAudioPlayer) {
+        // Only the current player's finish releases the slot + intent.
+        // This callback hops through a Task, so it can land AFTER a new
+        // preview has already replaced `self.player` — clearing
+        // unconditionally would kill the new preview mid-playback (its
+        // only strong reference) and end an intent it doesn't own.
+        guard self.player === player else { return }
+        self.player = nil
+        AudioSessionCoordinator.shared.end(.replyTTS)
+        let f = onFinished
+        onFinished = nil
+        f?()
+    }
+
     nonisolated func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer,
                                                 successfully flag: Bool) {
         Task { @MainActor in
-            // Only the current player's finish releases the slot + intent.
-            // This callback hops through a Task, so it can land AFTER a new
-            // preview has already replaced `self.player` — clearing
-            // unconditionally would kill the new preview mid-playback (its
-            // only strong reference) and end an intent it doesn't own.
-            guard self.player === player else { return }
-            self.player = nil
-            AudioSessionCoordinator.shared.end(.replyTTS)
+            self.finishCurrent(player)
+        }
+    }
+
+    nonisolated func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer,
+                                                   error: (any Error)?) {
+        Task { @MainActor in
+            self.finishCurrent(player)
         }
     }
 }

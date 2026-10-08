@@ -4,20 +4,23 @@ import UIKit
 // MARK: - TTSSettingsView · 语音（Phase D1）
 
 /// Voice settings: auto-read toggle, system-voice opt-in, playback speed,
-/// and the TTS service list (custom URL + key, one service selected as the
-/// read-aloud target).
+/// built-in voice presets (free, no key), and the TTS service list
+/// (custom URL + key, one service selected as the read-aloud target).
 ///
 /// Engine note (verified against the ported voice engine): the native port
 /// has no edge-tts vendor — the read-aloud chain resolves
-/// selected TTS service → chat model's voice group → system voice
-/// (system voice is opt-in here, OFF by default).
+/// selected TTS service → built-in preset → chat model's voice group →
+/// system voice (system voice is opt-in here, OFF by default). The built-in
+/// preset is selected by default so read-aloud works out of the box.
 struct TTSSettingsView: View {
     @ObservedObject private var voiceState = VoiceOutputState.shared
     @State private var systemVoiceAllowed: Bool = VoiceOutputPreferences.systemVoiceAllowed
     @State private var speed: Float = VoiceOutputPreferences.speedMultiplier
     @State private var services: [TTSServiceOptions] = TTSServiceStore.shared.services
     @State private var selectedId: String? = TTSServiceStore.shared.selectedServiceId
+    @State private var selectedPresetId: String = TTSBuiltInPresetStore.shared.selectedPresetId
     @State private var showingAdd = false
+    @ObservedObject private var testPlayer = TTSVoiceTestPlayer.shared
 
     var body: some View {
         List {
@@ -69,6 +72,18 @@ struct TTSSettingsView: View {
             }
 
             Section {
+                ForEach(TTSBuiltInPresetStore.shared.presets) { preset in
+                    presetRow(preset)
+                }
+            } header: {
+                DuduSectionTitle("内置音色")
+            } footer: {
+                DuduSectionFooter {
+                    Text("不用配密钥，开箱就能听。选了之后，朗读默认用它；哪天想换自己配的服务，回来点下面的就行。")
+                }
+            }
+
+            Section {
                 ForEach(services) { service in
                     NavigationLink {
                         TTSServiceEditor(existing: service) {
@@ -86,6 +101,7 @@ struct TTSSettingsView: View {
                                                      ? DuduTheme.pink : DuduTheme.duduTextDim)
                             }
                             .buttonStyle(.plain)
+                            .frame(minWidth: 44, minHeight: 44)
 
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(service.name.isEmpty ? service.kind.displayName : service.name)
@@ -94,6 +110,12 @@ struct TTSSettingsView: View {
                                 Text("\(service.kind.displayName) · \(service.voice)")
                                     .font(DuduTheme.captionFont())
                                     .foregroundStyle(DuduTheme.duduTextDim)
+                                let failed = testPlayer.failedReason(forKey: TTSVoiceTestPlayer.serviceKey(service))
+                                if !failed.isEmpty {
+                                    Text(failed)
+                                        .font(DuduTheme.captionFont())
+                                        .foregroundStyle(DuduTheme.duduTextDim)
+                                }
                             }
                             Spacer()
                             if TTSServiceStore.shared.hasAPIKey(for: service) {
@@ -101,6 +123,7 @@ struct TTSSettingsView: View {
                                     .font(DuduTheme.captionFont())
                                     .foregroundStyle(DuduTheme.duduTextDim)
                             }
+                            serviceTestButton(service)
                         }
                     }
                 }
@@ -120,13 +143,14 @@ struct TTSSettingsView: View {
                 DuduSectionTitle("语音服务")
             } footer: {
                 DuduSectionFooter {
-                    Text("朗读按顺序尝试：选定的语音服务 → 当前聊天模型的语音分组 → 系统语音（需在上方开启）。只配置了服务但没密钥时，该服务会被跳过。")
+                    Text("朗读按顺序尝试：你选定的语音服务 → 内置音色 → 当前聊天模型的语音分组 → 系统语音（需在上方开启）。没选服务时，内置音色开箱就能读；服务配了密钥但连不上时，会如实告诉你。")
                 }
             }
         }
         .duduCardList()
         .navigationTitle("语音")
         .onAppear { reload() }
+        .onDisappear { testPlayer.stop() }
         .sheet(isPresented: $showingAdd) {
             NavigationStack {
                 TTSServiceEditor(existing: nil) {
@@ -139,6 +163,106 @@ struct TTSSettingsView: View {
     private func reload() {
         services = TTSServiceStore.shared.services
         selectedId = TTSServiceStore.shared.selectedServiceId
+        selectedPresetId = TTSBuiltInPresetStore.shared.selectedPresetId
+    }
+
+    // MARK: - Built-in preset rows
+
+    /// A preset row is the active target only when no custom service is
+    /// explicitly selected AND this preset is the selected one. Picking a
+    /// preset releases the service selection (mutually exclusive); tapping a
+    /// service row re-selects there.
+    private func presetRow(_ preset: TTSBuiltInPreset) -> some View {
+        let active = selectedId == nil && selectedPresetId == preset.id
+        let key = TTSVoiceTestPlayer.presetKey(preset)
+        return VStack(alignment: .leading, spacing: 4) {
+            HStack(spacing: 10) {
+                Button {
+                    TTSBuiltInPresetStore.shared.setSelectedPresetId(preset.id)
+                    reload()
+                } label: {
+                    DuduIcon(systemName: active ? "checkmark.circle.fill" : "circle")
+                        .foregroundStyle(active ? DuduTheme.pink : DuduTheme.duduTextDim)
+                }
+                .buttonStyle(.plain)
+                .frame(minWidth: 44, minHeight: 44)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(preset.title)
+                        .font(DuduTheme.bodyFont())
+                        .foregroundStyle(DuduTheme.duduText)
+                    Text(preset.detail)
+                        .font(DuduTheme.captionFont())
+                        .foregroundStyle(DuduTheme.duduTextDim)
+                }
+                Spacer()
+                presetTestButton(preset, key: key)
+            }
+            let failed = testPlayer.failedReason(forKey: key)
+            if !failed.isEmpty {
+                Text(failed)
+                    .font(DuduTheme.captionFont())
+                    .foregroundStyle(DuduTheme.duduTextDim)
+                    .padding(.leading, 54)
+            }
+        }
+    }
+
+    /// 试听 button for a preset row. The "off" row has no sound to play —
+    /// its button is honestly disabled with the plain reason, never a fake.
+    @ViewBuilder
+    private func presetTestButton(_ preset: TTSBuiltInPreset, key: String) -> some View {
+        if preset.previewable {
+            let playing = testPlayer.state(forKey: key) == .playing
+            Button {
+                testPlayer.testPreset(preset)
+            } label: {
+                Text(playing ? "停止" : "试听")
+                    .font(DuduTheme.captionFont(weight: .medium))
+                    .foregroundStyle(DuduTheme.pink)
+                    .frame(minWidth: 44, minHeight: 44)
+            }
+            .buttonStyle(.plain)
+        } else {
+            VStack(alignment: .trailing, spacing: 0) {
+                Text("试听")
+                    .font(DuduTheme.captionFont(weight: .medium))
+                    .foregroundStyle(DuduTheme.duduTextDim)
+                Text("关了就没声音可试")
+                    .font(DuduTheme.captionFont())
+                    .foregroundStyle(DuduTheme.duduTextDim)
+            }
+            .frame(minWidth: 44, minHeight: 44)
+        }
+    }
+
+    /// 试听 button for a custom service row. No key → disabled with the plain
+    /// reason (never fake playback); with a key → real vendor synthesis.
+    @ViewBuilder
+    private func serviceTestButton(_ service: TTSServiceOptions) -> some View {
+        let test = testPlayer.serviceTestability(service)
+        if test.ok {
+            let playing = testPlayer.state(forKey: TTSVoiceTestPlayer.serviceKey(service)) == .playing
+            Button {
+                testPlayer.testService(service)
+            } label: {
+                Text(playing ? "停止" : "试听")
+                    .font(DuduTheme.captionFont(weight: .medium))
+                    .foregroundStyle(DuduTheme.pink)
+                    .frame(minWidth: 44, minHeight: 44)
+            }
+            .buttonStyle(.plain)
+        } else {
+            VStack(alignment: .trailing, spacing: 0) {
+                Text("试听")
+                    .font(DuduTheme.captionFont(weight: .medium))
+                    .foregroundStyle(DuduTheme.duduTextDim)
+                Text(test.reason)
+                    .font(DuduTheme.captionFont())
+                    .foregroundStyle(DuduTheme.duduTextDim)
+            }
+            .frame(minWidth: 44, minHeight: 44)
+        }
     }
 
     private func stepLabel(_ step: Float) -> String {

@@ -531,6 +531,16 @@ final class VoiceOutputPlayer: NSObject, ObservableObject {
         var candidates: [Candidate] = Self.resolvedServiceCandidates()
 
         if candidates.isEmpty {
+            // [T-tts-builtin-presets 10-08] Built-in preset sits between the
+            // explicit custom service and the Model-Group path: out of the box
+            // the app reads aloud with a curated high-quality Chinese voice —
+            // no key needed. An explicitly selected custom service still wins
+            // (it was checked first); "不用内置音色" yields no candidate here
+            // and the old fall-through (group → System) is preserved.
+            candidates = Self.resolvedPresetCandidates()
+        }
+
+        if candidates.isEmpty {
             candidates = VoiceProviderResolver.resolvedOutputCandidates().compactMap { entry -> Candidate? in
                 guard let p = VoiceProviderResolver.outputProvider(for: entry) else { return nil }
                 return Candidate(key: entry.id,
@@ -733,6 +743,23 @@ final class VoiceOutputPlayer: NSObject, ObservableObject {
             label: "\(service.name) · \(service.voice)",
             provider: provider,
             makeRequest: { text in TTSProviderBridge.request(for: service, text: text) }
+        )]
+    }
+
+    /// [T-tts-builtin-presets 10-08] The built-in preset target: a pinned
+    /// Apple TTS voice rendered through SystemVoiceProvider — always
+    /// available, no credential, no network. The preset's voice identifier
+    /// rides `VoiceOutputRequest.model`, which SystemVoiceProvider.resolveVoice
+    /// pins to exactly that voice (falling back to the language default when
+    /// the pack was removed). Empty when the user picked "不用内置音色".
+    @MainActor
+    private static func resolvedPresetCandidates() -> [Candidate] {
+        guard let preset = TTSBuiltInPresetStore.shared.selectedPreset else { return [] }
+        return [Candidate(
+            key: "tts-preset:\(preset.id)",
+            label: preset.title,
+            provider: SystemVoiceProvider.shared,
+            makeRequest: { text in VoiceOutputRequest(input: text, model: preset.voiceIdentifier) }
         )]
     }
 
