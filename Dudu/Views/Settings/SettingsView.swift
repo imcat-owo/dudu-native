@@ -184,44 +184,7 @@ struct SettingsView: View {
             .navigationTitle("设置")
             .searchable(text: $searchText, prompt: "搜索设置")
             .navigationDestination(for: SettingsRoute.self) { route in
-                switch route {
-                case .providerDetail("__list__"):
-                    ProviderListView()
-                case .providerDetail(let id):
-                    ProviderDetailView(instanceId: id)
-                case .qrScan:
-                    ProviderQRScanView()
-                case .providerShare(let id):
-                    ProviderQRShareView(instanceId: id)
-                case .modelGroups:
-                    ModelGroupListView()
-                case .modelGroupDetail(let id):
-                    ModelGroupDetailView(groupId: id)
-                case .personas:
-                    PersonaListView()
-                case .appearance:
-                    AppearanceView()
-                case .fontScale:
-                    FontScaleView()
-                case .ttsSettings:
-                    TTSSettingsView()
-                case .mcpServers:
-                    MCPListView()
-                case .backup:
-                    BackupView()
-                case .appLock:
-                    AppLockView()
-                case .musicKit:
-                    AppleMusicSettingsView()
-                case .sandbox:
-                    SandboxSettingsView()
-                case .about:
-                    AboutView()
-                case .siriShortcuts:
-                    SiriShortcutsHubView()
-                case .help:
-                    HelpView()
-                }
+                settingsDestination(for: route)
             }
             .onReceive(DeepLinkCoordinator.shared.$pendingSettingsTarget) { target in
                 // D22: `dudu-clone://settings/siri` lands here. DuduTabView
@@ -233,6 +196,50 @@ struct SettingsView: View {
             }
         }
         .environmentObject(navigator)
+    }
+
+    /// Pulled out of `body` so the type-checker solves it as its own
+    /// expression (the giant inline switch timed out compilation).
+    @ViewBuilder
+    private func settingsDestination(for route: SettingsRoute) -> some View {
+        switch route {
+        case .providerDetail("__list__"):
+            ProviderListView()
+        case .providerDetail(let id):
+            ProviderDetailView(instanceId: id)
+        case .qrScan:
+            ProviderQRScanView()
+        case .providerShare(let id):
+            ProviderQRShareView(instanceId: id)
+        case .modelGroups:
+            ModelGroupListView()
+        case .modelGroupDetail(let id):
+            ModelGroupDetailView(groupId: id)
+        case .personas:
+            PersonaListView()
+        case .appearance:
+            AppearanceView()
+        case .fontScale:
+            FontScaleView()
+        case .ttsSettings:
+            TTSSettingsView()
+        case .mcpServers:
+            MCPListView()
+        case .backup:
+            BackupView()
+        case .appLock:
+            AppLockView()
+        case .musicKit:
+            AppleMusicSettingsView()
+        case .sandbox:
+            SandboxSettingsView()
+        case .about:
+            AboutView()
+        case .siriShortcuts:
+            SiriShortcutsHubView()
+        case .help:
+            HelpView()
+        }
     }
 }
 
