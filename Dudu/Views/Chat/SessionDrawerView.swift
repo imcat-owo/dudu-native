@@ -29,6 +29,11 @@ struct SessionDrawerView: View {
     @State private var pendingSession: ChatSession?
     @State private var showNewChatIncognitoConfirm = false
 
+    // Wave 3 P1 — rename dialog state.
+    @State private var renameTarget: ChatSession?
+    @State private var renameTitle = ""
+    @State private var showRenameAlert = false
+
     // Phase D6 — archived sessions are partitioned out of the active list.
     private var active: [ChatSession] { sessions.filter { $0.archivedAt == nil } }
     private var archived: [ChatSession] { sessions.filter { $0.archivedAt != nil } }
@@ -134,6 +139,19 @@ struct SessionDrawerView: View {
         } message: {
             Text("隐身聊天的消息不会被保存，退出后将清空当前对话。")
         }
+        // Wave 3 P1 — rename: TextField alert, persists via ChatStore.
+        .alert("重命名对话", isPresented: $showRenameAlert) {
+            TextField("对话标题", text: $renameTitle)
+                .textInputAutocapitalization(.never)
+            Button("保存") {
+                Task { await commitRename() }
+            }
+            Button("取消", role: .cancel) {
+                renameTarget = nil
+            }
+        } message: {
+            Text("输入新的对话标题")
+        }
         .presentationDetents([.medium, .large])
     }
 
@@ -164,6 +182,14 @@ struct SessionDrawerView: View {
                 }
             }
             .padding(.vertical, 4)
+        }
+        // Wave 3 P1 — long-press menu (iOS convention) with rename.
+        .contextMenu {
+            Button {
+                beginRename(session)
+            } label: {
+                Label("重命名", systemImage: "pencil")
+            }
         }
         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
             Button(role: .destructive) {
@@ -315,5 +341,22 @@ struct SessionDrawerView: View {
                 await reload()
             }
         }
+    }
+
+    // Wave 3 P1 — rename. Pre-fills the current title; the alert's TextField
+    // edits renameTitle, and commitRename persists via ChatStore.
+    private func beginRename(_ session: ChatSession) {
+        renameTarget = session
+        renameTitle = session.title ?? ""
+        showRenameAlert = true
+    }
+
+    private func commitRename() async {
+        defer { renameTarget = nil }
+        guard let target = renameTarget else { return }
+        let trimmed = renameTitle.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        await ChatStore.shared.updateSessionTitle(target.id, title: trimmed)
+        await reload()
     }
 }
