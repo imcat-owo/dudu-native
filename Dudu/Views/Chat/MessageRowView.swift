@@ -1,6 +1,42 @@
 import SwiftUI
 import UIKit
 
+// MARK: - Chat bubble shape (Wave 2 item 4)
+
+/// Asymmetric chat-bubble corners per html-2 定稿: three corners 17pt, one
+/// 6pt "tail" corner nearest the speaker's avatar — the handmade feel.
+/// Literals used here; Wave 2 item 10 will systematize the radius tokens.
+struct BubbleShape: Shape {
+    /// Which side the tail sits on.
+    enum TailSide {
+        /// AI bubbles: avatar sits left, tail tightens bottom-leading.
+        case avatarLeading
+        /// User bubbles: avatar sits right, tail tightens bottom-trailing.
+        case avatarTrailing
+    }
+
+    let tailSide: TailSide
+    private static let round: CGFloat = 17
+    private static let tail: CGFloat = 6
+
+    private var cornerRadii: RectangleCornerRadii {
+        switch tailSide {
+        case .avatarLeading:
+            RectangleCornerRadii(topLeading: Self.round, bottomLeading: Self.tail,
+                                 bottomTrailing: Self.round, topTrailing: Self.round)
+        case .avatarTrailing:
+            RectangleCornerRadii(topLeading: Self.round, bottomLeading: Self.round,
+                                 bottomTrailing: Self.tail, topTrailing: Self.round)
+        }
+    }
+
+    func path(in rect: CGRect) -> Path {
+        UnevenRoundedRectangle(cornerRadii: cornerRadii, style: .continuous).path(in: rect)
+    }
+}
+
+// MARK: - Message row
+
 /// Phase C2 — one message row. Holds its ChatMessage as @ObservedObject so
 /// streaming updates re-render only this row.
 ///
@@ -80,7 +116,7 @@ struct MessageRowView: View {
                         .padding(.vertical, 9)
                         .background(
                             DuduTheme.pinkSoft,
-                            in: RoundedRectangle(cornerRadius: DuduTheme.radiusCard, style: .continuous)
+                            in: BubbleShape(tailSide: .avatarTrailing)
                         )
                 }
                 // [C2-followup-queue] A follow-up sent while the AI was busy
@@ -156,7 +192,7 @@ struct MessageRowView: View {
                     .padding(.vertical, 10)
                     .background(
                         DuduTheme.duduCard,
-                        in: RoundedRectangle(cornerRadius: DuduTheme.radiusCard, style: .continuous)
+                        in: BubbleShape(tailSide: .avatarLeading)
                     )
                     .overlay(alignment: .topLeading) {
                         // Approved design spec: the 44pt slot's left edge
