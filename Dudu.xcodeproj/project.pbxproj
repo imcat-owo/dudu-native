@@ -494,6 +494,11 @@
 		AADDE2A35C5FEAF1199EC8A7 /* QRCodeImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB6E0781B60454ED1F804DF /* QRCodeImage.swift */; };
 		45987FCE3D37EB6FB8315492 /* ManualProviderSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00A75E47A52BD9919F7FEDD /* ManualProviderSetupView.swift */; };
 		ED2BD9F7F320FDFEAE7E3037 /* BlackCatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC2977FF88B72468FEF58986 /* BlackCatView.swift */; };
+		B205E4BC3D8145E07B0A3BDB /* DuduTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D9C5910E4A9D16396058B7 /* DuduTabBar.swift */; };
+		7549626D5A6633957F0CAC6C /* FilesBrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A83E1CB41644C68B1B1C93D4 /* FilesBrowserView.swift */; };
+		22C184B71354967D4F574872 /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F5A7690FA0EF72C687ADFD /* LibraryView.swift */; };
+		601943A3F6A2C92E5B418A7F /* DuduIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A323AAC31CE217C5AA3276A /* DuduIcon.swift */; };
+		75D139560FF824DB55F68371 /* DuduListCards.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF39BC6E6CAD67849EC89D4 /* DuduListCards.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1125,6 +1130,11 @@
 		6AB6E0781B60454ED1F804DF /* QRCodeImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeImage.swift; sourceTree = "<group>"; };
 		A00A75E47A52BD9919F7FEDD /* ManualProviderSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualProviderSetupView.swift; sourceTree = "<group>"; };
 		EC2977FF88B72468FEF58986 /* BlackCatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlackCatView.swift; sourceTree = "<group>"; };
+		F4D9C5910E4A9D16396058B7 /* DuduTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuduTabBar.swift; sourceTree = "<group>"; };
+		A83E1CB41644C68B1B1C93D4 /* FilesBrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesBrowserView.swift; sourceTree = "<group>"; };
+		96F5A7690FA0EF72C687ADFD /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
+		4A323AAC31CE217C5AA3276A /* DuduIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuduIcon.swift; sourceTree = "<group>"; };
+		0BF39BC6E6CAD67849EC89D4 /* DuduListCards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuduListCards.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 		30AC3C5C6C418C791E362178 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 
@@ -2109,9 +2119,12 @@
 			isa = PBXGroup;
 			children = (
 				7A3B8CCE9D85174C68E0F45C /* DuduTab.swift */,
+				96F5A7690FA0EF72C687ADFD /* LibraryView.swift */,
 				A518A484F7F330B3A7B60FE8 /* ChatEmptyStateView.swift */,
+				A83E1CB41644C68B1B1C93D4 /* FilesBrowserView.swift */,
 				F0E7CFF749FB97F62FD39107 /* SettingsStubView.swift */,
 				F34947BEA13ACF9BC967DE68 /* DuduTabView.swift */,
+				F4D9C5910E4A9D16396058B7 /* DuduTabBar.swift */,
 			);
 			path = Shell;
 			sourceTree = "<group>";
@@ -2119,6 +2132,8 @@
 		3ADCBF358DC9CFDB2F2EC897 /* Theme */ = {
 			isa = PBXGroup;
 			children = (
+				0BF39BC6E6CAD67849EC89D4 /* DuduListCards.swift */,
+				4A323AAC31CE217C5AA3276A /* DuduIcon.swift */,
 				DC4F03EEF77B47173E669EE2 /* DuduTheme.swift */,
 			);
 			path = Theme;
@@ -2640,6 +2655,7 @@
 				20FFE63AD822E6DB8394502F /* CustomFontManager.swift in Sources */,
 				213D8C9D2BFBA67D19336772 /* CorrectionContextBuilder.swift in Sources */,
 				2199BEA93B328984E882D617 /* AppLogger.swift in Sources */,
+				22C184B71354967D4F574872 /* LibraryView.swift in Sources */,
 				230176062B0C4AECD0123270 /* DuduMarkdownSegments.swift in Sources */,
 				241EC1EBB90EBA7813AE57B9 /* ModelEntry.swift in Sources */,
 				247E674257B4DD9EBF5C767F /* StickerStore.swift in Sources */,
@@ -2741,6 +2757,7 @@
 				5EDB617F7A0C1048824A6E3F /* BackupSecrets.swift in Sources */,
 				5EFEEAFD287B3313F7EAD0A3 /* ThinkingDrawerView.swift in Sources */,
 				5F786E3CEE6A8E09C02031C3 /* ChatSessionIdEnvironment.swift in Sources */,
+				601943A3F6A2C92E5B418A7F /* DuduIcon.swift in Sources */,
 				60FB4E304E801C8C9AA86E5F /* TTSPaper.swift in Sources */,
 				615729977F97B0C6D4BF6434 /* DuduL10n.swift in Sources */,
 				61DA7635161432D2DE8D77D8 /* KimiOAuthManager.swift in Sources */,
@@ -2781,6 +2798,8 @@
 				745D13BC63F9C332BAB2A7C6 /* ThemePackShareView.swift in Sources */,
 				74EE7CB8FF29657982E011DD /* AIChatViewModel+SSEStream.swift in Sources */,
 				750D6959384BE052FB7059EE /* RcloneRemoteStore.swift in Sources */,
+				7549626D5A6633957F0CAC6C /* FilesBrowserView.swift in Sources */,
+				75D139560FF824DB55F68371 /* DuduListCards.swift in Sources */,
 				761F4D086C9100A513AFCC20 /* OAuthRefreshCoordinator.swift in Sources */,
 				765098CEC2079346EFE211F2 /* AIChatViewModel+ThemeTools.swift in Sources */,
 				77296DA526C47E1BB62E3AEA /* OpenAppWhitelist.swift in Sources */,
@@ -2882,6 +2901,7 @@
 				B14BD78E795825B2B44C492A /* OpenAIAgentProvider.swift in Sources */,
 				B19A3C95E097250777DC0595 /* BackupRestoreJournal.swift in Sources */,
 				B1FA904A6FB20E4432428FEF /* QuickActionWorkflow.swift in Sources */,
+				B205E4BC3D8145E07B0A3BDB /* DuduTabBar.swift in Sources */,
 				B328CC3C8EA4D8CF34DBF356 /* BackupCrypto.swift in Sources */,
 				B3399D5143FF38CD7D98D35E /* SentenceSplitter.swift in Sources */,
 				B3E2ECFC581E50F1B6363D02 /* VoiceBubblePlaybackState.swift in Sources */,
