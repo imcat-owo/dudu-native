@@ -58146,6 +58146,28 @@
           }
         }
       }
+    },
+    "manualsetup.baseURL": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Base URL"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "接口地址"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "介面地址"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

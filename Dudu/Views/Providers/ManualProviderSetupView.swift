@@ -233,7 +233,7 @@ struct ManualProviderSetupView: View {
                 Section {
                     if showsBaseURLField {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("Base URL")
+                            Text(AppLocalized("manualsetup.baseURL"))
                                 .font(DuduTheme.bodyFont())
                                 .foregroundStyle(DuduTheme.duduText)
                             TextField(basePlaceholder, text: $baseURL)
@@ -538,8 +538,10 @@ struct ManualProviderSetupView: View {
         }
         keySavedForTest = true
         store.addInstance(instance)
-        // addInstance fires its own auto-refresh; write the models we already
-        // probed so the list is exact even if the refresh races.
+        // addInstance fires its own auto-refresh after this synchronous write,
+        // so the probed list is exact at save time. (If a later refresh fails
+        // transiently it may fall back to built-in models; the next successful
+        // refresh restores the honest list.)
         if case .success(let models) = phase {
             store.replaceEntries(for: instance.id, models: models, caller: "ManualProviderSetupView.save")
         }
