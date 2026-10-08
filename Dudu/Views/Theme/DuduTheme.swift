@@ -35,6 +35,10 @@ extension DuduTheme {
     static var pink: Color { Color(hex: "ECC7D6") }
     /// #2A2A2E — black-cat silhouette (fixed, both modes).
     static var kitty: Color { Color(hex: "2A2A2E") }
+    /// #171518 (light) / #09090b (dark) — black-cat ink for BlackCatView's
+    /// solid fills. Dynamic: follows the iOS system appearance (plus the
+    /// studio's appearanceMode override) via adaptive(), never hardcoded.
+    static var kittyInk: Color { adaptive(light: "171518", dark: "09090b") }
 
     // MARK: Semantic tokens · 语义色 (light/dark variants)
 
