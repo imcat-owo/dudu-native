@@ -9,6 +9,8 @@ enum SettingsRoute: Hashable {
     case providerShare(String)
     case modelGroups
     case modelGroupDetail(String)
+    // Wave 3 P1: 人设管理（PersonaListView）。
+    case personas
     case appearance
     case fontScale
     case ttsSettings
@@ -44,6 +46,12 @@ struct SettingsView: View {
                         icon: "cpu",
                         title: "模型服务",
                         route: .providerDetail("__list__")
+                    )
+                    // Wave 3 P1: 人设管理
+                    SettingsRow(
+                        icon: "person.crop.circle",
+                        title: "人设",
+                        route: .personas
                     )
                     // D24: 模型分组（编排）——分组切换器 + 成员编排
                     SettingsRow(
@@ -128,6 +136,8 @@ struct SettingsView: View {
                     ModelGroupListView()
                 case .modelGroupDetail(let id):
                     ModelGroupDetailView(groupId: id)
+                case .personas:
+                    PersonaListView()
                 case .appearance:
                     AppearanceView()
                 case .fontScale:

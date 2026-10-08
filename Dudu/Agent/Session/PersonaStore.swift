@@ -21,6 +21,7 @@ struct Persona: Codable, Identifiable, Hashable {
     var id: String
     var name: String
     var avatar: String?          // dataURI，nil = 默认图标
+    var desc: String? = nil      // 一句话介绍，卡片上展示；nil = 不展示（Wave 3 P1 新增，可选字段，老数据解码不受影响）
     var modelId: String?         // nil = 用全局默认模型
     var skillIds: [String]?      // nil = 全部可用
     var mcpServerIds: [String]?  // nil = 全部可用
