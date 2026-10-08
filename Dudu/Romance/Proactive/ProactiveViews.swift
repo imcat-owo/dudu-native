@@ -72,7 +72,7 @@ struct ProactiveSettingsView: View {
         } header: {
             Text("每日心情")
         } footer: {
-            Text("每天在你定的时间轻轻问一句。今天已经记过、你刚在线、或昨天没回，今天就不问。")
+            Text("每天在你定的时间问一句。今天已经记过、你刚在线、或昨天没回，今天就不问。")
                 .foregroundStyle(DuduTheme.duduTextDim)
         }
     }

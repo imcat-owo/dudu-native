@@ -156,7 +156,7 @@ struct MusicPlaylistsSheet: View {
             if expanded == pl.id {
                 let tracks = store.playlistTracks(pl.id)
                 if tracks.isEmpty {
-                    Text(pl.kind == .ours ? "还没有我们的歌。听到特别的，点那颗小心心。" : "空的，去歌曲库里加几首。")
+                    Text(pl.kind == .ours ? "还没有我们的歌。听到特别的，点一下爱心标记。" : "空的，去歌曲库里加几首。")
                         .font(DuduTheme.captionFont())
                         .foregroundStyle(DuduTheme.duduTextDim)
                 }

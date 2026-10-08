@@ -5446,13 +5446,13 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "查着呢…"
+            "value": "检查中…"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "查着呢…"
+            "value": "檢查中…"
           }
         }
       }
@@ -6744,13 +6744,13 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "歇着呢"
+            "value": "已停用"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "歇着呢"
+            "value": "已停用"
           }
         }
       }
@@ -7316,13 +7316,13 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "分组名，比如：白嫖"
+            "value": "分组名，比如：免费额度"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "分組名，比如：白嫖"
+            "value": "分組名，比如：免費額度"
           }
         }
       }
@@ -8174,13 +8174,13 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "跑着呢…"
+            "value": "测试中…"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "跑着呢…"
+            "value": "測試中…"
           }
         }
       }
@@ -16820,13 +16820,13 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "醒啦"
+            "value": "醒了"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "醒啦"
+            "value": "醒了"
           }
         }
       }
@@ -23530,13 +23530,13 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "别担心，你的东西都还在。点一下重试，我带你回去。"
+            "value": "你的东西都还在。点一下重试即可。"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "別擔心，你的東西都還在。點一下重試，我帶你回去。"
+            "value": "你的東西都還在。點一下重試即可。"
           }
         }
       }
@@ -25928,13 +25928,13 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "配置「%1$@」导进来啦，去 API 分组里看看。"
+            "value": "已导入配置「%1$@」，去 API 分组查看。"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "配置「%1$@」導進來啦，去 API 分組裡看看。"
+            "value": "已匯入配置「%1$@」，去 API 分組查看。"
           }
         }
       }
@@ -26368,13 +26368,13 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "聊上几句，回来就有热力图看啦。"
+            "value": "多聊几句，热力图就会出现在这里。"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "聊上幾句，回來就有熱力圖看啦。"
+            "value": "多聊幾句，熱力圖就會出現在這裡。"
           }
         }
       }
@@ -32088,13 +32088,13 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "每天他会轻轻问一句你今天怎么样。记下来的都在这里，随时可以删。"
+            "value": "每天他会问一句你今天怎么样。记下来的都在这里，随时可以删。"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "每天他會輕輕問一句你今天怎麼樣。記下來的都在這裡，隨時可以刪。"
+            "value": "每天他會問一句你今天怎麼樣。記下來的都在這裡，隨時可以刪。"
           }
         }
       }
@@ -34772,13 +34772,13 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "「%1$@」那边还顺利吗？点我，我带你回嘟嘟。"
+            "value": "「%1$@」那边还顺利吗？点一下，带你回嘟嘟。"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "「%1$@」那邊還順利嗎？點我，我帶你回嘟嘟。"
+            "value": "「%1$@」那邊還順利嗎？點一下，帶你回嘟嘟。"
           }
         }
       }
@@ -34992,13 +34992,13 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "「%1$@」还有 %2$@ 天，我在偷偷准备小惊喜"
+            "value": "「%1$@」还有 %2$@ 天，正在准备一个小惊喜"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "「%1$@」還有 %2$@ 天，我在偷偷準備小驚喜"
+            "value": "「%1$@」還有 %2$@ 天，正在準備一個小驚喜"
           }
         }
       }
@@ -35212,13 +35212,13 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "好久没见你了，来看看我好不好"
+            "value": "好久没见了，回来看看？"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "好久沒見你了，來看看我好不好"
+            "value": "好久沒見了，回來看看？"
           }
         }
       }
@@ -36642,13 +36642,13 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "用户：你好\nAI：你好呀！"
+            "value": "用户：你好\nAI：你好。"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "用戶：你好\nAI：你好呀！"
+            "value": "用戶：你好\nAI：你好。"
           }
         }
       }
@@ -38006,13 +38006,13 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "打开后，他会在安静时刻给你发照片——像随手拍一张自拍告诉你在干嘛。默认关闭，只有你能打开。"
+            "value": "打开后，他会在安静时刻给你发照片——像随手拍一张自拍，告诉你在做什么。默认关闭，只有你能打开。"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "打開後，他會在安靜時刻給你發照片——像隨手拍一張自拍告訴你在幹嘛。預設關閉，只有你能打開。"
+            "value": "打開後，他會在安靜時刻給你發照片——像隨手拍一張自拍，告訴你在做什麼。預設關閉，只有你能打開。"
           }
         }
       }
@@ -38424,13 +38424,13 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "刷个脸，我就开门。"
+            "value": "刷脸验证后进入。"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "刷個臉，我就開門。"
+            "value": "刷臉驗證後進入。"
           }
         }
       }
@@ -42560,13 +42560,13 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "这个本事是干嘛的"
+            "value": "这个本事是做什么的"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "這個本事是幹嘛的"
+            "value": "這個本事是做什麼的"
           }
         }
       }
@@ -46850,13 +46850,13 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "分组够多啦（50 个）。"
+            "value": "分组已达上限（50 个）。"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "分組夠多啦（50 個）。"
+            "value": "分組已達上限（50 個）。"
           }
         }
       }
@@ -51844,13 +51844,13 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "合成过的语音和播客会留在这里占地方。30 天没碰过的，开 App 时我会悄悄清掉；你也可以现在动手清。"
+            "value": "合成过的语音和播客会留在这里占地方。30 天没动过的，启动时会自动清理；你也可以现在手动清理。"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "合成過的語音和播客會留在這裏佔地方。30 天沒碰過的，開 App 時我會悄悄清掉；你也可以現在動手清。"
+            "value": "合成過的語音和播客會留在這裡佔地方。30 天沒動過的，啟動時會自動清理；你也可以現在手動清理。"
           }
         }
       }
@@ -53406,13 +53406,13 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "你好呀，我是嘟嘟。"
+            "value": "你好，我是嘟嘟。"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "你好呀，我是嘟嘟。"
+            "value": "你好，我是嘟嘟。"
           }
         }
       }
@@ -57212,13 +57212,13 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "悄悄给嘟嘟塞个后台任务——你忙你的，她接着干。"
+            "value": "给嘟嘟加一个后台任务——你忙你的，她接着干。"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "悄悄給嘟嘟塞個背景任務——你忙你的，她接著幹。"
+            "value": "給嘟嘟加一個後臺任務——你忙你的，她接著幹。"
           }
         }
       }
@@ -57256,13 +57256,13 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "瞄一眼正在跑的任务——看看嘟嘟在干嘛、刚说了什么。"
+            "value": "看一眼正在跑的任务——看看嘟嘟在做什么、刚说了什么。"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "瞄一眼正在跑的任務——看看嘟嘟在幹嘛、剛說了什麼。"
+            "value": "看一眼正在跑的任務——看看嘟嘟在做什麼、剛說了什麼。"
           }
         }
       }

@@ -190,7 +190,7 @@ struct AppLockOverlayView: View {
                 Text("嘟嘟已锁定")
                     .font(DuduTheme.titleFont())
                     .foregroundStyle(DuduTheme.duduText)
-                Text("用\(BiometricAuth.biometryDisplayName)验证一下，我就开门。")
+                Text("用\(BiometricAuth.biometryDisplayName)验证后进入。")
                     .font(DuduTheme.bodyFont())
                     .foregroundStyle(DuduTheme.duduTextDim)
                     .multilineTextAlignment(.center)

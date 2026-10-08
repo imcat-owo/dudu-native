@@ -433,7 +433,7 @@ struct PeekCatHost: View {
                     BlackCatView(mode: .peeking, tapNonce: tapNonce, pressed: pressed)
                 }
                 .buttonStyle(CatPressButtonStyle(pressed: $pressed))
-                .accessibilityLabel("小黑猫正在探头偷看，打开思考与工具")
+                .accessibilityLabel("小黑猫探头，打开思考与工具")
             }
         }
         .frame(width: 60, height: 46)
