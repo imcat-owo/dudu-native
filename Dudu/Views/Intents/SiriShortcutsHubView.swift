@@ -118,7 +118,6 @@ struct SiriShortcutsHubView: View {
         }
         .navigationTitle(AppLocalized("Siri & Shortcuts"))
         .navigationBarTitleDisplayMode(.inline)
-        .settingsPage()
         .duduCardList()
     }
 
