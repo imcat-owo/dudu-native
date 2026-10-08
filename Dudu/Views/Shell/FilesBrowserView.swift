@@ -285,7 +285,7 @@ struct FilesBrowserView: View {
                 } label: {
                     HStack(spacing: 4) {
                         DuduIcon(systemName: "plus")
-                            .font(.system(size: 12, weight: .semibold))
+                            .font(DuduTheme.appFont(size: 12, weight: .semibold))
                         Text(AppLocalized("library.import"))
                             .font(DuduTheme.bodyFont(weight: .semibold))
                     }
@@ -315,7 +315,7 @@ struct FilesBrowserView: View {
     private func fileRow(_ item: DuduFileItem) -> some View {
         HStack(spacing: 12) {
             DuduIcon(systemName: item.iconName)
-                .font(.system(size: 15))
+                .font(DuduTheme.appFont(size: 15))
                 .foregroundStyle(DuduTheme.pink)
                 .frame(width: 30, height: 30)
                 .background(DuduTheme.pinkSoft)
@@ -333,7 +333,7 @@ struct FilesBrowserView: View {
             Spacer()
             ShareLink(item: item.url, preview: SharePreview(item.name)) {
                 DuduIcon(systemName: "square.and.arrow.up")
-                    .font(.system(size: 13))
+                    .font(DuduTheme.appFont(size: 13))
                     .foregroundStyle(DuduTheme.duduTextDim)
             }
             .accessibilityLabel(AppLocalized("library.share"))
@@ -342,7 +342,7 @@ struct FilesBrowserView: View {
                     pendingDelete = item
                 } label: {
                     DuduIcon(systemName: "trash")
-                        .font(.system(size: 13))
+                        .font(DuduTheme.appFont(size: 13))
                         .foregroundStyle(DuduTheme.duduDestructive)
                 }
                 .accessibilityLabel(AppLocalized("library.delete"))
@@ -356,7 +356,7 @@ struct FilesBrowserView: View {
     private var emptyState: some View {
         VStack(spacing: 8) {
             DuduIcon(systemName: "folder")
-                .font(.system(size: 28))
+                .font(DuduTheme.appFont(size: 28))
                 .foregroundStyle(DuduTheme.duduTextDim)
             Text(model.scope == .shared
                 ? AppLocalized("library.emptyFilesTitle")
@@ -443,7 +443,7 @@ struct FilePreviewSheet: View {
     private var infoFallback: some View {
         VStack(spacing: 10) {
             DuduIcon(systemName: item.iconName)
-                .font(.system(size: 40))
+                .font(DuduTheme.appFont(size: 40))
                 .foregroundStyle(DuduTheme.duduTextDim)
             Text(item.name)
                 .font(DuduTheme.bodyFont(weight: .semibold))

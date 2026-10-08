@@ -50,7 +50,7 @@ struct MusicTrackRow: View {
                 Task { try? await dj.playTrack(track) }
             } label: {
                 DuduIcon(systemName: "play.fill")
-                    .font(.system(size: 12))
+                    .font(DuduTheme.appFont(size: 12))
                     .foregroundStyle(DuduTheme.duduText)
                     .frame(width: 32, height: 32)
                     .background(DuduTheme.pinkSoft, in: Circle())
@@ -98,7 +98,7 @@ struct MusicPlaylistsSheet: View {
                         showingNew = true
                     } label: {
                         DuduIcon(systemName: "plus")
-                            .font(.system(size: 14, weight: .semibold))
+                            .font(DuduTheme.appFont(size: 14, weight: .semibold))
                     }
                 }
             }
@@ -141,13 +141,13 @@ struct MusicPlaylistsSheet: View {
                             }
                         } label: {
                             DuduIcon(systemName: "ellipsis")
-                                .font(.system(size: 13))
+                                .font(DuduTheme.appFont(size: 13))
                                 .foregroundStyle(DuduTheme.duduTextDim)
                                 .frame(width: 32, height: 32)
                         }
                     }
                     DuduIcon(systemName: "chevron.down")
-                        .font(.system(size: 12, weight: .semibold))
+                        .font(DuduTheme.appFont(size: 12, weight: .semibold))
                         .foregroundStyle(DuduTheme.duduTextDim)
                         .rotationEffect(.degrees(expanded == pl.id ? 180 : 0))
                 }
@@ -167,7 +167,7 @@ struct MusicPlaylistsSheet: View {
                                 _ = store.removeFromPlaylist(pl.id, trackId: t.id)
                             } label: {
                                 DuduIcon(systemName: "minus.circle")
-                                    .font(.system(size: 14))
+                                    .font(DuduTheme.appFont(size: 14))
                                     .foregroundStyle(DuduTheme.duduTextDim)
                             }
                             .buttonStyle(.plain)
@@ -232,7 +232,7 @@ struct MusicLibrarySheet: View {
                                         }
                                     } label: {
                                         DuduIcon(systemName: "ellipsis")
-                                            .font(.system(size: 13))
+                                            .font(DuduTheme.appFont(size: 13))
                                             .foregroundStyle(DuduTheme.duduTextDim)
                                             .frame(width: 32, height: 32)
                                     }
@@ -261,7 +261,7 @@ struct MusicLibrarySheet: View {
                         showingAdd = true
                     } label: {
                         DuduIcon(systemName: "plus")
-                            .font(.system(size: 14, weight: .semibold))
+                            .font(DuduTheme.appFont(size: 14, weight: .semibold))
                     }
                 }
             }
@@ -303,7 +303,7 @@ struct MusicQueueSheet: View {
                                             _ = store.removeFromQueue(t.id)
                                         } label: {
                                             DuduIcon(systemName: "xmark.circle")
-                                                .font(.system(size: 14))
+                                                .font(DuduTheme.appFont(size: 14))
                                                 .foregroundStyle(DuduTheme.duduTextDim)
                                         }
                                         .buttonStyle(.plain)

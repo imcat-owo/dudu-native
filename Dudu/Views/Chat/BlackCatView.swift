@@ -149,7 +149,7 @@ struct BlackCatView: View {
     /// opacity .65.
     private var ellipseShadow: some View {
         Ellipse()
-            .fill(Color(red: 105 / 255, green: 75 / 255, blue: 72 / 255, opacity: 0.12))
+            .fill(DuduTheme.catShadow)
             .frame(width: Self.iconSize - 20, height: 7)
             .blur(radius: 4)
             .offset(y: Self.iconSize / 2 - 2 - 3.5)

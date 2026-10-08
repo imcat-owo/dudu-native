@@ -157,7 +157,7 @@ struct ThemePackShareView: View {
         Button(action: action) {
             VStack(spacing: 6) {
                 DuduIcon(systemName: systemImage)
-                    .font(.system(size: 15, weight: .medium))
+                    .font(DuduTheme.appFont(size: 15, weight: .medium))
                     .foregroundStyle(DuduTheme.pink)
                     .frame(width: 40, height: 40)
                     .background(DuduTheme.pinkSoft)
@@ -238,7 +238,7 @@ struct ThemePackShareView: View {
             } label: {
                 HStack {
                     DuduIcon(systemName: "bookmark.fill")
-                        .font(.system(size: 13, weight: .medium))
+                        .font(DuduTheme.appFont(size: 13, weight: .medium))
                         .foregroundStyle(DuduTheme.pink)
                         .frame(width: 28, height: 28)
                         .background(DuduTheme.pinkSoft)
@@ -248,7 +248,7 @@ struct ThemePackShareView: View {
                         .foregroundStyle(DuduTheme.duduText)
                     Spacer()
                     DuduIcon(systemName: "plus")
-                        .font(.system(size: 12, weight: .medium))
+                        .font(DuduTheme.appFont(size: 12, weight: .medium))
                         .foregroundStyle(DuduTheme.duduTextDim)
                 }
             }
@@ -278,7 +278,7 @@ struct ThemePackShareView: View {
                         renameText = item.name
                     } label: {
                         DuduIcon(systemName: "pencil")
-                            .font(.system(size: 12))
+                            .font(DuduTheme.appFont(size: 12))
                             .foregroundStyle(DuduTheme.duduTextDim)
                     }
                     .buttonStyle(.plain)
@@ -286,7 +286,7 @@ struct ThemePackShareView: View {
                         deleteTarget = item
                     } label: {
                         DuduIcon(systemName: "trash")
-                            .font(.system(size: 12))
+                            .font(DuduTheme.appFont(size: 12))
                             .foregroundStyle(DuduTheme.duduDestructive)
                     }
                     .buttonStyle(.plain)

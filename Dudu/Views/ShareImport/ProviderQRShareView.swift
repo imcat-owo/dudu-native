@@ -152,7 +152,7 @@ struct ProviderQRShareView: View {
     private func providerRow(_ instance: ProviderInstance) -> some View {
         HStack(spacing: 12) {
             DuduIcon(systemName: instance.providerType.iconName)
-                .font(.system(size: 15))
+                .font(DuduTheme.appFont(size: 15))
                 .foregroundStyle(DuduTheme.pink)
                 .frame(width: 30, height: 30)
                 .background(DuduTheme.pinkSoft)

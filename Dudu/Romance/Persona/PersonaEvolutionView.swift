@@ -66,7 +66,7 @@ struct PersonaEvolutionView: View {
             } label: {
                 HStack(spacing: 4) {
                     Image(systemName: "plus")
-                        .font(.system(size: 11, weight: .semibold))
+                        .font(DuduTheme.appFont(size: 11, weight: .semibold))
                     Text("记一条")
                         .font(DuduTheme.captionFont(weight: .semibold))
                 }
@@ -137,7 +137,7 @@ struct PersonaEvolutionView: View {
                     store.deleteNote(id: note.id)
                 } label: {
                     Image(systemName: "trash")
-                        .font(.system(size: 12))
+                        .font(DuduTheme.appFont(size: 12))
                         .foregroundStyle(DuduTheme.duduTextDim)
                         .frame(width: 30, height: 30)
                 }

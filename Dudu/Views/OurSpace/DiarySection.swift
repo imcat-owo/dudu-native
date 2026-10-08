@@ -73,7 +73,7 @@ struct DiarySection: View {
                 showingDeleteConfirm = true
             } label: {
                 DuduIcon(systemName: "trash")
-                    .font(.system(size: 12))
+                    .font(DuduTheme.appFont(size: 12))
                     .foregroundStyle(DuduTheme.duduTextDim)
                     .frame(width: 28, height: 28)
             }

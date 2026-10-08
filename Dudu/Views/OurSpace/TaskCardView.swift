@@ -154,7 +154,7 @@ struct TaskCardView: View {
             }
         } label: {
             DuduIcon(systemName: "ellipsis")
-                .font(.system(size: 13, weight: .semibold))
+                .font(DuduTheme.appFont(size: 13, weight: .semibold))
                 .foregroundStyle(DuduTheme.duduTextDim)
                 .frame(width: 28, height: 28)
                 .background(DuduTheme.duduIconChip, in: Circle())

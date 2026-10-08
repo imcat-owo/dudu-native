@@ -21,7 +21,7 @@ struct ProviderListView: View {
                 } label: {
                     HStack(spacing: 12) {
                         DuduIcon(systemName: "qrcode.viewfinder")
-                            .font(.system(size: 15))
+                            .font(DuduTheme.appFont(size: 15))
                             .foregroundStyle(DuduTheme.pink)
                             .frame(width: 30, height: 30)
                             .background(DuduTheme.pinkSoft)
@@ -31,7 +31,7 @@ struct ProviderListView: View {
                             .foregroundStyle(DuduTheme.duduText)
                         Spacer()
                         DuduIcon(systemName: "chevron.right")
-                            .font(.system(size: 12, weight: .medium))
+                            .font(DuduTheme.appFont(size: 12, weight: .medium))
                             .foregroundStyle(DuduTheme.duduTextDim)
                     }
                     .frame(minHeight: 44)
@@ -97,7 +97,7 @@ private struct ProviderRowView: View {
     var body: some View {
         HStack(spacing: 12) {
             DuduIcon(systemName: instance.providerType.iconName)
-                .font(.system(size: 17))
+                .font(DuduTheme.appFont(size: 17))
                 .foregroundStyle(DuduTheme.pink)
                 .frame(width: 32, height: 32)
                 .background(DuduTheme.pinkSoft)
@@ -285,7 +285,7 @@ private struct ProviderTypePickerView: View {
     private func pickerRow(icon: String, title: String, subtitle: String) -> some View {
         HStack(spacing: 12) {
             DuduIcon(systemName: icon)
-                .font(.system(size: 17))
+                .font(DuduTheme.appFont(size: 17))
                 .foregroundStyle(DuduTheme.pink)
                 .frame(width: 32, height: 32)
                 .background(DuduTheme.pinkSoft)

@@ -91,7 +91,7 @@ private struct MomentEditorSheet: View {
                         } label: {
                             HStack(spacing: 5) {
                                 DuduIcon(systemName: k.systemImage)
-                                    .font(.system(size: 11))
+                                    .font(DuduTheme.appFont(size: 11))
                                 Text(k.label)
                                     .font(DuduTheme.captionFont(weight: selected ? .semibold : .regular))
                             }
@@ -172,7 +172,7 @@ private struct MomentCardView: View {
             } label: {
                 HStack(spacing: 5) {
                     Image(systemName: "heart.fill")
-                        .font(.system(size: 14, weight: .semibold))
+                        .font(DuduTheme.appFont(size: 14, weight: .semibold))
                         .foregroundStyle(m.likedByHer ? DuduTheme.pink : DuduTheme.duduTextDim)
                         .scaleEffect(m.likedByHer ? 1.2 : 1.0)
                         .animation(.spring(response: 0.3, dampingFraction: 0.45), value: m.likedByHer)
@@ -190,7 +190,7 @@ private struct MomentCardView: View {
             } label: {
                 HStack(spacing: 5) {
                     Image(systemName: "bubble.left.fill")
-                        .font(.system(size: 13, weight: .semibold))
+                        .font(DuduTheme.appFont(size: 13, weight: .semibold))
                         .foregroundStyle(DuduTheme.duduTextDim)
                     if !m.comments.isEmpty {
                         Text("\(m.comments.count)")
@@ -257,7 +257,7 @@ private struct MomentCommentSheet: View {
                     if comments.isEmpty {
                         VStack(spacing: 8) {
                             Image(systemName: "bubble.left")
-                                .font(.system(size: 28))
+                                .font(DuduTheme.appFont(size: 28))
                                 .foregroundStyle(DuduTheme.duduTextDim)
                             Text("还没有评论，来抢第一条")
                                 .font(DuduTheme.bodyFont())
@@ -316,7 +316,7 @@ private struct MomentCommentSheet: View {
                             store.deleteMomentComment(momentID: momentID, commentID: c.id)
                         } label: {
                             Image(systemName: "trash")
-                                .font(.system(size: 12))
+                                .font(DuduTheme.appFont(size: 12))
                                 .foregroundStyle(DuduTheme.duduTextDim)
                         }
                         .buttonStyle(.plain)

@@ -428,7 +428,7 @@ struct BackupView: View {
                 } label: {
                     HStack(spacing: 12) {
                         DuduIcon(systemName: "externaldrive.fill.badge.plus")
-                            .font(.system(size: 20))
+                            .font(DuduTheme.appFont(size: 20))
                             .foregroundStyle(DuduTheme.pink)
                             .frame(width: 36, height: 36)
                             .background(DuduTheme.duduIconChip)
@@ -475,7 +475,7 @@ struct BackupView: View {
             // before any destination delivery runs.
             HStack(spacing: 12) {
                 DuduIcon(systemName: "internaldrive.fill")
-                    .font(.system(size: 15))
+                    .font(DuduTheme.appFont(size: 15))
                     .foregroundStyle(DuduTheme.pink)
                     .frame(width: 30, height: 30)
                     .background(DuduTheme.duduIconChip)
@@ -499,7 +499,7 @@ struct BackupView: View {
             ForEach(BackupDestinations.eligibleFolders) { folder in
                 HStack(spacing: 12) {
                     DuduIcon(systemName: "folder.fill")
-                        .font(.system(size: 15))
+                        .font(DuduTheme.appFont(size: 15))
                         .foregroundStyle(DuduTheme.pink)
                         .frame(width: 30, height: 30)
                         .background(DuduTheme.duduIconChip)
@@ -540,7 +540,7 @@ struct BackupView: View {
                 HStack(spacing: 12) {
                     DuduIcon(systemName: RcloneBackendCatalog.all
                         .first(where: { $0.type == remote.backend })?.icon ?? "network")
-                        .font(.system(size: 15))
+                        .font(DuduTheme.appFont(size: 15))
                         .foregroundStyle(DuduTheme.pink)
                         .frame(width: 30, height: 30)
                         .background(DuduTheme.duduIconChip)
@@ -618,7 +618,7 @@ struct BackupView: View {
                 } label: {
                     HStack(spacing: 12) {
                         DuduIcon(systemName: "archivebox.fill")
-                            .font(.system(size: 15))
+                            .font(DuduTheme.appFont(size: 15))
                             .foregroundStyle(DuduTheme.pink)
                             .frame(width: 30, height: 30)
                             .background(DuduTheme.duduIconChip)
@@ -634,7 +634,7 @@ struct BackupView: View {
                         }
                         Spacer()
                         DuduIcon(systemName: "chevron.right")
-                            .font(.system(size: 12, weight: .semibold))
+                            .font(DuduTheme.appFont(size: 12, weight: .semibold))
                             .foregroundStyle(DuduTheme.duduTextDim)
                     }
                     .frame(minHeight: 44)
@@ -665,7 +665,7 @@ struct BackupView: View {
             } label: {
                 HStack(spacing: 12) {
                     DuduIcon(systemName: "square.and.arrow.down.fill")
-                        .font(.system(size: 15))
+                        .font(DuduTheme.appFont(size: 15))
                         .foregroundStyle(DuduTheme.pink)
                         .frame(width: 30, height: 30)
                         .background(DuduTheme.duduIconChip)
@@ -704,7 +704,7 @@ struct BackupView: View {
                 } label: {
                     HStack(spacing: 12) {
                         DuduIcon(systemName: historyIcon(for: record.status))
-                            .font(.system(size: 15))
+                            .font(DuduTheme.appFont(size: 15))
                             .foregroundStyle(historyTint(for: record.status))
                             .frame(width: 30, height: 30)
                             .background(DuduTheme.duduIconChip)
@@ -1123,7 +1123,7 @@ struct RestoreSheet: View {
     private func failedView(message: String) -> some View {
         VStack(spacing: 16) {
             DuduIcon(systemName: "exclamationmark.circle.fill")
-                .font(.system(size: 44))
+                .font(DuduTheme.appFont(size: 44))
                 .foregroundStyle(DuduTheme.pink)
             Text("恢复失败")
                 .font(DuduTheme.titleFont())

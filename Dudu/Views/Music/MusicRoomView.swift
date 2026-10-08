@@ -46,7 +46,7 @@ struct MusicRoomView: View {
                     showingAddTrack = true
                 } label: {
                     DuduIcon(systemName: "plus")
-                        .font(.system(size: 14, weight: .semibold))
+                        .font(DuduTheme.appFont(size: 14, weight: .semibold))
                         .foregroundStyle(DuduTheme.duduText)
                 }
             }
@@ -104,7 +104,7 @@ struct MusicRoomView: View {
                         toggleOurs(track)
                     } label: {
                         DuduIcon(systemName: store.isOurs(track.id) ? "heart.fill" : "heart")
-                            .font(.system(size: 16))
+                            .font(DuduTheme.appFont(size: 16))
                             .foregroundStyle(DuduTheme.pink)
                     }
                     .buttonStyle(.plain)
@@ -150,7 +150,7 @@ struct MusicRoomView: View {
                         Task { await dj.togglePlayPause() }
                     } label: {
                         DuduIcon(systemName: dj.status.playing ? "pause.fill" : "play.fill")
-                            .font(.system(size: 22))
+                            .font(DuduTheme.appFont(size: 22))
                             .foregroundStyle(DuduTheme.duduText)
                             .frame(width: 52, height: 52)
                             .background(DuduTheme.pinkSoft, in: Circle())
@@ -189,7 +189,7 @@ struct MusicRoomView: View {
     private func transportButton(systemImage: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             DuduIcon(systemName: systemImage)
-                .font(.system(size: 18))
+                .font(DuduTheme.appFont(size: 18))
                 .foregroundStyle(DuduTheme.duduText)
                 .frame(width: 44, height: 44)
         }
@@ -259,7 +259,7 @@ struct MusicRoomView: View {
                             }
                             Spacer()
                             DuduIcon(systemName: "play.fill")
-                                .font(.system(size: 11))
+                                .font(DuduTheme.appFont(size: 11))
                                 .foregroundStyle(DuduTheme.duduTextDim)
                         }
                     }
@@ -321,7 +321,7 @@ struct MusicRoomView: View {
     private var togetherRow: some View {
         HStack(spacing: 10) {
             DuduIcon(systemName: "person.2.fill")
-                .font(.system(size: 14))
+                .font(DuduTheme.appFont(size: 14))
                 .foregroundStyle(DuduTheme.pink)
             VStack(alignment: .leading, spacing: 2) {
                 Text("一起听")
@@ -363,7 +363,7 @@ struct MusicRoomView: View {
         Button(action: action) {
             VStack(spacing: 6) {
                 DuduIcon(systemName: systemImage)
-                    .font(.system(size: 16))
+                    .font(DuduTheme.appFont(size: 16))
                     .foregroundStyle(DuduTheme.pink)
                 Text("\(title) · \(count)")
                     .font(DuduTheme.captionFont(weight: .semibold))
@@ -509,7 +509,7 @@ struct MusicRoomView: View {
         RoundedRectangle(cornerRadius: size * 0.22)
             .fill(DuduTheme.duduIconChip)
         DuduIcon(systemName: "music.note")
-            .font(.system(size: size * 0.4))
+            .font(DuduTheme.appFont(size: size * 0.4))
             .foregroundStyle(DuduTheme.pink)
     }
     .frame(width: size, height: size)
@@ -565,7 +565,7 @@ struct AddTrackSheet: View {
                         } label: {
                             HStack {
                                 DuduIcon(systemName: "doc.badge.plus")
-                                    .font(.system(size: 13))
+                                    .font(DuduTheme.appFont(size: 13))
                                 Text(audioName.isEmpty ? "选择音频文件" : audioName)
                                     .font(DuduTheme.captionFont())
                                     .lineLimit(1)
@@ -591,7 +591,7 @@ struct AddTrackSheet: View {
                         } label: {
                             HStack {
                                 DuduIcon(systemName: "photo.badge.plus")
-                                    .font(.system(size: 13))
+                                    .font(DuduTheme.appFont(size: 13))
                                 Text(coverUri.isEmpty ? "选择封面图片" : "已选封面")
                                     .font(DuduTheme.captionFont())
                             }
@@ -700,7 +700,7 @@ struct AddTrackSheet: View {
                             Spacer()
                             if pickedCatalog?.id == hit.id {
                                 DuduIcon(systemName: "checkmark.circle.fill")
-                                    .font(.system(size: 14))
+                                    .font(DuduTheme.appFont(size: 14))
                                     .foregroundStyle(DuduTheme.pink)
                             }
                         }

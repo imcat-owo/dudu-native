@@ -1012,12 +1012,12 @@ private struct CrossAppRow: View {
                         ProgressView()
                     } else if entry.needsParams {
                         DuduIcon(systemName: "chevron.right")
-                            .font(.system(size: 13))
+                            .font(DuduTheme.appFont(size: 13))
                             .foregroundStyle(DuduTheme.duduTextDim)
                             .rotationEffect(.degrees(expanded ? 90 : 0))
                     } else {
                         DuduIcon(systemName: "arrow.up.right")
-                            .font(.system(size: 13))
+                            .font(DuduTheme.appFont(size: 13))
                             .foregroundStyle(DuduTheme.duduTextDim)
                     }
                 }

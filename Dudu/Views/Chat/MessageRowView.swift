@@ -354,7 +354,7 @@ struct MessageRowView: View {
         .frame(width: 34, height: 34)
         .clipShape(Circle())
         // html-2 定稿: 34px avatar with 2px white ring.
-        .overlay(Circle().stroke(Color.white, lineWidth: 2))
+        .overlay(Circle().stroke(DuduTheme.avatarRing, lineWidth: 2))
     }
 
     // MARK: - Long-press menu

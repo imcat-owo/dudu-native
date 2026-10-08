@@ -22,7 +22,7 @@ struct ArtifactCardView: View {
                         .fill(DuduTheme.duduIconChip)
                         .frame(width: 36, height: 36)
                     DuduIcon(systemName: artifact.kind.systemIcon)
-                        .font(.system(size: 16, weight: .semibold))
+                        .font(DuduTheme.appFont(size: 16, weight: .semibold))
                         .foregroundStyle(DuduTheme.pink)
                 }
                 VStack(alignment: .leading, spacing: 2) {
@@ -129,7 +129,7 @@ struct ArtifactPreviewView: View {
     private var emptyState: some View {
         VStack(spacing: 10) {
             DuduIcon(systemName: artifact.kind.systemIcon)
-                .font(.system(size: 28, weight: .regular))
+                .font(DuduTheme.appFont(size: 28, weight: .regular))
                 .foregroundStyle(DuduTheme.pink)
             Text(L10n.string("chat.artifact.empty"))
                 .font(DuduTheme.bodyFont())

@@ -38,7 +38,7 @@ private struct PromptCard: View {
             // 标题行：图标 + "AI 想用{能力}"
             HStack(spacing: 10) {
                 DuduIcon(systemName: iconName(for: request.commandName))
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(DuduTheme.appFont(size: 16, weight: .semibold))
                     .foregroundStyle(DuduTheme.pink)
                     .frame(width: 34, height: 34)
                     .background(DuduTheme.duduIconChip)

@@ -48,6 +48,12 @@ extension DuduTheme {
     /// rgba(86,60,62,0.10) — soft drop shadow under floating glass
     /// capsules (html-2 定稿: 0 12px 35px). Fixed, both schemes.
     static var capsuleShadow: Color { Color(hex: "563C3E").opacity(0.10) }
+    /// rgba(105,75,72,0.12) — soft grounded ellipse shadow under the
+    /// black cat (BlackCatView). Fixed, both schemes.
+    static var catShadow: Color { Color(hex: "694B48").opacity(0.12) }
+    /// 2px avatar ring (html-2 定稿): pinned white in both schemes — a
+    /// deliberate decorative accent, readable on light and dark surfaces.
+    static var avatarRing: Color { .white }
     /// #171518 (light) / #09090b (dark) — black-cat ink for BlackCatView's
     /// solid fills. Dynamic: follows the iOS system appearance (plus the
     /// studio's appearanceMode override) via adaptive(), never hardcoded.
@@ -150,6 +156,15 @@ extension DuduTheme {
     /// Heading H1: title base size plus a delta, semibold. → FontSettings app axis.
     static func headingFont(delta: CGFloat) -> Font {
         baseFont(scaledSize: FontSettings.shared.scaledApp(titleSize + delta), weight: .semibold)
+    }
+    /// One-off UI sizes that don't land on the semantic title/body/caption
+    /// steps. Still routes through FontSettings (app axis) and the active
+    /// custom font family — exactly like monoFont(size:) does for its axis —
+    /// so Dynamic Type scaling and font upload keep working with zero visual
+    /// change at default settings. Prefer the semantic helpers above when the
+    /// size matches (11 caption / 13 body / 15 title).
+    static func appFont(size: CGFloat, weight: Font.Weight = .regular) -> Font {
+        baseFont(scaledSize: FontSettings.shared.scaledApp(size), weight: weight)
     }
 
     /// Base font constructor (D12): an uploaded custom font wins over the

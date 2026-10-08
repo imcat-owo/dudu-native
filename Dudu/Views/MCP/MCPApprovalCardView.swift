@@ -104,7 +104,7 @@ struct MCPApprovalCardView: View {
             HStack(spacing: 10) {
                 DuduIcon(systemName: "shield.fill")
                     .foregroundStyle(DuduTheme.pink)
-                    .font(.system(size: 18))
+                    .font(DuduTheme.appFont(size: 18))
                 Text(payload.title)
                     .font(DuduTheme.bodyFont(weight: .semibold))
                     .foregroundStyle(DuduTheme.duduText)

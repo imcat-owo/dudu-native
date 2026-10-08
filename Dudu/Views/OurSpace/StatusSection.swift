@@ -25,7 +25,7 @@ struct StatusSection: View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 6) {
                 DuduIcon(systemName: "waveform")
-                    .font(.system(size: 12, weight: .semibold))
+                    .font(DuduTheme.appFont(size: 12, weight: .semibold))
                     .foregroundStyle(DuduTheme.pink)
                 Text("我在做什么")
                     .font(DuduTheme.titleFont())
@@ -60,7 +60,7 @@ struct StatusSection: View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 6) {
                 DuduIcon(systemName: "face.smiling")
-                    .font(.system(size: 12, weight: .semibold))
+                    .font(DuduTheme.appFont(size: 12, weight: .semibold))
                     .foregroundStyle(DuduTheme.pink)
                 Text("她的心情")
                     .font(DuduTheme.titleFont())

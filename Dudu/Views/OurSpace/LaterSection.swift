@@ -57,7 +57,7 @@ struct LaterSection: View {
                             .fill(DuduTheme.pink)
                             .frame(width: 20, height: 20)
                         DuduIcon(systemName: "checkmark")
-                            .font(.system(size: 10, weight: .bold))
+                            .font(DuduTheme.appFont(size: 10, weight: .bold))
                             .foregroundStyle(DuduTheme.duduCard)
                     }
                 }
@@ -81,7 +81,7 @@ struct LaterSection: View {
                 store.deleteLater(id: item.id)
             } label: {
                 DuduIcon(systemName: "trash")
-                    .font(.system(size: 12))
+                    .font(DuduTheme.appFont(size: 12))
                     .foregroundStyle(DuduTheme.duduTextDim)
                     .frame(width: 28, height: 28)
             }

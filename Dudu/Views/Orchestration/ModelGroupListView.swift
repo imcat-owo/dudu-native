@@ -148,7 +148,7 @@ private struct ModelGroupRowView: View {
     var body: some View {
         HStack(spacing: 12) {
             DuduIcon(systemName: "square.stack.3d.up")
-                .font(.system(size: 15))
+                .font(DuduTheme.appFont(size: 15))
                 .foregroundStyle(DuduTheme.pink)
                 .frame(width: 30, height: 30)
                 .background(DuduTheme.pinkSoft)

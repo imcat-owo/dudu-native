@@ -44,7 +44,7 @@ struct PersonaDialsView: View {
         VStack(alignment: .leading, spacing: 6) {
             HStack(spacing: 8) {
                 Image(systemName: dial.systemImage)
-                    .font(.system(size: 13, weight: .semibold))
+                    .font(DuduTheme.appFont(size: 13, weight: .semibold))
                     .foregroundStyle(DuduTheme.duduText)
                     .frame(width: 22)
                 Text(dial.title)

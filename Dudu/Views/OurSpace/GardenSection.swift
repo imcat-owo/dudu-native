@@ -118,7 +118,7 @@ struct GardenSection: View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 6) {
                 DuduIcon(systemName: seed.confidence.systemImage)
-                    .font(.system(size: 11, weight: .semibold))
+                    .font(DuduTheme.appFont(size: 11, weight: .semibold))
                     .foregroundStyle(DuduTheme.duduText)
                 OurSpaceChip(text: seed.confidence.label, color: seed.confidence.chipColor)
                 OurSpaceChip(text: seed.category.label, color: DuduTheme.duduIconChip)
@@ -143,7 +143,7 @@ struct GardenSection: View {
                     } label: {
                         HStack(spacing: 4) {
                             DuduIcon(systemName: "checkmark")
-                                .font(.system(size: 11, weight: .semibold))
+                                .font(DuduTheme.appFont(size: 11, weight: .semibold))
                             Text("记对了")
                                 .font(DuduTheme.captionFont(weight: .semibold))
                         }
@@ -158,7 +158,7 @@ struct GardenSection: View {
                     } label: {
                         HStack(spacing: 4) {
                             DuduIcon(systemName: "bubble.left")
-                                .font(.system(size: 11, weight: .semibold))
+                                .font(DuduTheme.appFont(size: 11, weight: .semibold))
                             Text("我来回答")
                                 .font(DuduTheme.captionFont(weight: .semibold))
                         }
@@ -175,7 +175,7 @@ struct GardenSection: View {
                     store.deleteSeed(id: seed.id)
                 } label: {
                     DuduIcon(systemName: "trash")
-                        .font(.system(size: 12))
+                        .font(DuduTheme.appFont(size: 12))
                         .foregroundStyle(DuduTheme.duduTextDim)
                         .frame(width: 30, height: 30)
                 }
@@ -259,7 +259,7 @@ private struct SeedEditorSheet: View {
         } label: {
             VStack(spacing: 4) {
                 DuduIcon(systemName: c.systemImage)
-                    .font(.system(size: 14, weight: selected ? .semibold : .regular))
+                    .font(DuduTheme.appFont(size: 14, weight: selected ? .semibold : .regular))
                 Text(c.label)
                     .font(DuduTheme.captionFont(weight: selected ? .semibold : .regular))
             }

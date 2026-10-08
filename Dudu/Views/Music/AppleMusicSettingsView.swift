@@ -99,7 +99,7 @@ struct AppleMusicSettingsView: View {
                     showToken.toggle()
                 } label: {
                     DuduIcon(systemName: showToken ? "eye.slash" : "eye")
-                        .font(.system(size: 13))
+                        .font(DuduTheme.appFont(size: 13))
                         .foregroundStyle(DuduTheme.duduTextDim)
                 }
                 .buttonStyle(.plain)

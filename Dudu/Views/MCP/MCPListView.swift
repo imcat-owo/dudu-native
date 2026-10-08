@@ -17,7 +17,7 @@ struct MCPListView: View {
                 Section {
                     VStack(spacing: 12) {
                         DuduIcon(systemName: "server.rack")
-                            .font(.system(size: 36))
+                            .font(DuduTheme.appFont(size: 36))
                             .foregroundStyle(DuduTheme.duduTextDim)
                         Text("还没有 MCP 服务器")
                             .font(DuduTheme.bodyFont())

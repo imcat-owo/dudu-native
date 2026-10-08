@@ -204,7 +204,7 @@ struct ThemeTryOnBanner: View {
         if tryOn.isStaged {
             HStack(spacing: 10) {
                 DuduIcon(systemName: "paintbrush.fill")
-                    .font(.system(size: 13, weight: .medium))
+                    .font(DuduTheme.appFont(size: 13, weight: .medium))
                     .foregroundStyle(DuduTheme.pink)
                     .frame(width: 28, height: 28)
                     .background(DuduTheme.pinkSoft)

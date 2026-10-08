@@ -42,7 +42,7 @@ struct AppLockView: View {
                 )) {
                     HStack(spacing: 12) {
                         DuduIcon(systemName: BiometricAuth.biometryIconName)
-                            .font(.system(size: 15))
+                            .font(DuduTheme.appFont(size: 15))
                             .foregroundStyle(DuduTheme.pink)
                             .frame(width: 30, height: 30)
                             .background(DuduTheme.duduIconChip)
@@ -182,7 +182,7 @@ struct AppLockOverlayView: View {
             VStack(spacing: 14) {
                 Spacer()
                 DuduIcon(systemName: BiometricAuth.biometryIconName)
-                    .font(.system(size: 52, weight: .regular))
+                    .font(DuduTheme.appFont(size: 52, weight: .regular))
                     .foregroundStyle(DuduTheme.pink)
                     .frame(width: 96, height: 96)
                     .background(DuduTheme.duduIconChip)

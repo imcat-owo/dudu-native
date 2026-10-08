@@ -137,7 +137,7 @@ struct IntimacyView: View {
         let state = manager.state(of: days)
         return HStack(spacing: 10) {
             Image(systemName: stateIcon(state))
-                .font(.system(size: 13, weight: .semibold))
+                .font(DuduTheme.appFont(size: 13, weight: .semibold))
                 .foregroundStyle(state == .upcoming ? DuduTheme.duduTextDim : DuduTheme.duduText)
                 .frame(width: 22)
             Text("\(days) 天")

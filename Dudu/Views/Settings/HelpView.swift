@@ -12,7 +12,7 @@ struct HelpView: View {
             Section {
                 HStack(spacing: 12) {
                     DuduIcon(systemName: "lifepreserver.fill")
-                        .font(.system(size: 15))
+                        .font(DuduTheme.appFont(size: 15))
                         .foregroundStyle(DuduTheme.pink)
                         .frame(width: 30, height: 30)
                         .background(DuduTheme.duduIconChip)
@@ -31,7 +31,7 @@ struct HelpView: View {
                     } label: {
                         HStack(spacing: 12) {
                             DuduIcon(systemName: guide.icon)
-                                .font(.system(size: 15))
+                                .font(DuduTheme.appFont(size: 15))
                                 .foregroundStyle(DuduTheme.pink)
                                 .frame(width: 30, height: 30)
                                 .background(DuduTheme.duduIconChip)

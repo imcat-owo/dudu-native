@@ -60,7 +60,7 @@ struct ComputerTerminalView: View {
                         .fill(DuduTheme.duduIconChip)
                         .frame(width: 40, height: 40)
                     DuduIcon(systemName: "terminal")
-                        .font(.system(size: FontSettings.shared.scaledApp(18), weight: .medium))
+                        .font(DuduTheme.appFont(size: 18, weight: .medium))
                         .foregroundStyle(DuduTheme.pink)
                 }
                 VStack(alignment: .leading, spacing: 4) {
@@ -153,7 +153,7 @@ struct ComputerTerminalView: View {
                 if viewModel.status == .running {
                     VStack(spacing: 8) {
                         DuduIcon(systemName: "terminal")
-                            .font(.system(size: FontSettings.shared.scaledApp(28)))
+                            .font(DuduTheme.appFont(size: 28))
                             .foregroundStyle(DuduTheme.duduTextDim)
                         Text(L10n.string("term.readyTitle"))
                             .font(DuduTheme.titleFont())
@@ -252,7 +252,7 @@ struct ComputerTerminalView: View {
                     viewModel.run()
                 } label: {
                     DuduIcon(systemName: "paperplane.fill")
-                        .font(.system(size: FontSettings.shared.scaledApp(16), weight: .medium))
+                        .font(DuduTheme.appFont(size: 16, weight: .medium))
                         .foregroundStyle(DuduTheme.cream)
                         .frame(width: 40, height: 40)
                         .background(viewModel.canRun ? DuduTheme.pink : DuduTheme.duduDivider)

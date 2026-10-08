@@ -87,7 +87,7 @@ struct OurSpaceView: View {
                             .fill(DuduTheme.duduIconChip)
                             .frame(width: 40, height: 40)
                         DuduIcon(systemName: "music.note")
-                            .font(.system(size: 16, weight: .medium))
+                            .font(DuduTheme.appFont(size: 16, weight: .medium))
                             .foregroundStyle(DuduTheme.pink)
                     }
                     VStack(alignment: .leading, spacing: 2) {
@@ -108,7 +108,7 @@ struct OurSpaceView: View {
                     }
                     Spacer()
                     DuduIcon(systemName: "chevron.right")
-                        .font(.system(size: 12, weight: .semibold))
+                        .font(DuduTheme.appFont(size: 12, weight: .semibold))
                         .foregroundStyle(DuduTheme.duduTextDim)
                 }
                 .padding(12)
@@ -119,7 +119,7 @@ struct OurSpaceView: View {
                 Task { await dj.togglePlayPause() }
             } label: {
                 DuduIcon(systemName: dj.status.playing ? "pause.fill" : "play.fill")
-                    .font(.system(size: 14))
+                    .font(DuduTheme.appFont(size: 14))
                     .foregroundStyle(DuduTheme.duduText)
                     .frame(width: 40, height: 40)
                     .background(DuduTheme.pinkSoft, in: Circle())
@@ -153,7 +153,7 @@ struct OurSpaceView: View {
                 } label: {
                     HStack(spacing: 4) {
                         DuduIcon(systemName: "plus")
-                            .font(.system(size: 11, weight: .semibold))
+                            .font(DuduTheme.appFont(size: 11, weight: .semibold))
                         Text("新建")
                             .font(DuduTheme.captionFont(weight: .semibold))
                     }
@@ -231,7 +231,7 @@ struct OurSpaceSegmentedControl: View {
                 } label: {
                     VStack(spacing: 3) {
                         DuduIcon(systemName: s.systemImage)
-                            .font(.system(size: 13, weight: selected ? .semibold : .regular))
+                            .font(DuduTheme.appFont(size: 13, weight: selected ? .semibold : .regular))
                         Text(s.title)
                             .font(DuduTheme.captionFont(weight: selected ? .semibold : .regular))
                     }
@@ -275,7 +275,7 @@ struct OurSpaceSectionHeader: View {
                 Button(action: action) {
                     HStack(spacing: 4) {
                         DuduIcon(systemName: "plus")
-                            .font(.system(size: 11, weight: .semibold))
+                            .font(DuduTheme.appFont(size: 11, weight: .semibold))
                         Text(actionTitle)
                             .font(DuduTheme.captionFont(weight: .semibold))
                     }
@@ -312,7 +312,7 @@ struct OurSpaceEmptyState: View {
                     .fill(DuduTheme.duduIconChip)
                     .frame(width: 56, height: 56)
                 DuduIcon(systemName: systemImage)
-                    .font(.system(size: 22, weight: .medium))
+                    .font(DuduTheme.appFont(size: 22, weight: .medium))
                     .foregroundStyle(DuduTheme.pink)
             }
             Text(title)

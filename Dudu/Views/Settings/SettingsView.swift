@@ -247,7 +247,7 @@ private struct SettingsRow: View {
         NavigationLink(value: route) {
             HStack(spacing: 12) {
                 DuduIcon(systemName: icon)
-                    .font(.system(size: 15))
+                    .font(DuduTheme.appFont(size: 15))
                     .foregroundStyle(DuduTheme.pink)
                     .frame(width: 30, height: 30)
                     .background(DuduTheme.pinkSoft)
