@@ -61,7 +61,7 @@ struct MessageBlockView: View {
 // MARK: - Thinking block
 
 /// Phase D2 — collapsible thinking header. Tapping the header (or the live
-/// thinking-indicator slot) presents ThinkingDrawerView, the bottom-sheet
+/// thinking-indicator slot) presents ThinkingDrawerOverlay, the custom bottom
 /// drawer with the full thinking text. `block.isThinkingExpanded` /
 /// `thinkingUserToggled` stay engine-owned (the legacy collection-view path
 /// in CollectionViewMessageListV3.swift still reads them); this SwiftUI view
@@ -98,8 +98,14 @@ struct ThinkingBlockView: View {
         }
         .buttonStyle(.plain)
         .accessibilityLabel("查看完整思考过程")
-        .sheet(isPresented: $showDrawer) {
-            ThinkingDrawerView(block: block, isLive: isLiveBlock)
+        // Custom bottom drawer (Wave 2 Item 9): presented as an overlay,
+        // not a system sheet.
+        .overlay {
+            if showDrawer {
+                ThinkingDrawerOverlay(block: block, isLive: isLiveBlock) {
+                    showDrawer = false
+                }
+            }
         }
     }
 }

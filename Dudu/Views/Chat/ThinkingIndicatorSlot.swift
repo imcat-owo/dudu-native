@@ -108,8 +108,14 @@ struct ThinkingIndicatorSlot: View {
             }
             .buttonStyle(CatPressButtonStyle(pressed: $pressed))
             .accessibilityLabel(label)
-            .sheet(item: $drawerBlock) { block in
-                ThinkingDrawerView(block: block, isLive: isLiveBlock)
+            // Custom bottom drawer (Wave 2 Item 9): presented as an overlay,
+            // not a system sheet.
+            .overlay {
+                if let block = drawerBlock {
+                    ThinkingDrawerOverlay(block: block, isLive: isLiveBlock) {
+                        drawerBlock = nil
+                    }
+                }
             }
         }
         .frame(width: 44, height: 44)

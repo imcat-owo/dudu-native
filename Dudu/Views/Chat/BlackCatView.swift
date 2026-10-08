@@ -438,11 +438,17 @@ struct PeekCatHost: View {
         }
         .frame(width: 60, height: 46)
         .clipped()
-        // The sheet lives on the host (not inside `if peeking`) so it
+        // The drawer lives on the host (not inside `if peeking`) so it
         // survives the peek window closing underneath it. Peek only shows
         // while the engine is idle, so the block is never live.
-        .sheet(item: $drawerBlock) { block in
-            ThinkingDrawerView(block: block, isLive: false)
+        // Custom bottom drawer (Wave 2 Item 9): presented as an overlay,
+        // not a system sheet.
+        .overlay {
+            if let block = drawerBlock {
+                ThinkingDrawerOverlay(block: block, isLive: false) {
+                    drawerBlock = nil
+                }
+            }
         }
         .onReceive(tick) { _ in
             countdown -= 1

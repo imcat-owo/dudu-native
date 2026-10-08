@@ -1,9 +1,10 @@
 import SwiftUI
+import UIKit
 
 // MARK: - ThinkingDrawerView (Phase D2)
 //
-// Bottom-sheet drawer that shows the FULL thinking text of one assistant
-// thinking block.
+// The FULL thinking text of one assistant thinking block, shown inside
+// ThinkingDrawerOverlay (the custom bottom drawer — Wave 2 Item 9).
 //
 // Trigger: tapping the "思考过程" header in ThinkingBlockView (the header
 // carries the ThinkingIndicatorSlot while the thinking is still streaming,
@@ -30,6 +31,8 @@ struct ThinkingDrawerView: View {
     @ObservedObject var block: AssistantBlock
     /// True while this block belongs to the live, still-streaming turn.
     let isLive: Bool
+    /// Called by the close button (the overlay owns dismissal).
+    let onClose: () -> Void
 
     /// Content this long (chars) AND with multiple paragraphs gets sectioned.
     private static let sectionThreshold = 1_200
@@ -38,7 +41,6 @@ struct ThinkingDrawerView: View {
 
     @State private var expandedSections: Set<Int> = [0]
     @State private var followLive = true
-    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         VStack(spacing: 0) {
@@ -83,8 +85,6 @@ struct ThinkingDrawerView: View {
             }
         }
         .background(DuduTheme.duduBackground)
-        .presentationDetents([.medium, .large])
-        .presentationDragIndicator(.visible)
     }
 
     // MARK: - Header
@@ -117,7 +117,7 @@ struct ThinkingDrawerView: View {
                     .tint(DuduTheme.pink)
             }
             Button {
-                dismiss()
+                onClose()
             } label: {
                 DuduIcon(systemName: "xmark")
                     .font(DuduTheme.captionFont(weight: .semibold))
@@ -255,6 +255,154 @@ struct ThinkingDrawerView: View {
         }
         withAnimation(.easeOut(duration: 0.2)) {
             proxy.scrollTo("tail", anchor: .bottom)
+        }
+    }
+}
+
+// MARK: - ThinkingDrawerOverlay (Wave 2 Item 9)
+//
+// Custom bottom drawer chrome for the thinking drawer, replacing the system
+// .sheet (html-2 定稿): dimmed scrim with tap-to-dismiss, 22pt top corner
+// radius, 60%-of-screen-height card, spring present/dismiss, drag-down to
+// dismiss. Rendered as an .overlay at the presentation site — the drawer
+// feels like part of Dudu, not iOS system UI.
+//
+// Screen anchoring: the presentation sites are small hosts deep in the chat
+// (a 44pt slot, a header button, the peek-cat host). A GeometryReader reads
+// the host's global frame and positions a screen-sized container so the
+// drawer lands on the real screen bottom. The anchor is captured once on
+// appear so message-list scrolling can't move the drawer mid-presentation.
+
+struct ThinkingDrawerOverlay: View {
+    let block: AssistantBlock
+    let isLive: Bool
+    /// Called after the exit animation lands; the site removes the overlay.
+    let onDismiss: () -> Void
+
+    /// Drawer height = 60% of screen (html-2 定稿 tuned value).
+    private static let heightFraction: CGFloat = 0.6
+    /// Top corner radius (html-2 定稿).
+    private static let cornerRadius: CGFloat = 22
+    /// Dragging the card this far down (or flinging it) dismisses.
+    private static let dismissThreshold: CGFloat = 120
+
+    @State private var shown = false
+    @State private var dragY: CGFloat = 0
+    @State private var anchor: CGPoint?
+    @State private var dismissing = false
+
+    private var spring: Animation {
+        .spring(response: 0.38, dampingFraction: 0.88)
+    }
+
+    /// Home-indicator clearance from the key window.
+    private var bottomSafeInset: CGFloat {
+        UIApplication.shared.connectedScenes
+            .compactMap { ($0 as? UIWindowScene)?.keyWindow }
+            .first?.safeAreaInsets.bottom ?? 0
+    }
+
+    var body: some View {
+        GeometryReader { geo in
+            let host = geo.frame(in: .global)
+            let screen = UIScreen.main.bounds
+            let cardHeight = screen.height * Self.heightFraction + bottomSafeInset
+            ZStack(alignment: .bottom) {
+                // Scrim — tap anywhere outside the card to dismiss.
+                DuduTheme.kitty
+                    .opacity(scrimOpacity(cardHeight: cardHeight))
+                    .onTapGesture { dismiss() }
+                    .accessibilityLabel("关闭思考过程")
+                    .accessibilityAddTraits(.isButton)
+                // Drawer card.
+                VStack(spacing: 0) {
+                    grabber
+                    ThinkingDrawerView(block: block, isLive: isLive, onClose: dismiss)
+                        .padding(.bottom, bottomSafeInset)
+                }
+                .frame(height: cardHeight)
+                .frame(maxWidth: .infinity)
+                .background(DuduTheme.duduBackground)
+                .clipShape(UnevenRoundedRectangle(
+                    topLeadingRadius: Self.cornerRadius,
+                    bottomLeadingRadius: 0,
+                    bottomTrailingRadius: 0,
+                    topTrailingRadius: Self.cornerRadius,
+                    style: .continuous))
+                .offset(y: cardOffset(cardHeight: cardHeight))
+                .gesture(dragGesture(cardHeight: cardHeight))
+                .accessibilityElement(children: .contain)
+            }
+            .frame(width: screen.width, height: screen.height, alignment: .bottom)
+            .position(anchorPoint(host: host, screen: screen))
+            .onAppear {
+                // Capture the anchor once: later layout passes (e.g. the
+                // message list scrolling underneath) must not move the drawer.
+                anchor = CGPoint(x: screen.midX - host.minX, y: screen.midY - host.minY)
+                withAnimation(spring) { shown = true }
+            }
+        }
+    }
+
+    // MARK: - Chrome pieces
+
+    private var grabber: some View {
+        Capsule()
+            .fill(DuduTheme.duduTextDim.opacity(0.4))
+            .frame(width: 36, height: 5)
+            .padding(.top, 10)
+            .padding(.bottom, 6)
+            .accessibilityHidden(true)
+    }
+
+    private func anchorPoint(host: CGRect, screen: CGRect) -> CGPoint {
+        // Overlay-local origin is the host frame's top-left; the screen-sized
+        // container must be centered on the real screen center.
+        if let anchor { return anchor }
+        return CGPoint(x: screen.midX - host.minX, y: screen.midY - host.minY)
+    }
+
+    private func cardOffset(cardHeight: CGFloat) -> CGFloat {
+        // Hidden: parked fully below the screen. Shown: follows the finger.
+        shown ? dragY : cardHeight
+    }
+
+    private func scrimOpacity(cardHeight: CGFloat) -> Double {
+        guard shown else { return 0 }
+        let dragProgress = min(max(dragY / cardHeight, 0), 1)
+        return 0.45 * (1 - dragProgress)
+    }
+
+    private func dragGesture(cardHeight: CGFloat) -> some Gesture {
+        DragGesture()
+            .onChanged { value in
+                guard shown, !dismissing else { return }
+                // Downward only — the card never stretches upward.
+                dragY = max(0, value.translation.height)
+            }
+            .onEnded { value in
+                guard shown, !dismissing else { return }
+                let flung = value.predictedEndTranslation.height > cardHeight * 0.5
+                if value.translation.height > Self.dismissThreshold || flung {
+                    dismiss()
+                } else {
+                    withAnimation(spring) { dragY = 0 }
+                }
+            }
+    }
+
+    // MARK: - Dismiss
+
+    private func dismiss() {
+        guard !dismissing else { return }
+        dismissing = true
+        withAnimation(spring) {
+            shown = false
+            dragY = 0
+        }
+        // Let the exit animation land before the site removes the overlay.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+            onDismiss()
         }
     }
 }
