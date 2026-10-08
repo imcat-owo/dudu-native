@@ -17,6 +17,7 @@ struct DuduTabView: View {
     @StateObject private var providerStore = ProviderConfigStore.shared
     @StateObject private var appearance = AppearanceStudio.shared
     @ObservedObject private var deepLinks = DeepLinkCoordinator.shared
+    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         ZStack {
@@ -47,6 +48,13 @@ struct DuduTabView: View {
             selection = .more
         }
         .appFontScale()
+        // Theme tokens now read AppearanceStudio live (Wave 3): when the user
+        // toggles system appearance, force a re-render so the new variant
+        // resolves. (The old adaptive() UIColor providers did this at UIKit
+        // render time; the studio path needs an explicit invalidation.)
+        .onChange(of: colorScheme) { _ in
+            appearance.objectWillChange.send()
+        }
         // D11: app-level Face ID lock — overlay + foreground/background
         // evaluation live in AppLockGate (Views/Settings/AppLockView.swift).
         .modifier(AppLockGate())

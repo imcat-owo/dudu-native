@@ -73,10 +73,9 @@ extension DuduTheme {
     static var duduTextDim: Color { color(.secondaryText) }
     /// Icon chip background. → mutedSurface role. Default light #FFE7E8 · dark #4A3A36.
     static var duduIconChip: Color { color(.mutedSurface) }
-    /// Soft tinted chip/highlight background — same mutedSurface role as
-    /// duduIconChip, kept as a separate name because call sites use it for
-    /// highlight washes rather than icon chips.
-    static var pinkSoft: Color { color(.mutedSurface) }
+    /// Soft tinted chip/highlight background. Fixed #FFE7E8 in both schemes
+    /// (was fixed before the System A/B unification; not theme-customizable).
+    static var pinkSoft: Color { Color(hex: "FFE7E8") }
     /// Dividers. → border role. Default light #F1E7E2 · dark #38302C.
     static var duduDivider: Color { color(.border) }
     /// Accent: selected states, completed checks, solid icon glyphs.
